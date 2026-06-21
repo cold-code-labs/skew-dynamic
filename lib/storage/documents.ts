@@ -23,6 +23,10 @@ const STUB: Documento[] = [
 ]
 
 export async function listDocumentos(): Promise<Documento[]> {
+  if (DATA_MODE === "postgrest") {
+    const { listDocumentosRest } = await import("./rest")
+    return listDocumentosRest()
+  }
   if (DATA_MODE !== "pocketbase") return STUB
 
   const { pbServer } = await import("@/lib/auth/pocketbase")

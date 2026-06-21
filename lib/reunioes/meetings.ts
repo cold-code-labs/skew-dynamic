@@ -57,6 +57,10 @@ const STUB: Reuniao[] = [
 ]
 
 export async function listReunioes(): Promise<Reuniao[]> {
+  if (DATA_MODE === "postgrest") {
+    const { listReunioesRest } = await import("./rest")
+    return listReunioesRest()
+  }
   if (DATA_MODE !== "pocketbase") return STUB
 
   const { pbServer } = await import("@/lib/auth/pocketbase")
@@ -77,6 +81,10 @@ export async function listReunioes(): Promise<Reuniao[]> {
 }
 
 export async function getReuniao(id: string): Promise<Reuniao | null> {
+  if (DATA_MODE === "postgrest") {
+    const { getReuniaoRest } = await import("./rest")
+    return getReuniaoRest(id)
+  }
   if (DATA_MODE !== "pocketbase") return STUB.find((r) => r.id === id) ?? null
 
   const { pbServer } = await import("@/lib/auth/pocketbase")

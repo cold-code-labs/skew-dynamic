@@ -38,6 +38,10 @@ export async function createRecord(key: string, form: FormData): Promise<ActionR
   if (!def) return { ok: false, error: "Recurso desconhecido." }
   const denied = await requireCapability("data.write")
   if (denied) return { ok: false, error: denied }
+  if (DATA_MODE === "postgrest") {
+    const { createRecordRest } = await import("./rest")
+    return createRecordRest(def, payloadFromForm(def, form))
+  }
   if (DATA_MODE !== "pocketbase") return DEMO_NOTICE
   try {
     const col = await pbCollection(def)
@@ -59,6 +63,10 @@ export async function updateRecord(
   if (!def) return { ok: false, error: "Recurso desconhecido." }
   const denied = await requireCapability("data.write")
   if (denied) return { ok: false, error: denied }
+  if (DATA_MODE === "postgrest") {
+    const { updateRecordRest } = await import("./rest")
+    return updateRecordRest(def, id, payloadFromForm(def, form))
+  }
   if (DATA_MODE !== "pocketbase") return DEMO_NOTICE
   try {
     const col = await pbCollection(def)
@@ -76,6 +84,10 @@ export async function deleteRecord(key: string, id: string): Promise<ActionResul
   if (!def) return { ok: false, error: "Recurso desconhecido." }
   const denied = await requireCapability("data.delete")
   if (denied) return { ok: false, error: denied }
+  if (DATA_MODE === "postgrest") {
+    const { deleteRecordRest } = await import("./rest")
+    return deleteRecordRest(def, id)
+  }
   if (DATA_MODE !== "pocketbase") return DEMO_NOTICE
   try {
     const col = await pbCollection(def)

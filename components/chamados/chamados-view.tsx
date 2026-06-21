@@ -1,9 +1,11 @@
 "use client"
 
-import { useMemo, useState, useTransition } from "react"
+import { useEffect, useMemo, useState, useTransition } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { Filter, MessageSquare, Plus, Ticket } from "lucide-react"
+
+import { HauldrLive, type RealtimeProps } from "@/lib/realtime/live"
 
 import { useCan } from "@/components/auth/use-can"
 import { PageShell } from "@/components/page-shell"
@@ -43,15 +45,48 @@ const fieldClass =
 export function ChamadosView({
   chamados,
   persisted,
+  realtime,
 }: {
   chamados: Chamado[]
   persisted: boolean
+  realtime?: RealtimeProps | null
 }) {
   const can = useCan()
   const canWrite = can("data.write")
+  const router = useRouter()
   const [open, setOpen] = useState(false)
   const [fStatus, setFStatus] = useState<string>("abertos")
   const [fDepto, setFDepto] = useState<string>("todos")
+  const [viewers, setViewers] = useState(0)
+
+  // Live updates (Hauldr tier): another user's create/comment/status change pings
+  // a private "chamados" channel → refetch the list. Presence shows who's viewing.
+  // The ping carries no data — the refresh goes back through RLS-guarded PostgREST.
+  useEffect(() => {
+    if (!realtime) return
+    // getToken keeps the private channel authorized past the access token's ~1h
+    // life: the route rotates the cookie pair and returns a fresh token.
+    const getToken = async () => {
+      try {
+        const r = await fetch("/api/auth/token", { cache: "no-store" })
+        if (!r.ok) return undefined
+        return ((await r.json()) as { accessToken?: string }).accessToken
+      } catch {
+        return undefined
+      }
+    }
+    const live = new HauldrLive(realtime.url, realtime.accessToken, getToken)
+    const sub = live.on("chamados", () => router.refresh(), { private: true })
+    const here = live.presence("chamados", (state) => setViewers(Object.keys(state).length), {
+      key: realtime.me.key,
+      initial: { name: realtime.me.name },
+      private: true,
+    })
+    return () => {
+      sub.unsubscribe()
+      here.unsubscribe()
+    }
+  }, [realtime, router])
 
   const filtered = useMemo(() => {
     return chamados.filter((c) => {
@@ -73,12 +108,23 @@ export function ChamadosView({
           : "Nenhum chamado em aberto — tudo resolvido."
       }
       actions={
-        canWrite ? (
-          <Button size="sm" onClick={() => setOpen(true)}>
-            <Plus data-icon="inline-start" />
-            Novo chamado
-          </Button>
-        ) : undefined
+        <div className="flex items-center gap-2">
+          {realtime && viewers > 0 ? (
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border px-2.5 py-1 text-xs text-muted-foreground">
+              <span className="relative flex size-2">
+                <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-500/60" />
+                <span className="relative inline-flex size-2 rounded-full bg-emerald-500" />
+              </span>
+              {viewers} vendo agora
+            </span>
+          ) : null}
+          {canWrite ? (
+            <Button size="sm" onClick={() => setOpen(true)}>
+              <Plus data-icon="inline-start" />
+              Novo chamado
+            </Button>
+          ) : null}
+        </div>
       }
     >
       {/* Filters */}

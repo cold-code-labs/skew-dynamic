@@ -22,7 +22,7 @@ export default async function ChamadoDetailPage({
     <ChamadoDetail
       chamado={chamado}
       comentarios={comentarios}
-      persisted={DATA_MODE === "pocketbase"}
+      persisted={DATA_MODE !== "stub"}
     />
   )
 }

@@ -12,6 +12,10 @@ export type ActionResult = { ok: boolean; error?: string }
 export async function markAllRead(): Promise<ActionResult> {
   const user = await getSession()
   if (!user) return { ok: false, error: "Sessão expirada." }
+  if (DATA_MODE === "postgrest") {
+    const { markAllReadRest } = await import("./rest")
+    return markAllReadRest()
+  }
   if (DATA_MODE !== "pocketbase") return { ok: true }
 
   try {

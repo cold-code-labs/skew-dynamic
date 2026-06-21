@@ -18,6 +18,7 @@ import {
 import { useToast } from "@/components/ui/toast"
 import { ChatMessages, ChatComposer, ChatProvider } from "@/components/ui/chat"
 import type { ChatMessageData } from "@/components/ui/chat"
+import { HauldrLive, type RealtimeProps } from "@/lib/realtime/live"
 import { ROLES, type RoleKey } from "@/config/roles"
 import { cn } from "@/lib/utils"
 import {
@@ -58,6 +59,8 @@ export function ChatView({
   users,
   canManage,
   persisted,
+  sseRelay,
+  realtime,
 }: {
   currentUser: CurrentUser
   channels: Channel[]
@@ -66,6 +69,10 @@ export function ChatView({
   users: ChatUser[]
   canManage: boolean
   persisted: boolean
+  /** PocketBase tier only: use the SSE relay at /api/chat/stream. */
+  sseRelay?: boolean
+  /** Hauldr tier: live updates via the shared Realtime service (broadcast). */
+  realtime?: RealtimeProps | null
 }) {
   const { toast } = useToast()
   const [channels, setChannels] = useState<Channel[]>(initialChannels)
@@ -89,9 +96,9 @@ export function ChatView({
   const active = channels.find((c) => c.id === activeId)
   const messages = cache[activeId] ?? []
 
-  // ── Realtime: subscribe to the SSE relay once, fan out by channel ──────────
+  // ── Realtime (PocketBase tier): SSE relay once, fan out by channel ─────────
   useEffect(() => {
-    if (!persisted) return
+    if (!sseRelay) return
     const es = new EventSource("/api/chat/stream")
     es.addEventListener("ready", () => setLive(true))
     es.addEventListener("error", () => setLive(false))
@@ -129,7 +136,39 @@ export function ChatView({
       }
     }
     return () => es.close()
-  }, [persisted])
+  }, [sseRelay])
+
+  // ── Realtime (Hauldr tier): a write broadcasts "changed" on the active
+  // channel's private topic → reload that conversation's messages through
+  // RLS-guarded PostgREST. Re-subscribes when the active channel changes.
+  useEffect(() => {
+    if (!realtime || !activeId) return
+    const getToken = async () => {
+      try {
+        const r = await fetch("/api/auth/token", { cache: "no-store" })
+        if (!r.ok) return undefined
+        return ((await r.json()) as { accessToken?: string }).accessToken
+      } catch {
+        return undefined
+      }
+    }
+    const channelId = activeId
+    const live = new HauldrLive(realtime.url, realtime.accessToken, getToken)
+    setLive(true)
+    const sub = live.on(
+      `chat:${channelId}`,
+      () => {
+        carregarMensagens(channelId).then((msgs) =>
+          setCache((prev) => ({ ...prev, [channelId]: msgs })),
+        )
+      },
+      { private: true },
+    )
+    return () => {
+      sub.unsubscribe()
+      setLive(false)
+    }
+  }, [realtime, activeId])
 
   // ── Select a conversation (load history on first open) ─────────────────────
   const selectChannel = useCallback(

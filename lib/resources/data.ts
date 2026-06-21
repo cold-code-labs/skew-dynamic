@@ -24,8 +24,10 @@ export async function listResource(def: ResourceDef): Promise<ResourceRow[]> {
     return recs.map((r) => ({ ...r })) as ResourceRow[]
   }
 
-  // PostgREST: expects a view/table named after the collection.
-  const cols = def.columns.map((c) => c.field).join(",")
+  // PostgREST: expects a view/table named after the collection. Always select
+  // `id` (row actions edit/delete need it) plus the declared display columns.
+  const fields = def.columns.map((c) => c.field).filter((f) => f !== "id")
+  const cols = ["id", ...fields].join(",")
   const order = def.sort?.startsWith("-")
     ? `${def.sort.slice(1)}.desc`
     : `${def.sort ?? "id"}.asc`

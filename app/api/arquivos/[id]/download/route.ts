@@ -1,8 +1,10 @@
 import {
+  DATA_MODE,
   PB_CF_ACCESS_CLIENT_ID,
   PB_CF_ACCESS_CLIENT_SECRET,
 } from "@/config/env"
 import { requireCapability } from "@/lib/auth/guard"
+import { pgrest } from "@/lib/data/client"
 import { pbServer } from "@/lib/auth/pocketbase"
 import { logWarn } from "@/lib/log"
 
@@ -45,6 +47,35 @@ export async function GET(
   if (denied) return new Response(denied, { status: 401 })
 
   const { id } = await params
+
+  // Hauldr tier: metadata in PostgREST, bytes in Garage (S3). Stream them back
+  // through this same-origin proxy (the bucket is never public).
+  if (DATA_MODE === "postgrest") {
+    try {
+      const rows = await pgrest<Record<string, unknown>[]>(
+        `/documentos?id=eq.${id}&select=name,s3_key&limit=1`,
+      )
+      const rec = rows[0]
+      const key = rec?.s3_key as string | undefined
+      if (!rec || !key) return new Response("Sem arquivo.", { status: 404 })
+
+      const { getObject } = await import("@/lib/storage/garage")
+      const obj = await getObject(key, request.headers.get("range") ?? undefined)
+
+      const headers = new Headers()
+      headers.set("content-type", obj.contentType)
+      if (obj.contentLength != null) headers.set("content-length", String(obj.contentLength))
+      if (obj.contentRange) headers.set("content-range", obj.contentRange)
+      headers.set("accept-ranges", "bytes")
+      headers.set("content-disposition", contentDisposition((rec.name as string) || "arquivo"))
+      headers.set("cache-control", "private, no-store")
+      return new Response(obj.body, { status: obj.status, headers })
+    } catch (e) {
+      logWarn("storage", "download proxy (garage) error", e, { id })
+      return new Response("Não encontrado.", { status: 404 })
+    }
+  }
+
   try {
     const pb = await pbServer()
     const rec = await pb.collection("documentos").getOne(id)

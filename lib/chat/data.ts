@@ -56,6 +56,13 @@ function mapChannel(r: Record<string, unknown>): Channel {
 
 // ── Users (for the DM picker) ────────────────────────────────────────────────
 export async function listChatUsers(excludeId?: string): Promise<ChatUser[]> {
+  if (DATA_MODE === "postgrest") {
+    const { getSession } = await import("@/lib/auth/session")
+    const me = await getSession()
+    if (!me) return []
+    const { listChatUsersRest } = await import("./rest")
+    return listChatUsersRest(me, excludeId)
+  }
   if (DATA_MODE !== "pocketbase") return STUB_USERS.filter((u) => u.id !== excludeId)
 
   const { pbServer } = await import("@/lib/auth/pocketbase")
@@ -75,6 +82,10 @@ export async function listChatUsers(excludeId?: string): Promise<ChatUser[]> {
 
 /** All conversations the user may see, with DM names resolved to the partner. */
 export async function listChannelsForUser(user: SessionUser): Promise<Channel[]> {
+  if (DATA_MODE === "postgrest") {
+    const { listChannelsForUserRest } = await import("./rest")
+    return listChannelsForUserRest(user)
+  }
   if (DATA_MODE !== "pocketbase") {
     return STUB_CHANNELS.filter((c) => canSeeChannel(user.id, user.role, c))
   }
@@ -102,6 +113,10 @@ export async function listChannelsForUser(user: SessionUser): Promise<Channel[]>
 }
 
 export async function getChannel(id: string, user: SessionUser): Promise<Channel | null> {
+  if (DATA_MODE === "postgrest") {
+    const { getChannelRest } = await import("./rest")
+    return getChannelRest(id, user)
+  }
   if (DATA_MODE !== "pocketbase") {
     const c = STUB_CHANNELS.find((c) => c.id === id) ?? null
     return c && canSeeChannel(user.id, user.role, c) ? c : null
@@ -125,6 +140,10 @@ export async function visibleChannelIds(user: SessionUser): Promise<string[]> {
 
 // ── Messages ─────────────────────────────────────────────────────────────────
 export async function listMessages(channelId: string): Promise<ChatMessage[]> {
+  if (DATA_MODE === "postgrest") {
+    const { listMessagesRest } = await import("./rest")
+    return listMessagesRest(channelId)
+  }
   if (DATA_MODE !== "pocketbase") return STUB_MESSAGES[channelId] ?? []
 
   const { pbServer } = await import("@/lib/auth/pocketbase")

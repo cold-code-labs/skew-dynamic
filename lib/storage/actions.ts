@@ -17,6 +17,10 @@ const DEMO: ActionResult = {
 export async function uploadDocumento(form: FormData): Promise<ActionResult> {
   const denied = await requireCapability("files.upload")
   if (denied) return { ok: false, error: denied }
+  if (DATA_MODE === "postgrest") {
+    const { uploadDocumentoRest } = await import("./rest")
+    return uploadDocumentoRest(form)
+  }
   if (DATA_MODE !== "pocketbase") return DEMO
   const file = form.get("file")
   if (!(file instanceof File) || file.size === 0) {
@@ -43,6 +47,10 @@ export async function uploadDocumento(form: FormData): Promise<ActionResult> {
 export async function deleteDocumento(id: string): Promise<ActionResult> {
   const denied = await requireCapability("files.upload")
   if (denied) return { ok: false, error: denied }
+  if (DATA_MODE === "postgrest") {
+    const { deleteDocumentoRest } = await import("./rest")
+    return deleteDocumentoRest(id)
+  }
   if (DATA_MODE !== "pocketbase") return DEMO
   try {
     const { pbServer } = await import("@/lib/auth/pocketbase")

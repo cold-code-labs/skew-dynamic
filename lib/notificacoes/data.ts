@@ -18,8 +18,12 @@ const STUB: Notificacao[] = [
   { titulo: "Backup concluído", mensagem: "O backup diário foi finalizado com sucesso.", tipo: "info", lida: true, data: "2026-06-05" },
 ]
 
-/** All notifications, newest first. Mode-agnostic (stub | pocketbase). */
+/** All notifications, newest first. Mode-agnostic (stub | pocketbase | postgrest). */
 export async function listNotificacoes(): Promise<Notificacao[]> {
+  if (DATA_MODE === "postgrest") {
+    const { listNotificacoesRest } = await import("./rest")
+    return listNotificacoesRest()
+  }
   if (DATA_MODE !== "pocketbase") return STUB
 
   const { pbServer } = await import("@/lib/auth/pocketbase")

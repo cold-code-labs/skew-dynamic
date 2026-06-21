@@ -17,5 +17,5 @@ export default async function ReuniaoDetailPage({
   const reuniao = await getReuniao(id)
   if (!reuniao) notFound()
 
-  return <ReuniaoEditor reuniao={reuniao} persisted={DATA_MODE === "pocketbase"} />
+  return <ReuniaoEditor reuniao={reuniao} persisted={DATA_MODE !== "stub"} />
 }

@@ -64,22 +64,25 @@ create table if not exists notificacoes (
   created_at timestamptz not null default now()
 );
 
--- ── Row Level Security (owner = JWT sub) ──────────────────────────────────────
+-- ── Row Level Security ────────────────────────────────────────────────────────
+-- Business data (tickets + thread) is SHARED across the workspace: any
+-- authenticated staff member sees/edits every row — parity with the PocketBase
+-- apps (rules are just the authenticated gate) and with coldcodelabs. `owner` is
+-- kept as an audit stamp, not an access key. Notificações stay PER-USER (your
+-- notifications are yours).
 alter table chamados              enable row level security;
 alter table chamados_comentarios  enable row level security;
 alter table notificacoes          enable row level security;
 
 drop policy if exists chamados_owner on chamados;
-create policy chamados_owner on chamados
-  for all to authenticated
-  using (owner = hauldr.current_user_id())
-  with check (owner = hauldr.current_user_id());
+drop policy if exists chamados_rw on chamados;
+create policy chamados_rw on chamados
+  for all to authenticated using (true) with check (true);
 
 drop policy if exists chamados_comentarios_owner on chamados_comentarios;
-create policy chamados_comentarios_owner on chamados_comentarios
-  for all to authenticated
-  using (owner = hauldr.current_user_id())
-  with check (owner = hauldr.current_user_id());
+drop policy if exists chamados_comentarios_rw on chamados_comentarios;
+create policy chamados_comentarios_rw on chamados_comentarios
+  for all to authenticated using (true) with check (true);
 
 drop policy if exists notificacoes_owner on notificacoes;
 create policy notificacoes_owner on notificacoes

@@ -6,6 +6,7 @@ import { DATA_MODE } from "@/config/env"
 import { requireCapability } from "@/lib/auth/guard"
 import { getSession } from "@/lib/auth/session"
 import { logError, logWarn } from "@/lib/log"
+import { broadcastChange } from "@/lib/realtime/server"
 import { getCurrentTenantId } from "@/lib/tenant"
 
 import { notificarChamado } from "./notify"
@@ -25,7 +26,9 @@ export async function criarChamado(form: FormData): Promise<ActionResult> {
   if (denied) return { ok: false, error: denied }
   if (DATA_MODE === "postgrest") {
     const { criarChamadoRest } = await import("./rest")
-    return criarChamadoRest(form)
+    const r = await criarChamadoRest(form)
+    if (r.ok) await broadcastChange("chamados")
+    return r
   }
   if (DATA_MODE !== "pocketbase") return DEMO
 
@@ -80,7 +83,9 @@ export async function comentarChamado(
   if (denied) return { ok: false, error: denied }
   if (DATA_MODE === "postgrest") {
     const { comentarChamadoRest } = await import("./rest")
-    return comentarChamadoRest(chamadoId, corpo)
+    const r = await comentarChamadoRest(chamadoId, corpo)
+    if (r.ok) await broadcastChange("chamados")
+    return r
   }
   if (DATA_MODE !== "pocketbase") return DEMO
   const texto = corpo.trim()
@@ -129,7 +134,9 @@ export async function mudarStatus(
   if (denied) return { ok: false, error: denied }
   if (DATA_MODE === "postgrest") {
     const { mudarStatusRest } = await import("./rest")
-    return mudarStatusRest(chamadoId, status)
+    const r = await mudarStatusRest(chamadoId, status)
+    if (r.ok) await broadcastChange("chamados")
+    return r
   }
   if (DATA_MODE !== "pocketbase") return DEMO
   const novo = normalizeStatus(status)
@@ -175,7 +182,9 @@ export async function atribuirChamado(
   if (denied) return { ok: false, error: denied }
   if (DATA_MODE === "postgrest") {
     const { atribuirChamadoRest } = await import("./rest")
-    return atribuirChamadoRest(chamadoId, responsavel)
+    const r = await atribuirChamadoRest(chamadoId, responsavel)
+    if (r.ok) await broadcastChange("chamados")
+    return r
   }
   if (DATA_MODE !== "pocketbase") return DEMO
   const nome = responsavel.trim()
@@ -217,7 +226,9 @@ export async function excluirChamado(chamadoId: string): Promise<ActionResult> {
   if (denied) return { ok: false, error: denied }
   if (DATA_MODE === "postgrest") {
     const { excluirChamadoRest } = await import("./rest")
-    return excluirChamadoRest(chamadoId)
+    const r = await excluirChamadoRest(chamadoId)
+    if (r.ok) await broadcastChange("chamados")
+    return r
   }
   if (DATA_MODE !== "pocketbase") return DEMO
   try {

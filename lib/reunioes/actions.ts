@@ -29,6 +29,10 @@ const DEMO: ActionResult = {
 export async function criarReuniao(form: FormData): Promise<ActionResult> {
   const denied = await requireCapability("files.upload")
   if (denied) return { ok: false, error: denied }
+  if (DATA_MODE === "postgrest") {
+    const { criarReuniaoRest } = await import("./rest")
+    return criarReuniaoRest(form)
+  }
   if (DATA_MODE !== "pocketbase") return DEMO
 
   const audio = form.get("audio")
@@ -64,6 +68,10 @@ export async function criarReuniao(form: FormData): Promise<ActionResult> {
 export async function transcreverReuniao(id: string): Promise<ActionResult> {
   const denied = await requireCapability("data.write")
   if (denied) return { ok: false, error: denied }
+  if (DATA_MODE === "postgrest") {
+    const { transcreverReuniaoRest } = await import("./rest")
+    return transcreverReuniaoRest(id)
+  }
   if (DATA_MODE !== "pocketbase") return DEMO
   if (!transcribeProviderKey()) {
     return { ok: false, error: "Configure a chave do provedor de transcrição no servidor." }
@@ -138,7 +146,6 @@ export async function salvarTranscricao(
 ): Promise<ActionResult> {
   const denied = await requireCapability("data.write")
   if (denied) return { ok: false, error: denied }
-  if (DATA_MODE !== "pocketbase") return DEMO
 
   // Re-parse defensively: this crosses the network from the browser.
   const segmentos = parseSegmentos(input?.segmentos)
@@ -146,6 +153,12 @@ export async function salvarTranscricao(
   if (segmentos.length === 0) {
     return { ok: false, error: "Transcrição vazia — nada para salvar." }
   }
+
+  if (DATA_MODE === "postgrest") {
+    const { salvarTranscricaoRest } = await import("./rest")
+    return salvarTranscricaoRest(id, segmentos, locutores)
+  }
+  if (DATA_MODE !== "pocketbase") return DEMO
 
   try {
     const { pbServer } = await import("@/lib/auth/pocketbase")
@@ -167,9 +180,13 @@ export async function salvarTranscricao(
 export async function renomearReuniao(id: string, titulo: string): Promise<ActionResult> {
   const denied = await requireCapability("data.write")
   if (denied) return { ok: false, error: denied }
-  if (DATA_MODE !== "pocketbase") return DEMO
   const clean = titulo.trim()
   if (!clean) return { ok: false, error: "Informe um título." }
+  if (DATA_MODE === "postgrest") {
+    const { renomearReuniaoRest } = await import("./rest")
+    return renomearReuniaoRest(id, clean)
+  }
+  if (DATA_MODE !== "pocketbase") return DEMO
   try {
     const { pbServer } = await import("@/lib/auth/pocketbase")
     const pb = await pbServer()
@@ -185,6 +202,10 @@ export async function renomearReuniao(id: string, titulo: string): Promise<Actio
 export async function excluirReuniao(id: string): Promise<ActionResult> {
   const denied = await requireCapability("data.delete")
   if (denied) return { ok: false, error: denied }
+  if (DATA_MODE === "postgrest") {
+    const { excluirReuniaoRest } = await import("./rest")
+    return excluirReuniaoRest(id)
+  }
   if (DATA_MODE !== "pocketbase") return DEMO
   try {
     const { pbServer } = await import("@/lib/auth/pocketbase")

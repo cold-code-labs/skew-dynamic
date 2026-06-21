@@ -6,6 +6,7 @@ import { ChatView } from "@/components/chat/chat-view"
 import { can } from "@/config/roles"
 import { getSession } from "@/lib/auth/session"
 import { listChannelsForUser, listChatUsers, listMessages } from "@/lib/chat/data"
+import { realtimeProps } from "@/lib/realtime/server"
 
 export const dynamic = "force-dynamic"
 
@@ -19,9 +20,10 @@ export default async function ChatPage() {
 
   const channels = await listChannelsForUser(user)
   const activeId = channels[0]?.id ?? ""
-  const [initialMessages, users] = await Promise.all([
+  const [initialMessages, users, realtime] = await Promise.all([
     activeId ? listMessages(activeId) : Promise.resolve([]),
     listChatUsers(user.id),
+    realtimeProps(),
   ])
 
   return (
@@ -32,7 +34,9 @@ export default async function ChatPage() {
       initialMessages={initialMessages}
       users={users}
       canManage={can(user.role, "members.manage")}
-      persisted={DATA_MODE === "pocketbase"}
+      persisted={DATA_MODE !== "stub"}
+      sseRelay={DATA_MODE === "pocketbase"}
+      realtime={realtime}
     />
   )
 }

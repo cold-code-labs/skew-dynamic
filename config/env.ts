@@ -171,6 +171,29 @@ export const HAULDR_JWT_SECRET = process.env.HAULDR_JWT_SECRET ?? ""
  */
 export const HAULDR_DEFAULT_ROLE = process.env.HAULDR_DEFAULT_ROLE || "owner"
 
+/**
+ * Project Realtime base URL (e.g. https://realtime-<proj>.coldcodelabs.com) — the
+ * shared Hauldr Realtime service, public so the browser can open a WebSocket to it
+ * directly. Unset = realtime off (the app falls back to refresh-on-action). Used by
+ * lib/realtime for app-driven broadcast + presence on a private channel.
+ */
+export const HAULDR_REALTIME_URL = process.env.HAULDR_REALTIME_URL ?? ""
+
+// ── Hauldr Storage (Garage S3 object store) ──────────────────────────────────
+// File bytes live in the project's Garage bucket (S3). The app server (in the
+// coolify network) reaches Garage internally in prod; downloads are streamed
+// back through the same-origin /api/arquivos/<id>/download proxy (the bucket is
+// never public). Dev points at a public S3 endpoint via HAULDR_S3_ENDPOINT_REMOTE.
+// All five unset = storage off (the module reports the gap, like the PB tier).
+export const HAULDR_S3_ENDPOINT = resolveByEnv(
+  process.env.HAULDR_S3_ENDPOINT ?? "",
+  process.env.HAULDR_S3_ENDPOINT_REMOTE ?? "",
+)
+export const HAULDR_S3_BUCKET = process.env.HAULDR_S3_BUCKET ?? ""
+export const HAULDR_S3_ACCESS_KEY_ID = process.env.HAULDR_S3_ACCESS_KEY_ID ?? ""
+export const HAULDR_S3_SECRET_ACCESS_KEY = process.env.HAULDR_S3_SECRET_ACCESS_KEY ?? ""
+export const HAULDR_S3_REGION = process.env.HAULDR_S3_REGION || "garage"
+
 /** edge-runtime (Deno) functions base URL, e.g. https://fn.<app>.coldcodelabs.com */
 export const FUNCTIONS_URL = process.env.FUNCTIONS_URL ?? ""
 

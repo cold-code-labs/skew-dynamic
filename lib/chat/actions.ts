@@ -6,6 +6,7 @@ import { DATA_MODE } from "@/config/env"
 import { requireCapability } from "@/lib/auth/guard"
 import { getSession } from "@/lib/auth/session"
 import { logError } from "@/lib/log"
+import { broadcastChange } from "@/lib/realtime/server"
 import { getCurrentTenantId } from "@/lib/tenant"
 
 import { getChannel, listChannelsForUser, listMessages } from "./data"
@@ -46,6 +47,16 @@ export async function enviarMensagem(
 ): Promise<ActionResult> {
   const denied = await requireCapability("data.write")
   if (denied) return { ok: false, error: denied }
+  if (DATA_MODE === "postgrest") {
+    const user = await getSession()
+    if (!user) return { ok: false, error: "Sessão expirada." }
+    const channel = await getChannel(channelId, user)
+    if (!channel) return { ok: false, error: "Canal indisponível." }
+    const { enviarMensagemRest } = await import("./rest")
+    const r = await enviarMensagemRest(channelId, form, user)
+    if (r.ok) await broadcastChange(`chat:${channelId}`)
+    return r
+  }
   if (DATA_MODE !== "pocketbase") return DEMO
 
   const corpo = String(form.get("corpo") || "").trim()
@@ -104,6 +115,12 @@ export async function iniciarDM(
 ): Promise<ActionResult & { channelId?: string }> {
   const denied = await requireCapability("data.write")
   if (denied) return { ok: false, error: denied }
+  if (DATA_MODE === "postgrest") {
+    const user = await getSession()
+    if (!user) return { ok: false, error: "Sessão expirada." }
+    const { iniciarDMRest } = await import("./rest")
+    return iniciarDMRest(user, outroUserId)
+  }
   if (DATA_MODE !== "pocketbase") return DEMO
 
   try {
@@ -154,6 +171,10 @@ export async function iniciarDM(
 export async function criarCanal(form: FormData): Promise<ActionResult & { channelId?: string }> {
   const denied = await requireCapability("members.manage")
   if (denied) return { ok: false, error: denied }
+  if (DATA_MODE === "postgrest") {
+    const { criarCanalRest } = await import("./rest")
+    return criarCanalRest(form)
+  }
   if (DATA_MODE !== "pocketbase") return DEMO
 
   const nome = String(form.get("nome") || "").trim()
@@ -192,6 +213,10 @@ export async function gerenciarMembros(
 ): Promise<ActionResult> {
   const denied = await requireCapability("members.manage")
   if (denied) return { ok: false, error: denied }
+  if (DATA_MODE === "postgrest") {
+    const { gerenciarMembrosRest } = await import("./rest")
+    return gerenciarMembrosRest(channelId, memberIds)
+  }
   if (DATA_MODE !== "pocketbase") return DEMO
 
   try {

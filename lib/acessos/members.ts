@@ -21,6 +21,10 @@ const STUB: Member[] = [
 ]
 
 export async function listMembers(): Promise<Member[]> {
+  if (DATA_MODE === "postgrest") {
+    const { listMembersRest } = await import("./rest")
+    return listMembersRest()
+  }
   if (DATA_MODE !== "pocketbase") return STUB
 
   const { pbServer } = await import("@/lib/auth/pocketbase")

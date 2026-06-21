@@ -33,6 +33,10 @@ async function pb() {
 export async function inviteMember(form: FormData): Promise<ActionResult> {
   const denied = await requireCapability("members.manage")
   if (denied) return { ok: false, error: denied }
+  if (DATA_MODE === "postgrest") {
+    const { inviteMemberRest } = await import("./rest")
+    return inviteMemberRest(read(form))
+  }
   if (DATA_MODE !== "pocketbase") return DEMO
   const data = read(form)
   try {
@@ -63,6 +67,10 @@ export async function inviteMember(form: FormData): Promise<ActionResult> {
 export async function updateMember(id: string, form: FormData): Promise<ActionResult> {
   const denied = await requireCapability("members.manage")
   if (denied) return { ok: false, error: denied }
+  if (DATA_MODE === "postgrest") {
+    const { updateMemberRest } = await import("./rest")
+    return updateMemberRest(id, read(form))
+  }
   if (DATA_MODE !== "pocketbase") return DEMO
   try {
     const client = await pb()
@@ -78,6 +86,10 @@ export async function updateMember(id: string, form: FormData): Promise<ActionRe
 export async function removeMember(id: string): Promise<ActionResult> {
   const denied = await requireCapability("members.manage")
   if (denied) return { ok: false, error: denied }
+  if (DATA_MODE === "postgrest") {
+    const { removeMemberRest } = await import("./rest")
+    return removeMemberRest(id)
+  }
   if (DATA_MODE !== "pocketbase") return DEMO
   try {
     const client = await pb()
