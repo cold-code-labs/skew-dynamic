@@ -1,7 +1,0 @@
-{
-  "$comment": "Seleção de módulos desta instância, gravada pelo Ice Breaker. config/features.ts lê este arquivo como fallback quando APP_FEATURES está vazio (ex.: um clone local), pra o dev ver os mesmos módulos que estão live. O env APP_FEATURES do Coolify sempre vence em runtime.",
-  "features": [
-    "calendario",
-    "reunioes"
-  ]
-}
