@@ -37,5 +37,10 @@ export async function pgrest<T>(
     throw new Error(`PostgREST ${res.status} on ${path}: ${body}`)
   }
 
-  return (await res.json()) as T
+  // Writes with `Prefer: return=minimal` come back with an empty body
+  // (POST → 201, DELETE/PATCH → 204); calling res.json() on those throws
+  // "Unexpected end of JSON input".
+  if (res.status === 204) return undefined as T
+  const text = await res.text()
+  return (text ? JSON.parse(text) : undefined) as T
 }
