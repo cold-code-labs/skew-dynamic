@@ -9,3 +9,5 @@ STEP      = 250       # passo (use STEP=WINDOW p/ janelas não-sobrepostas)
 MIN_ODD   = 1.01      # filtro de odds inválidas (dado sujo)
 BOOT_B    = 2000      # reamostras do bootstrap
 SEED      = 42
+
+DEVIG_METHOD = "shin"  # de-vigging primário: shin | multiplicative | power

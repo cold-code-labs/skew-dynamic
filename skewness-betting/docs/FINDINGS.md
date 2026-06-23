@@ -111,10 +111,40 @@ muda devagar, a skewness é um invariante temporal. A margem das casas é
 ortogonal a isso (afeta nível de retorno, não assimetria).
 
 ## Próximas frentes (não exploradas ainda)
-- Modelar skewness_liga ~ índice de competitividade (HHI de títulos, Gini de
-  pontos) — formalizar a relação −0.83.
 - Drift abertura→fechamento: a skewness do movimento de preço (precisa de odds
   de abertura, dataset tem parcial).
 - Sazonalidade intra-temporada controlada por liga (início vs fim).
-- Mercado over/under 2.5 (dataset tem) — skewness de um mercado binário vs 1X2.
 - Testar invariância em outro esporte (basquete/tênis) — generalização externa.
+
+---
+
+# LOG DE FASES (rumo ao paper)
+
+> Dataset congelado em `data/PROVENANCE.json` (sha256 `6905ca53…`, 205.435
+> jogos ≥2005, 38 ligas, 2005-01→2025-06). Baseline reproduzida em
+> `outputs/phase0_baseline.log`. Cada fase abaixo adiciona um bloco ao paper.
+
+## Fase 0 — Reprodução + congelamento (2026-06-23)
+Blocos 00–06 reproduzem `FINDINGS` exatamente contra o arquivo completo de 38
+ligas. Bug corrigido em `06_league_hetero` (`tab.skew` colidia com
+`DataFrame.skew()`). Dataset congelado por hash.
+
+## Fase 1 / W1 — Skewness ex-ante e o núcleo mecânico (2026-06-23)
+Objeto primário redefinido: **skewness implícita (de-vigada)** da aposta no
+favorito, via modelo de **Shin** (z médio 3.4% de dinheiro informado;
+overround 1.068). Fechada, sem ruído amostral.
+
+- **Ex-ante ≈ ex-post.** Skew global ex-ante **+0.236** vs realizada **+0.230**
+  → o objeto implícito reproduz o realizado; odds bem calibradas no agregado.
+- **Decomposição (lei dos cumulantes totais) — assume o núcleo mecânico:**
+  M3 = **+102.6% intra-jogo (Bernoulli/FLB)** − 2.6% covariância − 0.0%
+  entre-jogos. A skewness de mercado é, a ~100%, a assimetria intra-jogo da
+  distribuição de p — não artefato de pooling. `within_frac` ≈ 1.00 em **todas**
+  as faixas de p_fav. Converte a crítica de "tautologia" na própria tese: a
+  assimetria de risco É a imagem algébrica do FLB.
+- **Cross-liga (objeto limpo):** corr(ex-ante, ex-post)=**+0.872**;
+  corr(p_fav, skew)=**−0.900** — porém ainda circular (p vem das odds). Alvo
+  do W2: reproduzir com competitividade **odds-free**.
+
+Artefatos: `skewlib/devig.py`, `skewlib/exante.py`, `analysis/07_devig_exante.py`,
+`outputs/exante_by_league.csv`.
