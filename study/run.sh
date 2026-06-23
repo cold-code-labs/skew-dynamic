@@ -89,6 +89,9 @@ for script in \
   analysis/26_sharp_soft.py \
   analysis/27_shin_z_series.py \
   analysis/28_asian_handicap.py \
+  analysis/29_intraseason.py \
+  analysis/30_game_contribution.py \
+  analysis/31_team_decomposition.py \
   analysis/12_figures.py
 do
   echo

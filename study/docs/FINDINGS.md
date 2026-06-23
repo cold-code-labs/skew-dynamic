@@ -539,3 +539,49 @@ diferente.
 Artefatos: `skewlib/microstructure.py` (prep_ah, ah_league),
 `analysis/28_asian_handicap.py`, `outputs/asian_handicap_by_league.csv`,
 `outputs/fig/f16_asian_handicap.png`.
+
+## Fase F1 — Sazonalidade intra-temporada: invariância vale dentro do ano (2026-06-23)
+A skewness se move do início ao fim da temporada (Ago→Jul, terços por data)?
+
+- **Drift LEVE e previsto:** global por fase +0.243 → +0.235 → +0.229 (amplitude
+  **0.015**); p_fav sobe 0.494 → 0.503 (favoritos um pouco mais fortes no fim, com a
+  classificação cristalizando). Δskew(fim−início) por liga: média **−0.008**, IC95
+  [−0.013, −0.0015] (exclui 0 por pouco).
+- **Conclusão:** existe uma cristalização pequena — mas ~3–4× menor que o sd entre
+  ligas (0.05) e **prevista pela própria lei** (mais p_fav ⇒ menos skew). A
+  invariância vale também DENTRO da temporada, a menos desse drift mínimo.
+
+Artefatos: `skewlib/intraleague.py` (add_season_phase, skew_by_phase,
+phase_shift_by_league), `analysis/29_intraseason.py`,
+`outputs/intraseason_shift_by_league.csv`, `outputs/fig/f17_intraseason.png`.
+
+## Fase F2 — Que jogos carregam a skewness (cancelamento de caudas) (2026-06-23)
+Decomposição do 3º momento agrupado por faixa de competitividade do JOGO (p_fav):
+quais jogos contribuem a assimetria.
+
+- **Lei no nível do jogo:** skew por faixa vai de **+0.465** (p_fav 0.39, favorito
+  fraco) a **−1.055** (p_fav 0.73, favorito forte) — exatamente a identidade
+  (1−2p)/√(p(1−p)). Jogos de favorito FRACO (p<0.5) somam **+126%** do M₃; favorito
+  FORTE (p>0.5) **−26%**.
+- **Conclusão:** a skewness da liga é a soma líquida de contribuições que o
+  cancelamento de caudas quase zera; a competitividade no nível do JOGO fixa o sinal
+  e a magnitude de cada contribuição — a lei macro emerge do micro.
+
+Artefatos: `skewlib/intraleague.py` (m3_contribution_by_bin),
+`analysis/30_game_contribution.py`, `outputs/m3_contribution_by_bin.csv`,
+`outputs/fig/f18_game_contribution.png`.
+
+## Fase F3 — Decomposição por time: a assinatura vem da dispersão de força (2026-06-23)
+Por clube: dominância (Elo médio) vs skewness média dos jogos que disputa.
+
+- **Clubes dominantes puxam p/ skew negativa:** Barcelona (Elo 1983, favorito 97%)
+  skew dos jogos **−1.10**, Bayern −1.09, Real Madrid −0.90; clubes fracos (Lahti
+  Elo 1182) **+0.06**. corr(Elo, skew dos jogos) = **−0.44** [−0.53,−0.34].
+- **A lei, vista por dentro:** corr(dispersão de Elo da liga, skew da liga) =
+  **−0.60** [−0.77,−0.42] — ligas com mais super-clubes têm skew mais baixa.
+- **Conclusão:** a assinatura de skew da liga é função da sua dispersão de força no
+  nível dos TIMES — a versão micro de skewness=f(competitividade).
+
+Artefatos: `skewlib/intraleague.py` (team_long, team_dominance),
+`analysis/31_team_decomposition.py`, `outputs/team_dominance.csv`,
+`outputs/fig/f19_team_decomposition.png`.

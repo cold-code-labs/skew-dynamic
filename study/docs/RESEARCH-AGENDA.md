@@ -105,12 +105,18 @@ parâmetros de preferência (CPT) são eles próprios invariantes.
 - **E3** Cutoff de empate c endógeno por liga (ligas mais "empatadeiras"); refit
   e ver se a invariância muda. Calibrar (h,c,σ) POR liga, não só global.
 
-## Frente F — Dentro da liga / micro  [dataset]
-- **F1** Sazonalidade intra-temporada controlada por liga (início vs fim, conforme
-  a classificação cristaliza). A skewness se move dentro da temporada?
-- **F2** Contribuição por importância do jogo (derby, briga de rebaixamento, jogo
-  morto) — competitividade no nível do JOGO prevê a contribuição de skew do jogo?
-- **F3** Decomposição por time: clubes dominantes "puxam" a assinatura da liga?
+## Frente F — Dentro da liga / micro  ✅ F1+F2+F3 FEITAS (2026-06-23) [dataset]
+> **F1+F2+F3 concluídas** (Fases F1/F2/F3 em `FINDINGS.md`): F1 = drift
+> intra-temporada leve (+0.243→+0.229, shift −0.008 ~3–4× < sd-liga, previsto por
+> p_fav subir no fim); F2 = M₃ por faixa de p_fav (favorito fraco +126%, forte −26%;
+> skew jogo +0.47→−1.05 na identidade); F3 = clubes dominantes puxam skew negativa
+> (Barcelona −1.10), corr(dispersão de Elo da liga, skew) = −0.60. Artefatos:
+> `skewlib/intraleague.py`, `analysis/{29_intraseason,30_game_contribution,31_team_decomposition}.py`.
+- **F1** ✅ Sazonalidade intra-temporada (controlada por liga).
+- **F2** ✅ Contribuição por competitividade do jogo (decomposição do M₃ por p_fav).
+  (Nota: "importância" via derby/rebaixamento exigiria classificação ao vivo; feito
+  pela competitividade do jogo, que é o canal mecânico direto.)
+- **F3** ✅ Decomposição por time (dominância de Elo → assinatura da liga).
 
 ## Frente G — Robustez adversarial  ✅ G1+G2+G3 FEITAS (2026-06-23) [dataset]
 > **G1+G2+G3 concluídas** (Fases G1/G2/G3 em `FINDINGS.md`): G1 = de-vig de Shin
