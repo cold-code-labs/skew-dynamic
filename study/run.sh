@@ -83,6 +83,9 @@ for script in \
   analysis/20_cpt.py \
   analysis/21_closed_form.py \
   analysis/22_force_robustness.py \
+  analysis/23_devig_reliability.py \
+  analysis/24_balanced_panel.py \
+  analysis/25_block_bootstrap.py \
   analysis/12_figures.py
 do
   echo

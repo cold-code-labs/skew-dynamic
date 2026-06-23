@@ -427,6 +427,22 @@ window-overlap artefact: with disjoint windows the series is white noise
 quantifies how much within-league variation is mere sampling noise. Ex-ante and
 ex-post measures agree throughout.
 
+Three adversarial checks close the robustness case. First, the de-vig is
+trustworthy and the result does not depend on it: the favourite probability is
+near-perfectly calibrated against realised outcomes (Brier reliability term
+0.000 globally, with a between-league standard deviation of 0.0003 and no badly
+calibrated league or season), and the aggregate skewness ranges only +0.224 to
++0.263 across Shin, multiplicative and power de-vigs, the best-price book, and a
+multi-book consensus (Figure 12). Second, composition is not driving the
+invariance: rebuilding the global series from only the fifteen leagues present in
+all twenty-one seasons leaves the trend flat (β = −0.0001/yr, twenty-year change
+−0.003, level +0.243 ± 0.014; Figure 13), so the absence of drift is not an
+artefact of a changing league basket. Third, the headline numbers carry honest
+confidence intervals: a block-bootstrap that resamples whole seasons (respecting
+within-year dependence) gives global skewness +0.236 [+0.232, +0.239] and a
+structural-law correlation of −0.90 [−0.92, −0.88] — both comfortably excluding
+the null.
+
 The derivation also does not lean on the Gaussian strength assumption (Figure 11).
 A match's strength gap is the difference d = rᵢ − rⱼ of two independent team
 strengths, which is symmetric about zero for *any* identically distributed strength
@@ -532,6 +548,12 @@ asymmetry is inherited from the sport, not produced by the pricing of it.
 - **Figure 11.** Strength-law robustness: the skewness–competitiveness curve under
   Normal, Student-t (ν = 3, 5), skew-normal and uniform strengths, near-coincident
   when reparametrised by mean favourite probability (max |ΔS| = 0.03).
+- **Figure 12.** De-vig reliability: the favourite's reliability diagram (predicted
+  vs realised win frequency) and the calibration-error term by league — small and
+  stable, so the implied skewness is not a de-vig artefact.
+- **Figure 13.** Balanced panel: the global skewness series from the fifteen
+  always-present leagues lies flat against the full-basket series — no drift once
+  composition is held fixed.
 
 ## References
 

@@ -113,12 +113,18 @@ parâmetros de preferência (CPT) são eles próprios invariantes.
   morto) — competitividade no nível do JOGO prevê a contribuição de skew do jogo?
 - **F3** Decomposição por time: clubes dominantes "puxam" a assinatura da liga?
 
-## Frente G — Robustez adversarial  [dataset]
-- **G1** De-vig não-paramétrico / consenso multi-casa (Nash 2018): o resíduo de
-  Shin é estável? Reliability diagram + decomposição de Brier por liga/ano.
-- **G2** Painel BALANCEADO estrito (só ligas presentes em todos os anos) para a
-  série GLOBAL — mata 100% o confound de composição (P1 fez por-liga).
-- **G3** Block-bootstrap sobre temporadas para IC de TODOS os números-título.
+## Frente G — Robustez adversarial  ✅ G1+G2+G3 FEITAS (2026-06-23) [dataset]
+> **G1+G2+G3 concluídas** (Fases G1/G2/G3 em `FINDINGS.md`): G1 = de-vig de Shin
+> calibrado quase perfeito (REL global 0.0000, sd entre ligas 0.0003) + skew
+> invariante ao método/casa (∈[+0.224,+0.263], amplitude 0.039); G2 = painel
+> balanceado estrito (15 ligas em todas as 21 temporadas) → série global sem
+> tendência (β=−0.00013/ano, nível +0.243±0.014, confound de composição morto);
+> G3 = block-bootstrap sobre temporadas → skew +0.236 IC95 [+0.232,+0.239], lei
+> corr(skew,p_fav)=−0.90 IC95 [−0.922,−0.876]. Artefatos: `skewlib/adversarial.py`,
+> `analysis/{23_devig_reliability,24_balanced_panel,25_block_bootstrap}.py`.
+- **G1** ✅ De-vig confiável (reliability/Brier por liga/ano) + invariância de método/casa.
+- **G2** ✅ Painel BALANCEADO estrito p/ a série GLOBAL (composição morta).
+- **G3** ✅ Block-bootstrap sobre temporadas para IC dos números-título.
 
 ## Frente H — Experimentos naturais  [novo dado]
 - **H1** Mudanças de regra como choques de competitividade: adoção de 3-pontos-
@@ -140,8 +146,9 @@ ordem, ADF+KPSS dupla, reportar sensibilidade.
 1. ~~**B1+B2** (multi-momento + colapso)~~ ✅ FEITA 2026-06-23 (Fases B1/B2).
 2. ~~**C1+C2** (prêmio de skew + CPT invariante)~~ ✅ FEITA 2026-06-23 (Fases C1/C2).
 3. ~~**E1+E2** (forma fechada + robustez de força)~~ ✅ FEITA 2026-06-23 (Fases E1/E2).
-4. **G1–G3** (robustez adversarial) — **PRÓXIMA**; pré-submissão.
-5. **F1–F3 / D2–D4 / H2 / C3 / E3** (micro/microestrutura/Kelly/calibração-por-liga).
+4. ~~**G1–G3** (robustez adversarial)~~ ✅ FEITA 2026-06-23 (Fases G1/G2/G3).
+5. **F1–F3 / D2–D4 / H2 / C3 / E3** (micro/microestrutura/Kelly/calibração-por-liga)
+   — **EM ANDAMENTO** (exaurindo o dataset).
 
 > Foco atual (decisão Vitor 2026-06-23): **exaurir o futebol** no dataset congelado.
 > Frente A (tênis/outros esportes) e tudo que exige dado externo (D1, H1) ficam fora.

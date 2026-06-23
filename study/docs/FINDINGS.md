@@ -432,3 +432,54 @@ qualquer força iid** — a assimetria da força não pode enviesar a lei; só a
 
 Artefatos: `skewlib/model.py` (force_diff, curve_family), `analysis/22_force_robustness.py`,
 `outputs/force_robustness.csv`, `outputs/fig/f11_force_robustness.png`.
+
+## Fase G1 — De-vig confiável e invariante (2026-06-23)
+Robustez adversarial: o de-vig de Shin é confiável e a skewness não é artefato do
+método? Reliability diagram + decomposição de Brier (Murphy: BS=REL−RES+UNC) do
+favorito por liga/ano, e skewness sob 5 de-vigs/casas.
+
+- **De-vig calibrado quase perfeitamente:** acerto do favorito 0.501 vs prob média
+  0.499; **REL (erro de calibração) global = 0.0000**. Brier 0.236 = REL 0.000 −
+  RES 0.014 + UNC 0.250.
+- **REL pequeno e homogêneo:** entre 32 ligas média 0.0005 (sd 0.0003, max 0.0014);
+  entre 21 temporadas média 0.0002 (sd 0.0001). Nenhuma liga/ano mal calibrado — o
+  resíduo do de-vig é estável (não há viés escondido que produza a assimetria).
+- **Skewness invariante ao método/casa:** shin·odd +0.236, shin·max +0.254,
+  mult +0.263, power +0.224, consenso multi-casa +0.252 — amplitude **0.039**,
+  todos positivos. Estende W4: o achado não depende do de-vig nem da casa.
+- **Conclusão:** a skewness não é fabricada pelo de-vig; a assimetria implícita é
+  bem calibrada contra os resultados e robusta à escolha de método.
+
+Artefatos: `skewlib/adversarial.py` (fav_won, reliability, brier_decomp,
+reliability_by, skew_by_devig), `analysis/23_devig_reliability.py`,
+`outputs/reliability_by_league.csv`, `outputs/fig/f12_reliability.png`.
+
+## Fase G2 — Painel balanceado estrito (composição morta) (2026-06-23)
+A série GLOBAL de skewness refeita usando SÓ as ligas presentes em todas as 21
+temporadas (15 ligas: B1,D1,D2,E0–E3,F1,F2,I1,I2,N1,SP1,SP2,T1) — mata 100% o
+confound de composição que P1 atacou por-liga.
+
+- **Sem tendência com cesta fixa:** β = **−0.00013/ano** (r=−0.06, Δ20a −0.003) na
+  série balanceada vs −0.00009 na cheia; KPSS p=0.10 (estacionária). Nível médio
+  **+0.243 (sd 0.014)** — apertadíssimo.
+- **Conclusão:** a invariância temporal NÃO vem de a cesta de ligas mudar ano a ano;
+  com o núcleo fixo a série global continua plana. O "sem drift" é real.
+
+Artefatos: `skewlib/adversarial.py` (balanced_leagues, global_series_balanced),
+`analysis/24_balanced_panel.py`, `outputs/balanced_global_series.csv`,
+`outputs/fig/f13_balanced_panel.png`.
+
+## Fase G3 — IC por block-bootstrap sobre temporadas (2026-06-23)
+ICs honestos reamostrando TEMPORADAS inteiras (com reposição), respeitando a
+dependência intra-ano que a reamostragem de jogos quebraria.
+
+- **Skewness global +0.236**, IC95 **[+0.232, +0.239]** (SE 0.0019) — exclui 0 com
+  folga.
+- **Lei estrutural corr(skew_liga, p_fav_liga) = −0.900**, IC95 **[−0.922, −0.876]**
+  (SE 0.011) — a relação skewness↔competitividade sobrevive à reamostragem de anos.
+- **Retorno do favorito −4.82%**, IC95 [−5.37%, −4.43%].
+- **Conclusão:** os números-título carregam IC por reamostragem de temporadas; o
+  sinal e a magnitude não dependem de uma janela específica de anos.
+
+Artefatos: `skewlib/adversarial.py` (season_block_bootstrap, stat_global_skew,
+stat_league_corr), `analysis/25_block_bootstrap.py`.
