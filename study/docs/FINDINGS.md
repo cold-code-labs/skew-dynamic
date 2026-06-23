@@ -333,3 +333,44 @@ o p-valor satura com n grande).
 
 Artefatos: `skewlib/collapse.py`, `analysis/18_collapse.py`,
 `outputs/collapse_ks.csv`, `outputs/fig/f7_collapse.png`.
+
+## Fase C1 — Prêmio de skewness: nada além do FLB mecânico (2026-06-23)
+Decomposição do retorno do favorito (identidade exata) em margem + nível FLB
+mecânico + resíduo, e teste do resíduo contra a skewness implícita por liga.
+
+- **Retorno = margem + FLB (calibração):** global ret −4.82% = **vig −4.97%** +
+  **FLB +0.15%**. A perda é quase toda margem; o FLB do favorito é pequeno e
+  positivo (favoritos levemente subapreçados). Curva mecânica do FLB monotônica em
+  p_fav (favoritos fracos contribuem −, fortes +).
+- **Sem prêmio de skewness por liga ALÉM do mecânico:** corr(resíduo, skew) =
+  **+0.11** [−0.20,+0.38] (IC inclui 0); corr(FLB total, skew) −0.04; corr(vig,
+  skew) −0.29. O resíduo de mispricing não acompanha a skewness da liga — a casa
+  não deixa prêmio extra atrelado à assimetria. Coerente com a margem ortogonal (W4).
+- **Conclusão:** o "prêmio de skewness" é inteiramente o FLB mecânico (entre tipos
+  de aposta, já em W1/Bloco B); no nível da liga não sobra prêmio puro — o
+  apreçamento é eficiente até a margem + o viés mecânico.
+
+Artefatos: `skewlib/premium.py`, `analysis/19_premium.py`,
+`outputs/return_decomp.csv`, `outputs/fig/f8_premium.png`.
+
+## Fase C2 — A preferência (CPT) é ela própria invariante (2026-06-23)
+Ajuste da ponderação de probabilidade de Tversky-Kahneman `w(p)=p^γ/(p^γ+(1−p)^γ)^{1/γ}`
+à curva de calibração (implícito PROPORCIONAL `q` vs acerto objetivo `π`; o de-vig de
+Shin apagaria o viés a medir, então usa-se o proporcional).
+
+- **Inverse-S confirmado (γ<1 = FLB):** γ global **0.958**; calibração revela o viés
+  (azarão q 0.101 vs π 0.086 = superposto; favorito q 0.711 vs π 0.743 = subposto).
+- **γ é um invariante TEMPORAL:** por temporada γ médio 0.955, sd 0.020, tendência
+  **β=+0.0003/ano** (r=+0.08, Δ20a ≈ +0.006) — **sem drift em 20 anos**. A preferência
+  de ponderação é estável no tempo, espelhando a invariância da skewness (e o FLB
+  estável do P4).
+- **Quase invariante entre ligas:** γ médio 0.945, sd **0.040**, range [0.85,1.00] —
+  apertado. Mostra associação leve com a competitividade (corr(γ,p_fav) −0.45
+  [−0.74,−0.10]), nuance honesta (pode refletir a faixa de p amostrada por liga),
+  não uma quebra da estabilidade temporal.
+- **Conclusão:** o parâmetro de preferência por trás do FLB é uma constante
+  estrutural estável (não um processo) — a invariância vale também do lado da
+  preferência, não só da assinatura de risco.
+
+Artefatos: `skewlib/cpt.py`, `analysis/20_cpt.py`, `outputs/cpt_by_league.csv`,
+`outputs/cpt_by_season.csv`, `outputs/fig/f9_cpt.png`.

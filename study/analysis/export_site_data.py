@@ -6,7 +6,7 @@ import json, numpy as np, pandas as pd
 from pathlib import Path
 from scipy.stats import skew
 from skewlib import (io, returns, exante, elo, panel, balance, model, decompose,
-                     collapse, config as C)
+                     collapse, premium, cpt, stats, config as C)
 
 OUT = Path(__file__).resolve().parents[1].parent / "site" / "src" / "data" / "findings.json"
 
@@ -101,6 +101,35 @@ def main():
                     "ks_stat": float(r.ks_stat_med)} for r in csumm.itertuples()],
     }
 
+    # C1 — prêmio de skewness (decomposição do retorno)
+    pg = premium.decompose_global(df)
+    dec = premium.decompose_by_league(df, min_n=2000)
+    sk = exante.pooled_by(df, "Division", min_n=2000)[["Division", "skew_exante"]]
+    DL = dec.merge(sk, on="Division")
+    premium_data = {
+        "global": {"ret": pg["ret_mean"], "vig": pg["vig"], "flb": pg["flb"]},
+        "resid_skew_r": stats.bootstrap_corr(DL.residual.values, DL.skew_exante.values)["r"],
+        "flb_skew_r": stats.bootstrap_corr(DL.flb.values, DL.skew_exante.values)["r"],
+        "flb_curve": [{"p": float(r.p), "flb": float(r.flb)}
+                      for r in premium.flb_curve(df, nbins=20).itertuples()],
+    }
+
+    # C2 — CPT invariante (ponderação de probabilidade)
+    cal = cpt.calibration(df, nbins=25)
+    g0 = cpt.fit_gamma(cal)
+    gl = cpt.gamma_by(df, "Division", min_n=4000, nbins=15)
+    dd = df.copy(); dd["season"] = dd.date.dt.year
+    gy = cpt.gamma_by(dd, "season", min_n=4000, nbins=15).sort_values("season")
+    gtr = stats.ols(gy.gamma.values, gy.season.values - gy.season.mean())
+    cpt_data = {
+        "gamma": g0, "gamma_mean": float(gl.gamma.mean()),
+        "gamma_sd_league": float(gl.gamma.std()), "gamma_sd_season": float(gy.gamma.std()),
+        "trend_beta": gtr["slope"],
+        "weight_curve": [{"pi": float(r.pi), "q": float(r.q)} for r in cal.itertuples()],
+        "by_season": [{"season": int(r.season), "gamma": float(r.gamma)}
+                      for r in gy.itertuples()],
+    }
+
     data = {
         "meta": {"n_matches": prov["analysis_rows_ge2005"], "leagues": prov["leagues"],
                  "date_min": prov["date_min"], "date_max": prov["date_max"],
@@ -119,6 +148,7 @@ def main():
             "icc": vdec["icc"], "sd_between": vdec["sd_between"], "sd_within": vdec["sd_within"]},
         "flb_year": flb_year,
         "moments": moments, "collapse": collapse_data,
+        "premium": premium_data, "cpt": cpt_data,
     }
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(round_rec(data), ensure_ascii=False, indent=0))

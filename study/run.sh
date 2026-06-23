@@ -79,6 +79,8 @@ for script in \
   analysis/16_flb_stability.py \
   analysis/17_moments.py \
   analysis/18_collapse.py \
+  analysis/19_premium.py \
+  analysis/20_cpt.py \
   analysis/12_figures.py
 do
   echo

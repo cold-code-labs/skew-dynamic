@@ -60,9 +60,15 @@ invariante após controlar competitividade.
 - **B3** Formalizar o "cancelamento de caudas" (B3 do FINDINGS) como teorema:
   por que within domina e between→0 em misturas de distribuições de dois pontos.
 
-## Frente C — Prêmio de risco / asset-pricing  ⭐ o "so what" econômico [dataset]
+## Frente C — Prêmio de risco / asset-pricing  ✅ C1+C2 FEITAS (2026-06-23) [dataset]
 **Hipótese:** existe um prêmio de skewness ALÉM do nível mecânico do FLB, e os
 parâmetros de preferência (CPT) são eles próprios invariantes.
+> **C1+C2 concluídas** (Fases C1/C2 em `FINDINGS.md`): C1 = retorno = vig + FLB
+> mecânico + resíduo; resíduo NÃO correlaciona com skewness (r=+0.11, IC inclui 0) ⇒
+> sem prêmio por liga além do mecânico. C2 = ponderação TK γ=0.96 (inverse-S),
+> **invariante temporal** (β≈0, Δ20a +0.006) e apertado entre ligas (sd 0.04).
+> Artefatos: `skewlib/{premium,cpt}.py`, `analysis/{19_premium,20_cpt}.py`.
+> **Pendente em C:** C3 (Kelly/staking ótimo sob a estrutura de skewness/CPT).
 - **C1** Decompor retorno esperado em: margem (overround) + nível FLB mecânico +
   resíduo de mispricing. Quanto sobra de "prêmio" puro?
 - **C2** Ajustar **Cumulative Prospect Theory** (Barberis-Huang / probability
@@ -124,10 +130,10 @@ ordem, ADF+KPSS dupla, reportar sensibilidade.
 
 ## Sugestão de ordem (payoff×custo)
 1. ~~**B1+B2** (multi-momento + colapso)~~ ✅ FEITA 2026-06-23 (Fases B1/B2).
-2. **C1+C2** (prêmio de skew + CPT invariante) — **PRÓXIMA**; o ângulo econômico do paper.
-3. **E1+E2** (forma fechada + robustez de força) — blinda a teoria.
+2. ~~**C1+C2** (prêmio de skew + CPT invariante)~~ ✅ FEITA 2026-06-23 (Fases C1/C2).
+3. **E1+E2** (forma fechada + robustez de força) — **PRÓXIMA**; blinda a teoria.
 4. **G1–G3** (robustez adversarial) — pré-submissão.
-5. **F1–F3 / D2–D4 / H2** — micro/microestrutura no dataset.
+5. **F1–F3 / D2–D4 / H2 / C3** (micro/microestrutura/Kelly no dataset).
 
 > Foco atual (decisão Vitor 2026-06-23): **exaurir o futebol** no dataset congelado.
 > Frente A (tênis/outros esportes) e tudo que exige dado externo (D1, H1) ficam fora.

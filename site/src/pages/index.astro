@@ -12,6 +12,8 @@ import data from '../data/findings.json';
 const h = data.headline;
 const m = data.moments;
 const col = data.collapse;
+const pr = data.premium;
+const cp = data.cpt;
 ---
 <Base>
   <Nav />
@@ -148,12 +150,49 @@ const col = data.collapse;
 
   <hr class="divider" />
 
-  <!-- TIMELINE -->
-  <section id="timeline">
+  <!-- PRICING / PREFERENCE -->
+  <section id="pricing">
     <div class="container">
       <div class="section-head reveal">
-        <div class="eyebrow">05 · How we got here</div>
-        <h2>Thirteen phases, each verified.</h2>
+        <div class="eyebrow">05 · Pricing</div>
+        <h2>Priced by the bias, not beyond it.</h2>
+        <p class="lede">If asymmetry is structural, is it <em>priced</em>? Only through the mechanical longshot
+          bias — there is no extra league-level premium — and the preference behind that bias is itself a
+          stable constant.</p>
+      </div>
+      <div class="split">
+        <div class="reveal prose">
+          <h3>No premium beyond the mechanical bias</h3>
+          <p>The favourite's −{Math.abs(pr.global.ret*100).toFixed(1)}% return splits exactly into
+            <strong>{(pr.global.vig*100).toFixed(1)}% margin</strong> and
+            <strong>+{(pr.global.flb*100).toFixed(2)}% longshot bias</strong> — the loss is almost all the
+            bookmaker's vig. Stripping the mechanical FLB level, the league residual is
+            <strong>uncorrelated with skewness</strong> (r = +{pr.resid_skew_r.toFixed(2)}). Bookmakers leave no
+            extra, skewness-linked edge: the asymmetry analogue of margin orthogonality.</p>
+          <h3>An invariant preference</h3>
+          <p>The bias is the inverse-S probability weighting of prospect theory — fitting Tversky–Kahneman gives
+            <strong>γ = {cp.gamma.toFixed(2)} &lt; 1</strong> (longshots overweighted, favourites underweighted).
+            The new point: γ is itself invariant — <strong>no drift over 20 years</strong>
+            (sd {cp.gamma_sd_season.toFixed(2)}/season, β = {cp.trend_beta >= 0 ? '+' : ''}{cp.trend_beta.toFixed(4)}/yr) and
+            tightly clustered across leagues (sd {cp.gamma_sd_league.toFixed(2)}). The preference is a structural
+            constant, not a process.</p>
+        </div>
+        <div class="reveal">
+          <img src="/f9_cpt.png" alt="Fitted Tversky–Kahneman probability weighting, and γ by season flat within the between-league band"
+            style="width:100%;border-radius:12px;border:1px solid var(--line)" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- TIMELINE -->
+  <section id="timeline" style="background:var(--surface-2)">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="eyebrow">06 · How we got here</div>
+        <h2>Fifteen phases, each verified.</h2>
         <p class="lede">From a frozen dataset to a derived law — every claim reproduced from one command and
           checked against an adversarially-verified literature review.</p>
       </div>

@@ -310,6 +310,37 @@ Once competitiveness is fixed, league identity adds essentially nothing: the
 distribution collapses, a stylised fact that the shape is a function of
 competitiveness and not of the league.
 
+### 4.7 The price of asymmetry: no extra premium, an invariant preference (Figure 8, Figure 9)
+
+If skewness is structural, is it *priced* beyond the mechanical bias? The
+favourite's expected return decomposes exactly into a margin term and a
+calibration term, r = (p·o − 1) + ((1{win} − p)·o): the first is the vig paid even
+under perfect calibration, the second the monetised favourite–longshot bias.
+Globally the favourite returns −4.8%, split into **−5.0% margin** and **+0.15%
+FLB** — the loss is almost entirely the bookmaker's margin, and the favourite side
+of the longshot bias is small and positive (favourites are mildly underpriced).
+Decomposing the FLB term into a mechanical level (the global FLB-vs-probability
+curve applied to each league's probability composition) and a league residual, the
+residual is **uncorrelated with the league's implied skewness** (r = +0.11,
+95% CI [−0.20, +0.38]); so are the total FLB (−0.04) and the margin (−0.29). There
+is no league-level skewness premium beyond the mechanical bias: the asymmetry is
+priced only through the favourite–longshot identity itself, and bookmakers leave no
+extra, skewness-linked edge — the asymmetry analogue of the margin orthogonality of
+§4.4.
+
+The bias has a behavioural reading. Modelling the proportionally-devigged implied
+probability q as the decision weight of the objective probability π through the
+Tversky–Kahneman weighting w(p) = p^γ/(p^γ + (1−p)^γ)^{1/γ}, the fit gives
+**γ = 0.96 < 1** — the inverse-S that overweights longshots and underweights
+favourites (calibration: q = 0.10 vs π = 0.09 for longshots, q = 0.71 vs π = 0.74
+for favourites). The new point is that this *preference parameter is itself an
+invariant*: across seasons γ has mean 0.955, standard deviation 0.020, and **no
+secular trend** (β = +0.0003/yr, Δ over 20 years ≈ +0.006), and across leagues it is
+tightly clustered (mean 0.945, sd 0.040), with only a mild association with
+competitiveness (r = −0.45). The probability weighting behind the bias is a stable
+structural constant, not a moving process — the invariance holds on the preference
+side as well as on the risk side [Snowberg & Wolfers 2010; Barberis & Huang 2008].
+
 ## 5. Mechanism
 
 The results cohere under one principle. The skewness of a fixed-odds bet is the
@@ -433,7 +464,10 @@ league-level value is fixed by sporting
 competitiveness — a relation that survives an odds-free measure of competitiveness
 — and it shows no secular drift within the modern competitive regime that spans
 our window. Bookmaker margin is orthogonal
-to it, and the identity holds in a second, binary market. The market's risk
+to it, and the identity holds in a second, binary market. No league-level premium
+is priced beyond the mechanical bias, and the preference that underlies that bias —
+the probability weighting of cumulative prospect theory — is itself a stable
+structural constant, showing no drift over twenty years. The market's risk
 asymmetry is inherited from the sport, not produced by the pricing of it.
 
 ---
@@ -455,6 +489,11 @@ asymmetry is inherited from the sport, not produced by the pricing of it.
 - **Figure 7.** Distribution collapse: standardised favourite-return ECDFs differ
   across leagues (left), but collapse onto one another within a fixed band of
   competitiveness (right).
+- **Figure 8.** Return decomposition: the mechanical FLB curve by favourite
+  probability (left), and total FLB vs league residual against implied skewness —
+  no league-level premium beyond the mechanical level (right).
+- **Figure 9.** Invariant preference: the fitted Tversky–Kahneman probability
+  weighting (left) and γ by season, flat within the between-league band (right).
 
 ## References
 
@@ -506,6 +545,8 @@ asymmetry is inherited from the sport, not produced by the pricing of it.
   International Journal of Forecasting 30(4):934–943.
 - Thaler, R. & Ziemba, W. (1988). *Anomalies: Parimutuel Betting Markets.* Journal
   of Economic Perspectives.
+- Tversky, A. & Kahneman, D. (1992). *Advances in Prospect Theory: Cumulative
+  Representation of Uncertainty.* Journal of Risk and Uncertainty 5(4):297–323.
 - Utt, J. & Fort, R. (2002). *Pitfalls to measuring competitive balance with Gini
   coefficients.* J. Sports Economics 3(4):367–373.
 - Whelan, K. (2024). *The favourite–longshot bias in fixed-odds football betting.*
