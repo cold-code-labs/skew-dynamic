@@ -95,6 +95,7 @@ for script in \
   analysis/32_open_vs_closed.py \
   analysis/33_kelly_staking.py \
   analysis/34_per_league_calibration.py \
+  analysis/35_poisson_crossmodel.py \
   analysis/12_figures.py
 do
   echo

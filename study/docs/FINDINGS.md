@@ -640,7 +640,26 @@ Artefatos: `skewlib/model.py` (calibrate_by_league),
 
 ---
 
-> **Agenda no dataset congelado EXAURIDA** (2026-06-23): W1–W5 · P1–P5 · B1–B2 ·
-> C1–C3 · E1–E3 · D2–D4 · F1–F3 · G1–G3 · H2. Restam só frentes que exigem dado
-> externo (A tênis/cross-esporte, D1 abertura→fechamento, H1 mudanças de regra).
-> Lineage completo em `lineage.json` / `docs/LINEAGE.md` (tags `evidence/*`).
+> **1ª rodada no dataset congelado EXAURIDA** (2026-06-23): W1–W5 · P1–P5 · B1–B2 ·
+> C1–C3 · E1–E3 · D2–D4 · F1–F3 · G1–G3 · H2. Segue a **2ª rodada** (I…) explorando
+> veias intocadas do MESMO dataset. Lineage em `lineage.json` / `docs/LINEAGE.md`.
+
+## Fase I — Validação cruzada do mecanismo: modelo de gols (Poisson) (2026-06-23)
+A lei skewness=f(competitividade) foi derivada de um ordered-probit sobre a margem
+latente. Aqui um modelo COMPLETAMENTE diferente — Poisson de GOLS (ataque/defesa +
+mando por liga-temporada, resultado via Skellam) — gera as probabilidades e a
+skewness. 617 liga-temporadas ajustadas.
+
+- **O modelo de gols recupera a competitividade:** corr(p_fav Poisson, p_fav
+  empírico) entre 38 ligas = **+0.972** [+0.95,+0.99].
+- **E reproduz a skewness:** corr(skew Poisson, skew empírico) = **+0.925**
+  [+0.85,+0.97]; o Poisson cai na curva do ordered-probit com r=**+0.85** (vs
+  empírico +0.90). Nível um pouco menor (skew Poisson médio +0.177 vs +0.215) porque
+  o Poisson subdispersa levemente o p_fav — a LEI (ordenação) é o que importa.
+- **Conclusão:** três modelos independentes — margem latente (ordered-probit), gols
+  (Poisson) e o mercado (empírico) — caem na MESMA curva. A lei é independente do
+  modelo gerador; não é artefato de uma forma funcional escolhida.
+
+Artefatos: `skewlib/goals.py` (fit_match_probs, league_season_table, by_league),
+`analysis/35_poisson_crossmodel.py`, `outputs/poisson_crossmodel_by_league.csv`,
+`outputs/fig/f23_poisson_crossmodel.png`.

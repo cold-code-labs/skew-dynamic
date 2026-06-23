@@ -145,6 +145,50 @@ parâmetros de preferência (CPT) são eles próprios invariantes.
 
 ---
 
+# 2ª RODADA — frentes novas no dataset congelado (2026-06-23)
+
+> A 1ª rodada (A–H) está fechada. Estas frentes exploram veias do MESMO dataset
+> ainda intocadas (gols `FT*`, intervalo `HT*`, estrutura de portfólio, cauda
+> realizada), sem nenhum esporte ou dado externo. Prioridade por payoff×custo.
+
+## Frente I — Validação cruzada do mecanismo (modelo de gols)  ✅ FEITA (2026-06-23)
+> **Concluída** (Fase I): um Poisson de GOLS (ataque/defesa+mando por liga-temporada,
+> Skellam→resultado) reproduz a lei. Entre 38 ligas: corr(p_fav Poisson, empírico)
+> +0.972, corr(skew Poisson, empírico) +0.925; Poisson na curva do ordered-probit
+> r=+0.85. Três modelos independentes (margem latente, gols-Poisson, mercado) na
+> MESMA curva ⇒ mecanismo independente do modelo. `skewlib/goals.py`,
+> `analysis/35_poisson_crossmodel.py`.
+
+## Frente J — Chegada de informação: intervalo → fim (HT→FT)  [dataset]
+Sem odds de abertura (D1 fora), usar o RESULTADO do intervalo (`HTResult`/`HT*`) como
+choque de informação: P(favorito vence | placar do HT) e a skewness implícita do
+"resto do jogo" — como a assimetria se RESOLVE conforme o jogo anda (substituto de
+descoberta de preço no próprio dataset).
+
+## Frente K — Diversificação / portfólio  [dataset]
+A skewness é fenômeno de aposta ÚNICA? Para N apostas (quase) independentes, a
+skewness padronizada do retorno médio escala ~1/√N → uma banca diversificada de
+favoritos é ~gaussiana, enquanto a variância não some. Implica: o viés/preferência
+por skew importa para o apostador RECREATIVO (poucas apostas), não para o sindicato.
+Quantificar com os retornos realizados (`ret_fav`).
+
+## Frente L — Vantagem de casa secular vs invariância  [dataset]
+A vantagem de casa caiu ao longo das décadas (e no choque COVID, W3). Traçar a HFA
+por ano e mostrar que, apesar de a HFA se mover, a skewness fica invariante (depende
+da dispersão de p_fav, não do nível do mando) — fecha o confound do lado do mando.
+
+## Frente M — Risco de cauda realizado (VaR/CVaR/drawdown)  [dataset]
+Lado prático: momentos realizados de ordem alta, VaR/CVaR e max drawdown das
+estratégias (sempre-favorito vs sempre-azarão), conectando a skewness ao risco de
+banca de fato. Atrai o leitor quant; usa `ret_fav`/`ret_dog`.
+
+## Frente N — Entropia + estrutura de co-momento entre mercados  [dataset]
+Índice alternativo de competitividade (entropia de Shannon da distribuição 1X2) e
+sua relação com a skewness; e fator COMUM: a skewness do 1X2 e do O/U compartilham
+um latente de competitividade da liga (co-skewness entre mercados)?
+
+---
+
 ## Como estender (arquitetura)
 Lógica nova → função em `skewlib/`, depois script fino `analysis/NN_*.py` que a
 usa (NÃO duplicar lógica em script). Parâmetros só em `config.py`. Rodar:
