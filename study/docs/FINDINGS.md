@@ -585,3 +585,62 @@ Por clube: dominância (Elo médio) vs skewness média dos jogos que disputa.
 Artefatos: `skewlib/intraleague.py` (team_long, team_dominance),
 `analysis/31_team_decomposition.py`, `outputs/team_dominance.csv`,
 `outputs/fig/f19_team_decomposition.png`.
+
+## Fase H2 — Liga aberta vs fechada: a MLS na lei (2026-06-23)
+A MLS (USA) é a única liga FECHADA da amostra (salary cap, draft, sem
+rebaixamento), desenhada para comprimir a dispersão de força; as europeias são
+abertas. Predição: estrutura fechada ⇒ mais competitividade ⇒ skew balanceada.
+
+- **MLS é a mais balanceada por medida estrutural:** Noll-Scully **1.13, rank 1/38**
+  (a mais competitiva da amostra) — exatamente o que cap + sem-rebaixamento preveem.
+  Skew ex-ante **+0.162**, abaixo da média das abertas (+0.219); p_fav 0.503.
+- **Na curva, com nuance honesta:** resíduo vs a lei das abertas −0.06 (~1 sd) — a
+  MLS fica no extremo competitivo/balanceado, consistente com a teoria open-vs-closed.
+- **Conclusão:** a liga fechada não quebra a lei — sua estrutura aperta a
+  competitividade e a skewness segue para o balanceado. Não é teste nítido (1 só liga
+  fechada na amostra; pleno exige mais ligas fechadas = dado externo).
+
+Artefatos: `analysis/32_open_vs_closed.py`, `outputs/open_vs_closed.csv`,
+`outputs/fig/f20_open_vs_closed.png`.
+
+## Fase C3 — Kelly/staking: o crescimento sob a estrutura de skewness (2026-06-23)
+O que a assimetria implica para o crescimento ótimo de banca?
+
+- **Kelly manda NÃO apostar:** sob a margem real, **0.0%** das apostas têm EV>0 (f*=0
+  em todas) — após a vig não há crescimento a extrair (ecoa a eficiência do C1).
+- **A skewness é o canal do FLB:** decompondo o log-crescimento (g ≈ μ − σ²/2 +
+  m₃/3) a uma fração fixa, o termo de SKEWNESS do azarão é **+0.60** (×1e3) vs **+0.01**
+  do favorito — a assimetria positiva compensa parte do EV negativo no
+  crescimento/utilidade. É o canal pelo qual a preferência por skew (FLB) sobrevive a
+  ser EV-negativa.
+- **Conclusão:** a estrutura de skewness não abre crescimento (mercado eficiente),
+  mas explica quantitativamente por que o apostador de azarão paga EV em troca de
+  assimetria — o prêmio de skewness em termos de crescimento/utilidade.
+
+Artefatos: `skewlib/staking.py` (kelly_fraction, growth_rate, moment_growth_terms),
+`analysis/33_kelly_staking.py`, `outputs/fig/f21_kelly.png`.
+
+## Fase E3 — Calibração por liga (cutoff de empate endógeno) (2026-06-23)
+Calibração de (h, c, σ_L) POR liga (vs global do P3/bloco 15): vantagem de casa,
+cutoff de empate e dispersão de força endógenos.
+
+- **Parâmetros endógenos plausíveis** (32 ligas): h [0.085, 0.350], **c [0.297,
+  0.449]** (cutoff de empate por liga), σ_L [0.137, 0.436]. corr(c, taxa de empate) =
+  **+0.906** — c capta a "empatabilidade" da liga; corr(σ_L, p_fav) = **+0.874** —
+  σ_L recupera a competitividade observável.
+- **A lei sobrevive:** skew prevista pelo modelo da PRÓPRIA liga vs observada r =
+  **+0.905**, RMSE 0.026 — igual ao global (r=+0.90). Calibrar (h,c,σ) por liga não
+  muda a história.
+- **Conclusão:** a invariância sobrevive ao cutoff de empate endógeno; σ_L
+  (competitividade) continua governando a skewness, liga a liga.
+
+Artefatos: `skewlib/model.py` (calibrate_by_league),
+`analysis/34_per_league_calibration.py`, `outputs/per_league_calibration.csv`,
+`outputs/fig/f22_per_league_calib.png`.
+
+---
+
+> **Agenda no dataset congelado EXAURIDA** (2026-06-23): W1–W5 · P1–P5 · B1–B2 ·
+> C1–C3 · E1–E3 · D2–D4 · F1–F3 · G1–G3 · H2. Restam só frentes que exigem dado
+> externo (A tênis/cross-esporte, D1 abertura→fechamento, H1 mudanças de regra).
+> Lineage completo em `lineage.json` / `docs/LINEAGE.md` (tags `evidence/*`).

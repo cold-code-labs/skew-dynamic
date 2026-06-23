@@ -237,6 +237,30 @@ def calibrate(home=0.444, draw=0.264, pfav=0.499, n=200000):
     return {"h": float(h), "c": float(abs(c)), "sigma_ref": float(abs(s))}
 
 
+def calibrate_by_league(df, n=120000, min_n=3000):
+    """Calibra (h, c, σ_L) POR liga a partir das taxas marginais da própria liga
+    (Frente E3): vantagem de casa, cutoff de empate e dispersão de força endógenos.
+    Requer add_exante (p_fav_dv). Devolve DataFrame por liga + skew prevista pelo
+    modelo da própria liga vs observada."""
+    import pandas as pd
+    rows = []
+    for lg, g in df.groupby("Division"):
+        if len(g) < min_n:
+            continue
+        home = float((g.FTResult == "H").mean())
+        draw = float((g.FTResult == "D").mean())
+        pfav = float(g.p_fav_dv.mean())
+        try:
+            par = calibrate(home=home, draw=draw, pfav=pfav, n=n)
+        except Exception:
+            continue
+        sk_model = league_skew(par["sigma_ref"], par["h"], par["c"], n=n, seed=5)
+        rows.append({"Division": lg, "n": len(g), "home": home, "draw": draw,
+                     "p_fav": pfav, "h": par["h"], "c": par["c"],
+                     "sigma_L": par["sigma_ref"], "skew_model": sk_model})
+    return pd.DataFrame(rows)
+
+
 def curve(h, c, sigmas, n=200000, seed=3):
     """Traça (mean p_fav, skewness) ao longo de uma grade de σ_L."""
     pf, sk = [], []

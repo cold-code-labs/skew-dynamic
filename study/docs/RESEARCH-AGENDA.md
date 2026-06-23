@@ -74,8 +74,10 @@ parâmetros de preferência (CPT) são eles próprios invariantes.
 - **C2** Ajustar **Cumulative Prospect Theory** (Barberis-Huang / probability
   weighting) à curva FLB por liga; testar se os params de ponderação de
   probabilidade são invariantes no tempo e entre ligas (preferência estável).
-- **C3** Ligação com Kelly/staking ótimo: o que a estrutura de skewness implica
-  para o crescimento ótimo de banca? (resultado prático, atrai quants.)
+- **C3** ✅ FEITA (2026-06-23, Fase C3): Kelly = 0% EV>0 após margem (sem
+  crescimento, ecoa C1); termo de skew do azarão +0.60 vs +0.01 do favorito = o
+  canal pelo qual o FLB sobrevive a ser EV-negativo. `analysis/33_kelly_staking.py`,
+  `skewlib/staking.py`.
 
 ## Frente D — Microestrutura / formação de preço  ✅ D2+D3+D4 FEITAS (2026-06-23)
 > **D2+D3+D4 concluídas** (Fases D2/D3/D4 em `FINDINGS.md`): D2 = sharp(Max) vs
@@ -102,8 +104,10 @@ parâmetros de preferência (CPT) são eles próprios invariantes.
 - **E1** ✅ Forma fechada de S(σ_L) via integral gaussiano (quadratura) + expansão
   near-balance. (Era por simulação em `model.league_skew`.)
 - **E2** ✅ Robustez da distribuição de força (t-Student / skew-normal / uniforme).
-- **E3** Cutoff de empate c endógeno por liga (ligas mais "empatadeiras"); refit
-  e ver se a invariância muda. Calibrar (h,c,σ) POR liga, não só global.
+- **E3** ✅ FEITA (2026-06-23, Fase E3): calibração (h,c,σ) POR liga, cutoff de
+  empate c endógeno (corr c↔taxa de empate +0.91; σ_L↔competitividade +0.87); a lei
+  sobrevive (skew por liga r=+0.90). `model.calibrate_by_league`,
+  `analysis/34_per_league_calibration.py`.
 
 ## Frente F — Dentro da liga / micro  ✅ F1+F2+F3 FEITAS (2026-06-23) [dataset]
 > **F1+F2+F3 concluídas** (Fases F1/F2/F3 em `FINDINGS.md`): F1 = drift
@@ -131,11 +135,13 @@ parâmetros de preferência (CPT) são eles próprios invariantes.
 - **G2** ✅ Painel BALANCEADO estrito p/ a série GLOBAL (composição morta).
 - **G3** ✅ Block-bootstrap sobre temporadas para IC dos números-título.
 
-## Frente H — Experimentos naturais  [novo dado]
-- **H1** Mudanças de regra como choques de competitividade: adoção de 3-pontos-
-  por-vitória (datas por liga), VAR, mudança de formato/playoff → a skewness move?
-- **H2** Liga aberta vs fechada: MLS (salary cap, sem rebaixamento — já apareceu
-  com Noll-Scully/skew baixos) vs europeias abertas. Formalizar open-vs-closed.
+## Frente H — Experimentos naturais
+- **H1** [novo dado] Mudanças de regra como choques de competitividade: adoção de
+  3-pontos-por-vitória (datas por liga), VAR, mudança de formato/playoff. FORA (dado).
+- **H2** ✅ FEITA (2026-06-23, Fase H2) [dataset]: MLS (USA, fechada) é a mais
+  balanceada por Noll-Scully (1/38), skew no extremo balanceado (+0.16 vs +0.22 das
+  abertas); resíduo da curva −0.06 (~1 sd). Suporta open-vs-closed; teste pleno pede
+  + ligas fechadas (dado externo). `analysis/32_open_vs_closed.py`.
 
 ---
 
@@ -152,8 +158,10 @@ ordem, ADF+KPSS dupla, reportar sensibilidade.
 2. ~~**C1+C2** (prêmio de skew + CPT invariante)~~ ✅ FEITA 2026-06-23 (Fases C1/C2).
 3. ~~**E1+E2** (forma fechada + robustez de força)~~ ✅ FEITA 2026-06-23 (Fases E1/E2).
 4. ~~**G1–G3** (robustez adversarial)~~ ✅ FEITA 2026-06-23 (Fases G1/G2/G3).
-5. **F1–F3 / D2–D4 / H2 / C3 / E3** (micro/microestrutura/Kelly/calibração-por-liga)
-   — **EM ANDAMENTO** (exaurindo o dataset).
+5. ~~**F1–F3 / D2–D4 / H2 / C3 / E3**~~ ✅ FEITA 2026-06-23 (micro/microestrutura/
+   Kelly/calibração-por-liga/aberto-vs-fechado).
 
-> Foco atual (decisão Vitor 2026-06-23): **exaurir o futebol** no dataset congelado.
-> Frente A (tênis/outros esportes) e tudo que exige dado externo (D1, H1) ficam fora.
+> **DATASET EXAURIDO** (2026-06-23): todas as frentes que rodam no arquivo congelado
+> estão FEITAS (W·P·B·C·E·D·F·G·H2 — 29 fases; ver `docs/LINEAGE.md`). Restam só as
+> que exigem **dado externo**: Frente A (tênis/cross-esporte), D1 (abertura→fechamento),
+> H1 (mudanças de regra). Decisão Vitor: futebol no dataset congelado primeiro — cumprido.
