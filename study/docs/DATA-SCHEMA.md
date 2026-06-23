@@ -83,16 +83,24 @@ canonical path reproduces `exante.bettype_by` exactly (asserted in
 `analysis/47_canonical.py` and `tests/test_canonical.py`). It ships two markets:
 1X2 (3 outcomes) and over/under-2.5 (2 outcomes), proving the core handles n ≠ 3.
 
-**Adding a sport (e.g. tennis match-odds, 2 outcomes, no draw):**
+**Tennis (`adapters/tennis.py`, implemented).** Source: tennis-data.co.uk (ATP/WTA;
+fetch with `analysis/00b_fetch_tennis.py`, raw not redistributed). Match-odds market,
+two outcomes, no draw:
 
 ```python
-SPORT="tennis"; MARKET="match_odds"; OUTCOMES=["P1","P2"]
-ROLES={"P1":"player1","P2":"player2"}; DRAW_ROLE=None
-def to_canonical(df=None, method=None):
-    # map raw → rows (event_id, sport, market, competition, date, outcome, role,
-    # odds, p=canonical.devig(...), won); favourite/underdog fall out of select(),
-    # draw bets return empty (DRAW_ROLE is None).
+SPORT="tennis"; MARKET="match_odds"; OUTCOMES=["winner","loser"]
+ROLES={"winner":"won","loser":"lost"}; DRAW_ROLE=None
 ```
+
+Odds are labelled by the realised winner/loser (`B365W`/`B365L`, …), so each match
+yields a *winner* outcome (won=1) and a *loser* outcome (won=0); the **favourite**
+falls out of `select(...,"fav")` as the lower-odds side — sometimes the winner,
+sometimes the loser (an upset). `competition` defaults to the tournament tier
+(`Series`/`Tier`) or `Surface`. Draw bets return empty (`DRAW_ROLE is None`).
+
+**Adding any sport** is the same three things: a `to_canonical` that emits the table,
+a taxonomy (`OUTCOMES`/`ROLES`/`DRAW_ROLE`), and a registry entry — the core never
+changes.
 
 ## What stays sport-specific (not in the canonical core)
 
