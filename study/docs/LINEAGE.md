@@ -6,7 +6,7 @@
 > 38 ligas). Volte a qualquer estado com
 > `git checkout <tag>`; audite mudança de resultado com `--check`.
 
-**HEAD na geração:** `3b63b770`  ⚠️ working tree DIRTY
+**HEAD na geração:** `c2a38498`  ⚠️ working tree DIRTY
 
 | Fase | Frente | Achado | Blocos | Figuras | Números-título | Commit | Tag |
 |------|--------|--------|--------|---------|----------------|--------|-----|
@@ -48,6 +48,7 @@
 | **D1** | Price discovery | Descoberta de preço: abertura→fechamento [canônico] | 42_open_close | f30 | skew_open=0.248 · skew_close=0.249 · corr_open_close=0.998 · law_open=-0.866 · n=34659 | `3b63b77` (2026-06-23) | `evidence/frente-D1` |
 | **H1** | Natural experiment | VAR escalonado: choque institucional não move a skewness (placebo) | 44_var | f31 | did_skew_beta=-0.0066 · did_skew_p=0.65 · did_skew_sd=-0.14 · n_obs=321 | `3b63b77` (2026-06-23) | `evidence/frente-H1` |
 | **P6** | Regime | Pré-2005: o regime moderno já vigora desde ~2000 [canônico] | 43_pre2005 | f32 | skew_pre2005=0.214 · skew_modern=0.232 · level_beta_pre=-0.0194 · trend_beta=0.00112 · n_leagues=17 | `3b63b77` (2026-06-23) | `evidence/frente-pre2005` |
+| **Q** | Similarity | skew-meter: similaridade de assimetrias (escada de suficiência) | 45_skewmeter | f33 | r2_1param=0.82 · r2_2moment=0.98 · r2_full=0.99 · split_half_r=0.98 · corr_oddsfree=0.826 · n_leagues=38 | `c2a3849` (2026-06-23) | `evidence/frente-Q` |
 
 ## Tags de versionamento (`evidence/*`)
 Uma tag anotada por marco de evidência aponta o commit que estabeleceu

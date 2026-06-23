@@ -172,6 +172,12 @@ PHASES = [
      "blocks": ["43_pre2005"], "figures": ["f32"],
      "metrics": {"skew_pre2005": 0.214, "skew_modern": 0.232, "level_beta_pre": -0.0194,
      "trend_beta": 0.00112, "n_leagues": 17}},
+    # ── 4ª rodada (síntese: objetivo-raiz 'similaridade de assimetrias') ──
+    {"id": "Q", "frente": "Similarity", "tag": "evidence/frente-Q", "commit": "c2a3849",
+     "title": "skew-meter: similaridade de assimetrias (escada de suficiência)",
+     "blocks": ["45_skewmeter"], "figures": ["f33"],
+     "metrics": {"r2_1param": 0.82, "r2_2moment": 0.98, "r2_full": 0.99,
+     "split_half_r": 0.98, "corr_oddsfree": 0.826, "n_leagues": 38}},
 ]
 
 

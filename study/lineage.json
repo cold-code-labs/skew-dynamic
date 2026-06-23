@@ -1,6 +1,6 @@
 {
   "schema": "skew-dynamic/lineage@1",
-  "generated_at_head": "3b63b770",
+  "generated_at_head": "c2a38498",
   "head_dirty": true,
   "data": {
     "sha256": "6905ca5324df9528",
@@ -732,6 +732,28 @@
         "level_beta_pre": -0.0194,
         "trend_beta": 0.00112,
         "n_leagues": 17
+      },
+      "commit_date": "2026-06-23"
+    },
+    {
+      "id": "Q",
+      "frente": "Similarity",
+      "tag": "evidence/frente-Q",
+      "commit": "c2a3849",
+      "title": "skew-meter: similaridade de assimetrias (escada de suficiência)",
+      "blocks": [
+        "45_skewmeter"
+      ],
+      "figures": [
+        "f33"
+      ],
+      "metrics": {
+        "r2_1param": 0.82,
+        "r2_2moment": 0.98,
+        "r2_full": 0.99,
+        "split_half_r": 0.98,
+        "corr_oddsfree": 0.826,
+        "n_leagues": 38
       },
       "commit_date": "2026-06-23"
     }
