@@ -130,6 +130,10 @@ PHASES = [
      "title": "Validação cruzada do mecanismo (Poisson de gols)", "blocks": ["35_poisson_crossmodel"],
      "figures": ["f23"], "metrics": {"corr_pfav": 0.972, "corr_skew": 0.925,
      "league_r_poisson": 0.85, "n_league_seasons": 617}},
+    {"id": "J", "frente": "Dynamic", "tag": "evidence/frente-J", "commit": "74f9c2e",
+     "title": "Chegada de informação HT→FT (identidade dinâmica)", "blocks": ["36_inplay_resolution"],
+     "figures": ["f24"], "metrics": {"skew_pregame": 0.239, "skew_behind": 2.084,
+     "skew_ahead2": -3.908, "martingale_err": 0.0035}},
 ]
 
 

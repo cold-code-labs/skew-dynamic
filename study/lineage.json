@@ -1,6 +1,6 @@
 {
   "schema": "skew-dynamic/lineage@1",
-  "generated_at_head": "7a457597",
+  "generated_at_head": "74f9c2e9",
   "head_dirty": true,
   "data": {
     "sha256": "6905ca5324df9528",
@@ -551,6 +551,26 @@
         "corr_skew": 0.925,
         "league_r_poisson": 0.85,
         "n_league_seasons": 617
+      },
+      "commit_date": "2026-06-23"
+    },
+    {
+      "id": "J",
+      "frente": "Dynamic",
+      "tag": "evidence/frente-J",
+      "commit": "74f9c2e",
+      "title": "Chegada de informação HT→FT (identidade dinâmica)",
+      "blocks": [
+        "36_inplay_resolution"
+      ],
+      "figures": [
+        "f24"
+      ],
+      "metrics": {
+        "skew_pregame": 0.239,
+        "skew_behind": 2.084,
+        "skew_ahead2": -3.908,
+        "martingale_err": 0.0035
       },
       "commit_date": "2026-06-23"
     }
