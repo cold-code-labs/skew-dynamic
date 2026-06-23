@@ -23,9 +23,11 @@ def _long(g):
     ], ignore_index=True)
 
 
-def fit_match_probs(g, max_goals_diff=15):
-    """Ajusta Poisson ataque/defesa+mando na liga-temporada e devolve (pH,pD,pA)
-    por jogo via Skellam. None se falhar/converge mal."""
+def fit_rates(g):
+    """Ajusta o Poisson ataque/defesa+mando na liga-temporada e devolve (lh, la)
+    por jogo — as taxas de gol esperadas (casa, fora). Base COMPARTILHADA dos
+    geradores de gols (Poisson via Skellam, Dixon-Coles, Negative-Binomial da
+    bateria de modelos). None se o ajuste falhar ou não convergir."""
     import statsmodels.formula.api as smf
     import statsmodels.api as sm
     long = _long(g)
@@ -38,7 +40,16 @@ def fit_match_probs(g, max_goals_diff=15):
         return None
     lh = m.predict(pd.DataFrame({"att": g.HomeTeam, "dfn": g.AwayTeam, "home": 1})).values
     la = m.predict(pd.DataFrame({"att": g.AwayTeam, "dfn": g.HomeTeam, "home": 0})).values
-    lh = np.clip(lh, 1e-3, 12); la = np.clip(la, 1e-3, 12)
+    return np.clip(lh, 1e-3, 12), np.clip(la, 1e-3, 12)
+
+
+def fit_match_probs(g, max_goals_diff=15):
+    """Ajusta Poisson ataque/defesa+mando na liga-temporada e devolve (pH,pD,pA)
+    por jogo via Skellam. None se falhar/converge mal."""
+    r = fit_rates(g)
+    if r is None:
+        return None
+    lh, la = r
     pH = 1 - skellam.cdf(0, lh, la)
     pD = skellam.pmf(0, lh, la)
     pA = skellam.cdf(-1, lh, la)
@@ -46,9 +57,25 @@ def fit_match_probs(g, max_goals_diff=15):
     return pH / s, pD / s, pA / s
 
 
+# Gap p_fav(modelo) − p_fav(empírico) acima do qual o ajuste é DEGENERADO. Sob
+# libs novas (pandas 3 / numpy 2 / statsmodels atual) o GLM de raras liga-temporadas
+# patológicas (ex.: JAP 2017) sofre separação quase-completa e "converge" para um
+# ajuste em que p_fav≈1 em TODO jogo (vs ~0.48 empírico) — antes eram excluídas por
+# não-convergência. Isso explode a skewness de odds-justas (1−2p)/√(p(1−p)) → −∞ e
+# envenena a média da liga. O maior gap de uma liga REAL é ~0.08; 0.25 é margem 3×.
+SEP_GAP = 0.25
+
+
+def degenerate_fit(pf_model, pf_emp, gap=SEP_GAP):
+    """True se o ajuste do gerador é degenerado (separação): o p_fav modelo diverge
+    implausivelmente do empírico. Reutilizado pela bateria de modelos (crossmodel)."""
+    return float(np.mean(pf_model)) - float(np.mean(pf_emp)) > gap
+
+
 def league_season_table(df, min_games=150, min_teams=8):
     """Skewness agrupada do favorito sob o modelo de GOLS (Poisson) vs empírico,
-    por liga-temporada. Requer add_exante (p_fav_dv, o_fav) e coluna `season`."""
+    por liga-temporada. Requer add_exante (p_fav_dv, o_fav) e coluna `season`.
+    Descarta ajustes degenerados (separação do GLM) via `degenerate_fit`."""
     from . import exante
     rows = []
     for (lg, yr), g in df.groupby(["Division", "season"]):
@@ -60,6 +87,8 @@ def league_season_table(df, min_games=150, min_teams=8):
         pH, pD, pA = pr
         P = np.vstack([pH, pD, pA]).T
         pf = np.clip(P.max(1), 1e-6, 1 - 1e-6)
+        if degenerate_fit(pf, g.p_fav_dv.values):     # ajuste podre (ex.: JAP 2017)
+            continue
         sk_pois = exante.pooled_skew(pf, 1.0 / pf)["skew"]
         sk_emp = exante.pooled_skew(g.p_fav_dv.values, g.o_fav.values)["skew"]
         rows.append({"Division": lg, "season": int(yr), "n": len(g),

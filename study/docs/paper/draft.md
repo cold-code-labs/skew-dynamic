@@ -411,6 +411,27 @@ skew, strong favourites negative — offset, leaving aggregate skewness (corr wi
 strength ≈ −0.2) and its composition nearly decoupled. Stability of the competitive
 distribution therefore buys stability of skewness for free.
 
+**Model independence (Figure 14).** The law is a property of the two-point mixture,
+not of the ordered-probit form used to derive it. We regenerate each league's
+match-level outcome probabilities from a battery of independent generators and ask
+whether each reproduces the cross-league skewness ordering and lands on the derived
+curve. A Poisson goals model (attack/defence plus home effect, fit per league-season
+over 617 league-seasons) recovers competitiveness at r = +0.97 and the skewness
+ordering at r = +0.93; a Dixon-Coles model adding low-score dependence (mean
+ρ = −0.05) raises the implied level toward the market (+0.20 against the market's
++0.22) at r = +0.87; a Bradley-Terry-Davidson model — multiplicative team strengths
+with a tie parameter, fit by paired comparison and using no goals at all —
+reproduces it at r = +0.84; and the results-only Elo of §4.2, a fully odds-free
+generator, sits on the curve at r = +0.96. All five families — latent-margin probit,
+Poisson, Dixon-Coles, Bradley-Terry-Davidson and the results Elo — together with the
+market, fall on a single curve (r on the derived curve from +0.85 to +0.96 against
++0.90 for the market). Models built to deviate do not: because football goals are
+very nearly independent Poisson (median home–away goal covariance −0.07, negligible
+overdispersion), both a bivariate-Poisson generator (positive goal correlation) and
+a negative-binomial generator (overdispersion) collapse back to the Poisson result.
+The skewness–competitiveness law is the geometry of the two-point mixture over the
+league's competitiveness distribution, not an artefact of any one functional form.
+
 ## 6. Robustness
 
 The central findings are insensitive to analytical choices. The global ex-ante
@@ -554,6 +575,10 @@ asymmetry is inherited from the sport, not produced by the pricing of it.
 - **Figure 13.** Balanced panel: the global skewness series from the fifteen
   always-present leagues lies flat against the full-basket series — no drift once
   composition is held fixed.
+- **Figure 14.** Model independence: five independent outcome generators
+  (latent-margin probit, Poisson, Dixon-Coles, Bradley-Terry-Davidson, results-only
+  Elo) and the market all fall on one skewness–competitiveness curve (left), each
+  reproducing the cross-league skewness ordering against the market (right).
 
 ## References
 

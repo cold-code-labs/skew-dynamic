@@ -101,6 +101,7 @@ for script in \
   analysis/38_home_advantage.py \
   analysis/39_tail_risk.py \
   analysis/40_entropy_comoment.py \
+  analysis/41_model_battery.py \
   analysis/12_figures.py
 do
   echo

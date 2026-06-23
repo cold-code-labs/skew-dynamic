@@ -751,11 +751,51 @@ Artefatos: `skewlib/extras.py` (shannon_entropy, entropy_by_league),
 `analysis/40_entropy_comoment.py`, `outputs/entropy_comoment.csv`,
 `outputs/fig/f28_entropy_comoment.png`.
 
+## Fase O — Bateria de modelos geradores: a lei é independente do modelo (2026-06-23)
+A Frente I validou a lei com UM gerador alternativo (Poisson de gols). Aqui a
+submetemos a uma BATERIA de geradores genuinamente distintos, cada um produzindo
+(pH,pD,pA) por jogo por liga-temporada, e medimos se todos reproduzem a lei e caem
+na curva S(σ_L) do ordered-probit. 617 liga-temporadas, 38 ligas.
+
+- **Cinco famílias + o mercado, uma curva.** corr(skew do modelo, skew empírico)
+  entre 38 ligas: **Poisson +0.925** [+0.85,+0.97] · **Dixon-Coles +0.874**
+  [+0.77,+0.94] · **Bradley-Terry-Davidson +0.840** [+0.71,+0.93] · **Elo de
+  resultados (odds-free) +0.786** [+0.59,+0.90]. Todos recuperam a competitividade
+  (corr p_fav +0.91…+0.97) e caem na curva derivada (r na curva +0.85…+0.96 vs
+  empírico +0.90).
+- **O Dixon-Coles aproxima o NÍVEL do mercado:** a correção de dependência em
+  placares baixos (ρ médio −0.05, empurra empates 0-0/1-1) sobe a skew para **+0.199**
+  (vs Poisson +0.177), mais perto do empírico +0.215 — o modelo canônico do futebol
+  é o que melhor casa o nível, não só a ordenação.
+- **Família SEM gols também cai na lei:** o Bradley-Terry-Davidson (forças
+  multiplicativas + empate, comparação pareada logística — nenhum gol) reproduz a
+  ordenação a **+0.84**. E o gerador ODDS-FREE (Elo de resultados → mapa ordinal, a
+  máquina da W2) cai exatamente na curva (r=**+0.96**).
+- **Modelos desenhados para desviar COLAPSAM ao Poisson:** gols de futebol são
+  Poisson independente quase puro — covariância casa×fora mediana **−0.07** (Poisson
+  bivariado λ₃≈0) e super-dispersão ≈0 (Negative-Binomial α≈0). Ambos colapsam ao
+  Poisson e nada acrescentam — reportados como robustez, não como série.
+- **Nota de reprodução (hardening):** sob o stack novo (pandas 3 / numpy 2 /
+  statsmodels atual) o GLM de uma liga-temporada patológica (JAP 2017) sofre
+  separação quase-completa (p_fav≈1 em todo jogo vs ~0.48 empírico), explodindo a
+  skewness de odds-justas. Adicionado `goals.degenerate_fit` (guard de separação);
+  a Frente I volta exatamente ao ledger (corr_skew +0.925) e a bateria fica blindada.
+- **Conclusão:** a lei skewness=f(competitividade) não é artefato de nenhuma forma
+  funcional — margem-probit, gols-Poisson, gols-com-dependência, forças-logísticas
+  e ratings-de-resultados convergem todos à MESMA curva. É geometria da mistura de
+  apostas de dois pontos sobre a distribuição de competitividade da liga.
+
+Artefatos: `skewlib/crossmodel.py` (dc_probs, dc_rho, btd_probs, elo_by_league,
+battery_table), `skewlib/goals.py` (fit_rates, degenerate_fit),
+`analysis/41_model_battery.py`, `outputs/model_battery_by_league.csv`,
+`outputs/fig/f29_model_battery.png`.
+
 ---
 
 > **2ª rodada no dataset (I–N) concluída** (2026-06-23): cross-model Poisson,
 > dinâmica HT→FT, diversificação, HFA secular, cauda realizada, entropia+co-momento.
-> 34 fases no ledger (35 cards no timeline do site). O dataset congelado está agora
-> muito amplamente explorado;
+> **Fase O (2026-06-23):** bateria de modelos geradores — 5 famílias independentes +
+> o mercado na mesma curva (independência de modelo). 35 fases no ledger (36 cards no
+> timeline do site). O dataset congelado está agora muito amplamente explorado;
 > fronteiras restantes exigem dado externo (outros esportes, odds de abertura,
 > mudanças de regra). Lineage completo em `lineage.json`/`docs/LINEAGE.md`.
