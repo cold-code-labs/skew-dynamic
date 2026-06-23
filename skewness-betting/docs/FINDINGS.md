@@ -237,3 +237,21 @@ DENTRO do regime competitivo**.
   Fort/Basini de frente e os usa como moldura — a contra-evidência vira aliada.
 
 Artefatos: `skewlib/panel.py` (league_breaks), `analysis/13_regimes.py`.
+
+## Fase P2 — CB canônico odds-independente da classificação (2026-06-23)
+Hardening da W2 com os índices size-robust da literatura (Gini fora, Utt & Fort
+2002), computados da **classificação final** (resultados, sem odds nem Elo) —
+ataque mais forte à circularidade.
+
+- **Lei reproduzida, sinal previsto (desequilíbrio → skewness↓):**
+  skew ~ Noll-Scully **−0.625** [−0.83,−0.36] · ~ HHI* (Owen 2007) −0.593 · ~
+  Theil/GE1 (Borooah-Mangan) −0.478. Todas IC95% excluem zero.
+- **Escada de errors-in-variables limpa:** odds (circular) −0.90 > Elo
+  (match-level) +0.83 > classificação (season-level) 0.48–0.63. Quanto mais perto
+  do p-por-jogo, mais forte o corr — o latente é forte, medido por proxies de
+  fidelidade variável.
+- Time a time bate: N1/EPL (NS~1.84, dominância) skew baixa; MLS (NS 1.13, salary
+  cap) e Argentina (NS 1.20) skew alta. Mecanismo visível na classificação.
+
+Artefatos: `skewlib/balance.py`, `analysis/14_balance_indices.py`,
+`outputs/balance_indices.csv`.

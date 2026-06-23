@@ -176,8 +176,22 @@ skewness vs upset rate **r = +0.826** [0.71, 0.91], vs Elo predictive entropy
 +0.719, vs Elo favourite probability −0.748, vs Elo rating dispersion −0.731
 (all bootstrap CIs exclude zero). The attenuation relative to the circular −0.900
 is the expected errors-in-variables effect of a noisier proxy, not evidence
-against the law. The asymmetry of market returns is inherited from the
-competitive structure of the league.
+against the law.
+
+The same holds for the canonical, size-robust competitive-balance indices used in
+the sports-economics literature, computed from final standings alone — and hence
+independent of both the odds *and* our Elo. Following Utt & Fort (2002) we avoid
+the Gini coefficient (invalid for zero-sum league play) and use the Noll-Scully
+ratio, the size-normalised HHI* of Owen, Ryan & Weatherston (2007), and the
+Theil/GE(1) entropy of Borooah & Mangan (2012). All three reproduce the law with
+the predicted sign — more imbalance, lower skewness: skewness vs Noll-Scully
+r = −0.625 [−0.83, −0.36], vs HHI* −0.593, vs Theil −0.478. This yields a
+coherent errors-in-variables ladder, from the (circular) odds at −0.90, through
+match-level Elo at +0.83, to season-level standings indices at 0.48–0.63: the
+closer the proxy sits to the per-match win-probability distribution that
+mechanically generates skewness, the stronger the measured relation. The
+asymmetry of market returns is inherited from the competitive structure of the
+league.
 
 ### 4.3 Temporal invariance (Figure 4)
 

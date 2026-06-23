@@ -74,6 +74,7 @@ for script in \
   analysis/10_overunder.py \
   analysis/11_margin_robustness.py \
   analysis/13_regimes.py \
+  analysis/14_balance_indices.py \
   analysis/12_figures.py
 do
   echo
