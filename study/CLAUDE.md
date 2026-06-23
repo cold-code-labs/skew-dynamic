@@ -26,11 +26,12 @@ competitividade da liga. Ver `docs/FINDINGS.md` para o estado atual.
 - Confirmação dupla de estacionariedade (ADF + KPSS).
 - Reportar sensibilidade a tamanho de janela como robustez.
 
-## Próximas frentes (ver fim de docs/FINDINGS.md)
-1. Modelar skewness_liga ~ índice de competitividade (HHI/Gini) — formaliza o −0.83.
-2. Drift abertura→fechamento (precisa de odds de abertura).
-3. Mercado over/under 2.5 (binário) vs 1X2.
-4. Generalização externa: repetir em basquete/tênis.
+## Estado e próximas frentes
+Tese central **provada** (W1–W5 + P1–P5, blocos 00–16; ver `docs/FINDINGS.md`).
+**Frentes abertas, priorizadas e detalhadas em `docs/RESEARCH-AGENDA.md`** —
+destaques: multi-momento + colapso de distribuição (barato, roda no dataset),
+tênis (generalização externa), prêmio de skewness/CPT (ângulo econômico), forma
+fechada da derivação, robustez adversarial. `docs/LITERATURA.md` ancora tudo.
 
 ## Estilo
 - Português nos comentários e docs. Código limpo, funções pequenas.
