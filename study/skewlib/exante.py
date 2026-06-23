@@ -154,6 +154,37 @@ def add_exante(df, method=None):
     return out
 
 
+def fav_dog_draw(df):
+    """(p de-vigado, o de mercado) dos TRÊS objetos de aposta, por jogo:
+    favorito (argmax p / odd mínima), empate (resultado D), azarão (argmin p /
+    odd máxima). Requer df já de-vigado (p_H/p_D/p_A) com OddHome/Draw/Away.
+    O favorito coincide com (p_fav_dv, o_fav) de `add_exante`."""
+    P = df[["p_H", "p_D", "p_A"]].to_numpy(float)
+    O = df[["OddHome", "OddDraw", "OddAway"]].to_numpy(float)
+    i = np.arange(len(P))
+    jf, jd = P.argmax(axis=1), P.argmin(axis=1)
+    return {"fav": (P[i, jf], O[i, jf]),
+            "draw": (P[:, 1], O[:, 1]),
+            "dog": (P[i, jd], O[i, jd])}
+
+
+def bettype_by(df, col="Division", min_n=2000):
+    """Skewness ex-ante AGRUPADA dos três objetos de aposta (favorito/empate/
+    azarão) por grupo. Uma linha por liga com skew_fav/skew_draw/skew_dog e a
+    competitividade (média de p_fav) — a base do radar de tipo de aposta."""
+    rows = []
+    for key, g in df.groupby(col, observed=True):
+        if len(g) < min_n:
+            continue
+        sel = fav_dog_draw(g)
+        row = {col: key, "n": int(len(g)),
+               "p_fav_mean": float(sel["fav"][0].mean())}
+        for name, (p, o) in sel.items():
+            row[f"skew_{name}"] = pooled_skew(p, o)["skew"]
+        rows.append(row)
+    return pd.DataFrame(rows)
+
+
 def pooled_by(df, col, min_n=50, expost_col="ret_fav"):
     """Skewness ex-ante agrupada por `col` + skew ex-post realizada lado a lado.
 

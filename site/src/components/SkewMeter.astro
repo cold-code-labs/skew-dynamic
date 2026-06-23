@@ -4,9 +4,14 @@
 // o resíduo contra a lei, e responde "esta liga é como X, diferente de Y".
 // Sem backend: lê findings.json + JS no cliente. Idioma de LawChart/FlbChart.
 import data from '../data/findings.json';
-const L = [...data.leagues].sort((a,b)=>a.skew-b.skew);
+// junta o exkurt por liga (moments.leagues) p/ a distância de FORMA de Mahalanobis
+const EK = Object.fromEntries(data.moments.leagues.map(d=>[d.code,d.exkurt]));
+const L = [...data.leagues].sort((a,b)=>a.skew-b.skew).map(d=>({...d, exkurt: EK[d.code]}));
 const SM = data.skewmeter, CV = data.convergence, curve = SM.curve;
+const CINV = SM.shape_cov_inv;        // métrica de Mahalanobis auditada (bloco 45)
 const def = L.find(d=>d.code==='E0') ? 'E0' : L[Math.floor(L.length/2)].code;
+// tetos de explicação: com odds (lei, p_fav) vs sem odds (upset do Elo)
+const corrOdds = SM.r2_1param, corrFree = SM.corr_oddsfree;
 
 // Painel A — gauge horizontal (skew −0.05 … 0.40)
 const GW=720, GH=120, glo=-0.05, ghi=0.40, gpad=46;
@@ -18,6 +23,24 @@ const W=680,H=360,P={l:54,r:18,t:18,b:42}, xlo=0.43,xhi=0.60,ylo=0.06,yhi=0.34;
 const X=(p)=>P.l+((p-xlo)/(xhi-xlo))*(W-P.l-P.r);
 const Y=(s)=>P.t+(1-(s-ylo)/(yhi-ylo))*(H-P.t-P.b);
 const cpts = curve.filter(d=>d.p_fav>=xlo&&d.p_fav<=xhi).map(d=>`${X(d.p_fav).toFixed(1)},${Y(d.skew).toFixed(1)}`);
+
+// Painel D — tipo de aposta (bloco 46): três séries skew vs competitividade
+const BT = data.bettype, btL = BT.leagues;
+const BW=680,BH=300,BP={l:46,r:14,t:16,b:40};
+const bxlo=Math.min(...btL.map(d=>d.p_fav))-0.006, bxhi=Math.max(...btL.map(d=>d.p_fav))+0.006;
+const bymax=Math.ceil(Math.max(...btL.map(d=>d.dog))*10)/10;
+const BX=(p)=>BP.l+((p-bxlo)/(bxhi-bxlo))*(BW-BP.l-BP.r);
+const BY=(s)=>BP.t+(1-(s/bymax))*(BH-BP.t-BP.b);
+const BETS=[['dog','underdog','#d05a4f'],['draw','draw','#9a8c5a'],['fav','favourite','#4a78b5']];
+
+// Painel E — diversificação (bloco 37): skewness do retorno médio de N apostas
+const DV = data.diversification, sizes=DV.sizes, Nmax=sizes[sizes.length-1];
+const DW=680,DH=300,DP={l:46,r:14,t:16,b:40};
+const dymax=Math.ceil(Math.max(DV.base_dog, ...DV.dog)*10)/10;
+const lx=(N)=>DP.l+(Math.log(N)/Math.log(Nmax))*(DW-DP.l-DP.r);
+const dy=(s)=>DP.t+(1-(Math.max(0,s)/dymax))*(DH-DP.t-DP.b);
+const dline=(arr)=>arr.map((s,i)=>`${lx(sizes[i]).toFixed(1)},${dy(s).toFixed(1)}`).join(' ');
+const dpred=(base)=>sizes.map(N=>`${lx(N).toFixed(1)},${dy(base/Math.sqrt(N)).toFixed(1)}`).join(' ');
 ---
 <figure class="sm">
   <div class="sm-controls">
@@ -35,7 +58,8 @@ const cpts = curve.filter(d=>d.p_fav>=xlo&&d.p_fav<=xhi).map(d=>`${X(d.p_fav).to
   <div class="sm-panel">
     <div class="sm-readout">
       <span class="big" id="sm-skew">+0.00</span><span class="lbl">skewness</span>
-      <span class="big" id="sm-pfav">0.00</span><span class="lbl">mean p<sub>fav</sub></span>
+      <span class="big" id="sm-pfav">0.00</span><span class="lbl">p<sub>fav</sub> · with odds</span>
+      <span class="big alt" id="sm-upset">0.00</span><span class="lbl">upset · odds-free</span>
       <span class="word" id="sm-word">—</span>
     </div>
     <svg viewBox={`0 0 ${GW} ${GH}`} class="sm-gauge" role="img" aria-label="asymmetry gauge">
@@ -46,7 +70,7 @@ const cpts = curve.filter(d=>d.p_fav>=xlo&&d.p_fav<=xhi).map(d=>`${X(d.p_fav).to
       <text class="sm-tick" x={gpad} y="34" text-anchor="start">← balanced</text>
       <text class="sm-tick" x={GW-gpad} y="34" text-anchor="end">lottery-like →</text>
     </svg>
-    <p class="sm-cap">The band is sampling noise — drag the window: it shrinks as the season runs, resolving the league below the between-league spread (<span class="mono">{SM.sd_between.toFixed(3)}</span>) in ~half a season.</p>
+    <p class="sm-cap">The band is sampling noise — drag the window: it shrinks as the season runs, resolving the league below the between-league spread (<span class="mono">{SM.sd_between.toFixed(3)}</span>) in ~half a season. The same signature reads off prices (p<sub>fav</sub>, R²&nbsp;<span class="mono">{(corrOdds*100).toFixed(0)}%</span>) or off <b>results alone</b> (upset rate, ceiling corr&nbsp;<span class="mono">{corrFree.toFixed(2)}</span>) — dropping the odds costs almost nothing.</p>
   </div>
 
   <div class="sm-two">
@@ -70,17 +94,63 @@ const cpts = curve.filter(d=>d.p_fav>=xlo&&d.p_fav<=xhi).map(d=>`${X(d.p_fav).to
     <!-- PANEL C — similarity -->
     <div class="sm-panel">
       <h4>Like <span id="sm-name">—</span>, unlike…</h4>
-      <div class="sm-sim">
+      <div class="sm-sim sm-sim3">
         <div><div class="sm-h">Raw |Δskew|</div><ol id="sm-raw" class="sm-list"></ol></div>
+        <div><div class="sm-h">Shape (Mahalanobis)</div><ol id="sm-shape" class="sm-list"></ol></div>
         <div><div class="sm-h">After competitiveness</div><ol id="sm-res" class="sm-list"></ol></div>
       </div>
       <p class="sm-verdict" id="sm-verdict">—</p>
-      <p class="sm-cap"><b>Similarity of asymmetries = similarity of competitiveness.</b> Verdict by equivalence (margin ½·sd = <span class="mono">{SM.margin.toFixed(3)}</span>), not a significance test.</p>
+      <p class="sm-cap"><b>Similarity of asymmetries = similarity of competitiveness.</b> The middle column is the 2-D shape distance (skew + excess-kurtosis) under the audited Mahalanobis metric — it ranks neighbours like raw |Δskew| (corr 0.74). Verdict by equivalence (margin ½·sd = <span class="mono">{SM.margin.toFixed(3)}</span>), not a significance test.</p>
     </div>
+  </div>
+
+  <!-- PANEL D — bet-type: every side of the book -->
+  <div class="sm-panel">
+    <div class="sm-d-head">
+      <h4>Every side of the book</h4>
+      <div class="sm-seg" id="bt-seg" role="group" aria-label="bet type">
+        <button data-bet="all" class="on">all</button>
+        <button data-bet="fav">favourite</button>
+        <button data-bet="draw">draw</button>
+        <button data-bet="dog">underdog</button>
+      </div>
+    </div>
+    <svg viewBox={`0 0 ${BW} ${BH}`} class="sm-law" id="bt-svg" role="img" aria-label="skewness of the three bet objects vs competitiveness">
+      {[0,0.5,1.0,1.5,2.0,2.5].filter(t=>t<=bymax).map(t=>(<g><line x1={BP.l} y1={BY(t)} x2={BW-BP.r} y2={BY(t)} stroke="var(--line)" stroke-opacity=".4"/><text class="sm-tick" x={BP.l-7} y={BY(t)+4} text-anchor="end">{t.toFixed(1)}</text></g>))}
+      {[0.46,0.50,0.54,0.58].filter(t=>t>=bxlo&&t<=bxhi).map(t=>(<text class="sm-tick" x={BX(t)} y={BH-BP.b+16} text-anchor="middle">{t.toFixed(2)}</text>))}
+      <line id="bt-guide" x1="0" y1={BP.t} x2="0" y2={BH-BP.b} stroke="var(--accent)" stroke-width="1.2" stroke-dasharray="3 3" opacity="0"/>
+      {BETS.map(([k,lab,col])=>(<g class={`bt-series bt-${k}`}>
+        {btL.map(d=>(<circle class="bt-pt" data-code={d.code} cx={BX(d.p_fav)} cy={BY(d[k])} r="4" fill={col} fill-opacity=".55" stroke="#fff" stroke-width=".6"/>))}
+        <text class="bt-corr" x={BW-BP.r-6} y={BP.t+14+BETS.findIndex(b=>b[0]===k)*15} text-anchor="end" fill={col}>{lab} · corr {BT.corr[k]>=0?'+':''}{BT.corr[k].toFixed(2)}</text>
+      </g>))}
+      <text class="sm-axis" x={BW/2} y={BH-4} text-anchor="middle">mean favourite probability (less competitive →)</text>
+    </svg>
+    <p class="sm-cap">Same law, mirrored across the book: as a league tilts (p<sub>fav</sub> ↑), the <b>favourite</b> bet flattens while the <b>draw</b> and <b>underdog</b> become bigger longshots. The selected league is ringed in all three.</p>
+  </div>
+
+  <!-- PANEL E — diversification -->
+  <div class="sm-panel">
+    <h4>What survives diversification</h4>
+    <svg viewBox={`0 0 ${DW} ${DH}`} class="sm-law" role="img" aria-label="skewness of the average return of N bets">
+      {[0,0.5,1.0,1.5,2.0].filter(t=>t<=dymax).map(t=>(<g><line x1={DP.l} y1={dy(t)} x2={DW-DP.r} y2={dy(t)} stroke="var(--line)" stroke-opacity=".4"/><text class="sm-tick" x={DP.l-7} y={dy(t)+4} text-anchor="end">{t.toFixed(1)}</text></g>))}
+      {[1,10,100,Nmax].map(t=>(<text class="sm-tick" x={lx(t)} y={DH-DP.b+16} text-anchor="middle">{t}</text>))}
+      <line x1={DP.l} y1={dy(0.1)} x2={DW-DP.r} y2={dy(0.1)} stroke="var(--ink-faint)" stroke-width="1" stroke-dasharray="2 3"/>
+      <text class="sm-tick" x={DP.l+4} y={dy(0.1)-4} text-anchor="start">≈ gaussian (0.1)</text>
+      <polyline points={dpred(DV.base_dog)} fill="none" stroke="#d05a4f" stroke-width="1" stroke-dasharray="4 3" opacity=".5"/>
+      <polyline points={dpred(DV.base_fav)} fill="none" stroke="#4a78b5" stroke-width="1" stroke-dasharray="4 3" opacity=".5"/>
+      <polyline points={dline(DV.dog)} fill="none" stroke="#d05a4f" stroke-width="2.4"/>
+      <polyline points={dline(DV.fav)} fill="none" stroke="#4a78b5" stroke-width="2.4"/>
+      <line x1={lx(DV.n_gauss_fav)} y1={dy(0.1)} x2={lx(DV.n_gauss_fav)} y2={DH-DP.b} stroke="#4a78b5" stroke-width="1" opacity=".6"/>
+      <line x1={lx(DV.n_gauss_dog)} y1={dy(0.1)} x2={lx(DV.n_gauss_dog)} y2={DH-DP.b} stroke="#d05a4f" stroke-width="1" opacity=".6"/>
+      <text class="bt-corr" x={lx(DV.n_gauss_fav)} y={DH-BP.b+2} text-anchor="middle" fill="#4a78b5">favourite ~{DV.n_gauss_fav}</text>
+      <text class="bt-corr" x={lx(DV.n_gauss_dog)} y={DH-BP.b+2} text-anchor="end" fill="#d05a4f">underdog ~{DV.n_gauss_dog}</text>
+      <text class="sm-axis" x={DW/2} y={DH-4} text-anchor="middle">bets in the portfolio N (log)</text>
+    </svg>
+    <p class="sm-cap">Skewness is a <b>single-bet</b> phenomenon: the average return of N independent bets carries skew ≈ skew/√N. A favourite book washes out by <b>~{DV.n_gauss_fav}</b> bets; the underdog's lottery survives to <b>~{DV.n_gauss_dog}</b> — which is why the bias bites the recreational bettor, not the diversified syndicate.</p>
   </div>
 </figure>
 
-<script define:vars={{ L, SM, CV, curve, def, gpad, GW, glo, ghi, W, H, P, xlo, xhi, ylo, yhi }}>
+<script define:vars={{ L, SM, CV, CINV, curve, def, gpad, GW, glo, ghi, W, H, P, xlo, xhi, ylo, yhi }}>
   const $ = (id)=>document.getElementById(id);
   const gx = (s)=> gpad + ((s-glo)/(ghi-glo))*(GW-2*gpad);
   const X=(p)=>P.l+((p-xlo)/(xhi-xlo))*(W-P.l-P.r);
@@ -104,6 +174,7 @@ const cpts = curve.filter(d=>d.p_fav>=xlo&&d.p_fav<=xhi).map(d=>`${X(d.p_fav).to
     // PANEL A
     $('sm-skew').textContent = (d.skew>=0?'+':'')+d.skew.toFixed(3);
     $('sm-pfav').textContent = d.p_fav.toFixed(2);
+    $('sm-upset').textContent = (d.upset!=null?d.upset.toFixed(2):'—');
     $('sm-word').textContent = word(d);
     const se = seAt(K);
     $('sm-needle').setAttribute('x1', gx(d.skew)); $('sm-needle').setAttribute('x2', gx(d.skew));
@@ -118,11 +189,21 @@ const cpts = curve.filter(d=>d.p_fav>=xlo&&d.p_fav<=xhi).map(d=>`${X(d.p_fav).to
     // PANEL C — vizinhos raw vs residual
     $('sm-name').textContent = code;
     const others = L.filter(x=>x.code!==code);
+    // distância de forma de MAHALANOBIS em (skew, exkurt) — métrica auditada (CINV)
+    const maha = (x)=>{ const u=x.skew-d.skew, v=x.exkurt-d.exkurt;
+      return Math.sqrt(u*(CINV[0][0]*u+CINV[0][1]*v) + v*(CINV[1][0]*u+CINV[1][1]*v)); };
     const raw = [...others].sort((a,b)=>Math.abs(a.skew-d.skew)-Math.abs(b.skew-d.skew));
+    const shp = [...others].sort((a,b)=>maha(a)-maha(b));
     const res = [...others].sort((a,b)=>Math.abs(a.residual-d.residual)-Math.abs(b.residual-d.residual));
-    const row = (x,val)=>`<li><span class="c">${x.code}</span><span class="b"><span style="width:${Math.min(100,val/0.22*100)}%"></span></span><span class="v">${val.toFixed(3)}</span></li>`;
-    $('sm-raw').innerHTML = raw.slice(0,4).map(x=>row(x,Math.abs(x.skew-d.skew))).join('');
-    $('sm-res').innerHTML = res.slice(0,4).map(x=>row(x,Math.abs(x.residual-d.residual))).join('');
+    const row = (x,val,scale)=>`<li><span class="c">${x.code}</span><span class="b"><span style="width:${Math.min(100,val/scale*100)}%"></span></span><span class="v">${val.toFixed(scale<1?3:1)}</span></li>`;
+    $('sm-raw').innerHTML = raw.slice(0,4).map(x=>row(x,Math.abs(x.skew-d.skew),0.22)).join('');
+    $('sm-shape').innerHTML = shp.slice(0,4).map(x=>row(x,maha(x),Math.max(...others.map(maha)))).join('');
+    $('sm-res').innerHTML = res.slice(0,4).map(x=>row(x,Math.abs(x.residual-d.residual),0.22)).join('');
+    // PANEL D — destaca a liga nas três séries + guia vertical
+    document.querySelectorAll('.bt-pt').forEach(el=>{ const on=el.getAttribute('data-code')===code;
+      el.setAttribute('r', on?'6':'4'); el.setAttribute('fill-opacity', on?'1':'.5'); el.style.stroke=on?'#222':'#fff'; });
+    const bg=$('bt-guide'), any=document.querySelector(`.bt-pt[data-code="${code}"]`);
+    if(bg&&any){ const cx=any.getAttribute('cx'); bg.setAttribute('x1',cx); bg.setAttribute('x2',cx); bg.setAttribute('opacity','.5'); }
     // verdict: o caso pedagógico é "parece diferente, é a MESMA forma" — a liga
     // MAIS distante no skew bruto que ainda é equivalente no resíduo.
     const eq = others.filter(x=>Math.abs(x.residual-d.residual) < SM.margin)
@@ -137,6 +218,11 @@ const cpts = curve.filter(d=>d.p_fav>=xlo&&d.p_fav<=xhi).map(d=>`${X(d.p_fav).to
   const sel=$('sm-league'), kk=$('sm-k');
   const go=()=>{ $('sm-kval').textContent=kk.value; render(sel.value, +kk.value); };
   sel.addEventListener('change', go); kk.addEventListener('input', go);
+  // segmented control do tipo de aposta: realça uma série (esmaece as outras)
+  const seg=$('bt-seg'), svg=$('bt-svg');
+  if(seg) seg.addEventListener('click', e=>{ const b=e.target.closest('button'); if(!b) return;
+    seg.querySelectorAll('button').forEach(x=>x.classList.toggle('on', x===b));
+    svg.className.baseVal = 'sm-law' + (b.dataset.bet==='all'?'':' emph-'+b.dataset.bet); });
   render(def, 380);
 </script>
 
@@ -151,6 +237,7 @@ const cpts = curve.filter(d=>d.p_fav>=xlo&&d.p_fav<=xhi).map(d=>`${X(d.p_fav).to
   .sm-panel h4 { margin:0 0 10px; font-size:1rem; }
   .sm-readout { display:flex; align-items:baseline; gap:8px 16px; flex-wrap:wrap; margin-bottom:6px; }
   .sm-readout .big { font-family:var(--mono); font-size:1.7rem; font-weight:600; color:var(--accent); }
+  .sm-readout .big.alt { color:var(--ink-soft); }
   .sm-readout .lbl { font-size:.78rem; color:var(--ink-soft); margin-right:8px; }
   .sm-readout .word { margin-left:auto; font-family:var(--mono); font-size:.85rem; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.08em; }
   .sm-gauge, .sm-law { width:100%; height:auto; }
@@ -160,6 +247,19 @@ const cpts = curve.filter(d=>d.p_fav>=xlo&&d.p_fav<=xhi).map(d=>`${X(d.p_fav).to
   .sm-two { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
   @media (max-width:760px){ .sm-two{ grid-template-columns:1fr; } }
   .sm-sim { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .sm-sim3 { grid-template-columns:1fr 1fr 1fr; }
+  @media (max-width:560px){ .sm-sim3{ grid-template-columns:1fr; } }
+  .sm-d-head { display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:8px; }
+  .sm-d-head h4 { margin:0; }
+  .sm-seg { display:inline-flex; border:1px solid var(--line); border-radius:8px; overflow:hidden; }
+  .sm-seg button { font:inherit; font-size:.78rem; padding:4px 10px; border:0; border-left:1px solid var(--line); background:var(--surface); color:var(--ink-soft); cursor:pointer; }
+  .sm-seg button:first-child { border-left:0; }
+  .sm-seg button.on { background:var(--accent); color:#fff; }
+  .bt-corr { font-family:var(--mono); font-size:10.5px; }
+  .bt-series { transition:opacity .15s; }
+  .emph-fav .bt-draw, .emph-fav .bt-dog,
+  .emph-draw .bt-fav, .emph-draw .bt-dog,
+  .emph-dog .bt-fav, .emph-dog .bt-draw { opacity:.12; }
   .sm-h { font-size:.74rem; text-transform:uppercase; letter-spacing:.1em; color:var(--ink-soft); margin-bottom:6px; }
   .sm-list { list-style:none; margin:0; padding:0; }
   .sm-list li { display:grid; grid-template-columns:34px 1fr 46px; align-items:center; gap:8px; padding:3px 0; font-size:.85rem; }

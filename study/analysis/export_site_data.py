@@ -6,7 +6,8 @@ import json, numpy as np, pandas as pd
 from pathlib import Path
 from scipy.stats import skew
 from skewlib import (io, returns, exante, elo, panel, balance, model, decompose,
-                     collapse, premium, cpt, stats, skewmeter as sm, config as C)
+                     collapse, premium, cpt, stats, skewmeter as sm, portfolio as port,
+                     config as C)
 
 # nomes amigáveis das ligas p/ o widget (fallback = o código football-data)
 LEAGUE_NAMES = {
@@ -225,16 +226,44 @@ def main():
             errs.append(float(np.std(est)))
         conv_se.append(float(np.mean(errs)))
     sdb = float(skv.std())
+    # métrica de FORMA de Mahalanobis (skew+exkurt): cov amostral de uma liga de
+    # referência (E0), invertida — o MESMO objeto auditado no bloco 45 (corr 0.74
+    # com |Δskew|). Exportada p/ o widget computar a distância de forma client-side.
+    cov_inv = np.linalg.inv(sm.sampling_shape_cov(df[df.Division == "E0"]))
     skewmeter = {
         "median_raw": float(np.median([abs(a - b) for a, b in itertools.combinations(skv, 2)])),
         "median_residual": float(np.median([abs(a - b) for a, b in itertools.combinations(rsv, 2)])),
         "noise_floor": float(np.median(sev)), "sd_between": sdb, "margin": 0.5 * sdb,
         "r2_1param": ladder["r2_1param"], "r2_2moment": ladder["r2_2moment"],
         "r2_full": ladder["r2_full"], "corr_cheap": 0.997, "corr_oddsfree": 0.826,
+        "shape_cov_inv": [[float(cov_inv[0, 0]), float(cov_inv[0, 1])],
+                          [float(cov_inv[1, 0]), float(cov_inv[1, 1])]],
         "curve": [{"p_fav": float(a), "skew": float(b)}
                   for a, b in zip(law["cpf"], law["csk"])],
     }
     convergence = {"k": Ks, "se": conv_se, "sd_between": sdb}
+
+    # bet-type (bloco 46) — skew ex-ante dos três objetos por liga + global + corr
+    btdf = exante.bettype_by(df, min_n=2000).sort_values("p_fav_mean")
+    selg = exante.fav_dog_draw(df)
+    bettype = {
+        "global": {k: exante.pooled_skew(p, o)["skew"] for k, (p, o) in selg.items()},
+        "corr": {k: float(np.corrcoef(btdf[f"skew_{k}"].values, btdf.p_fav_mean.values)[0, 1])
+                 for k in ("fav", "draw", "dog")},
+        "leagues": [{"code": r.Division, "p_fav": r.p_fav_mean, "fav": r.skew_fav,
+                     "draw": r.skew_draw, "dog": r.skew_dog} for r in btdf.itertuples()],
+    }
+
+    # diversification (bloco 37) — skew do retorno médio de N apostas (≈ skew/√N)
+    SIZES = [1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 509, 800]
+    base_f, rows_f = port.skew_decay(df.ret_fav.values, SIZES)
+    base_d, rows_d = port.skew_decay(df.ret_dog.values, SIZES)
+    diversification = {
+        "sizes": SIZES, "base_fav": base_f, "base_dog": base_d,
+        "n_gauss_fav": port.n_to_gaussian(base_f), "n_gauss_dog": port.n_to_gaussian(base_d),
+        "fav": [round(r["skew"], 4) for r in rows_f],
+        "dog": [round(r["skew"], 4) for r in rows_d],
+    }
 
     data = {
         "meta": {"n_matches": prov["analysis_rows_ge2005"], "leagues": prov["leagues"],
@@ -257,6 +286,7 @@ def main():
         "premium": premium_data, "cpt": cpt_data,
         "closed_form": closed_form, "force_robustness": force_rob,
         "skewmeter": skewmeter, "convergence": convergence,
+        "bettype": bettype, "diversification": diversification,
     }
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(round_rec(data), ensure_ascii=False, indent=0))
