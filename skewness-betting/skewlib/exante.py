@@ -65,6 +65,18 @@ def pooled_skew(p, o):
             "between_frac": float(between / M3)}
 
 
+def market_skew(df, odd_cols, method=None):
+    """De-viga um mercado 1X2 qualquer (ex.: odds médias vs máximas) e devolve
+    (p_fav, o_fav, decomposição pooled). Usado no teste de ortogonalidade da
+    margem: a skewness muda entre casas/margens?"""
+    dd = devig.devig_frame(df, method=method, cols=odd_cols)
+    P = dd[["p_H", "p_D", "p_A"]].to_numpy(float)
+    O = df[list(odd_cols)].to_numpy(float)
+    j = P.argmax(axis=1); i = np.arange(len(P))
+    p, o = P[i, j], O[i, j]
+    return p, o, pooled_skew(p, o)
+
+
 def add_exante(df, method=None):
     """De-viga, identifica o favorito e adiciona p_fav_dv, o_fav, skew_exante_match."""
     out = devig.devig_frame(df, method=method)

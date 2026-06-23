@@ -205,3 +205,16 @@ p_over de-vigada 0.492.
   vias do 1X2 — vale num mercado binário de gols. within≈100% se replica.
 
 Artefatos: `skewlib/overunder.py`, `analysis/10_overunder.py`, `outputs/overunder.csv`.
+
+## Fase 5 / W4 — Margem ortogonal + robustez ao de-vig (2026-06-23)
+- **Margem vs estrutura (odds média vs máxima, 202.760 jogos):** tomar o melhor
+  preço do mercado colapsa o overround **1.067→1.009** (retorno −4.8%→~0) mas a
+  skewness ex-ante quase não anda: **+0.236→+0.254** (corr p_fav por jogo
+  **0.996**). A casa compete na MARGEM (nível), não na assimetria — margem
+  largamente ortogonal à skewness.
+- **Robustez ao método de de-vig:** skew global 0.224 (power) / 0.236 (shin) /
+  0.263 (mult) — ±8% no nível; mas a **lei cross-liga é invariante**:
+  corr(p_fav,skew) = −0.906 / −0.900 / −0.891. O achado estrutural não é
+  artefato da escolha de de-vig.
+
+Artefatos: `skewlib/exante.py` (market_skew), `analysis/11_margin_robustness.py`.
