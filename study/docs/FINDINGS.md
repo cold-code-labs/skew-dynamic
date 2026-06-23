@@ -704,3 +704,57 @@ fortemente assimétrica.
 Artefatos: `skewlib/portfolio.py` (skew_decay, n_to_gaussian),
 `analysis/37_diversification.py`, `outputs/diversification.csv`,
 `outputs/fig/f25_diversification.png`.
+
+## Fase L — Vantagem de casa secular vs invariância da skewness (2026-06-23)
+A vantagem de casa (HFA) caiu nas décadas recentes; a skewness acompanha?
+
+- **HFA cai, skew não:** taxa de vitória do mandante 0.449 (2005) → 0.431 (2025),
+  β=**−0.00133/ano** (Δ20a −0.027, queda marcada); skewness β=−0.00009/ano (Δ20a
+  −0.002, plana). corr(HFA, skew) ano a ano = **−0.24** [−0.72,+0.55] (IC inclui 0).
+- **Conclusão:** a assimetria depende da DISPERSÃO de p_fav (competitividade), não
+  do nível do mando — fecha o confound pelo lado da vantagem de casa.
+
+Artefatos: `skewlib/extras.py` (hfa_and_skew_by_year),
+`analysis/38_home_advantage.py`, `outputs/hfa_by_year.csv`,
+`outputs/fig/f26_home_advantage.png`.
+
+## Fase M — Risco de cauda realizado das estratégias (2026-06-23)
+Lado quant: momentos realizados, VaR/CVaR e max drawdown do P&L acumulado
+(aposta unitária, ordem cronológica).
+
+- **Favorito vs azarão:** favorito ret −4.82%, skew +0.23, exkurt −1.7, maxDD
+  **−9.9k** unidades; azarão ret −10.2%, skew +2.25, exkurt +8.2, maxDD **−20.9k**.
+  Ambas sangram a margem (P&L final negativo), mas o azarão é a CAUDA — drawdown
+  ~2× mais fundo, sequências longas de perdas pontuadas por prêmios raros.
+- **Conclusão:** a estrutura de skewness se traduz em risco de banca concreto — a
+  "lotérica" do azarão é drawdown profundo + caudas grossas, não só um momento.
+
+Artefatos: `skewlib/extras.py` (tail_metrics, max_drawdown),
+`analysis/39_tail_risk.py`, `outputs/fig/f27_tail_risk.png`.
+
+## Fase N — Entropia + co-momento entre mercados (2026-06-23)
+(1) Entropia de Shannon da distribuição 1X2 como índice de competitividade
+odds-based; (2) a skew do 1X2 e a do O/U compartilham um fator comum?
+
+- **Entropia é a competitividade:** média 1.004 nats (máx 3-vias 1.099);
+  corr(entropia, skew) = **+0.827** [+0.70,+0.91] — índice alternativo robusto
+  (mais entropia/mais parelho ⇒ mais skew positiva).
+- **NULO honesto no co-momento:** corr(skew 1X2, skew O/U 2.5) = **+0.15**
+  [−0.39,+0.65] (IC inclui 0). As duas assimetrias NÃO são um fator único: o 1X2
+  mede dispersão de quem-vence (competitividade), o O/U mede o ambiente de GOLS —
+  dimensões largamente ortogonais. Cada mercado precifica uma feição estrutural
+  diferente.
+- **Conclusão:** entropia confirma a lei por mais um índice; mas a assimetria não é
+  um latente único entre mercados — é específica à dimensão que cada mercado mede.
+
+Artefatos: `skewlib/extras.py` (shannon_entropy, entropy_by_league),
+`analysis/40_entropy_comoment.py`, `outputs/entropy_comoment.csv`,
+`outputs/fig/f28_entropy_comoment.png`.
+
+---
+
+> **2ª rodada no dataset (I–N) concluída** (2026-06-23): cross-model Poisson,
+> dinâmica HT→FT, diversificação, HFA secular, cauda realizada, entropia+co-momento.
+> 36 fases no ledger. O dataset congelado está agora muito amplamente explorado;
+> fronteiras restantes exigem dado externo (outros esportes, odds de abertura,
+> mudanças de regra). Lineage completo em `lineage.json`/`docs/LINEAGE.md`.

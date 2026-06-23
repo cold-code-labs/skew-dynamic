@@ -171,20 +171,21 @@ parâmetros de preferência (CPT) são eles próprios invariantes.
 > ~509 (azarão). A assimetria é fenômeno de aposta ISOLADA; o FLB sobrevive pelo
 > apostador recreativo concentrado. `skewlib/portfolio.py`, `analysis/37_diversification.py`.
 
-## Frente L — Vantagem de casa secular vs invariância  [dataset]
-A vantagem de casa caiu ao longo das décadas (e no choque COVID, W3). Traçar a HFA
-por ano e mostrar que, apesar de a HFA se mover, a skewness fica invariante (depende
-da dispersão de p_fav, não do nível do mando) — fecha o confound do lado do mando.
+## Frente L — Vantagem de casa secular vs invariância  ✅ FEITA (2026-06-23)
+> **Concluída** (Fase L): HFA cai (vitória mandante 0.449→0.431, Δ20a −0.027) mas a
+> skew fica plana (Δ20a −0.002); corr(HFA,skew) −0.24 (IC inclui 0). Confound do
+> mando fechado. `skewlib/extras.py:hfa_and_skew_by_year`, `analysis/38_home_advantage.py`.
 
-## Frente M — Risco de cauda realizado (VaR/CVaR/drawdown)  [dataset]
-Lado prático: momentos realizados de ordem alta, VaR/CVaR e max drawdown das
-estratégias (sempre-favorito vs sempre-azarão), conectando a skewness ao risco de
-banca de fato. Atrai o leitor quant; usa `ret_fav`/`ret_dog`.
+## Frente M — Risco de cauda realizado (VaR/CVaR/drawdown)  ✅ FEITA (2026-06-23)
+> **Concluída** (Fase M): favorito maxDD −9.9k (skew +0.23, exkurt −1.7); azarão
+> maxDD −20.9k (skew +2.25, exkurt +8.2) — a lotérica em risco de banca concreto.
+> `skewlib/extras.py:{tail_metrics,max_drawdown}`, `analysis/39_tail_risk.py`.
 
-## Frente N — Entropia + estrutura de co-momento entre mercados  [dataset]
-Índice alternativo de competitividade (entropia de Shannon da distribuição 1X2) e
-sua relação com a skewness; e fator COMUM: a skewness do 1X2 e do O/U compartilham
-um latente de competitividade da liga (co-skewness entre mercados)?
+## Frente N — Entropia + estrutura de co-momento entre mercados  ✅ FEITA (2026-06-23)
+> **Concluída** (Fase N): entropia 1X2 ↔ skew +0.83 (índice alternativo robusto);
+> mas co-momento 1X2×O/U só +0.15 (IC inclui 0) = NULO honesto — as duas assimetrias
+> medem dimensões diferentes (quem-vence vs gols), não um latente único.
+> `skewlib/extras.py:{shannon_entropy,entropy_by_league}`, `analysis/40_entropy_comoment.py`.
 
 ---
 

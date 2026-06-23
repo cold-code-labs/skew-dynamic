@@ -98,6 +98,9 @@ for script in \
   analysis/35_poisson_crossmodel.py \
   analysis/36_inplay_resolution.py \
   analysis/37_diversification.py \
+  analysis/38_home_advantage.py \
+  analysis/39_tail_risk.py \
+  analysis/40_entropy_comoment.py \
   analysis/12_figures.py
 do
   echo
