@@ -6,7 +6,7 @@
 > 38 ligas). Volte a qualquer estado com
 > `git checkout <tag>`; audite mudança de resultado com `--check`.
 
-**HEAD na geração:** `4ccbc01f`  ⚠️ working tree DIRTY
+**HEAD na geração:** `e5b04e16`  ⚠️ working tree DIRTY
 
 | Fase | Frente | Achado | Blocos | Figuras | Números-título | Commit | Tag |
 |------|--------|--------|--------|---------|----------------|--------|-----|
@@ -32,6 +32,9 @@
 | **D2** | Microstructure | Sharp vs soft (margem ortogonal na melhor odd) | 26_sharp_soft | f14 | d_skew_mean=0.02 · corr_soft_sharp=0.993 · corr_sharp_pfav=-0.876 | `4ccbc01` (2026-06-23) | `evidence/frente-D` |
 | **D3** | Microstructure | z de Shin (dinheiro informado) como série | 27_shin_z_series | f15 | z_global=0.0343 · z_sd_league=0.0043 · corr_z_overround=0.999 | `4ccbc01` (2026-06-23) | `evidence/frente-D` |
 | **D4** | Third market | Handicap asiático: identidade num 3º mercado | 28_asian_handicap | f16 | p_fav_ah=0.533 · skew_ah_global=-0.104 · within_frac_ah=1.027 · league_identity_r=0.8 | `4ccbc01` (2026-06-23) | `evidence/frente-D` |
+| **F1** | Within-season | Sazonalidade intra-temporada (drift leve) | 29_intraseason | f17 | global_span=0.0149 · shift_mean=-0.0078 · shift_ci_lo=-0.0131 · shift_ci_hi=-0.0015 | `e5b04e1` (2026-06-23) | `evidence/frente-F` |
+| **F2** | Tail cancellation | Contribuição ao M₃ por competitividade do jogo | 30_game_contribution | f18 | share_weak_fav=1.26 · share_strong_fav=-0.26 | `e5b04e1` (2026-06-23) | `evidence/frente-F` |
+| **F3** | Team structure | Decomposição por time (dispersão de força) | 31_team_decomposition | f19 | corr_elo_teamskew=-0.444 · corr_elosd_leagueskew=-0.601 | `e5b04e1` (2026-06-23) | `evidence/frente-F` |
 
 ## Tags de versionamento (`evidence/*`)
 Uma tag anotada por marco de evidência aponta o commit que estabeleceu

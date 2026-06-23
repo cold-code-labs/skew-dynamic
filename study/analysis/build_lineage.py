@@ -103,6 +103,16 @@ PHASES = [
      "title": "Handicap asiático: identidade num 3º mercado", "blocks": ["28_asian_handicap"],
      "figures": ["f16"], "metrics": {"p_fav_ah": 0.533, "skew_ah_global": -0.104,
      "within_frac_ah": 1.027, "league_identity_r": 0.80}},
+    {"id": "F1", "frente": "Within-season", "tag": "evidence/frente-F", "commit": "e5b04e1",
+     "title": "Sazonalidade intra-temporada (drift leve)", "blocks": ["29_intraseason"],
+     "figures": ["f17"], "metrics": {"global_span": 0.0149, "shift_mean": -0.0078,
+     "shift_ci_lo": -0.0131, "shift_ci_hi": -0.0015}},
+    {"id": "F2", "frente": "Tail cancellation", "tag": "evidence/frente-F", "commit": "e5b04e1",
+     "title": "Contribuição ao M₃ por competitividade do jogo", "blocks": ["30_game_contribution"],
+     "figures": ["f18"], "metrics": {"share_weak_fav": 1.26, "share_strong_fav": -0.26}},
+    {"id": "F3", "frente": "Team structure", "tag": "evidence/frente-F", "commit": "e5b04e1",
+     "title": "Decomposição por time (dispersão de força)", "blocks": ["31_team_decomposition"],
+     "figures": ["f19"], "metrics": {"corr_elo_teamskew": -0.444, "corr_elosd_leagueskew": -0.601}},
 ]
 
 
