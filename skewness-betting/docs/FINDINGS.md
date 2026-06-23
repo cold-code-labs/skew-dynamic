@@ -255,3 +255,21 @@ ataque mais forte à circularidade.
 
 Artefatos: `skewlib/balance.py`, `analysis/14_balance_indices.py`,
 `outputs/balance_indices.csv`.
+
+## Fase P3 — Derivação formal: skewness = f(dispersão de força) (2026-06-23)
+A lei vira **consequência de um modelo**, não ajuste. Ordered-probit
+(Goddard-Asimakopoulos 2004; Koning 2000): força r~N(0,σ_L²), margem latente
+y*=d+h+ε, cutoffs ±c → (A,D,H); favorito p=max; sob odds justas a skewness
+agrupada S(σ_L)=E[m₃(p)]/E[σ²(p)]^{3/2}.
+
+- **Calibração** (taxas pooled H 0.444 / D 0.264 / p_fav 0.499): h=0.220,
+  c=0.373, σ_ref=0.291.
+- **Validação 1ª→3ª ordem:** o modelo prevê a skewness de cada liga a partir só
+  do mean p_fav: **corr(previsto, observado)=+0.904**, RMSE **0.024** (< metade
+  do sd entre ligas 0.051). As 38 ligas caem na curva derivada (F5).
+- **Leitura:** a lei skewness~competitividade é consequência analítica do modelo
+  de força do esporte + a identidade FLB — fecha "o gap" (ninguém amarrou 3º
+  momento de odds a um modelo de força). Curva teórica cobre skew −0.03..+0.30
+  (p_fav 0.44..0.76), bracketando o empírico.
+
+Artefatos: `skewlib/model.py`, `analysis/15_model.py`, `outputs/fig/f5_model.png`.

@@ -30,3 +30,4 @@ Betting Markets*
 - F2: skewness por liga vs competitividade odds-free (Elo) — a lei.
 - F3: decomposição de M₃ (within/cov/between) — barra.
 - F4: painel liga×temporada — sem tendência (skewness vs ano, FE).
+- F5: lei derivada — ligas na curva ordered-probit (P3).

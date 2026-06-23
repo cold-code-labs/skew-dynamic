@@ -266,6 +266,23 @@ the underlying competitive distribution is stable. Bookmaker margin shifts the
 level of returns but not this asymmetry (§4.4), and the principle is market-
 agnostic (§4.5).
 
+This is not merely a verbal account: the law can be *derived*. Following the
+ordered-probit tradition for football outcomes [Goddard & Asimakopoulos 2004;
+Koning 2000], let team strengths be Gaussian with within-league dispersion σ_L, so
+a match's strength gap is d ~ N(0, 2σ_L²); a latent margin y* = d + h + ε with
+home advantage h and standard-normal noise generates (away, draw, home) through a
+pair of cut-offs ±c, and the favourite probability is p = max(P_H, P_D, P_A).
+Under fair odds the favourite bet has zero mean, so a league's pooled skewness is
+the closed functional S(σ_L) = E[m₃(p)] / E[σ²(p)]^{3/2} with σ²(p) = (1 − p)/p and
+m₃(p) = (1 − p)(1 − 2p)/p² — a monotone function of the single competitiveness
+parameter σ_L. Calibrating (h, c, σ) once to the pooled marginal rates (home
+0.444, draw 0.264, mean favourite probability 0.499) gives h = 0.22, c = 0.37, and
+the resulting curve **predicts each league's third moment from its first moment
+(mean favourite probability) at r = +0.90, RMSE 0.024** — less than half the
+between-league standard deviation. The thirty-eight leagues lie on the derived
+curve (Figure 5): the skewness–competitiveness law is an analytic consequence of a
+strength model plus the favourite–longshot identity, not a free fit.
+
 ## 6. Robustness
 
 The central findings are insensitive to analytical choices. The global ex-ante
@@ -333,7 +350,9 @@ asymmetry is inherited from the sport, not produced by the pricing of it.
   competitiveness (Elo upset rate), r = +0.83.
 - **Figure 3.** Decomposition of the aggregate third moment into within-match,
   covariance and between-match components.
-- **Figure 4.** League×season panel: no secular trend in twenty years.
+- **Figure 4.** League×season panel: no secular trend within the modern regime.
+- **Figure 5.** The derived law: leagues lie on the ordered-probit curve relating
+  mean favourite probability to skewness (r = +0.90).
 
 ## References
 
