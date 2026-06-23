@@ -191,3 +191,17 @@ Bloco F por construção. 638 obs, 38 ligas, 2005–2025.
 
 Artefatos: `skewlib/panel.py`, `analysis/09_panel_temporal.py`,
 `outputs/panel_league_season.csv`.
+
+## Fase 4 / W5 — Mercado binário over/under 2.5: identidade fora do 1X2 (2026-06-23)
+148.261 jogos com odds O/U 2.5 (de-vig Shin; overround 1.067, z **0.067** — mais
+dinheiro informado que no 1X2). Calibração impecável: over real 0.490 =
+p_over de-vigada 0.492.
+
+- **Mesma identidade, mercado diferente:** aposta no lado favorito → skew
+  ex-ante **−0.210** (within intra-jogo **99.6%**), ex-post −0.217. A fórmula
+  fechada (1-2p)/√(p(1-p)) bate exatamente per-match (max|dif|=0). Por faixa de
+  p, ex-ante e ex-post andam colados (p=0.52→−0.09; p=0.74→−1.05).
+- **Conclusão:** o núcleo mecânico do W1 **não** é artefato da estrutura de 3
+  vias do 1X2 — vale num mercado binário de gols. within≈100% se replica.
+
+Artefatos: `skewlib/overunder.py`, `analysis/10_overunder.py`, `outputs/overunder.csv`.
