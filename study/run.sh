@@ -86,6 +86,9 @@ for script in \
   analysis/23_devig_reliability.py \
   analysis/24_balanced_panel.py \
   analysis/25_block_bootstrap.py \
+  analysis/26_sharp_soft.py \
+  analysis/27_shin_z_series.py \
+  analysis/28_asian_handicap.py \
   analysis/12_figures.py
 do
   echo

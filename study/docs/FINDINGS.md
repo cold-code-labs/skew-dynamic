@@ -483,3 +483,59 @@ dependência intra-ano que a reamostragem de jogos quebraria.
 
 Artefatos: `skewlib/adversarial.py` (season_block_bootstrap, stat_global_skew,
 stat_league_corr), `analysis/25_block_bootstrap.py`.
+
+## Fase D2 — Sharp vs soft: a margem é ortogonal também na melhor odd (2026-06-23)
+A skewness diverge entre a odd MÉDIA do mercado (Odd*, soft) e a MELHOR odd
+(Max*, ~sharp/arb)? Por liga.
+
+- **Melhor preço quase zera a margem:** overround soft 1.069 → sharp 1.008.
+- **Skew mal se move e uniformemente:** soft +0.218 → sharp +0.238 (Δ médio
+  **+0.020**, sd 0.006). corr(skew_soft, skew_sharp) entre ligas = **+0.993** — a
+  ordenação das ligas é idêntica; a **lei estrutural sobrevive na sharp**
+  (corr(skew_sharp, p_fav) = −0.876).
+- **Conclusão:** tirar a margem desloca a skew pouco e de forma uniforme; a casa
+  compete em margem, não em assimetria (aprofunda W4) — a lei é invariante ao livro.
+
+Artefatos: `skewlib/microstructure.py` (skew_by_book_league),
+`analysis/26_sharp_soft.py`, `outputs/sharp_soft_by_league.csv`,
+`outputs/fig/f14_sharp_soft.png`.
+
+## Fase D3 — z de Shin (dinheiro informado) como série (2026-06-23)
+z é subproduto do de-vig de Shin: a fração do book atribuída a insiders. z por
+liga/ano, sua estabilidade e relação com competitividade/overround.
+
+- **z baixo e apertado:** global 0.034 (3.4% de dinheiro informado no 1X2); entre
+  38 ligas média 0.035, sd 0.004, range [0.023, 0.042].
+- **z é essencialmente a margem reparametrizada:** corr(z, overround) = **+0.999**
+  (quase tautológico no modelo de Shin — z é monótono no booksum). O útil é a
+  **ortogonalidade à competitividade**: corr(z, p_fav) = −0.04 [−0.37, +0.30] —
+  o conteúdo informacional não dirige a lei de skewness.
+- **No tempo:** leve compressão (β=−0.0009/ano, Δ20a −0.019), espelhando a queda
+  suave de margem; magnitude pequena.
+- **Conclusão:** o dinheiro informado precificado é uma constante estrutural baixa,
+  ligada à margem e ortogonal à competitividade — consistente com a invariância.
+
+Artefatos: `skewlib/microstructure.py` (shin_z_frame, z_by),
+`analysis/27_shin_z_series.py`, `outputs/shin_z_by_league.csv`,
+`outputs/fig/f15_shin_z.png`.
+
+## Fase D4 — Handicap asiático: a identidade num 3º mercado (2026-06-23)
+Além de 1X2 (W1) e O/U 2.5 (W5), o AH é um mercado de 2 vias com linha MÓVEL que
+equilibra o jogo para ~50/50. Teste mais nítido da identidade num regime de p_fav
+diferente.
+
+- **Linha equilibra p/ ~0.5:** 150.003 jogos com AH válido, p_fav médio **0.533**
+  (vs 0.44 no 1X2). overround AH 1.044.
+- **Mesma identidade, sinal oposto:** skew ex-ante AGRUPADA = **−0.104** (within-match
+  102.7% = mecânico), pois p_fav>0.5 (favorito cobre com frequência ⇒ skew negativa)
+  — espelho do 1X2 (+0.236, p_fav<0.5). Ex-post (70.965 liquidados) **−0.117** ≈
+  ex-ante −0.112.
+- **Por liga na curva:** skew_ah vs identidade (1−2p)/√(p(1−p)) no p_fav do AH →
+  **r=+0.80**.
+- **Conclusão:** um TERCEIRO mercado independente confirma o núcleo mecânico — a
+  skewness é função de p (o sinal é fixado por qual lado de 0.5 o favorito cai), não
+  artefato da estrutura de 3 vias do 1X2.
+
+Artefatos: `skewlib/microstructure.py` (prep_ah, ah_league),
+`analysis/28_asian_handicap.py`, `outputs/asian_handicap_by_league.csv`,
+`outputs/fig/f16_asian_handicap.png`.

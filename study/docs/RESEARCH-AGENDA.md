@@ -77,18 +77,17 @@ parâmetros de preferência (CPT) são eles próprios invariantes.
 - **C3** Ligação com Kelly/staking ótimo: o que a estrutura de skewness implica
   para o crescimento ótimo de banca? (resultado prático, atrai quants.)
 
-## Frente D — Microestrutura / formação de preço
-- **D1 [novo dado] Drift abertura→fechamento** — a skewness implícita CONVERGE
-  para o valor eficiente conforme a info chega? "Descoberta de preço" da
-  assimetria. Precisa de odds de abertura (oddsportal/B365 opening).
-- **D2 [dataset] Sharp vs soft** — usar `Odd*` (média do mercado, mais soft) vs
-  `Max*` (melhor preço, ~sharp/arb) como proxies; a skewness diverge por tipo de
-  casa? (W4 tocou; aprofundar com a estrutura de momentos).
-- **D3 [dataset] Shin z como série** — `devig.shin` já dá z (fração de dinheiro
-  informado). z por liga/ano/mercado correlaciona com competitividade? overround?
-- **D4 [dataset] Mercado de handicap asiático** — `Handi*` permite um 3º mercado
-  (além de 1X2 e O/U) para testar a identidade. AH é quase-binário com linha
-  móvel → de-vig e skewness próprios.
+## Frente D — Microestrutura / formação de preço  ✅ D2+D3+D4 FEITAS (2026-06-23)
+> **D2+D3+D4 concluídas** (Fases D2/D3/D4 em `FINDINGS.md`): D2 = sharp(Max) vs
+> soft(Odd) — skew +0.218→+0.238 (Δ +0.020 uniforme, corr ligas +0.993, lei
+> sobrevive −0.876); D3 = z de Shin 3.4% global, ≈margem (corr +0.999) e ortogonal
+> à competitividade (−0.04); D4 = handicap asiático (150k jogos) p_fav 0.533 →
+> skew −0.104 (ex-post −0.117), na identidade r=+0.80 — 3º mercado independente.
+> Artefatos: `skewlib/microstructure.py`, `analysis/{26_sharp_soft,27_shin_z_series,28_asian_handicap}.py`.
+- **D1 [novo dado] Drift abertura→fechamento** — FORA (precisa odds de abertura).
+- **D2** ✅ Sharp vs soft (Odd* média vs Max* melhor preço).
+- **D3** ✅ Shin z como série (liga/ano vs competitividade/overround).
+- **D4** ✅ Mercado de handicap asiático como 3º teste da identidade.
 
 ## Frente E — Endurecer a derivação (teoria)  ✅ E1+E2 FEITAS (2026-06-23) [dataset]
 > **E1+E2 concluídas** (Fases E1/E2 em `FINDINGS.md`): E1 = `S(σ_L)` por QUADRATURA
