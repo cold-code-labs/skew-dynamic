@@ -138,6 +138,17 @@ PHASES = [
      "title": "Diversificação (skewness = fenômeno de aposta única)", "blocks": ["37_diversification"],
      "figures": ["f25"], "metrics": {"skew_single_fav": 0.230, "skew_single_dog": 2.254,
      "n_to_gaussian_dog": 509}},
+    {"id": "L", "frente": "Confound", "tag": "evidence/frente-LMN", "commit": "f22f163",
+     "title": "Vantagem de casa secular vs invariância", "blocks": ["38_home_advantage"],
+     "figures": ["f26"], "metrics": {"hfa_beta": -0.00133, "skew_beta": -0.00009,
+     "corr_hfa_skew": -0.244}},
+    {"id": "M", "frente": "Tail risk", "tag": "evidence/frente-LMN", "commit": "f22f163",
+     "title": "Risco de cauda realizado das estratégias", "blocks": ["39_tail_risk"],
+     "figures": ["f27"], "metrics": {"skew_fav": 0.230, "skew_dog": 2.254,
+     "maxdd_fav": -9922.9, "maxdd_dog": -20934.0}},
+    {"id": "N", "frente": "Indices", "tag": "evidence/frente-LMN", "commit": "f22f163",
+     "title": "Entropia + co-momento entre mercados", "blocks": ["40_entropy_comoment"],
+     "figures": ["f28"], "metrics": {"corr_entropy_skew": 0.827, "corr_1x2_ou_skew": 0.146}},
 ]
 
 

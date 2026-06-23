@@ -6,7 +6,7 @@
 > 38 ligas). Volte a qualquer estado com
 > `git checkout <tag>`; audite mudança de resultado com `--check`.
 
-**HEAD na geração:** `b4b90ebc`  ⚠️ working tree DIRTY
+**HEAD na geração:** `f22f163b`  ⚠️ working tree DIRTY
 
 | Fase | Frente | Achado | Blocos | Figuras | Números-título | Commit | Tag |
 |------|--------|--------|--------|---------|----------------|--------|-----|
@@ -41,6 +41,9 @@
 | **I** | Cross-model | Validação cruzada do mecanismo (Poisson de gols) | 35_poisson_crossmodel | f23 | corr_pfav=0.972 · corr_skew=0.925 · league_r_poisson=0.85 · n_league_seasons=617 | `7a45759` (2026-06-23) | `evidence/frente-I` |
 | **J** | Dynamic | Chegada de informação HT→FT (identidade dinâmica) | 36_inplay_resolution | f24 | skew_pregame=0.239 · skew_behind=2.084 · skew_ahead2=-3.908 · martingale_err=0.0035 | `74f9c2e` (2026-06-23) | `evidence/frente-J` |
 | **K** | Diversification | Diversificação (skewness = fenômeno de aposta única) | 37_diversification | f25 | skew_single_fav=0.23 · skew_single_dog=2.254 · n_to_gaussian_dog=509 | `b4b90eb` (2026-06-23) | `evidence/frente-K` |
+| **L** | Confound | Vantagem de casa secular vs invariância | 38_home_advantage | f26 | hfa_beta=-0.00133 · skew_beta=-9e-05 · corr_hfa_skew=-0.244 | `f22f163` (2026-06-23) | `evidence/frente-LMN` |
+| **M** | Tail risk | Risco de cauda realizado das estratégias | 39_tail_risk | f27 | skew_fav=0.23 · skew_dog=2.254 · maxdd_fav=-9922.9 · maxdd_dog=-20934.0 | `f22f163` (2026-06-23) | `evidence/frente-LMN` |
+| **N** | Indices | Entropia + co-momento entre mercados | 40_entropy_comoment | f28 | corr_entropy_skew=0.827 · corr_1x2_ou_skew=0.146 | `f22f163` (2026-06-23) | `evidence/frente-LMN` |
 
 ## Tags de versionamento (`evidence/*`)
 Uma tag anotada por marco de evidência aponta o commit que estabeleceu
