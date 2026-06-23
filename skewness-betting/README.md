@@ -32,8 +32,10 @@ skewlib/              módulo reutilizável
   devig.py            de-vigging 1X2 (multiplicative / Shin / power)
   exante.py           skewness ex-ante (implícita) + cumulantes totais [objeto primário]
   elo.py              Elo só de resultados → competitividade odds-free
-  panel.py            painel liga×temporada, tendência, variância, COVID
+  panel.py            painel liga×temporada, tendência, variância, COVID, quebras
   overunder.py        mercado binário over/under 2.5
+  balance.py          índices de CB da classificação (Noll-Scully/HHI*/Theil)
+  model.py            ordered-probit: derivação skewness=f(dispersão de força)
 analysis/             scripts finos que importam skewlib (um por bloco)
   00_fetch_data.py    baixa o dataset
   01..06              Blocos A–F originais (ver docs/FINDINGS.md)
@@ -42,8 +44,13 @@ analysis/             scripts finos que importam skewlib (um por bloco)
   09_panel_temporal.py W3 — invariância temporal (painel, COVID)
   10_overunder.py     W5 — mercado binário over/under 2.5
   11_margin_robustness.py W4 — margem ortogonal + robustez de-vig
+  13_regimes.py       P1 — invariância intra-regime (quebras, EPL)
+  14_balance_indices.py P2 — CB odds-independente da classificação
+  15_model.py         P3 — derivação formal + figura F5
+  16_flb_stability.py P4 — estabilidade temporal do FLB (Angelini)
   12_figures.py       figuras do paper (F1–F4)
-docs/                 metodologia, achados (log de fases), outline + abstract
+docs/                 metodologia, achados (log de fases), outline + abstract + draft
+  LITERATURA.md       revisão de literatura (deep-research, verificada)
 outputs/              séries, tabelas, figuras geradas (não versionado)
 data/PROVENANCE.json  hash + recorte do dataset congelado (versionado)
 ```
@@ -75,5 +82,10 @@ PYTHONPATH=. python analysis/01_baseline.py # ou qualquer 0X_*
 | W3 temporal | painel sem tendência (β=+0.0002/ano, p=0.73); ICC 0.70; COVID corrobora a causa |
 | W4 margem | overround 1.067→1.009, skewness +0.236→+0.254 (ortogonal); robusto ao de-vig |
 | W5 binário | over/under 2.5: identidade vale fora do 1X2 (within 99.6%) |
+| P1 regime | só 1 quebra em 38 ligas (COVID); EPL 0 → invariância **intra-regime** |
+| P2 CB classif. | lei odds-independente: skew~Noll-Scully −0.63, ~HHI* −0.59, ~Theil −0.48 |
+| P3 derivação | ordered-probit prevê 3º momento do 1º: r=+0.90, RMSE 0.024 (F5) |
+| P4 FLB estável | sem drift do viés (corr ano +0.27 n.s.); calibração ano a ano intacta |
 
-Detalhes e log de fases em `docs/FINDINGS.md`; metodologia em `docs/METHODOLOGY.md`.
+Detalhes e log de fases em `docs/FINDINGS.md`; metodologia em `docs/METHODOLOGY.md`;
+literatura em `docs/LITERATURA.md`; rascunho do paper em `docs/paper/draft.md`.
