@@ -79,6 +79,29 @@ sits within a single modern regime; our claim is invariance of a league-specific
 baseline *within* that regime, not atemporality, and we test for within-window
 breaks directly.
 
+**Related work and the gap.** Three strands meet here. The competitive-balance
+literature measures imbalance with size-robust indices — the Noll-Scully ratio,
+the normalised HHI* of Owen, Ryan & Weatherston (2007) and generalised-entropy
+families [Borooah & Mangan 2012] — and warns that the Gini coefficient is invalid
+for zero-sum league play [Utt & Fort 2002]; but it stops at the *first and second*
+moments of the outcome distribution. The forecasting literature provides the
+bridge from strength to per-match outcome probabilities — ordered-probit models
+[Goddard & Asimakopoulos 2004; Koning 2000] and strength-block multinomial models
+[Basini et al. 2023] — and the nearest analog to our object, Csató & Petróczy
+(2024), expresses ex-ante balance as the (normalised) *mean* win probability of
+the stronger side, finding, like us, no long-run trend, but for tournament group
+stages and at the mean rather than the third moment. The de-vigging literature
+supplies our tools and a caution: the multiplicative method ignores the
+favourite–longshot structure [Clarke, Kovalchik & Ingram 2017], Shin's method is
+strong but not universally dominant [Shin 1993; Štrumbelj 2014], and each price is
+formally consistent with a distribution of true probabilities rather than a single
+one [Nash 2018] — a defence against the charge that "odds are probabilities by
+definition." To our knowledge no prior work treats the **skewness (third moment)**
+of the de-vigged 1X2 distribution as a league-level invariant, formalises
+skewness = *f*(competitiveness), or tests its cross-league constancy with explicit
+third-moment inference while confronting de-vig circularity head-on. That is the
+gap we fill.
+
 ## 2. Data
 
 We use a normalised, multi-league compilation of football-data.co.uk match data
@@ -117,9 +140,12 @@ backbone of the FLB.
 
 Bookmaker odds embed a margin (overround): the raw inverse-odds sum to more than
 one. To recover probabilities we de-vig using the **Shin (1993)** model, whose
-single parameter *z* estimates the proportion of informed ("insider") money; we
-use multiplicative (proportional) and power de-vigging as robustness. The mean
-1X2 overround is 1.067 and the mean Shin *z* is 0.034.
+single parameter *z* estimates the proportion of informed ("insider") money
+[Štrumbelj 2014]; we use multiplicative (proportional) and power de-vigging as
+robustness, and report sensitivity across all three rather than claiming
+unconditional superiority for any (Štrumbelj's strong dominance claim for Shin
+does not hold universally). The mean 1X2 overround is 1.067 and the mean Shin *z*
+is 0.034.
 
 ### 3.3 Aggregation and decomposition
 
@@ -288,7 +314,10 @@ strength model plus the favourite–longshot identity, not a free fit.
 The central findings are insensitive to analytical choices. The global ex-ante
 skewness is 0.224 / 0.236 / 0.263 under power / Shin / multiplicative de-vigging,
 while the cross-league law is essentially unchanged (corr −0.906 / −0.900 /
-−0.891). Stationarity is confirmed by both ADF (p < 0.001) and KPSS (p = 0.10)
+−0.891). The ordering is itself a sanity check: the multiplicative method, which
+removes the margin proportionally and so under-corrects the longshot side, returns
+the highest skewness, exactly as expected when a de-vig ignores the
+favourite–longshot structure [Clarke, Kovalchik & Ingram 2017]. Stationarity is confirmed by both ADF (p < 0.001) and KPSS (p = 0.10)
 across window sizes from 500 to 3000 matches and under league-demeaning. The
 apparent short-run persistence in overlapping windows (ACF₁ = 0.74) is entirely a
 window-overlap artefact: with disjoint windows the series is white noise
@@ -371,27 +400,53 @@ asymmetry is inherited from the sport, not produced by the pricing of it.
 
 - Andrikogiannopoulou, A. & Papakonstantinou, F. *Estimating Risk Preferences
   from Betting Choices.* Review of Financial Studies.
+- Angelini, G. & De Angelis, L. (2019). *Efficiency of online football betting
+  markets.* International Journal of Forecasting 35(2):712–721.
 - Barberis, N. & Huang, M. (2008). *Stocks as Lotteries.* American Economic Review.
+- Basini, L., Tsouli, V., Ntzoufras, I. & Friel, N. (2023). *Assessing competitive
+  balance in football via a stochastic block model.* J. Royal Statistical Society
+  A 186(3):530–556.
+- Borooah, V. & Mangan, J. (2012). *Measuring competitive balance in sports using
+  generalized entropy.* Applied Economics 44(9):1093–1102.
 - Boyer, B., Mitton, T. & Vorkink, K. (2010). *Expected Idiosyncratic Skewness.*
   Review of Financial Studies.
+- Clarke, S., Kovalchik, S. & Ingram, M. (2017). *Adjusting bookmaker's odds to
+  allow for overround.* American J. Sports Science 5(6):45–49.
 - Constantinou, A. & Fenton, N. (2012). *Solving the problem of inadequate scoring
   rules for assessing probabilistic football forecasts.* J. Quantitative Analysis
   in Sports.
+- Csató, L. & Petróczy, D. (2024). *Long-term trends in the competitive balance of
+  the UEFA Champions League group stage.* arXiv:2406.19222.
 - Garrett, T., Hartley, R. & Coughlin, C. (2006). *Moment preferences and the
   favorite–longshot bias.*
+- Goddard, J. & Asimakopoulos, I. (2004). *Forecasting football results and the
+  efficiency of fixed-odds betting.* Journal of Forecasting 23(1):51–66.
 - Golec, J. & Tamarkin, M. (1998). *Bettors Love Skewness, Not Risk, at the Horse
-  Track.* Journal of Political Economy.
+  Track.* Journal of Political Economy 106(1):205–225.
 - Harvey, C. & Siddique, A. (2000). *Conditional Skewness in Asset Pricing Tests.*
   Journal of Finance.
+- Koning, R. (2000). *Balance in competition in Dutch soccer.* The Statistician
+  (JRSS-D) 49(3):419–431.
 - Kraus, A. & Litzenberger, R. (1976). *Skewness Preference and the Valuation of
   Risk Assets.* Journal of Finance.
+- Lee, Y. H. & Fort, R. (2012). *Competitive balance: time series lessons from the
+  English Premier League.* Scottish J. Political Economy 59(3):266–282.
+- Nash, J. (2018). *A formal approach to modelling the characteristics of sports
+  betting markets.* arXiv:1811.12516.
+- Owen, P. D., Ryan, M. & Weatherston, C. (2007). *Measuring competitive balance
+  in professional team sports using the Herfindahl–Hirschman index.* Review of
+  Industrial Organization 31:289–302.
 - Shin, H. S. (1993). *Measuring the Incidence of Insider Trading in a Market for
-  State-Contingent Claims.* Economic Journal.
+  State-Contingent Claims.* Economic Journal 103(420):1141–1153.
 - Snowberg, E. & Wolfers, J. (2010). *Explaining the Favorite–Longshot Bias: Is it
   Risk-Love or Misperceptions?* Journal of Political Economy.
 - Snowberg, E., Wolfers, J. & Zitzewitz, E. (2013). *Prediction Markets for
   Economic Forecasting.* Handbook of Economic Forecasting.
 - Štrumbelj, E. (2014). *On determining probability forecasts from betting odds.*
-  International Journal of Forecasting.
+  International Journal of Forecasting 30(4):934–943.
 - Thaler, R. & Ziemba, W. (1988). *Anomalies: Parimutuel Betting Markets.* Journal
   of Economic Perspectives.
+- Utt, J. & Fort, R. (2002). *Pitfalls to measuring competitive balance with Gini
+  coefficients.* J. Sports Economics 3(4):367–373.
+- Whelan, K. (2024). *The favourite–longshot bias in fixed-odds football betting.*
+  Economica 91(361):188–209.
