@@ -101,6 +101,8 @@ experimento natural de choque na vantagem de casa).
 | Estacionariedade/i.i.d. | ADF+KPSS, Ljung-Box, Variance-Ratio, AR(1) |
 | Invariância temporal | painel FE+ano (SE cluster), ICC, quebras |
 | Margem | overround e skew: odds média vs máxima |
+| Forma fechada (E1) | quadratura do integral gaussiano vs MC; expansão near-balance |
+| Robustez de força (E2) | curva skew×p_fav sob t-Student/skew-normal/uniforme |
 | Robustez | de-vig (mult/power/shin), janela, overlap, O/U binário |
 
 ## 8. Resultados (amostra congelada)
@@ -115,6 +117,8 @@ experimento natural de choque na vantagem de casa).
 | ICC (between/total) | **0,70** | invariante de liga domina o tempo |
 | Margem: overround vs skew | 1,067→1,009 vs +0,236→+0,254 | margem ortogonal à assimetria |
 | O/U 2.5 binário | ex-ante −0,210 (within 99,6%) | identidade vale fora do 1X2 |
+| Forma fechada S(σ_L) (E1) | quadratura ≈ MC (max\|Δ\|=**0,0015**); S₀=(1−2p₀)/√(p₀(1−p₀)) | lei é integral fechado, não simulação |
+| Robustez de força (E2) | max\|ΔS\|=**0,03** (t/skew-normal/uniforme) < sd-liga 0,05 | lei = geometria da mistura, não gaussianidade |
 
 ### Síntese
 A skewness do mercado de apostas é um **invariante estrutural**: ~100% a

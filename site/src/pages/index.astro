@@ -14,6 +14,9 @@ const m = data.moments;
 const col = data.collapse;
 const pr = data.premium;
 const cp = data.cpt;
+const cf = data.closed_form;
+const fr = data.force_robustness;
+const frFam = Object.fromEntries(fr.families.map(f => [f.key, f]));
 ---
 <Base>
   <Nav />
@@ -187,12 +190,61 @@ const cp = data.cpt;
 
   <hr class="divider" />
 
+  <!-- THEORY / CLOSED FORM + ROBUSTNESS -->
+  <section id="theory">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="eyebrow">06 · Theory</div>
+        <h2>Closed form, not a simulation — and it doesn't need the bell curve.</h2>
+        <p class="lede">The derived law was traced by Monte Carlo. We close it: the league's skewness is a
+          one-dimensional Gaussian integral, evaluated exactly. And it survives swapping the strength
+          distribution for heavy tails, skew, or a flat box — the law is the geometry of the mixture,
+          not the normality assumption.</p>
+      </div>
+      <div class="split">
+        <div class="reveal prose">
+          <h3>The law in closed form</h3>
+          <p>Under fair odds the favourite's standardised skewness is
+            <strong>S(σ_L) = E[m₃(p)] / E[σ²(p)]<sup>3/2</sup></strong>, the expectation taken over the
+            match strength gap <em>d ~ N(0, 2σ_L²)</em>. That expectation is a 1-D Gaussian integral; evaluating
+            it by quadrature reproduces the Monte-Carlo curve to
+            <strong>|Δ| ≤ {cf.max_mc_err.toFixed(4)}</strong> (the MC noise floor), noise-free. The balanced limit
+            is fully analytic: <strong>S₀ = (1−2p₀)/√(p₀(1−p₀)) = +{cf.S0.toFixed(3)}</strong> with
+            <strong>p₀ = Φ(h−c) = {cf.p0.toFixed(3)}</strong> — the per-match identity at the equilibrium favourite.
+            The curve is concave, peaking at <strong>σ* = {cf.sigma_peak.toFixed(2)}</strong>
+            (S<sub>max</sub> = +{cf.skew_peak.toFixed(2)}) and crossing zero only when one side dominates. It still
+            places the 38 leagues at <strong>r = +{cf.league_r.toFixed(2)}</strong>.</p>
+          <h3>Robust to the strength distribution</h3>
+          <p>The match gap <em>d = rᵢ − rⱼ</em> is symmetric for <em>any</em> i.i.d. strength law — so skew in the
+            strengths can't bias the result; only tail weight can. Swapping Normal strengths for Student-t
+            (excess kurtosis of d up to <strong>{frFam.t3.exkurt_d.toFixed(0)}</strong>), skew-normal or uniform,
+            the skewness–competitiveness curve shifts by at most
+            <strong>|ΔS| = {fr.max_dS_overall.toFixed(3)}</strong> — below the between-league spread
+            ({fr.sd_between_leagues.toFixed(3)}). Skew-normal collapses onto the Gaussian almost exactly, exactly
+            as the symmetry argument predicts.</p>
+          <div class="mini-stats">
+            <div><span class="stat-num">{cf.max_mc_err.toFixed(4)}</span><label>max gap between the closed-form integral and Monte Carlo — the law is exact, not simulated</label></div>
+            <div><span class="stat-num">≤{fr.max_dS_overall.toFixed(2)}</span><label>largest curve shift across heavy-tailed, skewed and flat strength laws — the law is geometry, not Gaussianity</label></div>
+          </div>
+        </div>
+        <div class="reveal" style="display:flex;flex-direction:column;gap:18px">
+          <img src="/f10_closed_form.png" alt="Closed-form quadrature curve matching Monte Carlo, and the leagues lying on the closed-form curve"
+            style="width:100%;border-radius:12px;border:1px solid var(--line)" />
+          <img src="/f11_force_robustness.png" alt="The skewness–competitiveness curve under Normal, Student-t, skew-normal and uniform strength distributions"
+            style="width:100%;border-radius:12px;border:1px solid var(--line)" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
   <!-- TIMELINE -->
   <section id="timeline" style="background:var(--surface-2)">
     <div class="container">
       <div class="section-head reveal">
-        <div class="eyebrow">06 · How we got here</div>
-        <h2>Fifteen phases, each verified.</h2>
+        <div class="eyebrow">07 · How we got here</div>
+        <h2>Seventeen phases, each verified.</h2>
         <p class="lede">From a frozen dataset to a derived law — every claim reproduced from one command and
           checked against an adversarially-verified literature review.</p>
       </div>
@@ -211,7 +263,7 @@ const cp = data.cpt;
       </div>
       <div class="repro card reveal">
         <pre class="mono"><code>git clone https://github.com/cold-code-labs/skew-dynamic
-cd skew-dynamic/study && ./run.sh   <span class="cmt"># venv + data + blocks 00→18</span></code></pre>
+cd skew-dynamic/study && ./run.sh   <span class="cmt"># venv + data + blocks 00→22</span></code></pre>
       </div>
       <div class="hero-cta" style="margin-top:28px">
         <a class="btn btn-primary" href="/paper">Read the paper →</a>

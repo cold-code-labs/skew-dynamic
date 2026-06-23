@@ -1,6 +1,6 @@
 ---
 const phases = [
-  { tag: 'P0', kind: 'Foundation', title: 'Freeze & reproduce', body: '205,435 matches · 38 leagues · 2005–2025, frozen by content hash. The full 00→18 pipeline reproduces every number from one command.' },
+  { tag: 'P0', kind: 'Foundation', title: 'Freeze & reproduce', body: '205,435 matches · 38 leagues · 2005–2025, frozen by content hash. The full 00→22 pipeline reproduces every number from one command.' },
   { tag: 'W1', kind: 'Finding', title: 'The mechanical core', body: 'Ex-ante (de-vigged) skewness +0.236 ≈ ex-post +0.230. A law-of-total-cumulants split shows the third moment is +102.6% within-match — the FLB itself.' },
   { tag: 'W2', kind: 'Mechanism', title: 'The law, without odds', body: 'A results-only Elo measures competitiveness with no market data. The law survives (skew ~ upset rate +0.83), and odds ↔ Elo agree at +0.91.' },
   { tag: 'W3', kind: 'Invariance', title: 'No secular trend', body: 'League×season panel: β = +0.00015/yr (p = 0.73); 70% of variance is between-league. The COVID empty-stadium shock moved skewness the predicted way.' },
@@ -15,6 +15,8 @@ const phases = [
   { tag: 'B2', kind: 'Collapse', title: 'Distribution collapse', body: 'Standardised returns differ across leagues (median KS 0.47); conditioning on competitiveness collapses them to 0.06 — an 87% drop. Given the sport’s competitiveness, league identity adds nothing.' },
   { tag: 'C1', kind: 'Pricing', title: 'No premium beyond the bias', body: 'The favourite’s −4.8% return is −5.0% margin + 0.15% longshot bias. The league residual is uncorrelated with skewness (r = +0.11): no extra, skewness-linked edge is priced.' },
   { tag: 'C2', kind: 'Preference', title: 'An invariant preference', body: 'The probability weighting behind the bias fits Tversky-Kahneman γ = 0.96 (inverse-S). γ shows no drift in 20 years (sd 0.02/season) and is tight across leagues (sd 0.04) — a stable structural constant.' },
+  { tag: 'E1', kind: 'Theory', title: 'The law in closed form', body: 'S(σ_L) is a 1-D Gaussian integral; quadrature reproduces the Monte-Carlo curve to |Δ| ≤ 0.0015 (the noise floor). The balanced limit is analytic — S₀ = (1−2p₀)/√(p₀(1−p₀)) with p₀ = Φ(h−c) — and the leagues still sit on the closed curve at r = +0.90.' },
+  { tag: 'E2', kind: 'Robustness', title: 'Robust to the strength law', body: 'The match gap d = rᵢ−rⱼ is symmetric for any i.i.d. strength, so only tail weight can move the law. Heavy-tailed (t), skewed and uniform strengths shift the skewness–competitiveness curve by at most |ΔS| = 0.03 — below the between-league spread (0.05).' },
 ];
 ---
 <ol class="timeline">

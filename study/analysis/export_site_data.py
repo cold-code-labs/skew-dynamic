@@ -130,6 +130,53 @@ def main():
                       for r in gy.itertuples()],
     }
 
+    # E1 — forma fechada de S(σ_L) (quadratura do integral gaussiano)
+    from scipy.stats import norm as _norm
+    cf = model.smallsigma_coeffs(par["h"], par["c"])
+    p0_an = float(_norm.cdf(par["h"] - par["c"]))
+    sig_e = np.linspace(0.03, 1.30, 44)
+    pf_ex, sk_ex = model.curve_exact(par["h"], par["c"], sig_e)
+    sk_mc_e = np.array([model.league_skew(s, par["h"], par["c"], n=300000, seed=7)
+                        for s in sig_e])
+    sg = np.linspace(0.02, 1.30, 300)
+    sk_fine = np.array([model.league_skew_exact(s, par["h"], par["c"]) for s in sg])
+    i_pk = int(sk_fine.argmax())
+    oe = np.argsort(pf_ex)
+    pred_e = np.interp(lg.p_fav_dv_mean.values, pf_ex[oe], sk_ex[oe])
+    closed_form = {
+        "p0": p0_an, "S0": cf["S0"], "S2": cf["S2"],
+        "max_mc_err": float(np.max(np.abs(sk_mc_e - sk_ex))),
+        "sigma_peak": float(sg[i_pk]), "skew_peak": float(sk_fine[i_pk]),
+        "pfav_peak": float(model.mean_pfav_exact(sg[i_pk], par["h"], par["c"])),
+        "league_r": float(np.corrcoef(pred_e, lg.skew_exante.values)[0, 1]),
+        "curve": [{"sigma": float(s), "p_fav": float(a), "skew": float(b)}
+                  for s, a, b in zip(sig_e, pf_ex, sk_ex)],
+    }
+
+    # E2 — robustez da distribuição de força
+    from scipy.stats import kurtosis as _kurt
+    fams = [("normal", {}, "normal"), ("t", {"nu": 3.0}, "t3"),
+            ("t", {"nu": 5.0}, "t5"), ("skewnormal", {"alpha": 4.0}, "skewnormal"),
+            ("uniform", {}, "uniform")]
+    fcurves = {key: model.curve_family(par["h"], par["c"], sig_e, family=fam,
+                                       n=250000, seed=11, **kw)
+               for fam, kw, key in fams}
+    blo = max(v[0].min() for v in fcurves.values())
+    bhi = min(v[0].max() for v in fcurves.values())
+    pgr = np.linspace(blo + 0.005, bhi - 0.005, 40)
+    nbpf, nbsk = fcurves["normal"]
+    base_i = np.interp(pgr, np.sort(nbpf), nbsk[np.argsort(nbpf)])
+    force_rob = {"families": []}
+    for fam, kw, key in fams:
+        pf, sk = fcurves[key]
+        si = np.interp(pgr, np.sort(pf), sk[np.argsort(pf)])
+        d = model.force_diff(par["sigma_ref"], 300000, 5, fam, **kw)
+        force_rob["families"].append({
+            "key": key, "exkurt_d": float(_kurt(d)),
+            "max_dS": float(np.max(np.abs(si - base_i)))})
+    force_rob["max_dS_overall"] = float(max(f["max_dS"] for f in force_rob["families"]))
+    force_rob["sd_between_leagues"] = float(lg.skew_exante.std())
+
     data = {
         "meta": {"n_matches": prov["analysis_rows_ge2005"], "leagues": prov["leagues"],
                  "date_min": prov["date_min"], "date_max": prov["date_max"],
@@ -149,6 +196,7 @@ def main():
         "flb_year": flb_year,
         "moments": moments, "collapse": collapse_data,
         "premium": premium_data, "cpt": cpt_data,
+        "closed_form": closed_form, "force_robustness": force_rob,
     }
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(round_rec(data), ensure_ascii=False, indent=0))

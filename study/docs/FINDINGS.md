@@ -374,3 +374,61 @@ Shin apagaria o viés a medir, então usa-se o proporcional).
 
 Artefatos: `skewlib/cpt.py`, `analysis/20_cpt.py`, `outputs/cpt_by_league.csv`,
 `outputs/cpt_by_season.csv`, `outputs/fig/f9_cpt.png`.
+
+## Fase E1 — Forma fechada de S(σ_L): a derivação sai do Monte Carlo (2026-06-23)
+O P3/bloco 15 traça a lei skewness=f(competitividade) por SIMULAÇÃO sobre a força
+`d`. Aqui mostramos que a esperança é um INTEGRAL gaussiano 1-D em `d` e o
+avaliamos por QUADRATURA — a forma fechada de `S(σ_L)=E[m₃(p_fav(d))]/E[σ²(p_fav(d))]^{3/2}`,
+`d~N(0,2σ_L²)`, determinística e sem ruído de MC.
+
+- **A quadratura reproduz o MC, sem ruído:** max|MC−exato| = **0.0015** (com
+  n=4·10⁵; é a magnitude do próprio ruído de MC), médio 0.0006, em toda a grade de
+  σ_L. A curva teórica vira exata e suave — a "derivação por simulação" passa a ser
+  derivação fechada.
+- **Limite balanceado em forma fechada:** `S(σ_L→0) = (1−2p₀)/√(p₀(1−p₀)) = +0.2449`,
+  com `p₀=Φ(h−c)=0.4392` (o favorito de equilíbrio = mandante). É a identidade por
+  jogo avaliada em p₀ — o intercepto da lei sai analítico. A curvatura líder
+  `S₂=+8.44>0` (a skew SOBE ao sair do equilíbrio), válida p/ σ_L≲0.1.
+- **A curva NÃO é monótona (caracterização exata):** côncava, com **pico em σ*=0.123
+  (S_max=+0.304, p_fav*=0.446)** e zerando em σ_L≈1.09 (favorito forte ⇒ skew→0 e
+  vira negativa). Corrige o "monótona" do docstring antigo.
+- **Honestidade matemática:** `p_fav(d)=max(p_H,p_D,p_A)` tem QUINAS onde o favorito
+  troca → `S(σ_L)` é C^∞ mas **não-analítica global** (a série de Taylor diverge além
+  do regime near-balance, confirmado numericamente). A forma fechada legítima é o
+  integral (quadratura), não uma série elementar; a expansão S₀+S₂σ² é a âncora
+  analítica local.
+- **Prevê as 38 ligas pela curva fechada:** corr(previsto,observado) = **+0.903**,
+  RMSE 0.024 — idêntico ao bloco 15 por MC (r=0.904), agora sem reamostragem.
+- **Conclusão:** a lei skewness=f(competitividade) é uma consequência fechada do
+  modelo de força + FLB, derivada do integral gaussiano, não um ajuste nem um
+  artefato de simulação.
+
+Artefatos: `skewlib/model.py` (league_moments_exact, league_skew_exact,
+mean_pfav_exact, smallsigma_coeffs/skew, fav_switch_points, curve_exact),
+`analysis/21_closed_form.py`, `outputs/closed_form_curve.csv`,
+`outputs/fig/f10_closed_form.png`.
+
+## Fase E2 — Robustez da distribuição de força (2026-06-23)
+O modelo assume força gaussiana, `r~N(0,σ_L²)`. A lei sobrevive se a força for
+cauda-pesada (t-Student), assimétrica (skew-normal) ou de suporte limitado
+(uniforme)? Predição teórica: a diferença de força `d=rᵢ−rⱼ` é **simétrica p/
+qualquer força iid** — a assimetria da força não pode enviesar a lei; só a CAUDA
+(kurtose de `d`) pode mover algo.
+
+- **A teoria bate:** exc.kurt(d) = normal 0.0, t₅ +2.8, **t₃ +42.6** (cauda
+  pesadíssima), skew-normal ±0.3, uniforme −0.6. skew(d)≈0 em TODAS (incl. as
+  skew-normais) — a força assimétrica gera diferença simétrica.
+- **A curva skew×competitividade quase não se move:** reparametrizando pela
+  competitividade observável (mean p_fav) e comparando à gaussiana, max|ΔS| =
+  t₅ **0.017**, t₃ **0.032**, skew-normal ±0.012, uniforme 0.011 — todos abaixo do
+  sd entre ligas (0.051). O deslocamento escala com a CAUDA de `d` (t₃ é o maior),
+  não com sua assimetria (skew-normal cola na gaussiana, como previsto).
+- **No ponto operacional do futebol** (p_fav=0.499): skew ∈ [+0.223,+0.250],
+  amplitude entre famílias = **0.027** (pequena perante o efeito da competitividade,
+  que varre +0.30→−0.02).
+- **Conclusão:** a lei é **geometria da mistura**, não da hipótese gaussiana —
+  robusta a caudas pesadas e a assimetria de força. A gaussianidade é conveniência,
+  não premissa carregando o resultado.
+
+Artefatos: `skewlib/model.py` (force_diff, curve_family), `analysis/22_force_robustness.py`,
+`outputs/force_robustness.csv`, `outputs/fig/f11_force_robustness.png`.

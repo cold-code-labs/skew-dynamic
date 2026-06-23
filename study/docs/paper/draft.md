@@ -366,14 +366,33 @@ home advantage h and standard-normal noise generates (away, draw, home) through 
 pair of cut-offs ±c, and the favourite probability is p = max(P_H, P_D, P_A).
 Under fair odds the favourite bet has zero mean, so a league's pooled skewness is
 the closed functional S(σ_L) = E[m₃(p)] / E[σ²(p)]^{3/2} with σ²(p) = (1 − p)/p and
-m₃(p) = (1 − p)(1 − 2p)/p² — a monotone function of the single competitiveness
-parameter σ_L. Calibrating (h, c, σ) once to the pooled marginal rates (home
-0.444, draw 0.264, mean favourite probability 0.499) gives h = 0.22, c = 0.37, and
-the resulting curve **predicts each league's third moment from its first moment
-(mean favourite probability) at r = +0.90, RMSE 0.024** — less than half the
-between-league standard deviation. The thirty-eight leagues lie on the derived
-curve (Figure 5): the skewness–competitiveness law is an analytic consequence of a
-strength model plus the favourite–longshot identity, not a free fit.
+m₃(p) = (1 − p)(1 − 2p)/p² — a single-peaked (concave) function of the lone
+competitiveness parameter σ_L. Calibrating (h, c, σ) once to the pooled marginal
+rates (home 0.444, draw 0.264, mean favourite probability 0.499) gives h = 0.22,
+c = 0.37, and the resulting curve **predicts each league's third moment from its
+first moment (mean favourite probability) at r = +0.90, RMSE 0.024** — less than
+half the between-league standard deviation. The thirty-eight leagues lie on the
+derived curve (Figure 5): the skewness–competitiveness law is an analytic
+consequence of a strength model plus the favourite–longshot identity, not a free
+fit.
+
+**The law in closed form (Figure 10).** S(σ_L) need not be simulated. Its two
+expectations are one-dimensional Gaussian integrals in the strength gap d, which we
+evaluate by adaptive quadrature, partitioning at the gap values where the favourite
+identity switches (the kinks of p_fav). The closed-form curve reproduces the
+Monte-Carlo estimate to a maximum absolute difference of 0.0015 — the Monte-Carlo
+noise floor — over the whole σ_L range, removing all simulation error. The balanced
+limit is fully analytic: as σ_L → 0, S(σ_L) → (1 − 2p₀)/√(p₀(1 − p₀)) with
+p₀ = Φ(h − c), the per-match identity evaluated at the equilibrium favourite
+(p₀ = 0.439, S₀ = +0.245 here), and the leading correction S₂ = +8.4 σ_L² is
+positive — skewness rises as a league departs from perfect balance. The curve is
+not monotone: it peaks at σ* = 0.12 (S_max = +0.30, mean favourite probability
+0.45) and declines thereafter, crossing zero only when one side becomes
+overwhelmingly favoured. Because p_fav is piecewise-smooth (kinked where the
+favourite changes identity), S(σ_L) is C^∞ but not globally analytic — its Taylor
+series about balance has a finite radius, so the closed form is the integral itself
+rather than an elementary series. Evaluated exactly, the curve still places the
+thirty-eight leagues at r = +0.90.
 
 **Why the within-match term dominates (tail cancellation).** The empirical finding
 that M_k ≈ E[m_{k,i}] at every order has a simple cause. Under fair odds the
@@ -407,6 +426,19 @@ window-overlap artefact: with disjoint windows the series is white noise
 (Ljung-Box p = 0.70, ACF₁ = −0.06). The per-match bootstrap benchmark (§4.3)
 quantifies how much within-league variation is mere sampling noise. Ex-ante and
 ex-post measures agree throughout.
+
+The derivation also does not lean on the Gaussian strength assumption (Figure 11).
+A match's strength gap is the difference d = rᵢ − rⱼ of two independent team
+strengths, which is symmetric about zero for *any* identically distributed strength
+law — so asymmetry in the strengths themselves cannot bias the result; only tail
+weight can. Replacing the Normal strengths with Student-t (raising the excess
+kurtosis of d from ~0 to as much as 36), with a skew-normal (±α), or with a uniform
+law, and comparing curves at matched competitiveness (mean favourite probability),
+the skewness–competitiveness relationship shifts by at most |ΔS| = 0.03 — smaller
+than the between-league standard deviation of 0.05. The skew-normal curves collapse
+onto the Gaussian almost exactly, precisely as the symmetry argument predicts, and
+the residual movement scales with the kurtosis of d, not its skew. The law is the
+geometry of the two-point mixture, not an artefact of normality.
 
 Finally, we guard against a specific confound: if the favourite–longshot bias
 itself drifted over the sample — recent work reports a weakening of the bias in
@@ -494,6 +526,12 @@ asymmetry is inherited from the sport, not produced by the pricing of it.
   no league-level premium beyond the mechanical level (right).
 - **Figure 9.** Invariant preference: the fitted Tversky–Kahneman probability
   weighting (left) and γ by season, flat within the between-league band (right).
+- **Figure 10.** Closed form: S(σ_L) by exact quadrature reproduces the Monte-Carlo
+  curve (left, max |Δ| = 0.0015) and, evaluated exactly, places the leagues on the
+  closed curve (right, r = +0.90).
+- **Figure 11.** Strength-law robustness: the skewness–competitiveness curve under
+  Normal, Student-t (ν = 3, 5), skew-normal and uniform strengths, near-coincident
+  when reparametrised by mean favourite probability (max |ΔS| = 0.03).
 
 ## References
 

@@ -81,6 +81,8 @@ for script in \
   analysis/18_collapse.py \
   analysis/19_premium.py \
   analysis/20_cpt.py \
+  analysis/21_closed_form.py \
+  analysis/22_force_robustness.py \
   analysis/12_figures.py
 do
   echo

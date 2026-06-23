@@ -90,11 +90,19 @@ parâmetros de preferência (CPT) são eles próprios invariantes.
   (além de 1X2 e O/U) para testar a identidade. AH é quase-binário com linha
   móvel → de-vig e skewness próprios.
 
-## Frente E — Endurecer a derivação (teoria)  [dataset]
-- **E1** Forma fechada de S(σ_L): hoje `model.league_skew` é por simulação.
-  Derivar E[m₃(p)]/E[σ²(p)]^{3/2} analiticamente via integrais gaussianas em d.
-- **E2** Robustez da distribuição de força: trocar N(0,σ²) por t-Student / força
-  assimétrica; a lei sobrevive? (modelo hoje assume forças gaussianas).
+## Frente E — Endurecer a derivação (teoria)  ✅ E1+E2 FEITAS (2026-06-23) [dataset]
+> **E1+E2 concluídas** (Fases E1/E2 em `FINDINGS.md`): E1 = `S(σ_L)` por QUADRATURA
+> do integral gaussiano (forma fechada, max|MC−exato|=0.0015), limite balanceado
+> analítico `S₀=(1−2p₀)/√(p₀(1−p₀))` com `p₀=Φ(h−c)`, pico exato σ*=0.123, curva
+> não-monótona; honesto sobre a não-analiticidade global (quinas de p_fav ⇒ a forma
+> fechada é o integral, não série elementar); prevê 38 ligas r=+0.903 sem ruído.
+> E2 = lei robusta à força (t-Student/skew-normal/uniforme): max|ΔS|≤0.032 vs sd-liga
+> 0.051; `d=rᵢ−rⱼ` simétrico p/ força iid ⇒ só a cauda (kurtose de d) move, e pouco.
+> Artefatos: `skewlib/model.py` (league_*_exact, smallsigma_*, force_diff, curve_*),
+> `analysis/{21_closed_form,22_force_robustness}.py`. **Pendente:** E3.
+- **E1** ✅ Forma fechada de S(σ_L) via integral gaussiano (quadratura) + expansão
+  near-balance. (Era por simulação em `model.league_skew`.)
+- **E2** ✅ Robustez da distribuição de força (t-Student / skew-normal / uniforme).
 - **E3** Cutoff de empate c endógeno por liga (ligas mais "empatadeiras"); refit
   e ver se a invariância muda. Calibrar (h,c,σ) POR liga, não só global.
 
@@ -131,9 +139,9 @@ ordem, ADF+KPSS dupla, reportar sensibilidade.
 ## Sugestão de ordem (payoff×custo)
 1. ~~**B1+B2** (multi-momento + colapso)~~ ✅ FEITA 2026-06-23 (Fases B1/B2).
 2. ~~**C1+C2** (prêmio de skew + CPT invariante)~~ ✅ FEITA 2026-06-23 (Fases C1/C2).
-3. **E1+E2** (forma fechada + robustez de força) — **PRÓXIMA**; blinda a teoria.
-4. **G1–G3** (robustez adversarial) — pré-submissão.
-5. **F1–F3 / D2–D4 / H2 / C3** (micro/microestrutura/Kelly no dataset).
+3. ~~**E1+E2** (forma fechada + robustez de força)~~ ✅ FEITA 2026-06-23 (Fases E1/E2).
+4. **G1–G3** (robustez adversarial) — **PRÓXIMA**; pré-submissão.
+5. **F1–F3 / D2–D4 / H2 / C3 / E3** (micro/microestrutura/Kelly/calibração-por-liga).
 
 > Foco atual (decisão Vitor 2026-06-23): **exaurir o futebol** no dataset congelado.
 > Frente A (tênis/outros esportes) e tudo que exige dado externo (D1, H1) ficam fora.
