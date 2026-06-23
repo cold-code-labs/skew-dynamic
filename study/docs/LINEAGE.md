@@ -1,0 +1,34 @@
+# LINEAGE — ledger de evidências (versionamento)
+
+> Gerado por `analysis/build_lineage.py` (não editar à mão). Cada fase pina
+> seu(s) número(s)-título à VERSÃO exata do código (commit + tag `evidence/*`)
+> e ao DATASET (`sha256:6905ca5324df9528`, 205435 jogos,
+> 38 ligas). Volte a qualquer estado com
+> `git checkout <tag>`; audite mudança de resultado com `--check`.
+
+**HEAD na geração:** `a70b7902`  ⚠️ working tree DIRTY
+
+| Fase | Frente | Achado | Blocos | Figuras | Números-título | Commit | Tag |
+|------|--------|--------|--------|---------|----------------|--------|-----|
+| **P0** | Foundation | Congelamento + reprodução | 00_fetch_data, 01_baseline | — | n_matches=205435 · leagues=38 · years=2005-2025 | `d58840c` (2026-06-23) | `evidence/phase-0` |
+| **W1** | Finding | Núcleo mecânico (skew ex-ante) | 07_devig_exante, 03_decomposition | f1, f3 | skew_exante=0.236 · skew_expost=0.23 · within_frac_m3=1.026 | `699f14c` (2026-06-23) | `evidence/W1` |
+| **W2** | Mechanism | Lei sem odds (Elo) | 08_mechanism_elo | f2 | corr_skew_upset=0.826 · corr_elo_odds=0.909 | `730fda7` (2026-06-23) | `evidence/W2` |
+| **W3** | Invariance | Invariância temporal (painel) | 09_panel_temporal | f4 | trend_beta_year=0.00015 · trend_p=0.73 · icc=0.7 | `c68eb69` (2026-06-23) | `evidence/W3` |
+| **W5** | Robustness | Mercado binário O/U 2.5 | 10_overunder | — | skew_ou=-0.21 · within_frac=0.996 | `95d1a07` (2026-06-23) | `evidence/W5` |
+| **W4** | Separation | Margem ortogonal + de-vig | 11_margin_robustness | — | overround_avg=1.067 · overround_best=1.009 | `16b8c2e` (2026-06-23) | `evidence/W4` |
+| **P1** | Reframe | Invariância intra-regime | 13_regimes | — | breaks_38_leagues=1 · epl_breaks=0 | `f2bc443` (2026-06-23) | `evidence/P1` |
+| **P2** | Hardening | Balanço da classificação (odds-free) | 14_balance_indices | — | corr_skew_nollscully=-0.625 | `7f00792` (2026-06-23) | `evidence/P2` |
+| **P3** | Theory | Lei derivada (ordered-probit) | 15_model | f5 | model_r=0.904 · model_rmse=0.024 | `624547a` (2026-06-23) | `evidence/P3` |
+| **P4** | Confound | FLB estável (Angelini) | 16_flb_stability | — | mean_abs_ante_post=0.015 | `2bcef94` (2026-06-23) | `evidence/P4` |
+| **B1** | Shape | Invariância de FORMA (multi-momento) | 17_moments | f6 | model_r_var=0.987 · model_r_skew=0.904 · model_r_exkurt=0.89 | `6946fc6` (2026-06-23) | `evidence/frente-B` |
+| **B2** | Collapse | Colapso de distribuição | 18_collapse | f7 | uncond_ks=0.474 · cond_ks=0.059 · drop=0.87 | `6946fc6` (2026-06-23) | `evidence/frente-B` |
+| **C1** | Pricing | Sem prêmio além do FLB mecânico | 19_premium | f8 | ret=-0.0482 · vig=-0.0497 · flb=0.0015 · resid_skew_r=0.11 | `2b2d423` (2026-06-23) | `evidence/frente-C` |
+| **C2** | Preference | CPT invariante (γ) | 20_cpt | f9 | gamma=0.958 · gamma_sd_season=0.02 · gamma_sd_league=0.04 · trend_beta=0.0003 | `2b2d423` (2026-06-23) | `evidence/frente-C` |
+| **E1** | Theory | Forma fechada de S(σ_L) | 21_closed_form | f10 | max_mc_err=0.0015 · p0=0.4392 · S0=0.2449 · sigma_peak=0.1226 · league_r=0.903 | `a70b790` (2026-06-23) | `evidence/frente-E` |
+| **E2** | Robustness | Robustez da distribuição de força | 22_force_robustness | f11 | max_dS_overall=0.032 · sd_between_leagues=0.0518 | `a70b790` (2026-06-23) | `evidence/frente-E` |
+
+## Tags de versionamento (`evidence/*`)
+Uma tag anotada por marco de evidência aponta o commit que estabeleceu
+aqueles números. `git tag -n` lista; `git checkout evidence/frente-E`
+recupera o código exato da Frente E.
+

@@ -17,7 +17,7 @@ import numpy as np
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from skewlib import io, returns, exante, model, config as C
+from skewlib import io, returns, exante, model, provenance as prov, config as C
 
 
 def main():
@@ -110,6 +110,10 @@ def main():
     fig.tight_layout()
     fig.savefig(FIG / "f10_closed_form.png", dpi=150, bbox_inches="tight"); plt.close(fig)
     print(f"  -> {FIG / 'f10_closed_form.png'}")
+
+    prov.write_stamp("21_closed_form", metrics={
+        "max_mc_err": float(err.max()), "p0": p0_analytic, "S0": float(S0_identity),
+        "sigma_peak": float(sg[i]), "league_r": r})
 
 
 if __name__ == "__main__":

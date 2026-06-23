@@ -17,7 +17,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from scipy.stats import kurtosis
-from skewlib import io, returns, exante, model, config as C
+from skewlib import io, returns, exante, model, provenance as prov, config as C
 
 FAMILIES = [
     ("normal",          {},            "N(0,σ²) — baseline",          "#444444"),
@@ -108,6 +108,11 @@ def main():
     fig.savefig(FIG / "f11_force_robustness.png", dpi=150, bbox_inches="tight")
     plt.close(fig)
     print(f"  -> {FIG / 'f11_force_robustness.png'}")
+
+    sd_lg = float(exante.pooled_by(df, "Division", min_n=2000).skew_exante.std())
+    prov.write_stamp("22_force_robustness", metrics={
+        "max_dS_overall": float(max(r["max_dS"] for r in rows)),
+        "sd_between_leagues": sd_lg})
 
 
 if __name__ == "__main__":

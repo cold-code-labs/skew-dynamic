@@ -18,3 +18,7 @@ node_modules/
 
 # os
 .DS_Store
+
+# carimbos de execução (regeneráveis; o ledger versionado é lineage.json)
+study/outputs/_provenance/
+outputs/_provenance/

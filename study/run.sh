@@ -92,5 +92,13 @@ do
   "$PY" "$script"
 done
 
+# 4) ledger de evidências: (re)gera lineage.json + docs/LINEAGE.md e audita drift
 echo
-echo "==> pipeline concluída. Séries/tabelas em outputs/"
+echo "================================================================"
+echo "==> lineage — ledger de evidências + auditoria de drift"
+echo "================================================================"
+"$PY" analysis/build_lineage.py
+"$PY" analysis/build_lineage.py --check
+
+echo
+echo "==> pipeline concluída. Séries/tabelas em outputs/; evidências em lineage.json"

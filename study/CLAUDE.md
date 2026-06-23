@@ -27,11 +27,29 @@ competitividade da liga. Ver `docs/FINDINGS.md` para o estado atual.
 - Reportar sensibilidade a tamanho de janela como robustez.
 
 ## Estado e próximas frentes
-Tese central **provada** (W1–W5 + P1–P5, blocos 00–16; ver `docs/FINDINGS.md`).
-**Frentes abertas, priorizadas e detalhadas em `docs/RESEARCH-AGENDA.md`** —
-destaques: multi-momento + colapso de distribuição (barato, roda no dataset),
-tênis (generalização externa), prêmio de skewness/CPT (ângulo econômico), forma
-fechada da derivação, robustez adversarial. `docs/LITERATURA.md` ancora tudo.
+Tese central **provada** (W1–W5 + P1–P5 + B + C + E, blocos 00–22; ver
+`docs/FINDINGS.md`). **Frentes abertas, priorizadas e detalhadas em
+`docs/RESEARCH-AGENDA.md`** — restantes no dataset: G (robustez adversarial,
+próxima), F (micro), D2–D4 (microestrutura), H2 (aberto×fechado), C3 (Kelly), E3
+(calibração por liga). `docs/LITERATURA.md` ancora tudo.
+
+## Lineage / proveniência / versionamento (NÃO pular)
+Cada achado é pinado à versão exata que o produziu. Disciplina ao fechar uma frente:
+1. **Carimbar** — todo bloco novo termina com
+   `prov.write_stamp("NN_nome", metrics={...})` (números-título), gravando git
+   sha + hash do dataset + libs em `outputs/_provenance/` (regenerável).
+2. **Timeline** — adicionar a fase ao `docs/FINDINGS.md` (Fase X) **e** ao
+   `site/src/components/Timeline.astro` (uma entrada por sub-achado).
+3. **Ledger** — registrar a fase em `analysis/build_lineage.py:PHASES` (blocos,
+   figuras, números, commit, tag), rodar `python analysis/build_lineage.py` p/
+   regenerar `lineage.json` + `docs/LINEAGE.md`.
+4. **Versionar** — commit; depois `git tag -a evidence/<frente> <sha> -m "..."`
+   no commit que estabeleceu os números (`--tags` sugere os comandos).
+5. **Auditar** — `python analysis/build_lineage.py --check` compara os carimbos de
+   execução com o ledger e acusa **DRIFT** (script mudou ⇒ número mudou). O
+   `run.sh` já roda isso no fim da pipeline. Se houver drift legítimo, atualizar o
+   ledger + nova tag — o git guarda o histórico do número antigo.
+`git checkout evidence/frente-E` recupera o código exato de qualquer evidência.
 
 ## Estilo
 - Português nos comentários e docs. Código limpo, funções pequenas.
