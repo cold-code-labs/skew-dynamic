@@ -106,6 +106,26 @@ def main():
                   f"→ residual {abs(t['d']):.3f} (explica {expl:.0%}) → "
                   f"{'EQUIVALENTES' if t['equivalent'] else 'distintas'}")
 
+    # ── E) endurecimento (rigor): SE block-bootstrap, Mahalanobis, lei out-of-sample ──
+    print("\nE) ROBUSTEZ DO APARELHO:")
+    big5 = ["E0", "SP1", "I1", "D1", "F1"]
+    iid = [sm.skew_se(df[df.Division == l].p_fav_dv.values,
+                      df[df.Division == l].o_fav.values) for l in big5]
+    blk = [sm.skew_se_block(df[df.Division == l]) for l in big5]
+    print(f"   SE jogos-i.i.d. {np.mean(iid):.4f} → SE block-bootstrap de TEMPORADAS "
+          f"{np.mean(blk):.4f} (×{np.mean(blk)/np.mean(iid):.1f} — dependência intra-ano)")
+    cov_inv = np.linalg.inv(sm.sampling_shape_cov(df[df.Division == "E0"]))
+    maha = [sm.shape_distance(sigs[i], sigs[j], cov_inv)
+            for i in range(len(sigs)) for j in range(i + 1, len(sigs))]
+    rawpairs = [sm.distance(sigs[i], sigs[j])
+                for i in range(len(sigs)) for j in range(i + 1, len(sigs))]
+    print(f"   distância de forma de Mahalanobis (skew+exkurt): mediana {np.median(maha):.1f}σ "
+          f"| corr com |Δskew| escalar = {np.corrcoef(maha, rawpairs)[0,1]:.2f} "
+          f"(a forma 2-D conta a MESMA história)")
+    oos = sm.law_oos_r2(df)
+    print(f"   lei OUT-OF-SAMPLE (calibra em anos pares, prevê ímpares): R²={oos:.3f} "
+          f"(≈ in-sample {lad['r2_1param']:.2f} → régua do resíduo não é overfit)")
+
     print("\n  → CONCLUSÃO: 'similaridade de assimetrias' É, em primeira ordem,")
     print("    similaridade de COMPETITIVIDADE — um único número explica ~80% da")
     print("    variância da assimetria entre ligas (medível em tempo real, sem Shin,")
@@ -144,7 +164,9 @@ def main():
         "r2_2moment": lad["r2_2moment"], "r2_full": lad["r2_full"],
         "split_half_r": sh["r"], "corr_cheap": float(np.corrcoef(truth, cheap)[0, 1]),
         "corr_oddsfree": float(np.corrcoef(truth, upset)[0, 1]),
-        "se_k400": conv[400], "n_leagues": len(sigs)})
+        "se_k400": conv[400], "se_iid": float(np.mean(iid)),
+        "se_block": float(np.mean(blk)), "law_oos_r2": oos,
+        "n_leagues": len(sigs)})
 
 
 if __name__ == "__main__":

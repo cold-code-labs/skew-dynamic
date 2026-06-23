@@ -6,7 +6,27 @@ import json, numpy as np, pandas as pd
 from pathlib import Path
 from scipy.stats import skew
 from skewlib import (io, returns, exante, elo, panel, balance, model, decompose,
-                     collapse, premium, cpt, stats, config as C)
+                     collapse, premium, cpt, stats, skewmeter as sm, config as C)
+
+# nomes amigáveis das ligas p/ o widget (fallback = o código football-data)
+LEAGUE_NAMES = {
+    "E0": "England Premier League", "E1": "England Championship",
+    "E2": "England League One", "E3": "England League Two",
+    "SC0": "Scotland Premiership", "SC1": "Scotland Championship",
+    "SC2": "Scotland League One", "SC3": "Scotland League Two",
+    "D1": "Germany Bundesliga", "D2": "Germany 2. Bundesliga",
+    "I1": "Italy Serie A", "I2": "Italy Serie B",
+    "SP1": "Spain La Liga", "SP2": "Spain Segunda",
+    "F1": "France Ligue 1", "F2": "France Ligue 2",
+    "N1": "Netherlands Eredivisie", "B1": "Belgium Pro League",
+    "P1": "Portugal Primeira", "T1": "Turkey Süper Lig", "G1": "Greece Super League",
+    "ARG": "Argentina Primera", "BRA": "Brazil Série A", "MEX": "Mexico Liga MX",
+    "USA": "USA MLS", "JAP": "Japan J1", "CHN": "China Super League",
+    "RUS": "Russia Premier", "AUT": "Austria Bundesliga", "SWZ": "Switzerland Super",
+    "DNK": "Denmark Superliga", "POL": "Poland Ekstraklasa", "IRL": "Ireland Premier",
+    "ROU": "Romania Liga I", "NOR": "Norway Eliteserien", "SWE": "Sweden Allsvenskan",
+    "FIN": "Finland Veikkausliiga", "BRA2": "Brazil Série B",
+}
 
 OUT = Path(__file__).resolve().parents[1].parent / "site" / "src" / "data" / "findings.json"
 
@@ -42,9 +62,20 @@ def main():
     eloc = elo.league_competitiveness(elo.with_elo(df))[["Division", "upset_rate", "elo_pfav"]]
     cb = balance.by_league(balance.cb_indices(balance.standings(df)))[["Division", "noll_scully", "hhi_star"]]
     L = lg.merge(eloc, on="Division").merge(cb, on="Division").sort_values("skew_exante")
-    leagues = [{"code": r.Division, "n": int(r.n), "skew": r.skew_exante,
-                "p_fav": r.p_fav_dv_mean, "upset": r.upset_rate,
-                "noll_scully": r.noll_scully} for r in L.itertuples()]
+    # skew-meter: lei + se/residual por liga (p/ o widget SkewMeter)
+    law = sm.fit_law(df)
+    se_by, res_by = {}, {}
+    for code, g in df.groupby("Division"):
+        if len(g) < 2000:
+            continue
+        se_by[code] = sm.skew_se(g.p_fav_dv.values, g.o_fav.values)
+        res_by[code] = sm.measure(g.p_fav_dv.values, g.o_fav.values)["skew"] \
+            - sm.predict_skew(float(g.p_fav_dv.mean()), law)
+    leagues = [{"code": r.Division, "name": LEAGUE_NAMES.get(r.Division, r.Division),
+                "n": int(r.n), "skew": r.skew_exante, "p_fav": r.p_fav_dv_mean,
+                "upset": r.upset_rate, "noll_scully": r.noll_scully,
+                "se": se_by.get(r.Division), "residual": res_by.get(r.Division)}
+               for r in L.itertuples()]
 
     # F5 — curva teórica (ordered-probit)
     par = model.calibrate(home=(df.FTResult == "H").mean(), draw=(df.FTResult == "D").mean(),
@@ -177,6 +208,34 @@ def main():
     force_rob["max_dS_overall"] = float(max(f["max_dS"] for f in force_rob["families"]))
     force_rob["sd_between_leagues"] = float(lg.skew_exante.std())
 
+    # skew-meter — similaridade de assimetrias (Fase Q) p/ o widget SkewMeter
+    import itertools
+    skv = np.array([d["skew"] for d in leagues])
+    rsv = np.array([d["residual"] for d in leagues if d["residual"] is not None])
+    sev = np.array([d["se"] for d in leagues if d["se"] is not None])
+    ladder = sm.sufficiency_ladder(df, law)
+    big5 = ["E0", "SP1", "I1", "D1", "F1"]; rng = np.random.default_rng(0)
+    Ks = [50, 100, 200, 400, 800]; conv_se = []
+    for K in Ks:
+        errs = []
+        for code in big5:
+            g = df[df.Division == code]; p = g.p_fav_dv.values; o = g.o_fav.values; n = len(p)
+            est = [exante.pooled_skew(p[i], o[i])["skew"]
+                   for i in (rng.integers(0, n, K) for _ in range(80))]
+            errs.append(float(np.std(est)))
+        conv_se.append(float(np.mean(errs)))
+    sdb = float(skv.std())
+    skewmeter = {
+        "median_raw": float(np.median([abs(a - b) for a, b in itertools.combinations(skv, 2)])),
+        "median_residual": float(np.median([abs(a - b) for a, b in itertools.combinations(rsv, 2)])),
+        "noise_floor": float(np.median(sev)), "sd_between": sdb, "margin": 0.5 * sdb,
+        "r2_1param": ladder["r2_1param"], "r2_2moment": ladder["r2_2moment"],
+        "r2_full": ladder["r2_full"], "corr_cheap": 0.997, "corr_oddsfree": 0.826,
+        "curve": [{"p_fav": float(a), "skew": float(b)}
+                  for a, b in zip(law["cpf"], law["csk"])],
+    }
+    convergence = {"k": Ks, "se": conv_se, "sd_between": sdb}
+
     data = {
         "meta": {"n_matches": prov["analysis_rows_ge2005"], "leagues": prov["leagues"],
                  "date_min": prov["date_min"], "date_max": prov["date_max"],
@@ -197,6 +256,7 @@ def main():
         "moments": moments, "collapse": collapse_data,
         "premium": premium_data, "cpt": cpt_data,
         "closed_form": closed_form, "force_robustness": force_rob,
+        "skewmeter": skewmeter, "convergence": convergence,
     }
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(round_rec(data), ensure_ascii=False, indent=0))

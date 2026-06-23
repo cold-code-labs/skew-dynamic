@@ -1,0 +1,173 @@
+---
+// SkewMeter — instrumento interativo de SIMILARIDADE DE ASSIMETRIAS (Fase Q).
+// Mede a assinatura de assimetria de uma liga (gauge + banda de incerteza), mostra
+// o resíduo contra a lei, e responde "esta liga é como X, diferente de Y".
+// Sem backend: lê findings.json + JS no cliente. Idioma de LawChart/FlbChart.
+import data from '../data/findings.json';
+const L = [...data.leagues].sort((a,b)=>a.skew-b.skew);
+const SM = data.skewmeter, CV = data.convergence, curve = SM.curve;
+const def = L.find(d=>d.code==='E0') ? 'E0' : L[Math.floor(L.length/2)].code;
+
+// Painel A — gauge horizontal (skew −0.05 … 0.40)
+const GW=720, GH=120, glo=-0.05, ghi=0.40, gpad=46;
+const gx = (s)=> gpad + ((s-glo)/(ghi-glo))*(GW-2*gpad);
+const gticks=[0.0,0.1,0.2,0.3];
+
+// Painel B — lei (reusa a geometria do LawChart)
+const W=680,H=360,P={l:54,r:18,t:18,b:42}, xlo=0.43,xhi=0.60,ylo=0.06,yhi=0.34;
+const X=(p)=>P.l+((p-xlo)/(xhi-xlo))*(W-P.l-P.r);
+const Y=(s)=>P.t+(1-(s-ylo)/(yhi-ylo))*(H-P.t-P.b);
+const cpts = curve.filter(d=>d.p_fav>=xlo&&d.p_fav<=xhi).map(d=>`${X(d.p_fav).toFixed(1)},${Y(d.skew).toFixed(1)}`);
+---
+<figure class="sm">
+  <div class="sm-controls">
+    <label>League
+      <select id="sm-league">
+        {L.slice().reverse().map(d=>(<option value={d.code} selected={d.code===def}>{d.name} ({d.code})</option>))}
+      </select>
+    </label>
+    <label class="sm-k">Sample window: <b><span id="sm-kval">380</span> matches</b>
+      <input id="sm-k" type="range" min="50" max="800" step="10" value="380" />
+    </label>
+  </div>
+
+  <!-- PANEL A — gauge -->
+  <div class="sm-panel">
+    <div class="sm-readout">
+      <span class="big" id="sm-skew">+0.00</span><span class="lbl">skewness</span>
+      <span class="big" id="sm-pfav">0.00</span><span class="lbl">mean p<sub>fav</sub></span>
+      <span class="word" id="sm-word">—</span>
+    </div>
+    <svg viewBox={`0 0 ${GW} ${GH}`} class="sm-gauge" role="img" aria-label="asymmetry gauge">
+      <line x1={gpad} y1="64" x2={GW-gpad} y2="64" stroke="var(--line)" stroke-width="6" stroke-linecap="round"/>
+      {gticks.map(t=>(<g><line x1={gx(t)} y1="56" x2={gx(t)} y2="72" stroke="var(--ink-faint)" stroke-width="1.5"/><text class="sm-tick" x={gx(t)} y="92" text-anchor="middle">{t.toFixed(1)}</text></g>))}
+      <rect id="sm-band" x={gx(0)} y="58" width="0" height="12" rx="3" fill="var(--accent)" opacity=".25"/>
+      <line id="sm-needle" x1={gx(0)} y1="48" x2={gx(0)} y2="80" stroke="var(--accent)" stroke-width="3.5" stroke-linecap="round"/>
+      <text class="sm-tick" x={gpad} y="34" text-anchor="start">← balanced</text>
+      <text class="sm-tick" x={GW-gpad} y="34" text-anchor="end">lottery-like →</text>
+    </svg>
+    <p class="sm-cap">The band is sampling noise — drag the window: it shrinks as the season runs, resolving the league below the between-league spread (<span class="mono">{SM.sd_between.toFixed(3)}</span>) in ~half a season.</p>
+  </div>
+
+  <div class="sm-two">
+    <!-- PANEL B — the law + residual -->
+    <div class="sm-panel">
+      <h4>Where it sits on the law</h4>
+      <svg viewBox={`0 0 ${W} ${H}`} class="sm-law" role="img" aria-label="league on the skewness law">
+        {[0.45,0.50,0.55].map(t=>(<text class="sm-tick" x={X(t)} y={H-P.b+16} text-anchor="middle">{t.toFixed(2)}</text>))}
+        {[0.10,0.20,0.30].map(t=>(<g><line x1={P.l} y1={Y(t)} x2={W-P.r} y2={Y(t)} stroke="var(--line)" stroke-opacity=".4"/><text class="sm-tick" x={P.l-8} y={Y(t)+4} text-anchor="end">{t.toFixed(2)}</text></g>))}
+        <polyline points={cpts.join(' ')} fill="none" stroke="var(--ink-faint)" stroke-width="2.5" opacity=".8"/>
+        {L.map(d=>(<circle class="sm-dot" data-code={d.code} cx={X(d.p_fav)} cy={Y(d.skew)} r="5" fill="var(--accent)" fill-opacity=".35" stroke="#fff" stroke-width="1"
+          data-tip={`${d.code}  skew=${d.skew.toFixed(3)}  residual=${d.residual.toFixed(3)}`}/>))}
+        <line id="sm-drop" x1="0" y1="0" x2="0" y2="0" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="3 3"/>
+        <circle id="sm-ring" cx="0" cy="0" r="8" fill="none" stroke="var(--accent)" stroke-width="2.5"/>
+        <text class="sm-axis" x={W/2} y={H-4} text-anchor="middle">mean favourite probability (more predictable →)</text>
+        <text class="sm-axis" x="14" y={H/2} text-anchor="middle" transform={`rotate(-90 14 ${H/2})`}>league skewness</text>
+      </svg>
+      <p class="sm-cap">The dashed drop-line is the <b>residual</b> — the asymmetry competitiveness does <i>not</i> explain. One parameter explains <span class="mono">{(SM.r2_1param*100).toFixed(0)}%</span> of the cross-league variance.</p>
+    </div>
+
+    <!-- PANEL C — similarity -->
+    <div class="sm-panel">
+      <h4>Like <span id="sm-name">—</span>, unlike…</h4>
+      <div class="sm-sim">
+        <div><div class="sm-h">Raw |Δskew|</div><ol id="sm-raw" class="sm-list"></ol></div>
+        <div><div class="sm-h">After competitiveness</div><ol id="sm-res" class="sm-list"></ol></div>
+      </div>
+      <p class="sm-verdict" id="sm-verdict">—</p>
+      <p class="sm-cap"><b>Similarity of asymmetries = similarity of competitiveness.</b> Verdict by equivalence (margin ½·sd = <span class="mono">{SM.margin.toFixed(3)}</span>), not a significance test.</p>
+    </div>
+  </div>
+</figure>
+
+<script define:vars={{ L, SM, CV, curve, def, gpad, GW, glo, ghi, W, H, P, xlo, xhi, ylo, yhi }}>
+  const $ = (id)=>document.getElementById(id);
+  const gx = (s)=> gpad + ((s-glo)/(ghi-glo))*(GW-2*gpad);
+  const X=(p)=>P.l+((p-xlo)/(xhi-xlo))*(W-P.l-P.r);
+  const Y=(s)=>P.t+(1-(s-ylo)/(yhi-ylo))*(H-P.t-P.b);
+  const byCode = Object.fromEntries(L.map(d=>[d.code,d]));
+  // predict_skew(p) — interp linear sobre a curva da lei (= np.interp)
+  const predict = (p)=>{ const c=curve;
+    if(p<=c[0].p_fav) return c[0].skew;
+    for(let i=1;i<c.length;i++) if(p<=c[i].p_fav){const a=c[i-1],b=c[i],t=(p-a.p_fav)/(b.p_fav-a.p_fav);return a.skew+t*(b.skew-a.skew);}
+    return c[c.length-1].skew; };
+  // SE interpolada na janela K (sobre o array de convergência)
+  const seAt = (K)=>{ const k=CV.k, s=CV.se;
+    if(K<=k[0]) return s[0]; if(K>=k[k.length-1]) return s[s.length-1];
+    for(let i=1;i<k.length;i++) if(K<=k[i]){const t=(K-k[i-1])/(k[i]-k[i-1]);return s[i-1]+t*(s[i]-s[i-1]);}
+    return s[s.length-1]; };
+  const word = (d)=>{ const a=Math.abs(d.skew);
+    if(a>=0.27) return 'strongly lottery-like'; if(a>=0.18) return 'tilted'; if(a>=0.10) return 'mildly tilted'; return 'near-balanced'; };
+
+  function render(code, K){
+    const d = byCode[code];
+    // PANEL A
+    $('sm-skew').textContent = (d.skew>=0?'+':'')+d.skew.toFixed(3);
+    $('sm-pfav').textContent = d.p_fav.toFixed(2);
+    $('sm-word').textContent = word(d);
+    const se = seAt(K);
+    $('sm-needle').setAttribute('x1', gx(d.skew)); $('sm-needle').setAttribute('x2', gx(d.skew));
+    $('sm-band').setAttribute('x', gx(d.skew-se)); $('sm-band').setAttribute('width', Math.max(0, gx(d.skew+se)-gx(d.skew-se)));
+    // PANEL B — ring + drop-line (residual)
+    const cx=X(d.p_fav), cy=Y(d.skew), cyhat=Y(d.skew-d.residual);
+    $('sm-ring').setAttribute('cx',cx); $('sm-ring').setAttribute('cy',cy);
+    $('sm-drop').setAttribute('x1',cx); $('sm-drop').setAttribute('y1',cy);
+    $('sm-drop').setAttribute('x2',cx); $('sm-drop').setAttribute('y2',cyhat);
+    document.querySelectorAll('.sm-dot').forEach(el=>{ const on=el.getAttribute('data-code')===code;
+      el.setAttribute('fill-opacity', on?'0.95':'0.3'); el.setAttribute('r', on?'6':'5'); });
+    // PANEL C — vizinhos raw vs residual
+    $('sm-name').textContent = code;
+    const others = L.filter(x=>x.code!==code);
+    const raw = [...others].sort((a,b)=>Math.abs(a.skew-d.skew)-Math.abs(b.skew-d.skew));
+    const res = [...others].sort((a,b)=>Math.abs(a.residual-d.residual)-Math.abs(b.residual-d.residual));
+    const row = (x,val)=>`<li><span class="c">${x.code}</span><span class="b"><span style="width:${Math.min(100,val/0.22*100)}%"></span></span><span class="v">${val.toFixed(3)}</span></li>`;
+    $('sm-raw').innerHTML = raw.slice(0,4).map(x=>row(x,Math.abs(x.skew-d.skew))).join('');
+    $('sm-res').innerHTML = res.slice(0,4).map(x=>row(x,Math.abs(x.residual-d.residual))).join('');
+    // verdict: o caso pedagógico é "parece diferente, é a MESMA forma" — a liga
+    // MAIS distante no skew bruto que ainda é equivalente no resíduo.
+    const eq = others.filter(x=>Math.abs(x.residual-d.residual) < SM.margin)
+                     .sort((a,b)=>Math.abs(b.skew-d.skew)-Math.abs(a.skew-d.skew));
+    const nb = eq.length ? eq[0] : res[0];
+    const rawd=Math.abs(nb.skew-d.skew), rd=Math.abs(nb.residual-d.residual), same = rd < SM.margin;
+    $('sm-verdict').className = 'sm-verdict ' + (same?'ok':'no');
+    $('sm-verdict').innerHTML = same
+      ? `<b>${d.code} vs ${nb.code}:</b> raw skewness differs by <b>${rawd.toFixed(3)}</b>, but once competitiveness is removed the gap is just <b>${rd.toFixed(3)}</b> (within the ${SM.margin.toFixed(3)} margin) → <b>same asymmetry</b>`
+      : `<b>${d.code} vs ${nb.code}:</b> closest in conditioned asymmetry (residual gap ${rd.toFixed(3)}) — still a genuine difference`;
+  }
+  const sel=$('sm-league'), kk=$('sm-k');
+  const go=()=>{ $('sm-kval').textContent=kk.value; render(sel.value, +kk.value); };
+  sel.addEventListener('change', go); kk.addEventListener('input', go);
+  render(def, 380);
+</script>
+
+<style>
+  .sm { margin:0; }
+  .sm-controls { display:flex; gap:24px; flex-wrap:wrap; align-items:center; margin-bottom:18px; font-size:.9rem; }
+  .sm-controls label { display:flex; flex-direction:column; gap:4px; color:var(--ink-soft); }
+  .sm-controls select { font:inherit; padding:6px 10px; border:1px solid var(--line); border-radius:8px; background:var(--surface); color:var(--ink); min-width:240px; }
+  .sm-k { flex:1; min-width:240px; }
+  .sm-k input { width:100%; accent-color:var(--accent); }
+  .sm-panel { background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:16px 18px; margin-bottom:18px; }
+  .sm-panel h4 { margin:0 0 10px; font-size:1rem; }
+  .sm-readout { display:flex; align-items:baseline; gap:8px 16px; flex-wrap:wrap; margin-bottom:6px; }
+  .sm-readout .big { font-family:var(--mono); font-size:1.7rem; font-weight:600; color:var(--accent); }
+  .sm-readout .lbl { font-size:.78rem; color:var(--ink-soft); margin-right:8px; }
+  .sm-readout .word { margin-left:auto; font-family:var(--mono); font-size:.85rem; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.08em; }
+  .sm-gauge, .sm-law { width:100%; height:auto; }
+  .sm-tick { font-family:var(--mono); font-size:11px; fill:var(--ink-soft); }
+  .sm-axis { font-size:12px; fill:var(--ink-soft); }
+  .sm-cap { font-size:.82rem; color:var(--ink-soft); margin:8px 0 0; max-width:70ch; }
+  .sm-two { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  @media (max-width:760px){ .sm-two{ grid-template-columns:1fr; } }
+  .sm-sim { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .sm-h { font-size:.74rem; text-transform:uppercase; letter-spacing:.1em; color:var(--ink-soft); margin-bottom:6px; }
+  .sm-list { list-style:none; margin:0; padding:0; }
+  .sm-list li { display:grid; grid-template-columns:34px 1fr 46px; align-items:center; gap:8px; padding:3px 0; font-size:.85rem; }
+  .sm-list .c { font-family:var(--mono); font-weight:600; }
+  .sm-list .b { height:7px; background:var(--line); border-radius:4px; overflow:hidden; }
+  .sm-list .b span { display:block; height:100%; background:var(--accent); opacity:.55; }
+  .sm-list .v { font-family:var(--mono); font-size:.78rem; color:var(--ink-soft); text-align:right; }
+  .sm-verdict { margin:14px 0 0; padding:10px 12px; border-radius:8px; font-size:.9rem; border-left:3px solid var(--line); }
+  .sm-verdict.ok { background:color-mix(in srgb, var(--accent) 9%, transparent); border-left-color:var(--accent); }
+  .sm-verdict.no { background:var(--surface-2); }
+</style>

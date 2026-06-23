@@ -75,307 +75,421 @@
 "leagues": [
 {
 "code": "N1",
+"name": "Netherlands Eredivisie",
 "n": 6135,
 "skew": 0.1006,
 "p_fav": 0.5637,
 "upset": 0.451,
-"noll_scully": 1.844
+"noll_scully": 1.844,
+"se": 0.0055,
+"residual": -0.0482
 },
 {
 "code": "AUT",
+"name": "Austria Bundesliga",
 "n": 2306,
 "skew": 0.1465,
 "p_fav": 0.5383,
 "upset": 0.5043,
-"noll_scully": 1.5467
+"noll_scully": 1.5467,
+"se": 0.0079,
+"residual": -0.0327
 },
 {
 "code": "CHN",
+"name": "China Super League",
 "n": 2532,
 "skew": 0.148,
 "p_fav": 0.5501,
 "upset": 0.4878,
-"noll_scully": 1.5367
+"noll_scully": 1.5367,
+"se": 0.008,
+"residual": -0.0167
 },
 {
 "code": "IRL",
+"name": "Ireland Premier",
 "n": 2367,
 "skew": 0.1481,
 "p_fav": 0.5447,
 "upset": 0.4812,
-"noll_scully": 1.7254
+"noll_scully": 1.7254,
+"se": 0.0087,
+"residual": -0.0232
 },
 {
 "code": "B1",
+"name": "Belgium Pro League",
 "n": 5420,
 "skew": 0.1553,
 "p_fav": 0.5248,
 "upset": 0.4803,
-"noll_scully": 1.5805
+"noll_scully": 1.5805,
+"se": 0.0047,
+"residual": -0.0413
 },
 {
 "code": "USA",
+"name": "USA MLS",
 "n": 5233,
 "skew": 0.1623,
 "p_fav": 0.5031,
 "upset": 0.5091,
-"noll_scully": 1.1283
+"noll_scully": 1.1283,
+"se": 0.0044,
+"residual": -0.0642
 },
 {
 "code": "E0",
+"name": "England Premier League",
 "n": 7735,
 "skew": 0.167,
 "p_fav": 0.5428,
 "upset": 0.4637,
-"noll_scully": 1.8408
+"noll_scully": 1.8408,
+"se": 0.0044,
+"residual": -0.0066
 },
 {
 "code": "NOR",
+"name": "Norway Eliteserien",
 "n": 3092,
 "skew": 0.1674,
 "p_fav": 0.518,
 "upset": 0.4897,
-"noll_scully": 1.383
+"noll_scully": 1.383,
+"se": 0.0061,
+"residual": -0.0384
 },
 {
 "code": "SWE",
+"name": "Sweden Allsvenskan",
 "n": 3110,
 "skew": 0.1733,
 "p_fav": 0.5213,
 "upset": 0.4945,
-"noll_scully": 1.4977
+"noll_scully": 1.4977,
+"se": 0.0064,
+"residual": -0.028
 },
 {
 "code": "D1",
+"name": "Germany Bundesliga",
 "n": 6273,
 "skew": 0.1802,
 "p_fav": 0.5279,
 "upset": 0.501,
-"noll_scully": 1.5983
+"noll_scully": 1.5983,
+"se": 0.0044,
+"residual": -0.0123
 },
 {
 "code": "I1",
+"name": "Italy Serie A",
 "n": 7726,
 "skew": 0.181,
 "p_fav": 0.5286,
 "upset": 0.4745,
-"noll_scully": 1.7946
+"noll_scully": 1.7946,
+"se": 0.0041,
+"residual": -0.0106
 },
 {
 "code": "G1",
+"name": "Greece Super League",
 "n": 4039,
 "skew": 0.1825,
 "p_fav": 0.5448,
 "upset": 0.4608,
-"noll_scully": 1.7081
+"noll_scully": 1.7081,
+"se": 0.007,
+"residual": 0.0113
 },
 {
 "code": "SUI",
+"name": "SUI",
 "n": 2272,
 "skew": 0.1931,
 "p_fav": 0.5025,
 "upset": 0.5198,
-"noll_scully": 1.4992
+"noll_scully": 1.4992,
+"se": 0.0067,
+"residual": -0.0343
 },
 {
 "code": "SP1",
+"name": "Spain La Liga",
 "n": 7351,
 "skew": 0.1961,
 "p_fav": 0.5319,
 "upset": 0.4731,
-"noll_scully": 1.7272
+"noll_scully": 1.7272,
+"se": 0.0043,
+"residual": 0.0087
 },
 {
 "code": "SC2",
+"name": "Scotland League One",
 "n": 3565,
 "skew": 0.1969,
 "p_fav": 0.4991,
 "upset": 0.5105,
-"noll_scully": 1.5985
+"noll_scully": 1.5985,
+"se": 0.0047,
+"residual": -0.0354
 },
 {
 "code": "T1",
+"name": "Turkey Süper Lig",
 "n": 6210,
 "skew": 0.1979,
 "p_fav": 0.5106,
 "upset": 0.4855,
-"noll_scully": 1.5865
+"noll_scully": 1.5865,
+"se": 0.004,
+"residual": -0.0181
 },
 {
 "code": "SC3",
+"name": "Scotland League Two",
 "n": 3566,
 "skew": 0.2089,
 "p_fav": 0.4981,
 "upset": 0.5101,
-"noll_scully": 1.5175
+"noll_scully": 1.5175,
+"se": 0.0048,
+"residual": -0.025
 },
 {
 "code": "SC0",
+"name": "Scotland Premiership",
 "n": 4539,
 "skew": 0.2162,
 "p_fav": 0.5346,
 "upset": 0.4823,
-"noll_scully": 1.8595
+"noll_scully": 1.8595,
+"se": 0.0053,
+"residual": 0.0324
 },
 {
 "code": "P1",
+"name": "Portugal Primeira",
 "n": 5491,
 "skew": 0.2173,
 "p_fav": 0.535,
 "upset": 0.4648,
-"noll_scully": 1.8479
+"noll_scully": 1.8479,
+"se": 0.0053,
+"residual": 0.0338
 },
 {
 "code": "SC1",
+"name": "Scotland Championship",
 "n": 3549,
 "skew": 0.2178,
 "p_fav": 0.4959,
 "upset": 0.5418,
-"noll_scully": 1.4785
+"noll_scully": 1.4785,
+"se": 0.0048,
+"residual": -0.0192
 },
 {
 "code": "DEN",
+"name": "DEN",
 "n": 2634,
 "skew": 0.2233,
 "p_fav": 0.494,
 "upset": 0.5205,
-"noll_scully": 1.3691
+"noll_scully": 1.3691,
+"se": 0.0058,
+"residual": -0.0165
 },
 {
 "code": "EC",
+"name": "EC",
 "n": 7096,
 "skew": 0.2258,
 "p_fav": 0.4863,
 "upset": 0.5403,
-"noll_scully": 1.5634
+"noll_scully": 1.5634,
+"se": 0.0032,
+"residual": -0.0255
 },
 {
 "code": "RUS",
+"name": "Russia Premier",
 "n": 3004,
 "skew": 0.2269,
 "p_fav": 0.5162,
 "upset": 0.496,
-"noll_scully": 1.5208
+"noll_scully": 1.5208,
+"se": 0.0069,
+"residual": 0.0187
 },
 {
 "code": "BRA",
+"name": "Brazil Série A",
 "n": 4849,
 "skew": 0.2286,
 "p_fav": 0.5013,
 "upset": 0.5075,
-"noll_scully": 1.3387
+"noll_scully": 1.3387,
+"se": 0.005,
+"residual": -0.0005
 },
 {
 "code": "FIN",
+"name": "Finland Veikkausliiga",
 "n": 2354,
 "skew": 0.2288,
 "p_fav": 0.5012,
 "upset": 0.5076,
-"noll_scully": 1.404
+"noll_scully": 1.404,
+"se": 0.0067,
+"residual": -0.0004
 },
 {
 "code": "F1",
+"name": "France Ligue 1",
 "n": 7539,
 "skew": 0.2341,
 "p_fav": 0.5025,
 "upset": 0.5051,
-"noll_scully": 1.5384
+"noll_scully": 1.5384,
+"se": 0.0039,
+"residual": 0.0066
 },
 {
 "code": "D2",
+"name": "Germany 2. Bundesliga",
 "n": 6238,
 "skew": 0.245,
 "p_fav": 0.4779,
 "upset": 0.5414,
-"noll_scully": 1.2502
+"noll_scully": 1.2502,
+"se": 0.0032,
+"residual": -0.0191
 },
 {
 "code": "ROM",
+"name": "ROM",
 "n": 3639,
 "skew": 0.2495,
 "p_fav": 0.502,
 "upset": 0.515,
-"noll_scully": 1.4232
+"noll_scully": 1.4232,
+"se": 0.0052,
+"residual": 0.0213
 },
 {
 "code": "MEX",
+"name": "Mexico Liga MX",
 "n": 4080,
 "skew": 0.2607,
 "p_fav": 0.4774,
 "upset": 0.536,
-"noll_scully": 1.2552
+"noll_scully": 1.2552,
+"se": 0.004,
+"residual": -0.0041
 },
 {
 "code": "JAP",
+"name": "Japan J1",
 "n": 4089,
 "skew": 0.2653,
 "p_fav": 0.474,
 "upset": 0.5456,
-"noll_scully": 1.4066
+"noll_scully": 1.4066,
+"se": 0.0043,
+"residual": -0.0047
 },
 {
 "code": "POL",
+"name": "Poland Ekstraklasa",
 "n": 3567,
 "skew": 0.2672,
 "p_fav": 0.4755,
 "upset": 0.545,
-"noll_scully": 1.1894
+"noll_scully": 1.1894,
+"se": 0.0048,
+"residual": -0.0004
 },
 {
 "code": "E2",
+"name": "England League One",
 "n": 11019,
 "skew": 0.2691,
 "p_fav": 0.4712,
 "upset": 0.5367,
-"noll_scully": 1.4826
+"noll_scully": 1.4826,
+"se": 0.0027,
+"residual": -0.0052
 },
 {
 "code": "E1",
+"name": "England Championship",
 "n": 11181,
 "skew": 0.276,
 "p_fav": 0.4698,
 "upset": 0.551,
-"noll_scully": 1.4064
+"noll_scully": 1.4064,
+"se": 0.0024,
+"residual": -0.0005
 },
 {
 "code": "E3",
+"name": "England League Two",
 "n": 11090,
 "skew": 0.2942,
 "p_fav": 0.4587,
 "upset": 0.5602,
-"noll_scully": 1.2883
+"noll_scully": 1.2883,
+"se": 0.0022,
+"residual": 0.0019
 },
 {
 "code": "SP2",
+"name": "Spain Segunda",
 "n": 8997,
 "skew": 0.2953,
 "p_fav": 0.4622,
 "upset": 0.5455,
-"noll_scully": 1.1968
+"noll_scully": 1.1968,
+"se": 0.003,
+"residual": 0.0078
 },
 {
 "code": "I2",
+"name": "Italy Serie B",
 "n": 8636,
 "skew": 0.3033,
 "p_fav": 0.4646,
 "upset": 0.5589,
-"noll_scully": 1.3163
+"noll_scully": 1.3163,
+"se": 0.0028,
+"residual": 0.0192
 },
 {
 "code": "F2",
+"name": "France Ligue 2",
 "n": 7582,
 "skew": 0.3047,
 "p_fav": 0.4594,
 "upset": 0.5539,
-"noll_scully": 1.2341
+"noll_scully": 1.2341,
+"se": 0.0032,
+"residual": 0.0132
 },
 {
 "code": "ARG",
+"name": "Argentina Primera",
 "n": 5330,
 "skew": 0.3134,
 "p_fav": 0.4644,
 "upset": 0.5535,
-"noll_scully": 1.2032
+"noll_scully": 1.2032,
+"se": 0.0034,
+"residual": 0.0291
 }
 ],
 "model_curve": [
@@ -4955,5 +5069,356 @@
 ],
 "max_dS_overall": 0.0299,
 "sd_between_leagues": 0.0518
+},
+"skewmeter": {
+"median_raw": 0.0508,
+"median_residual": 0.0228,
+"noise_floor": 0.0047,
+"sd_between": 0.0512,
+"margin": 0.0256,
+"r2_1param": 0.8159,
+"r2_2moment": 0.9843,
+"r2_full": 0.9945,
+"corr_cheap": 0.997,
+"corr_oddsfree": 0.826,
+"curve": [
+{
+"p_fav": 0.4394,
+"skew": 0.266
+},
+{
+"p_fav": 0.4397,
+"skew": 0.2795
+},
+{
+"p_fav": 0.4406,
+"skew": 0.2915
+},
+{
+"p_fav": 0.4422,
+"skew": 0.2994
+},
+{
+"p_fav": 0.4446,
+"skew": 0.3032
+},
+{
+"p_fav": 0.4477,
+"skew": 0.3034
+},
+{
+"p_fav": 0.4514,
+"skew": 0.3009
+},
+{
+"p_fav": 0.4556,
+"skew": 0.2964
+},
+{
+"p_fav": 0.4602,
+"skew": 0.2904
+},
+{
+"p_fav": 0.465,
+"skew": 0.2835
+},
+{
+"p_fav": 0.4702,
+"skew": 0.2758
+},
+{
+"p_fav": 0.4755,
+"skew": 0.2678
+},
+{
+"p_fav": 0.4809,
+"skew": 0.2594
+},
+{
+"p_fav": 0.4865,
+"skew": 0.251
+},
+{
+"p_fav": 0.4922,
+"skew": 0.2425
+},
+{
+"p_fav": 0.498,
+"skew": 0.234
+},
+{
+"p_fav": 0.5038,
+"skew": 0.2256
+},
+{
+"p_fav": 0.5096,
+"skew": 0.2173
+},
+{
+"p_fav": 0.5154,
+"skew": 0.2092
+},
+{
+"p_fav": 0.5213,
+"skew": 0.2013
+},
+{
+"p_fav": 0.5271,
+"skew": 0.1936
+},
+{
+"p_fav": 0.5329,
+"skew": 0.186
+},
+{
+"p_fav": 0.5387,
+"skew": 0.1787
+},
+{
+"p_fav": 0.5445,
+"skew": 0.1715
+},
+{
+"p_fav": 0.5502,
+"skew": 0.1646
+},
+{
+"p_fav": 0.5559,
+"skew": 0.1578
+},
+{
+"p_fav": 0.5615,
+"skew": 0.1513
+},
+{
+"p_fav": 0.5671,
+"skew": 0.1449
+},
+{
+"p_fav": 0.5726,
+"skew": 0.1388
+},
+{
+"p_fav": 0.5781,
+"skew": 0.1328
+},
+{
+"p_fav": 0.5835,
+"skew": 0.127
+},
+{
+"p_fav": 0.5888,
+"skew": 0.1214
+},
+{
+"p_fav": 0.594,
+"skew": 0.1159
+},
+{
+"p_fav": 0.5992,
+"skew": 0.1107
+},
+{
+"p_fav": 0.6043,
+"skew": 0.1055
+},
+{
+"p_fav": 0.6093,
+"skew": 0.1006
+},
+{
+"p_fav": 0.6143,
+"skew": 0.0957
+},
+{
+"p_fav": 0.6191,
+"skew": 0.0911
+},
+{
+"p_fav": 0.6239,
+"skew": 0.0865
+},
+{
+"p_fav": 0.6287,
+"skew": 0.0821
+},
+{
+"p_fav": 0.6333,
+"skew": 0.0778
+},
+{
+"p_fav": 0.6379,
+"skew": 0.0737
+},
+{
+"p_fav": 0.6424,
+"skew": 0.0697
+},
+{
+"p_fav": 0.6468,
+"skew": 0.0657
+},
+{
+"p_fav": 0.6511,
+"skew": 0.0619
+},
+{
+"p_fav": 0.6554,
+"skew": 0.0582
+},
+{
+"p_fav": 0.6596,
+"skew": 0.0546
+},
+{
+"p_fav": 0.6637,
+"skew": 0.0511
+},
+{
+"p_fav": 0.6678,
+"skew": 0.0477
+},
+{
+"p_fav": 0.6717,
+"skew": 0.0444
+},
+{
+"p_fav": 0.6756,
+"skew": 0.0412
+},
+{
+"p_fav": 0.6795,
+"skew": 0.038
+},
+{
+"p_fav": 0.6832,
+"skew": 0.035
+},
+{
+"p_fav": 0.6869,
+"skew": 0.032
+},
+{
+"p_fav": 0.6906,
+"skew": 0.0291
+},
+{
+"p_fav": 0.6941,
+"skew": 0.0262
+},
+{
+"p_fav": 0.6977,
+"skew": 0.0235
+},
+{
+"p_fav": 0.7011,
+"skew": 0.0208
+},
+{
+"p_fav": 0.7045,
+"skew": 0.0182
+},
+{
+"p_fav": 0.7078,
+"skew": 0.0156
+},
+{
+"p_fav": 0.711,
+"skew": 0.0131
+},
+{
+"p_fav": 0.7142,
+"skew": 0.0106
+},
+{
+"p_fav": 0.7174,
+"skew": 0.0082
+},
+{
+"p_fav": 0.7205,
+"skew": 0.0059
+},
+{
+"p_fav": 0.7235,
+"skew": 0.0036
+},
+{
+"p_fav": 0.7265,
+"skew": 0.0014
+},
+{
+"p_fav": 0.7294,
+"skew": -0.0008
+},
+{
+"p_fav": 0.7323,
+"skew": -0.003
+},
+{
+"p_fav": 0.7351,
+"skew": -0.0051
+},
+{
+"p_fav": 0.7378,
+"skew": -0.0071
+},
+{
+"p_fav": 0.7406,
+"skew": -0.0091
+},
+{
+"p_fav": 0.7432,
+"skew": -0.0111
+},
+{
+"p_fav": 0.7458,
+"skew": -0.013
+},
+{
+"p_fav": 0.7484,
+"skew": -0.0149
+},
+{
+"p_fav": 0.751,
+"skew": -0.0167
+},
+{
+"p_fav": 0.7534,
+"skew": -0.0185
+},
+{
+"p_fav": 0.7559,
+"skew": -0.0203
+},
+{
+"p_fav": 0.7583,
+"skew": -0.0221
+},
+{
+"p_fav": 0.7607,
+"skew": -0.0238
+},
+{
+"p_fav": 0.763,
+"skew": -0.0255
+}
+]
+},
+"convergence": {
+"k": [
+50,
+100,
+200,
+400,
+800
+],
+"se": [
+0.0543,
+0.0364,
+0.0264,
+0.0184,
+0.0119
+],
+"sd_between": 0.0512
 }
 }

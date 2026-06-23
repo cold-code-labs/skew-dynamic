@@ -904,9 +904,16 @@ piso amostral e veredito de equivalência. 38 ligas.
   são as competitividades de A e B?" — medível com 1 número, em tempo real, até sem odds.
   A distribuição de p_fav é o que torna a redução EXATA.
 
-Artefatos: `skewlib/skewmeter.py`, `analysis/45_skewmeter.py`,
-`outputs/fig/f33_skewmeter.png`. Subagentes (rigor + produto) anexaram a subseção do
-paper (§4.8) e a spec do widget `SkewMeter.astro`.
+- **Endurecimento (rigor):** SE por **block-bootstrap de temporadas** 0.0070 vs i.i.d.
+  0.0042 (×1.7, dependência intra-ano); distância de forma de **Mahalanobis** (skew+
+  exkurt) corr 0.74 com o escalar; lei **out-of-sample** (calibra anos pares, prevê
+  ímpares) R²=**0.80** ≈ in-sample 0.82 — a régua do resíduo não é overfit.
+
+Artefatos: `skewlib/skewmeter.py` (measure, distance, residual, sufficiency_ladder,
+tost, skew_se_block, shape_distance, law_oos_r2), `analysis/45_skewmeter.py`,
+`outputs/fig/f33_skewmeter.png`. **Produto:** widget interativo `site/src/components/
+SkewMeter.astro` (gauge + lei/resíduo + similaridade) na seção §07 do site, com dados
+exportados por `export_site_data.py` (blocos `skewmeter`/`convergence`). Paper §4.8.
 
 ---
 

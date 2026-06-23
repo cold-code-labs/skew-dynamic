@@ -155,6 +155,62 @@ def split_half_residual(df, law, min_n=4000):
     return {"r": float(np.corrcoef(a, b)[0, 1]), "n_leagues": len(rows)}
 
 
+def skew_se_block(g, B=150, seed=42):
+    """SE da skew por BLOCK-bootstrap de TEMPORADAS (reamostra anos inteiros) —
+    respeita a dependência intra-temporada que `skew_se` (jogos i.i.d.) ignora.
+    Piso amostral mais honesto. `g`: frame da liga com date/p_fav_dv/o_fav."""
+    import numpy as np, pandas as pd
+    g = g.copy(); g["yr"] = g.date.dt.year
+    seasons = [sg for _, sg in g.groupby("yr")]
+    if len(seasons) < 2:
+        return skew_se(g.p_fav_dv.values, g.o_fav.values, B=B, seed=seed)
+    rng = np.random.default_rng(seed); m = len(seasons)
+    vals = []
+    for _ in range(B):
+        sub = pd.concat([seasons[i] for i in rng.integers(0, m, m)])
+        vals.append(exante.pooled_skew(sub.p_fav_dv.values, sub.o_fav.values)["skew"])
+    return float(np.std(vals))
+
+
+def sampling_shape_cov(g, B=200, seed=1):
+    """Covariância amostral de (skew, exkurt) de uma liga por bootstrap de jogos —
+    a métrica para a distância de forma de Mahalanobis (ciente de escala e correlação)."""
+    import numpy as np
+    p = g.p_fav_dv.values; o = g.o_fav.values; n = len(p)
+    rng = np.random.default_rng(seed)
+    S = []
+    for _ in range(B):
+        i = rng.integers(0, n, n)
+        m = exante.pooled_moments(p[i], o[i], max_order=4)
+        S.append([m["skew"], m["exkurt"]])
+    return np.cov(np.array(S).T)
+
+
+def shape_distance(A, B, cov_inv):
+    """Distância de forma de MAHALANOBIS em (skew, exkurt) — métrica scale/correlation
+    -aware, supera o |Δskew| escalar e o Euclidiano cru de `distance(kind='shape')`."""
+    import numpy as np
+    d = np.array([A["skew"] - B["skew"], A["exkurt"] - B["exkurt"]])
+    return float(np.sqrt(d @ cov_inv @ d))
+
+
+def law_oos_r2(df, min_n=2000):
+    """Calibração OUT-OF-SAMPLE: ajusta a lei nas taxas de temporadas PARES e prevê
+    a skew das ligas em temporadas ÍMPARES (a lei nunca vê o alvo de teste). R² alto
+    ⇒ a lei não é overfit; a régua do resíduo é honesta."""
+    import numpy as np
+    d = df.copy(); d["yr"] = d.date.dt.year
+    ev, od = d[d.yr % 2 == 0], d[d.yr % 2 == 1]
+    law_ev = fit_law(ev)
+    t, pred = [], []
+    for lg, g in od.groupby("Division"):
+        if len(g) < min_n:
+            continue
+        t.append(exante.pooled_skew(g.p_fav_dv.values, g.o_fav.values)["skew"])
+        pred.append(predict_skew(float(g.p_fav_dv.mean()), law_ev))
+    return float(np.corrcoef(t, pred)[0, 1] ** 2)
+
+
 def tost(A, B, law, seA, seB, margin):
     """Teste de equivalência (TOST) — o veredito certo com n enorme (significância
     sempre rejeita). 'Mesma assimetria' se o IC de 90% da diferença residual cabe

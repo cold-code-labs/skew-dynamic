@@ -6,6 +6,7 @@ import FlbChart from '../components/FlbChart.astro';
 import DecompBar from '../components/DecompBar.astro';
 import LawChart from '../components/LawChart.astro';
 import PanelChart from '../components/PanelChart.astro';
+import SkewMeter from '../components/SkewMeter.astro';
 import Timeline from '../components/Timeline.astro';
 import Footer from '../components/Footer.astro';
 import data from '../data/findings.json';
@@ -234,6 +235,23 @@ const frFam = Object.fromEntries(fr.families.map(f => [f.key, f]));
             style="width:100%;border-radius:12px;border:1px solid var(--line)" />
         </div>
       </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- SKEW-METER -->
+  <section id="skewmeter" style="background:var(--surface-2)">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="eyebrow">07 · The instrument</div>
+        <h2>Measure the similarity of asymmetries.</h2>
+        <p class="lede">The project's root question, made into a tool. Pick a league: read its return-asymmetry
+          off a single live number, see what competitiveness does and doesn't explain, and ask which other
+          leagues share its shape. Similarity of asymmetries turns out to be similarity of competitiveness —
+          one parameter explains ~80%, the full win-probability distribution is sufficient.</p>
+      </div>
+      <div class="reveal"><SkewMeter /></div>
     </div>
   </section>
 
