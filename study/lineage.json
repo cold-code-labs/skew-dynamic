@@ -1,6 +1,6 @@
 {
   "schema": "skew-dynamic/lineage@1",
-  "generated_at_head": "c2a38498",
+  "generated_at_head": "a67e4652",
   "head_dirty": true,
   "data": {
     "sha256": "6905ca5324df9528",
@@ -753,6 +753,29 @@
         "r2_full": 0.99,
         "split_half_r": 0.98,
         "corr_oddsfree": 0.826,
+        "n_leagues": 38
+      },
+      "commit_date": "2026-06-23"
+    },
+    {
+      "id": "R",
+      "frente": "Bet-type",
+      "tag": "evidence/frente-R",
+      "commit": "a67e465",
+      "title": "Tipo de aposta: a lei skew=f(competitividade) em todo o book",
+      "blocks": [
+        "46_bettype"
+      ],
+      "figures": [
+        "f34"
+      ],
+      "metrics": {
+        "skew_fav": 0.236,
+        "skew_draw": 1.294,
+        "skew_dog": 2.349,
+        "corr_fav_comp": -0.9,
+        "corr_draw_comp": 0.95,
+        "corr_dog_comp": 0.91,
         "n_leagues": 38
       },
       "commit_date": "2026-06-23"

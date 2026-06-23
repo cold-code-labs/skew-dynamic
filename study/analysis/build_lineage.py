@@ -178,6 +178,13 @@ PHASES = [
      "blocks": ["45_skewmeter"], "figures": ["f33"],
      "metrics": {"r2_1param": 0.82, "r2_2moment": 0.98, "r2_full": 0.99,
      "split_half_r": 0.98, "corr_oddsfree": 0.826, "n_leagues": 38}},
+    # ── 5ª rodada (produto: tipo de aposta — a lei espelhada em todo o book) ──
+    {"id": "R", "frente": "Bet-type", "tag": "evidence/frente-R", "commit": "a67e465",
+     "title": "Tipo de aposta: a lei skew=f(competitividade) em todo o book",
+     "blocks": ["46_bettype"], "figures": ["f34"],
+     "metrics": {"skew_fav": 0.236, "skew_draw": 1.294, "skew_dog": 2.349,
+     "corr_fav_comp": -0.90, "corr_draw_comp": 0.95, "corr_dog_comp": 0.91,
+     "n_leagues": 38}},
 ]
 
 
