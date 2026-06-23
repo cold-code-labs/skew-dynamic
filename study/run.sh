@@ -102,6 +102,7 @@ for script in \
   analysis/39_tail_risk.py \
   analysis/40_entropy_comoment.py \
   analysis/41_model_battery.py \
+  analysis/44_var.py \
   analysis/12_figures.py
 do
   echo
@@ -118,6 +119,18 @@ echo "==> lineage — ledger de evidências + auditoria de drift"
 echo "================================================================"
 "$PY" analysis/build_lineage.py
 "$PY" analysis/build_lineage.py --check
+
+# 5) frentes de DADO EXTERNO (football-data.co.uk canônico): odds de abertura→
+#    fechamento (D1) e histórico pré-2005 (P6). Precisam de rede para baixar
+#    data/canonical/. Não abortam a pipeline se a rede/fonte falhar.
+echo
+echo "================================================================"
+echo "==> frentes de dado externo (canônico): fetch + D1 + pré-2005"
+echo "================================================================"
+( "$PY" analysis/50_fetch_canonical.py \
+  && "$PY" analysis/42_open_close.py \
+  && "$PY" analysis/43_pre2005.py ) \
+  || echo "   (puladas — sem rede/fonte canônica; o resto da pipeline está completo)"
 
 echo
 echo "==> pipeline concluída. Séries/tabelas em outputs/; evidências em lineage.json"

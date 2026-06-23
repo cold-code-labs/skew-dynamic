@@ -795,7 +795,81 @@ battery_table), `skewlib/goals.py` (fit_rates, degenerate_fit),
 > **2ª rodada no dataset (I–N) concluída** (2026-06-23): cross-model Poisson,
 > dinâmica HT→FT, diversificação, HFA secular, cauda realizada, entropia+co-momento.
 > **Fase O (2026-06-23):** bateria de modelos geradores — 5 famílias independentes +
-> o mercado na mesma curva (independência de modelo). 35 fases no ledger (36 cards no
-> timeline do site). O dataset congelado está agora muito amplamente explorado;
-> fronteiras restantes exigem dado externo (outros esportes, odds de abertura,
-> mudanças de regra). Lineage completo em `lineage.json`/`docs/LINEAGE.md`.
+> o mercado na mesma curva (independência de modelo).
+
+---
+
+# 3ª RODADA — frentes de DADO EXTERNO (football-data.co.uk canônico)
+
+> A 1ª/2ª rodadas exauriram o mirror congelado. Estas frentes usam o
+> football-data.co.uk **canônico** (`data/canonical/`, baixado por
+> `analysis/50_fetch_canonical.py`), que traz o que o mirror não tem: odds de
+> ABERTURA vs FECHAMENTO e profundidade pré-2005. VAR (H1) usa o mirror congelado.
+> Proveniência do dado canônico em `canonical_hash()` (carimbada em cada fase).
+
+## Fase D1 — Descoberta de preço: a assimetria já nasce na abertura (2026-06-23) [canônico]
+O mirror só tem o fechamento; o canônico traz odds de ABERTURA (Avg*) e FECHAMENTO
+(Avg*C) do mesmo jogo (2019/20–2023/24, 21 ligas, 34.659 jogos). Teste da tese no
+eixo TEMPORAL da formação de preço: a skewness é herdada da estrutura (presente já
+na abertura) ou produzida pela negociação (construída até o fechamento)?
+
+- **A assimetria já está no preço de abertura:** skew global abertura **+0.248** →
+  fechamento **+0.249** (within ~1.03 nos dois); corr(skew_open, skew_close) entre
+  21 ligas = **+0.998** [+0.99,+1.00]. Δskew médio por liga +0.0005 (sd 0.0045).
+- **O mercado refina a MARGEM, não a assimetria:** overround abertura 1.0609 →
+  fechamento 1.0597; Brier do favorito 0.2344 → 0.2330 (fechamento mais afiado).
+  Mas a lei estrutural está presente já na abertura: corr(skew, p_fav) = −0.866
+  (abre) / −0.874 (fecha). Drift do favorito +0.0001 (sem steam sistemático).
+- **Conclusão:** a assimetria não é construída pela negociação — está no primeiro
+  preço. O fechamento aperta margem e calibração e deixa a skewness intacta.
+  Extensão TEMPORAL da ortogonalidade da margem (W4/D2, que era entre books).
+
+Artefatos: `skewlib/fdcanon.py`, `analysis/42_open_close.py`,
+`outputs/open_close_by_league.csv`, `outputs/fig/f30_open_close.png`.
+
+## Fase H1 — VAR: choque institucional não move a skewness (placebo) (2026-06-23)
+O VAR é um choque institucional que NÃO altera a dispersão de força dos times.
+Diferenças-em-diferenças escalonado (mirror congelado): ligas adotam em 2018/2019/
+2020; divisões inferiores inglesas/escocesas (sem VAR de liga) são controle
+nunca-tratado. 321 liga-anos, 10 tratadas + 6 controles.
+
+- **Efeito NULO na skewness:** β=**−0.0066** [−0.035,+0.022], p=**0.65** (=−0.14 SD
+  da liga, IC inclui 0). Taxa de vitória do favorito β=+0.0024 (p=0.80) e p_fav do
+  mercado β=+0.0050 (p=0.45) — também nulos. Event-study sem salto na adoção.
+- **Contraste com a COVID (W3):** o único choque que moveu a skewness foi a COVID
+  (+0.42 SD, via queda de HFA) — um choque REAL de competitividade. O VAR, que não
+  toca a estrutura de força, deixa a skewness invariante.
+- **Conclusão:** placebo de competitividade — só choques de COMPETITIVIDADE movem a
+  skewness, não fatores institucionais. Confirma skewness = f(dispersão de força).
+
+Artefatos: `skewlib/var.py`, `analysis/44_var.py`, `outputs/var_panel.csv`,
+`outputs/fig/f31_var.png`.
+
+## Fase P6 — Pré-2005: o regime moderno já vigora desde ~2000 (2026-06-23) [canônico]
+O paper prevê que o baseline da liga se desloca nos choques de regime (Bosman 95,
+Champions 94/95, receita ~2003). Estendemos para trás com WILLIAM HILL — o único
+book contínuo 2000–2025 (book consistente; skewness é book-invariante, G1/D2).
+158.323 jogos, 21 ligas, 2000–2023.
+
+- **SEM quebra em 2005:** o recorte ≥2005 do estudo NÃO é fronteira de regime —
+  PELT acha quebras espalhadas (2005/2007/2010×2/2014/2016), nenhuma comum. A
+  ESTRUTURA por liga é a mesma desde 2000: corr(baseline pré-2005, moderno) entre
+  17 ligas = **+0.76**.
+- **Drift de NÍVEL fraco e marginal:** moderno +0.232 vs pré-2005 +0.214 (Δ +0.018);
+  FE de liga β=−0.019 [−0.037,−0.002] p=0.03, mas pareado p=0.10 e **sensível ao
+  endpoint** (com 2024 parcial incluído, p=0.25). Magnitude bem abaixo da variação
+  entre-ligas (sd 0.047) — coerente com invariância INTRA-regime + evolução lenta de
+  balanço, não atemporalidade.
+- **Limite honesto:** odds 1X2 só existem desde ~2000 — os choques dos anos 1990
+  (Bosman/Champions) ficam ANTES das odds e permanecem intestáveis. Estendemos a
+  janela de invariância em 5 anos; a predição completa do paper exige dado pré-odds.
+
+Artefatos: `skewlib/fdcanon.py` (WH), `analysis/43_pre2005.py`,
+`outputs/pre2005_by_league.csv`, `outputs/fig/f32_pre2005.png`.
+
+---
+
+> **3ª rodada (dado externo) concluída** (2026-06-23): D1 (abertura→fechamento),
+> H1 (VAR), P6 (pré-2005). 38 fases no ledger. Fronteiras restantes: outros esportes
+> (decisão: futebol exclusivamente) e odds pré-2000 (inexistentes). Lineage completo
+> em `lineage.json`/`docs/LINEAGE.md`.

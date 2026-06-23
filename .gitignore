@@ -1,5 +1,6 @@
 # data (large, regenerable; frozen by hash in study/data/PROVENANCE.json)
 study/data/*.csv
+study/data/canonical/
 study/outputs/*.csv
 study/outputs/*.png
 study/outputs/*.log

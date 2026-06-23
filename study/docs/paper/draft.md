@@ -256,6 +256,22 @@ deviations, positive in 21 of 33 leagues. The single exogenous competitiveness
 shock in twenty years moved skewness in the predicted direction — corroborating
 the mechanism without contradicting secular invariance.
 
+A second natural experiment sharpens the interpretation by *failing* to move
+skewness, as the mechanism predicts it should. The staggered introduction of the
+Video Assistant Referee (VAR) — adopted by different leagues in 2017/18, 2018/19 and
+2019/20 — is an institutional shock that does not alter the dispersion of team
+strengths, and so should leave the structural asymmetry untouched. A staggered
+difference-in-differences with league and year fixed effects (treated top divisions
+against never-treated English and Scottish lower divisions) returns a null effect on
+ex-ante skewness, β = −0.007 (cluster-robust p = 0.65; −0.14 league standard
+deviations, confidence interval spanning zero), with equally null effects on the
+realised favourite win rate and on the market's mean favourite probability, and no
+discontinuity at adoption in an event-study plot. The contrast with COVID is exactly
+that of the mechanism: a genuine competitiveness shock (empty stadiums, weaker home
+advantage) moves skewness; an institutional one that leaves the strength
+distribution intact does not. Skewness tracks the competitive structure of the
+sport, not the rules under which it is officiated.
+
 ### 4.4 Margin is orthogonal to asymmetry
 
 Comparing the market-average odds with the best available price over the same
@@ -264,6 +280,18 @@ Comparing the market-average odds with the best available price over the same
 barely moves, +0.236 → +0.254, with a per-match favourite-probability correlation
 of 0.996. Bookmakers compete on *margin* (the level of returns), not on the
 *asymmetry* (the structure). Pricing and risk-structure are separable.
+
+The same separation holds along the *time* axis of price formation. On a canonical
+sample of 34,659 matches (2019/20–2023/24) carrying both opening and closing prices,
+the asymmetry is already present in the first quote: the ex-ante skewness is +0.248
+at the open and +0.249 at the close, correlated at r = 0.998 across leagues, with a
+mean per-league change of +0.0005. The market does sharpen the price between open
+and close — the overround falls (1.061 → 1.060) and the favourite's Brier score
+improves (0.2344 → 0.2330) — but the structural law is already in force at the open
+(skewness vs favourite probability r = −0.87 at both), and the favourite's
+probability drifts by only +0.0001 on average. The asymmetry is not manufactured by
+trading; it is inherited from structure and is in the price before the market
+refines it.
 
 ### 4.5 The binary market
 
@@ -514,14 +542,19 @@ generator — from the "demand" side studied in asset pricing.
 Limitations. Competitiveness is a latent construct; our Elo proxy, though odds-
 free, is noisier than the odds themselves, attenuating the estimated law. Team
 identities are matched by name across a global pool, which may conflate rare
-homonyms. The dataset is a normalised mirror; primary-source provenance from
-football-data.co.uk is a natural pre-submission step. Our window is one
-competitive regime by construction; extending the odds record back through the
-mid-1990s shocks would let us test whether the *baseline itself* shifts across
-regimes (the prediction being that it does, in the direction of the documented
-competitive-balance changes). Finally, our evidence is from football; whether the
-same invariance holds in sports with different competitive structures (tennis,
-basketball) is left for external validation.
+homonyms. The dataset is a normalised mirror; we corroborate the key results on the
+primary football-data.co.uk source directly (the price-discovery and pre-2005
+analyses above use it). On the regime question, extending the record back to 2000
+with a single continuous bookmaker (William Hill) shows no break at our 2005 cutoff
+and a per-league baseline ordering preserved across the boundary (r = 0.76), with at
+most a faint, endpoint-sensitive drift in level (the modern era ≈ 0.018 above
+2000–2004, p ≈ 0.03–0.10) — the modern competitive regime already obtains by 2000.
+The institutional regime breaks the literature identifies, however, are earlier
+still (Bosman 1995, the Champions League expansion of 1994/95), and 1X2 odds do not
+exist before ≈ 2000, so the prediction that the *baseline itself* shifts across those
+1990s shocks remains beyond the reach of betting data. Finally, our evidence is from
+football; whether the same invariance holds in sports with different competitive
+structures (tennis, basketball) is left for external validation.
 
 ## 8. Conclusion
 
@@ -579,6 +612,15 @@ asymmetry is inherited from the sport, not produced by the pricing of it.
   (latent-margin probit, Poisson, Dixon-Coles, Bradley-Terry-Davidson, results-only
   Elo) and the market all fall on one skewness–competitiveness curve (left), each
   reproducing the cross-league skewness ordering against the market (right).
+- **Figure 15.** Price discovery: the ex-ante skewness at the opening price equals
+  that at the close (r = 0.998 across leagues, left), while the margin shrinks from
+  open to close (right) — the asymmetry is in the first quote, not built by trading.
+- **Figure 16.** VAR natural experiment: an event study shows no jump in skewness at
+  VAR adoption (left), and the difference-in-differences effect is null in league
+  standard deviations against the COVID competitiveness shock of §4.3 (right).
+- **Figure 17.** Pre-2005 regime: the league-demeaned global skewness series shows no
+  break at the 2005 cutoff (left), and the per-league baseline is preserved between
+  2000–2004 and the modern era (r = 0.76, right).
 
 ## References
 
