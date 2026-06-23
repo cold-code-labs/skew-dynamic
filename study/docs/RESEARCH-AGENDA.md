@@ -159,11 +159,11 @@ parâmetros de preferência (CPT) são eles próprios invariantes.
 > MESMA curva ⇒ mecanismo independente do modelo. `skewlib/goals.py`,
 > `analysis/35_poisson_crossmodel.py`.
 
-## Frente J — Chegada de informação: intervalo → fim (HT→FT)  [dataset]
-Sem odds de abertura (D1 fora), usar o RESULTADO do intervalo (`HTResult`/`HT*`) como
-choque de informação: P(favorito vence | placar do HT) e a skewness implícita do
-"resto do jogo" — como a assimetria se RESOLVE conforme o jogo anda (substituto de
-descoberta de preço no próprio dataset).
+## Frente J — Chegada de informação: intervalo → fim (HT→FT)  ✅ FEITA (2026-06-23)
+> **Concluída** (Fase J): a skewness do "resto do jogo" é a identidade na prob
+> condicional ao placar do HT — favorito atrás q=0.14 skew +2.08, +2 gols q=0.95
+> skew −3.91; calibração martingale |p0−q|=0.0035. O núcleo mecânico é DINÂMICO
+> (vale a cada estado de info). `skewlib/inplay.py`, `analysis/36_inplay_resolution.py`.
 
 ## Frente K — Diversificação / portfólio  [dataset]
 A skewness é fenômeno de aposta ÚNICA? Para N apostas (quase) independentes, a

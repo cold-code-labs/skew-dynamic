@@ -663,3 +663,25 @@ skewness. 617 liga-temporadas ajustadas.
 Artefatos: `skewlib/goals.py` (fit_match_probs, league_season_table, by_league),
 `analysis/35_poisson_crossmodel.py`, `outputs/poisson_crossmodel_by_league.csv`,
 `outputs/fig/f23_poisson_crossmodel.png`.
+
+## Fase J — Chegada de informação (HT→FT): o núcleo mecânico é dinâmico (2026-06-23)
+Sem odds de abertura (D1 fora), o RESULTADO do intervalo é o choque de informação. A
+prob de vitória do favorito pré-jogo se atualiza com o placar do HT, e a skewness do
+"resto do jogo" é de novo a identidade (1−2q)/√(q(1−q)) na prob condicional q.
+150.950 jogos com HT.
+
+- **A assimetria RESOLVE com a informação:** estado do favorito no HT → skew do resto
+  do jogo: **atrás** (20.6%) q=0.139, skew **+2.08** (virou lotérica); **empatado**
+  (42.4%) q=0.402, skew +0.40; **+1** (26.1%) q=0.757, skew **−1.20**; **+2 ou mais**
+  (10.9%) q=0.945, skew **−3.91** (quase certo). A identidade mecânica vale a CADA
+  estado de info, não só no apito inicial.
+- **Calibração dinâmica (martingale):** E[q condicional do HT | faixa de p0] ≈ p0,
+  erro médio |p0−q| = **0.0035** — a prob pré-jogo é bem calibrada e o HT a refina sem
+  viés.
+- **Conclusão:** o FLB/identidade é um fato DINÂMICO — a skewness implícita acompanha
+  a prob de vitória em qualquer instante; ela não "descobre" um valor eficiente ao
+  longo do tempo, ela já É a imagem algébrica da prob corrente. Extensão temporal do W1.
+
+Artefatos: `skewlib/inplay.py` (fav_state, conditional_table, martingale_check),
+`analysis/36_inplay_resolution.py`, `outputs/inplay_conditional.csv`,
+`outputs/fig/f24_inplay.png`.
