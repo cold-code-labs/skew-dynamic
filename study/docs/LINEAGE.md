@@ -6,7 +6,7 @@
 > 38 ligas). Volte a qualquer estado com
 > `git checkout <tag>`; audite mudança de resultado com `--check`.
 
-**HEAD na geração:** `74f9c2e9`  ⚠️ working tree DIRTY
+**HEAD na geração:** `b4b90ebc`  ⚠️ working tree DIRTY
 
 | Fase | Frente | Achado | Blocos | Figuras | Números-título | Commit | Tag |
 |------|--------|--------|--------|---------|----------------|--------|-----|
@@ -40,6 +40,7 @@
 | **E3** | Theory | Calibração por liga (cutoff de empate endógeno) | 34_per_league_calibration | f22 | corr_sigma_pfav=0.874 · corr_c_draw=0.906 · skew_model_r=0.905 | `e0bc9fd` (2026-06-23) | `evidence/E3` |
 | **I** | Cross-model | Validação cruzada do mecanismo (Poisson de gols) | 35_poisson_crossmodel | f23 | corr_pfav=0.972 · corr_skew=0.925 · league_r_poisson=0.85 · n_league_seasons=617 | `7a45759` (2026-06-23) | `evidence/frente-I` |
 | **J** | Dynamic | Chegada de informação HT→FT (identidade dinâmica) | 36_inplay_resolution | f24 | skew_pregame=0.239 · skew_behind=2.084 · skew_ahead2=-3.908 · martingale_err=0.0035 | `74f9c2e` (2026-06-23) | `evidence/frente-J` |
+| **K** | Diversification | Diversificação (skewness = fenômeno de aposta única) | 37_diversification | f25 | skew_single_fav=0.23 · skew_single_dog=2.254 · n_to_gaussian_dog=509 | `b4b90eb` (2026-06-23) | `evidence/frente-K` |
 
 ## Tags de versionamento (`evidence/*`)
 Uma tag anotada por marco de evidência aponta o commit que estabeleceu

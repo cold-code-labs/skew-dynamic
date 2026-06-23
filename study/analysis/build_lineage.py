@@ -134,6 +134,10 @@ PHASES = [
      "title": "Chegada de informação HT→FT (identidade dinâmica)", "blocks": ["36_inplay_resolution"],
      "figures": ["f24"], "metrics": {"skew_pregame": 0.239, "skew_behind": 2.084,
      "skew_ahead2": -3.908, "martingale_err": 0.0035}},
+    {"id": "K", "frente": "Diversification", "tag": "evidence/frente-K", "commit": "b4b90eb",
+     "title": "Diversificação (skewness = fenômeno de aposta única)", "blocks": ["37_diversification"],
+     "figures": ["f25"], "metrics": {"skew_single_fav": 0.230, "skew_single_dog": 2.254,
+     "n_to_gaussian_dog": 509}},
 ]
 
 

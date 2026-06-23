@@ -1,6 +1,6 @@
 {
   "schema": "skew-dynamic/lineage@1",
-  "generated_at_head": "74f9c2e9",
+  "generated_at_head": "b4b90ebc",
   "head_dirty": true,
   "data": {
     "sha256": "6905ca5324df9528",
@@ -571,6 +571,25 @@
         "skew_behind": 2.084,
         "skew_ahead2": -3.908,
         "martingale_err": 0.0035
+      },
+      "commit_date": "2026-06-23"
+    },
+    {
+      "id": "K",
+      "frente": "Diversification",
+      "tag": "evidence/frente-K",
+      "commit": "b4b90eb",
+      "title": "Diversificação (skewness = fenômeno de aposta única)",
+      "blocks": [
+        "37_diversification"
+      ],
+      "figures": [
+        "f25"
+      ],
+      "metrics": {
+        "skew_single_fav": 0.23,
+        "skew_single_dog": 2.254,
+        "n_to_gaussian_dog": 509
       },
       "commit_date": "2026-06-23"
     }
