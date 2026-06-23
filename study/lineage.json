@@ -1,6 +1,6 @@
 {
   "schema": "skew-dynamic/lineage@1",
-  "generated_at_head": "a3269108",
+  "generated_at_head": "4ccbc01f",
   "head_dirty": true,
   "data": {
     "sha256": "6905ca5324df9528",
@@ -359,6 +359,64 @@
         "skew_ci_hi": 0.239,
         "corr_ci_lo": -0.922,
         "corr_ci_hi": -0.876
+      },
+      "commit_date": "2026-06-23"
+    },
+    {
+      "id": "D2",
+      "frente": "Microstructure",
+      "tag": "evidence/frente-D",
+      "commit": "4ccbc01",
+      "title": "Sharp vs soft (margem ortogonal na melhor odd)",
+      "blocks": [
+        "26_sharp_soft"
+      ],
+      "figures": [
+        "f14"
+      ],
+      "metrics": {
+        "d_skew_mean": 0.02,
+        "corr_soft_sharp": 0.993,
+        "corr_sharp_pfav": -0.876
+      },
+      "commit_date": "2026-06-23"
+    },
+    {
+      "id": "D3",
+      "frente": "Microstructure",
+      "tag": "evidence/frente-D",
+      "commit": "4ccbc01",
+      "title": "z de Shin (dinheiro informado) como série",
+      "blocks": [
+        "27_shin_z_series"
+      ],
+      "figures": [
+        "f15"
+      ],
+      "metrics": {
+        "z_global": 0.0343,
+        "z_sd_league": 0.0043,
+        "corr_z_overround": 0.999
+      },
+      "commit_date": "2026-06-23"
+    },
+    {
+      "id": "D4",
+      "frente": "Third market",
+      "tag": "evidence/frente-D",
+      "commit": "4ccbc01",
+      "title": "Handicap asiático: identidade num 3º mercado",
+      "blocks": [
+        "28_asian_handicap"
+      ],
+      "figures": [
+        "f16"
+      ],
+      "metrics": {
+        "p_fav_ah": 0.533,
+        "skew_ah_global": -0.104,
+        "within_frac_ah": 1.027,
+        "league_identity_r": 0.8
       },
       "commit_date": "2026-06-23"
     }

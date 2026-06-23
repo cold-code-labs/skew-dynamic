@@ -6,7 +6,7 @@
 > 38 ligas). Volte a qualquer estado com
 > `git checkout <tag>`; audite mudança de resultado com `--check`.
 
-**HEAD na geração:** `a3269108`  ⚠️ working tree DIRTY
+**HEAD na geração:** `4ccbc01f`  ⚠️ working tree DIRTY
 
 | Fase | Frente | Achado | Blocos | Figuras | Números-título | Commit | Tag |
 |------|--------|--------|--------|---------|----------------|--------|-----|
@@ -29,6 +29,9 @@
 | **G1** | Reliability | De-vig confiável + invariância de método | 23_devig_reliability | f12 | rel_global=0.0 · rel_sd_league=0.0003 · skew_devig_range=0.039 | `a326910` (2026-06-23) | `evidence/frente-G` |
 | **G2** | Robustness | Painel balanceado estrito (composição morta) | 24_balanced_panel | f13 | n_balanced=15 · beta_balanced=-0.00013 · delta20_balanced=-0.003 | `a326910` (2026-06-23) | `evidence/frente-G` |
 | **G3** | Confidence | IC por block-bootstrap sobre temporadas | 25_block_bootstrap | — | skew_ci_lo=0.232 · skew_ci_hi=0.239 · corr_ci_lo=-0.922 · corr_ci_hi=-0.876 | `a326910` (2026-06-23) | `evidence/frente-G` |
+| **D2** | Microstructure | Sharp vs soft (margem ortogonal na melhor odd) | 26_sharp_soft | f14 | d_skew_mean=0.02 · corr_soft_sharp=0.993 · corr_sharp_pfav=-0.876 | `4ccbc01` (2026-06-23) | `evidence/frente-D` |
+| **D3** | Microstructure | z de Shin (dinheiro informado) como série | 27_shin_z_series | f15 | z_global=0.0343 · z_sd_league=0.0043 · corr_z_overround=0.999 | `4ccbc01` (2026-06-23) | `evidence/frente-D` |
+| **D4** | Third market | Handicap asiático: identidade num 3º mercado | 28_asian_handicap | f16 | p_fav_ah=0.533 · skew_ah_global=-0.104 · within_frac_ah=1.027 · league_identity_r=0.8 | `4ccbc01` (2026-06-23) | `evidence/frente-D` |
 
 ## Tags de versionamento (`evidence/*`)
 Uma tag anotada por marco de evidência aponta o commit que estabeleceu
