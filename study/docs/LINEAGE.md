@@ -6,7 +6,7 @@
 > 38 ligas). Volte a qualquer estado com
 > `git checkout <tag>`; audite mudança de resultado com `--check`.
 
-**HEAD na geração:** `ece51176`  ⚠️ working tree DIRTY
+**HEAD na geração:** `3b63b770`  ⚠️ working tree DIRTY
 
 | Fase | Frente | Achado | Blocos | Figuras | Números-título | Commit | Tag |
 |------|--------|--------|--------|---------|----------------|--------|-----|
@@ -45,6 +45,9 @@
 | **M** | Tail risk | Risco de cauda realizado das estratégias | 39_tail_risk | f27 | skew_fav=0.23 · skew_dog=2.254 · maxdd_fav=-9922.9 · maxdd_dog=-20934.0 | `f22f163` (2026-06-23) | `evidence/frente-LMN` |
 | **N** | Indices | Entropia + co-momento entre mercados | 40_entropy_comoment | f28 | corr_entropy_skew=0.827 · corr_1x2_ou_skew=0.146 | `f22f163` (2026-06-23) | `evidence/frente-LMN` |
 | **O** | Model battery | Bateria de modelos geradores (independência de modelo) | 41_model_battery | f29 | corr_skew_poisson=0.925 · corr_skew_dixoncoles=0.874 · corr_skew_btd=0.84 · corr_skew_elo=0.786 · r_curve_elo=0.96 · n_league_seasons=617 · n_models=5 | `ece5117` (2026-06-23) | `evidence/frente-O` |
+| **D1** | Price discovery | Descoberta de preço: abertura→fechamento [canônico] | 42_open_close | f30 | skew_open=0.248 · skew_close=0.249 · corr_open_close=0.998 · law_open=-0.866 · n=34659 | `3b63b77` (2026-06-23) | `evidence/frente-D1` |
+| **H1** | Natural experiment | VAR escalonado: choque institucional não move a skewness (placebo) | 44_var | f31 | did_skew_beta=-0.0066 · did_skew_p=0.65 · did_skew_sd=-0.14 · n_obs=321 | `3b63b77` (2026-06-23) | `evidence/frente-H1` |
+| **P6** | Regime | Pré-2005: o regime moderno já vigora desde ~2000 [canônico] | 43_pre2005 | f32 | skew_pre2005=0.214 · skew_modern=0.232 · level_beta_pre=-0.0194 · trend_beta=0.00112 · n_leagues=17 | `3b63b77` (2026-06-23) | `evidence/frente-pre2005` |
 
 ## Tags de versionamento (`evidence/*`)
 Uma tag anotada por marco de evidência aponta o commit que estabeleceu

@@ -156,6 +156,22 @@ PHASES = [
      "metrics": {"corr_skew_poisson": 0.925, "corr_skew_dixoncoles": 0.874,
      "corr_skew_btd": 0.840, "corr_skew_elo": 0.786, "r_curve_elo": 0.96,
      "n_league_seasons": 617, "n_models": 5}},
+    # ── 4ª rodada (DADO EXTERNO: football-data.co.uk canônico; H1 usa o mirror) ──
+    {"id": "D1", "frente": "Price discovery", "tag": "evidence/frente-D1", "commit": "3b63b77",
+     "title": "Descoberta de preço: abertura→fechamento [canônico]",
+     "blocks": ["42_open_close"], "figures": ["f30"],
+     "metrics": {"skew_open": 0.248, "skew_close": 0.249, "corr_open_close": 0.998,
+     "law_open": -0.866, "n": 34659}},
+    {"id": "H1", "frente": "Natural experiment", "tag": "evidence/frente-H1", "commit": "3b63b77",
+     "title": "VAR escalonado: choque institucional não move a skewness (placebo)",
+     "blocks": ["44_var"], "figures": ["f31"],
+     "metrics": {"did_skew_beta": -0.0066, "did_skew_p": 0.65, "did_skew_sd": -0.14,
+     "n_obs": 321}},
+    {"id": "P6", "frente": "Regime", "tag": "evidence/frente-pre2005", "commit": "3b63b77",
+     "title": "Pré-2005: o regime moderno já vigora desde ~2000 [canônico]",
+     "blocks": ["43_pre2005"], "figures": ["f32"],
+     "metrics": {"skew_pre2005": 0.214, "skew_modern": 0.232, "level_beta_pre": -0.0194,
+     "trend_beta": 0.00112, "n_leagues": 17}},
 ]
 
 
