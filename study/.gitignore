@@ -1,6 +1,10 @@
+# raw match data (restricted by football-data.co.uk ToS; regenerable, hash-frozen)
 data/*.csv
-outputs/*.csv
-outputs/*.png
+data/canonical/
+outputs/*.log
+outputs/_provenance/
+# derived tables (outputs/*.csv) and figures (outputs/fig/*.png) ARE tracked —
+# the shareable data deposit (see outputs/README.md).
 __pycache__/
 *.pyc
 .venv/

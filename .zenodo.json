@@ -1,0 +1,31 @@
+{
+  "title": "Structural Invariance of Return Skewness in Football Betting Markets — data & code",
+  "description": "Open data pipeline, derived datasets, figures and analysis code for the study of structural invariance of return skewness in football betting markets (Cold Code Labs). Includes the consolidated results artifact (findings.json), per-league/per-season derived tables with a data dictionary, the figures, and the one-command reproduction pipeline pinned to a hash-frozen match snapshot. The raw football-data.co.uk match file is not redistributed (terms of use) but is fetched and hash-verified by the pipeline.",
+  "upload_type": "software",
+  "access_right": "open",
+  "license": "Apache-2.0",
+  "creators": [
+    {
+      "name": "Alves, Vitor",
+      "affiliation": "Cold Code Labs",
+      "orcid": "0000-0000-0000-0000"
+    }
+  ],
+  "keywords": [
+    "skewness",
+    "favourite-longshot bias",
+    "betting markets",
+    "market efficiency",
+    "implied probabilities",
+    "structural invariance",
+    "competitive balance",
+    "reproducibility"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/cold-code-labs/skew-dynamic",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    }
+  ]
+}

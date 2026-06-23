@@ -1,6 +1,9 @@
-pandas>=2.0
-numpy>=1.24
-scipy>=1.10
-statsmodels>=0.14
-ruptures>=1.1
-matplotlib>=3.7
+# Dependências da pipeline de análise — PINADAS na versão exata que produziu os
+# números do paper (dataset congelado sha 6905ca53; Python 3.14, ver .python-version).
+# Reprodução bit-a-bit: use estas versões. requirements.lock tem o fecho transitivo.
+pandas==3.0.3
+numpy==2.5.0
+scipy==1.18.0
+statsmodels==0.14.6
+ruptures==1.1.9
+matplotlib==3.11.0

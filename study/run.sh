@@ -104,6 +104,7 @@ for script in \
   analysis/41_model_battery.py \
   analysis/44_var.py \
   analysis/45_skewmeter.py \
+  analysis/46_bettype.py \
   analysis/12_figures.py
 do
   echo
@@ -113,7 +114,15 @@ do
   "$PY" "$script"
 done
 
-# 4) ledger de evidências: (re)gera lineage.json + docs/LINEAGE.md e audita drift
+# 4) dados do site/serviço: (re)gera site/src/data/findings.json a partir das
+#    mesmas computações auditadas (alimenta o widget e a API /measure).
+echo
+echo "================================================================"
+echo "==> export — findings.json (site + API)"
+echo "================================================================"
+"$PY" analysis/export_site_data.py
+
+# 5) ledger de evidências: (re)gera lineage.json + docs/LINEAGE.md e audita drift
 echo
 echo "================================================================"
 echo "==> lineage — ledger de evidências + auditoria de drift"
@@ -121,7 +130,7 @@ echo "================================================================"
 "$PY" analysis/build_lineage.py
 "$PY" analysis/build_lineage.py --check
 
-# 5) frentes de DADO EXTERNO (football-data.co.uk canônico): odds de abertura→
+# 6) frentes de DADO EXTERNO (football-data.co.uk canônico): odds de abertura→
 #    fechamento (D1) e histórico pré-2005 (P6). Precisam de rede para baixar
 #    data/canonical/. Não abortam a pipeline se a rede/fonte falhar.
 echo

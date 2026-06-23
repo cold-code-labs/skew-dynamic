@@ -1,0 +1,32 @@
+name: ci
+
+# Verificação contínua leve: o motor importa e o serviço /measure passa nos testes
+# contra o findings.json versionado. A pipeline completa de análise não roda aqui
+# (depende do dataset bruto restrito), mas o drift dos NÚMEROS é auditado localmente
+# por `build_lineage.py --check` no run.sh.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install pinned dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r study/requirements.txt
+          pip install -r study/api/requirements.txt
+          pip install pytest
+      - name: Engine import smoke
+        working-directory: study
+        run: python -c "import skewlib.exante, skewlib.skewmeter, skewlib.model; print('skewlib OK')"
+      - name: API /measure tests
+        working-directory: study
+        run: python -m pytest api/test_api.py -q

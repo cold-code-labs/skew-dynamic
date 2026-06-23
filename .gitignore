@@ -1,10 +1,10 @@
-# data (large, regenerable; frozen by hash in study/data/PROVENANCE.json)
+# raw match data (restricted by football-data.co.uk ToS; regenerable via
+# analysis/00_fetch_data.py, frozen by hash in study/data/PROVENANCE.json)
 study/data/*.csv
 study/data/canonical/
-study/outputs/*.csv
-study/outputs/*.png
 study/outputs/*.log
-study/outputs/fig/*.png
+# NB: the DERIVED tables (study/outputs/*.csv) and figures (study/outputs/fig/*.png)
+# ARE tracked — they are the shareable data deposit (see study/outputs/README.md).
 
 # python
 __pycache__/

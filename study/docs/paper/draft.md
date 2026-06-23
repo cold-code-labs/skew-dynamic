@@ -1,6 +1,7 @@
 # Structural Invariance of Return Skewness in Football Betting Markets
 
 *Vitor Alves* — Cold Code Labs
+ORCID: ‹0000-0000-0000-0000 — register at orcid.org and replace before submission›
 
 **Target:** Royal Society Open Science (working draft)
 
@@ -8,33 +9,24 @@
 
 ## Abstract
 
-We study the asymmetry (skewness) of returns implied by football betting markets
-and ask whether it is a temporal process or a structural invariant. Using
-205,435 matches across 38 leagues (2005–2025), we define the *ex-ante* skewness
-of the favourite bet from de-vigged (Shin) implied probabilities and show, via a
-law-of-total-cumulants decomposition, that market skewness is ≈100% the
-within-match Bernoulli asymmetry of the win-probability distribution — the
-algebraic image of the favourite–longshot bias, not an emergent pooling effect
-(ex-ante +0.236 ≈ ex-post +0.230; the within-match term is +102.6% of the third
-moment). The cross-league level tracks competitiveness, and the relation
-survives a competitiveness measure built **without odds** — a results-only Elo
-(skewness vs upset rate r = +0.83) — while odds- and Elo-based favourite strength
-agree at r = 0.91, implying the market merely *reads* the sporting structure. A
-league×season panel shows **no secular trend** within the modern competitive
-regime spanning our 2005–2025 window (β = +0.00015/yr, p = 0.73; a single
-structural break across 38 leagues, COVID-19 in France; 70% of variance is
-between-league), and the COVID-19 empty-stadium shock moves skewness in the
-predicted direction. Bookmaker margin is orthogonal to asymmetry, and the
-identity reappears in the binary over/under-2.5 market. We cast these invariances as
-a single instrument for the *similarity of asymmetries*: a competitiveness-conditioned
-distance shows that one competitiveness parameter explains 82% of the between-league
-asymmetry variance, the first two moments of the win-probability distribution 98%, and
-the full distribution reduces the residual to the sampling floor — so the win-
-probability distribution is the minimal sufficient statistic for a league's asymmetry.
-We conclude that the
-market's risk asymmetry is a **league-specific structural baseline inherited from
-the competitive structure of the sport**, stable within a competitive regime
-rather than produced by the pricing of it.
+We ask whether the skewness of returns implied by football betting markets is a
+temporal process or a structural invariant. Using 205,435 matches across 38
+leagues (2005–2025), we define the *ex-ante* skewness of the favourite bet from
+de-vigged (Shin) implied probabilities. A law-of-total-cumulants decomposition
+shows market skewness is ≈100% the within-match Bernoulli asymmetry of the
+win-probability distribution — the algebraic image of the favourite–longshot bias
+(ex-ante +0.236 ≈ ex-post +0.230; within-match term +102.6%). Its cross-league
+level tracks competitiveness and survives a competitiveness measure built
+**without odds** (results-only Elo; skewness vs upset rate r = +0.83), while odds-
+and Elo-based favourite strength agree at r = 0.91. A league×season panel shows
+**no secular trend** within the modern regime (β = +0.00015/yr, p = 0.73; a single
+break, COVID-19; 70% of variance is between-league). Margin is orthogonal to
+asymmetry, and the identity reappears in the binary over/under-2.5 market. Cast as
+one instrument for the *similarity of asymmetries*, a single competitiveness
+parameter explains 82% of the between-league variance, the first two moments 98%,
+and the full win-probability distribution is the minimal sufficient statistic. The
+market's risk asymmetry is a structural baseline inherited from the sport, not
+produced by pricing it.
 
 **Keywords:** skewness; favourite–longshot bias; betting markets; market
 efficiency; implied probabilities; structural invariance.
@@ -619,6 +611,50 @@ asymmetry is inherited from the sport, not produced by the pricing of it.
 
 ---
 
+## Declarations
+
+**Ethics.** Not applicable. This study uses only publicly available aggregate
+match results and bookmaker odds; it involves no human participants, personal
+data, or animal subjects.
+
+**Data accessibility.** All derived data needed to reproduce every figure and
+statistic in this article are openly available: the per-league and per-season
+aggregate tables (`study/outputs/*.csv`), the consolidated results artifact
+(`site/src/data/findings.json`), and the figures, all with a data dictionary
+(`study/outputs/README.md`). These are archived at Zenodo
+(doi:10.5281/zenodo.XXXXXXX — minted on acceptance) and version-controlled at the
+repository below. The underlying raw match-and-odds file is sourced from
+football-data.co.uk; its terms of use restrict redistribution, so it is **not**
+deposited. It is regenerated deterministically by `analysis/00_fetch_data.py`,
+which verifies the exact analysis snapshot against the frozen SHA256
+(`6905ca5324df…`, recorded in `study/data/PROVENANCE.json`). The provided derived
+data are sufficient to replicate all reported findings without the raw file.
+
+**Code accessibility.** All analysis code is open source (Apache-2.0) at
+https://github.com/cold-code-labs/skew-dynamic. The complete pipeline reproduces
+every number, figure, and the evidence ledger from one command (`cd study &&
+./run.sh`), with a pinned environment (`requirements.txt` / `requirements.lock`,
+Python in `.python-version`) and an automatic result-drift audit
+(`build_lineage.py --check`). Each headline number is pinned to the exact code
+version that produced it via a versioned lineage ledger and git evidence tags.
+
+**Competing interests.** The author declares no competing interests.
+
+**Funding.** This work received no external funding; it was conducted by Cold
+Code Labs.
+
+**Authors' contributions.** V.A.: conceptualization, methodology, software,
+formal analysis, data curation, writing — original draft, writing — review and
+editing, visualization.
+
+**Use of AI.** The author used an AI coding assistant (Anthropic Claude) to help
+implement and review analysis code and to copy-edit prose. All study design,
+methodological choices, results, and conclusions are the author's; all
+AI-assisted code and text were verified against the data and the result-drift
+audit.
+
+---
+
 ## Figures
 
 - **Figure 1.** Favourite–longshot bias: ex-ante and ex-post skewness against
@@ -673,8 +709,12 @@ asymmetry is inherited from the sport, not produced by the pricing of it.
 
 ## References
 
-- Andrikogiannopoulou, A. & Papakonstantinou, F. *Estimating Risk Preferences
-  from Betting Choices.* Review of Financial Studies.
+*Listed author–date (valid for RSOS format-free initial submission). Final-stage
+copy-edit: convert to numbered Vancouver style and add DOIs.*
+
+- Andrikogiannopoulou, A. & Papakonstantinou, F. (2013). *Heterogeneity in Risk
+  Preferences: Evidence from a Real-World Betting Market.* Swiss Finance Institute
+  Research Paper 13-53. ‹verify intended work/year before final submission›
 - Angelini, G. & De Angelis, L. (2019). *Efficiency of online football betting
   markets.* International Journal of Forecasting 35(2):712–721.
 - Barberis, N. & Huang, M. (2008). *Stocks as Lotteries.* American Economic Review.
