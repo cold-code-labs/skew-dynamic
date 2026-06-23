@@ -45,7 +45,7 @@ frozen by content hash.
 ```
 study/        the research — fully reproducible Python pipeline
   skewlib/    reusable library (de-vig, ex-ante skewness, Elo, panel, model…)
-  analysis/   thin scripts, one per block (00–16)
+  analysis/   thin scripts, one per block (00–18)
   docs/       FINDINGS (phase log), METHODOLOGY, LITERATURA, paper/ (draft)
   data/PROVENANCE.json   frozen dataset hash + scope
   run.sh      one command: venv + deps + fetch + all blocks
@@ -56,7 +56,7 @@ site/         the showcase frontend (Astro) — skew-dynamic.coldcodelabs.com
 
 ```bash
 cd study
-./run.sh            # venv + deps + dataset + blocks 00→16 (figures in outputs/fig)
+./run.sh            # venv + deps + dataset + blocks 00→18 (figures in outputs/fig)
 ```
 
 Every reported number regenerates from the frozen dataset (sha256 in

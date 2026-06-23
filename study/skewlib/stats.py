@@ -49,6 +49,17 @@ def bootstrap_corr(x, y, B=5000, seed=42):
     return {"r": r, "ci_lo": float(lo), "ci_hi": float(hi)}
 
 
+def bootstrap_stat(fn, n, B=2000, seed=42):
+    """SE bootstrap de uma estatística `fn(idx)` que recebe índices reamostrados
+    (com reposição) de 0..n-1. Para momentos de ordem alta (skew/kurtose), em que
+    a normalidade do estimador não vale."""
+    rng = np.random.default_rng(seed)
+    vals = [fn(rng.integers(0, n, n)) for _ in range(B)]
+    return {"se": float(np.std(vals)),
+            "ci_lo": float(np.percentile(vals, 2.5)),
+            "ci_hi": float(np.percentile(vals, 97.5))}
+
+
 def ols(y, x):
     """Regressão simples y~x: slope, intercepto, R², r. (1 regressor)."""
     x = np.asarray(x, float); y = np.asarray(y, float)

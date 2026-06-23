@@ -275,6 +275,41 @@ fraction of **99.6%**, matching the realised −0.217 and the closed-form identi
 exactly across every probability bucket. The mechanical core is not an artefact
 of the 1X2 structure.
 
+### 4.6 Beyond the third moment: shape invariance (Figure 6, Figure 7)
+
+The mechanical decomposition of §3.3 generalises to every order. A two-point bet
+has closed-form central moments of all orders,
+m_k = oᵏ · p(1−p) · [(1−p)^{k−1} + (−1)ᵏ p^{k−1}], and the mixture's k-th central
+moment follows from the law of total moments, M_k = E_i[Σ_j C(k,j) m_{j,i} dᵢ^{k−j}]
+with dᵢ = μᵢ − μ. Computing this through the sixth order, the **within-match
+fraction is ≈ 1 at every order** (m₂ +1.00, m₃ +1.03, m₄ +1.01, m₅ +1.03, m₆ +1.02):
+not only the skewness but the entire shape of the implied distribution is the
+algebraic image of the win-probability distribution, with negligible contribution
+from how matches are pooled. Globally the implied favourite distribution has
+variance 0.99, skewness +0.236, excess kurtosis **−1.683** (the short-tailed
+signature of a mixture of Bernoullis), with bootstrap standard errors ≈ 0.001.
+
+The ordered-probit model of §5 predicts not just the third moment but each moment
+of a league from its mean favourite probability: across the thirty-eight leagues,
+**variance r = +0.99, skewness r = +0.90, excess kurtosis r = +0.89** (Figure 6).
+The standardised moments (skewness, kurtosis) match in both level and ordering;
+the raw variance matches in ordering with a multiplicative level offset induced by
+the overround (real odds o < 1/p). The skewness invariance is thus a corollary of
+a stronger **shape invariance**: the whole implied distribution is a single
+function of league competitiveness.
+
+A distribution-collapse test confirms this directly. Standardising favourite
+returns within each league (removing location and scale) and comparing leagues
+pairwise, the median Kolmogorov–Smirnov statistic is **0.474** — the standardised
+shape genuinely differs across leagues, because skewness varies with the league.
+But conditioning on competitiveness — comparing each league against the rest
+*within* narrow bins of favourite probability — the median KS statistic collapses
+to **0.059**, an 87% reduction (Figure 7). (With samples this large the KS p-value
+saturates and is uninformative; the statistic itself is the relevant effect size.)
+Once competitiveness is fixed, league identity adds essentially nothing: the
+distribution collapses, a stylised fact that the shape is a function of
+competitiveness and not of the league.
+
 ## 5. Mechanism
 
 The results cohere under one principle. The skewness of a fixed-odds bet is the
@@ -308,6 +343,23 @@ the resulting curve **predicts each league's third moment from its first moment
 between-league standard deviation. The thirty-eight leagues lie on the derived
 curve (Figure 5): the skewness–competitiveness law is an analytic consequence of a
 strength model plus the favourite–longshot identity, not a free fit.
+
+**Why the within-match term dominates (tail cancellation).** The empirical finding
+that M_k ≈ E[m_{k,i}] at every order has a simple cause. Under fair odds the
+favourite bet has mean exactly zero, so every deviation dᵢ = μᵢ − μ vanishes and
+the law-of-total-moments expansion collapses to M_k = E[m_{k,i}] *identically* —
+every cross term carries a factor of some dᵢ. Real odds carry an overround, so the
+means are slightly negative rather than zero, but uniformly so: the dᵢ are small
+and tightly clustered, and the covariance and between-match terms, being O(E[dᵢ])
+and O(E[dᵢ³]), stay near zero (−2.6% and −0.0% of M₃). The mixing of matches cannot
+generate asymmetry because the matches barely differ in mean; all the shape comes
+from within each two-point bet. A complementary cancellation explains why the
+*level* of skewness is insensitive to league composition while the variance is not:
+variance is monotone in favourite strength (corr −0.90), so reweighting matches
+moves it, whereas the two skewness tails — weak favourites contributing positive
+skew, strong favourites negative — offset, leaving aggregate skewness (corr with
+strength ≈ −0.2) and its composition nearly decoupled. Stability of the competitive
+distribution therefore buys stability of skewness for free.
 
 ## 6. Robustness
 
@@ -375,7 +427,9 @@ basketball) is left for external validation.
 
 The skewness of football betting returns is a structural invariant. It is, to
 within sampling error, the algebraic image of the win-probability distribution
-(the favourite–longshot bias); its league-level value is fixed by sporting
+(the favourite–longshot bias) — and not merely its third moment but its entire
+shape, which collapses across leagues once competitiveness is held fixed; its
+league-level value is fixed by sporting
 competitiveness — a relation that survives an odds-free measure of competitiveness
 — and it shows no secular drift within the modern competitive regime that spans
 our window. Bookmaker margin is orthogonal
@@ -395,6 +449,12 @@ asymmetry is inherited from the sport, not produced by the pricing of it.
 - **Figure 4.** League×season panel: no secular trend within the modern regime.
 - **Figure 5.** The derived law: leagues lie on the ordered-probit curve relating
   mean favourite probability to skewness (r = +0.90).
+- **Figure 6.** Shape invariance: each league's skewness and excess kurtosis lie on
+  the derived ordered-probit curve as a function of mean favourite probability
+  (r = +0.90 and +0.89).
+- **Figure 7.** Distribution collapse: standardised favourite-return ECDFs differ
+  across leagues (left), but collapse onto one another within a fixed band of
+  competitiveness (right).
 
 ## References
 

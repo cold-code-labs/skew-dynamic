@@ -45,6 +45,31 @@ def league_skew(sigma_L, h, c, n=200000, seed=1):
     return float(m3.mean() / s2.mean() ** 1.5)
 
 
+def _fair_central_moments(p, max_order=6):
+    """Momentos centrais por jogo sob odds JUSTAS (o=1/p ⇒ média zero):
+        m_k = (1-p)/p^(k-1) · [ (1-p)^(k-1) + (-1)^k · p^(k-1) ].
+    Recupera s²=(1-p)/p e m₃=(1-p)(1-2p)/p² usados em `league_skew`."""
+    p = np.asarray(p, float)
+    return {k: (1 - p) / p ** (k - 1) * ((1 - p) ** (k - 1) + (-1) ** k * p ** (k - 1))
+            for k in range(2, max_order + 1)}
+
+
+def league_moments(sigma_L, h, c, n=200000, seed=1, max_order=6):
+    """Momentos PADRONIZADOS da liga sob odds justas — var/skew/kurtose/etc.
+    fechados na distribuição de p_fav. Como todas as apostas têm média zero, não
+    há termo entre-jogos: M_k = E[m_k(p)]. Generaliza `league_skew` (ordem 3) e
+    permite prever a FORMA inteira (não só o 3º momento) a partir de σ_L."""
+    p = _pfav(_d(sigma_L, n, seed), h, c)
+    m = _fair_central_moments(p, max_order)
+    M2 = float(m[2].mean())
+    res = {"var": M2}
+    if max_order >= 3: res["skew"] = float(m[3].mean() / M2 ** 1.5)
+    if max_order >= 4: res["exkurt"] = float(m[4].mean() / M2 ** 2 - 3.0)
+    if max_order >= 5: res["std5"] = float(m[5].mean() / M2 ** 2.5)
+    if max_order >= 6: res["std6"] = float(m[6].mean() / M2 ** 3)
+    return res
+
+
 def calibrate(home=0.444, draw=0.264, pfav=0.499, n=200000):
     """Resolve (h, c, σ_ref) para casar as taxas marginais médias observadas."""
     def eqs(x):
@@ -62,3 +87,16 @@ def curve(h, c, sigmas, n=200000, seed=3):
         pf.append(marginals(s, h, c, n=n, seed=seed)["p_fav"])
         sk.append(league_skew(s, h, c, n=n, seed=seed))
     return np.array(pf), np.array(sk)
+
+
+def curve_moments(h, c, sigmas, n=200000, seed=3, max_order=6):
+    """Traça (mean p_fav, {var, skew, exkurt, ...}) ao longo da grade de σ_L —
+    a curva teórica de CADA momento, p/ prever a forma de cada liga pelo p_fav."""
+    keys = ["var", "skew", "exkurt", "std5", "std6"][: max_order - 1]
+    pf = []; mom = {k: [] for k in keys}
+    for s in sigmas:
+        pf.append(marginals(s, h, c, n=n, seed=seed)["p_fav"])
+        lm = league_moments(s, h, c, n=n, seed=seed, max_order=max_order)
+        for k in keys:
+            mom[k].append(lm[k])
+    return np.array(pf), {k: np.array(v) for k, v in mom.items()}

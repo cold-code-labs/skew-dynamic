@@ -15,7 +15,10 @@
 > do gerador esportivo, exógena ao apreçamento das casas.
 
 Evoluiu de "estável-com-memória" (rascunho v1) → **"constante estrutural +
-ruído branco"** (confirmado por 3 testes independentes).
+ruído branco"** (confirmado por 3 testes independentes). E de **invariância de
+skewness** → **invariância de FORMA** (Fases B1/B2): não só o 3º momento, mas a
+distribuição implícita inteira (var/skew/kurtose) é função única da competitividade
+— colapsa entre ligas quando se condiciona nela.
 
 ---
 
@@ -289,3 +292,44 @@ um viés em movimento poderia fingir invariância de skewness. Testado 2005–20
 
 Artefatos: `skewlib/decompose.py` (flb_by_year), `analysis/16_flb_stability.py`,
 `outputs/flb_by_year.csv`.
+
+## Fase B1 — Invariância de FORMA: não só o 3º momento (2026-06-23)
+Generalização da decomposição de momentos da mistura (lei dos momentos totais) para
+var/skew/**kurtose**/5ª–6ª ordem, e teste de cada um contra a curva derivada do
+ordered-probit (P3 fez só p/ a skew). Object: a distribuição implícita inteira é
+invariante após controlar competitividade?
+
+- **Toda a forma é MECÂNICA (intra-jogo), não pooling:** a fração `within` (parte
+  vinda da assimetria/forma intra-jogo, o FLB, vs dispersão entre jogos) é ≈1 em
+  **todas as ordens** — m2 +1.000, m3 +1.026, m4 +1.006, m5 +1.026, m6 +1.016. A
+  forma inteira é a imagem algébrica da distribuição de p, não artefato de mistura.
+- **O modelo de força prevê a forma inteira pelo p_fav:** corr(previsto, observado)
+  entre as 38 ligas = **var +0.987 · skew +0.904 · exkurt +0.890**. Skew e exkurt
+  (padronizados, scale-free) batem em **nível e ordenação**; a var segue a ordenação
+  (r=0.99) com offset de escala do overround (odds reais o<1/p). Global: skew
+  **+0.236** (boot SE 0.001), exkurt **−1.683** (forte caudas-curtas, esperado de
+  mistura de Bernoullis), std5 +0.85, std6 +2.18.
+- **Conclusão:** "invariância de skewness" se fortalece para **invariância de FORMA**
+  — a distribuição implícita inteira é uma função única da competitividade da liga.
+
+Artefatos: `skewlib/exante.py` (pooled_moments, per_match_central_moments),
+`skewlib/model.py` (league_moments, curve_moments), `analysis/17_moments.py`,
+`outputs/moments_by_league.csv`, `outputs/fig/f6_moments.png`.
+
+## Fase B2 — Colapso de distribuição: forma = f(competitividade) (2026-06-23)
+Teste tipo "data collapse" (física estatística): a forma é universal, ou colapsa
+sob a competitividade? KS sobre o retorno do favorito (efeito = estatística KS, pois
+o p-valor satura com n grande).
+
+- **Sem controlar competitividade** (retornos z-scored por liga, 38 ligas): KS
+  par-a-par com estatística mediana **0.474**, 100% dos pares rejeitam — a forma
+  padronizada **difere** entre ligas (a skew varia), logo não é universal.
+- **Controlando competitividade** (one-vs-rest dentro de 8 faixas de p_fav, 264
+  testes): estatística KS mediana **0.059** — **queda de 87%**. Dentro de cada faixa
+  as ligas ficam quase indistinguíveis; a identidade da liga não acrescenta nada
+  além da competitividade.
+- **Conclusão:** a distribuição **colapsa** quando se condiciona na competitividade —
+  fato estilizado de que a forma é função (única) da competitividade, não da liga.
+
+Artefatos: `skewlib/collapse.py`, `analysis/18_collapse.py`,
+`outputs/collapse_ks.csv`, `outputs/fig/f7_collapse.png`.

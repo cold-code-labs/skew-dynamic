@@ -1,6 +1,6 @@
 ---
 const phases = [
-  { tag: 'P0', kind: 'Foundation', title: 'Freeze & reproduce', body: '205,435 matches · 38 leagues · 2005–2025, frozen by content hash. The full 00→16 pipeline reproduces every number from one command.' },
+  { tag: 'P0', kind: 'Foundation', title: 'Freeze & reproduce', body: '205,435 matches · 38 leagues · 2005–2025, frozen by content hash. The full 00→18 pipeline reproduces every number from one command.' },
   { tag: 'W1', kind: 'Finding', title: 'The mechanical core', body: 'Ex-ante (de-vigged) skewness +0.236 ≈ ex-post +0.230. A law-of-total-cumulants split shows the third moment is +102.6% within-match — the FLB itself.' },
   { tag: 'W2', kind: 'Mechanism', title: 'The law, without odds', body: 'A results-only Elo measures competitiveness with no market data. The law survives (skew ~ upset rate +0.83), and odds ↔ Elo agree at +0.91.' },
   { tag: 'W3', kind: 'Invariance', title: 'No secular trend', body: 'League×season panel: β = +0.00015/yr (p = 0.73); 70% of variance is between-league. The COVID empty-stadium shock moved skewness the predicted way.' },
@@ -11,6 +11,8 @@ const phases = [
   { tag: 'P3', kind: 'Theory', title: 'The law, derived', body: 'An ordered-probit strength model predicts each league’s third moment from its first at r = +0.90 (RMSE 0.024). The leagues lie on the derived curve.' },
   { tag: 'P4', kind: 'Confound', title: 'A stable bias', body: 'No significant FLB drift over 20 years; ex-ante and ex-post coincide yearly (|diff| 0.015). The invariance is not an artefact of a moving bias.' },
   { tag: 'P5', kind: 'Positioning', title: 'Against the literature', body: 'Nearest analog (Csató) stops at the mean; we own the third moment. Adversarially-verified review anchors every claim.' },
+  { tag: 'B1', kind: 'Shape', title: 'The whole shape, invariant', body: 'The mechanical core holds at every order — within-match fraction ≈1 for moments 2–6. The strength model predicts each league’s variance, skewness AND excess kurtosis from its first moment (r = +0.99 / +0.90 / +0.89).' },
+  { tag: 'B2', kind: 'Collapse', title: 'Distribution collapse', body: 'Standardised returns differ across leagues (median KS 0.47); conditioning on competitiveness collapses them to 0.06 — an 87% drop. Given the sport’s competitiveness, league identity adds nothing.' },
 ];
 ---
 <ol class="timeline">

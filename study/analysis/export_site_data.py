@@ -6,7 +6,7 @@ import json, numpy as np, pandas as pd
 from pathlib import Path
 from scipy.stats import skew
 from skewlib import (io, returns, exante, elo, panel, balance, model, decompose,
-                     config as C)
+                     collapse, config as C)
 
 OUT = Path(__file__).resolve().parents[1].parent / "site" / "src" / "data" / "findings.json"
 
@@ -64,6 +64,43 @@ def main():
     flb_year = [{"year": int(r.year), "ret_dog": r.ret_dog, "spread": r.flb_spread,
                  "skew": r.skew_expost} for r in fy.itertuples()]
 
+    # B1 — invariância de FORMA (multi-momento): global + previsto×observado
+    Gm = exante.pooled_moments(df.p_fav_dv.values, df.o_fav.values, max_order=6)
+    rows = []
+    for code, g in df.groupby("Division"):
+        if len(g) < 2000: continue
+        pm = exante.pooled_moments(g.p_fav_dv.values, g.o_fav.values, max_order=4)
+        rows.append({"code": code, "p_fav": float(g.p_fav_dv.mean()),
+                     "var": pm["var"], "skew": pm["skew"], "exkurt": pm["exkurt"]})
+    lgm = pd.DataFrame(rows)
+    cpf2, cmom = model.curve_moments(par["h"], par["c"], sig, max_order=4)
+    o2 = np.argsort(cpf2)
+    model_r = {m: float(np.corrcoef(
+                   np.interp(lgm.p_fav.values, cpf2[o2], cmom[m][o2]), lgm[m].values)[0, 1])
+               for m in ["var", "skew", "exkurt"]}
+    moments = {
+        "global": {k: Gm[k] for k in ["var", "skew", "exkurt", "std5", "std6"]},
+        "within_frac": {f"m{k}": Gm[f"within_frac_m{k}"] for k in range(2, 7)},
+        "model_r": model_r,
+        "curve": [{"p_fav": float(a), "skew": float(s), "exkurt": float(k)}
+                  for a, s, k in zip(cpf2[o2], cmom["skew"][o2], cmom["exkurt"][o2])],
+        "leagues": [{"code": r.code, "p_fav": r.p_fav, "var": r.var,
+                     "skew": r.skew, "exkurt": r.exkurt} for r in lgm.itertuples()],
+    }
+
+    # B2 — colapso de distribuição (forma = f(competitividade))
+    z = collapse.zscore_returns(df, "ret_fav", "Division", min_n=2000)
+    A = collapse.pairwise_test(z, "ks")
+    ctab, csumm = collapse.conditional_invariance(
+        df, "p_fav_dv", "ret_fav", "Division", nbins=8, min_n=300)
+    collapse_data = {
+        "uncond_ks": A["median_stat"], "uncond_reject": A["reject_frac"],
+        "cond_ks": float(ctab.ks_stat.median()),
+        "drop": float(1 - ctab.ks_stat.median() / A["median_stat"]),
+        "by_bin": [{"p_mid": float(r.p_mid), "reject_frac": float(r.reject_frac),
+                    "ks_stat": float(r.ks_stat_med)} for r in csumm.itertuples()],
+    }
+
     data = {
         "meta": {"n_matches": prov["analysis_rows_ge2005"], "leagues": prov["leagues"],
                  "date_min": prov["date_min"], "date_max": prov["date_max"],
@@ -81,6 +118,7 @@ def main():
         "panel": panel_rows, "panel_stats": {"beta": trend["beta_year"], "p": trend["p"],
             "icc": vdec["icc"], "sd_between": vdec["sd_between"], "sd_within": vdec["sd_within"]},
         "flb_year": flb_year,
+        "moments": moments, "collapse": collapse_data,
     }
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(round_rec(data), ensure_ascii=False, indent=0))

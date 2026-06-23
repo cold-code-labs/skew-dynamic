@@ -10,6 +10,8 @@ import Timeline from '../components/Timeline.astro';
 import Footer from '../components/Footer.astro';
 import data from '../data/findings.json';
 const h = data.headline;
+const m = data.moments;
+const col = data.collapse;
 ---
 <Base>
   <Nav />
@@ -105,12 +107,53 @@ const h = data.headline;
 
   <hr class="divider" />
 
-  <!-- TIMELINE -->
-  <section id="timeline" style="background:var(--surface-2)">
+  <!-- SHAPE INVARIANCE -->
+  <section id="shape" style="background:var(--surface-2)">
     <div class="container">
       <div class="section-head reveal">
-        <div class="eyebrow">04 · How we got here</div>
-        <h2>Eleven phases, each verified.</h2>
+        <div class="eyebrow">04 · Shape</div>
+        <h2>Not just the third moment — the whole shape.</h2>
+        <p class="lede">The mechanical identity generalises to every order. Once competitiveness is held fixed,
+          the entire implied distribution — variance, skewness, kurtosis — is one function of the sport, and it
+          collapses across leagues.</p>
+      </div>
+      <div class="split">
+        <div class="reveal prose">
+          <h3>Every moment is mechanical</h3>
+          <p>The within-match (intra-game) fraction is <strong>≈ 1 at every order</strong>, from the variance to
+            the sixth moment — the whole shape is the algebraic image of the win-probability distribution, not a
+            product of pooling. The ordered-probit strength model predicts each league's
+            <strong>variance (r = +{m.model_r.var.toFixed(2)})</strong>,
+            <strong>skewness (r = +{m.model_r.skew.toFixed(2)})</strong> and
+            <strong>excess kurtosis (r = +{m.model_r.exkurt.toFixed(2)})</strong> from its mean favourite
+            probability alone.</p>
+          <h3>The distribution collapses</h3>
+          <p>Standardised returns genuinely differ across leagues (median KS statistic
+            <strong>{col.uncond_ks.toFixed(2)}</strong>) — skewness varies with the league. But comparing leagues
+            <em>within</em> a band of competitiveness, the median statistic falls to
+            <strong>{col.cond_ks.toFixed(2)}</strong>, a <strong>{Math.round(col.drop*100)}% drop</strong>. Hold
+            competitiveness fixed and league identity adds essentially nothing.</p>
+          <div class="mini-stats">
+            <div><span class="stat-num">≈1</span><label>within-match fraction at every order (moments 2–6): the whole shape is mechanical</label></div>
+            <div><span class="stat-num">{m.global.exkurt.toFixed(2)}</span><label>global excess kurtosis — the short-tailed signature of a mixture of Bernoullis</label></div>
+          </div>
+        </div>
+        <div class="reveal">
+          <img src="/f7_collapse.png" alt="Standardised favourite-return ECDFs differ across leagues but collapse within a fixed band of competitiveness"
+            style="width:100%;border-radius:12px;border:1px solid var(--line)" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- TIMELINE -->
+  <section id="timeline">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="eyebrow">05 · How we got here</div>
+        <h2>Thirteen phases, each verified.</h2>
         <p class="lede">From a frozen dataset to a derived law — every claim reproduced from one command and
           checked against an adversarially-verified literature review.</p>
       </div>
@@ -129,7 +172,7 @@ const h = data.headline;
       </div>
       <div class="repro card reveal">
         <pre class="mono"><code>git clone https://github.com/cold-code-labs/skew-dynamic
-cd skew-dynamic/study && ./run.sh   <span class="cmt"># venv + data + blocks 00→16</span></code></pre>
+cd skew-dynamic/study && ./run.sh   <span class="cmt"># venv + data + blocks 00→18</span></code></pre>
       </div>
       <div class="hero-cta" style="margin-top:28px">
         <a class="btn btn-primary" href="/paper">Read the paper →</a>

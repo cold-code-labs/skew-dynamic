@@ -63,6 +63,18 @@ M₃ = E[m₃ᵢ]                     (mecânico: assimetria intra-jogo / FLB)
 - **Ex-post realizada** (skewness dos retornos efetivos) = robustez; deve
   convergir à ex-ante sob calibração.
 
+**Extensão multi-momento (forma).** A Bernoulli reescalada tem momentos centrais
+fechados de **toda ordem**, `m_k = oᵏ·p(1−p)·[(1−p)^{k−1} + (−1)ᵏ·p^{k−1}]`, e o
+k-ésimo momento da mistura sai da **lei dos momentos totais**,
+`M_k = E_i[Σ_j C(k,j)·m_{j,i}·dᵢ^{k−j}]`, `dᵢ=μᵢ−μ` (a decomposição de M₃ acima é o
+caso k=3). Mede-se assim var/skew/**kurtose**/5ª–6ª ordem da distribuição implícita
+e a **fração `within`** (mecânica) por ordem. Sob odds justas as médias são zero
+(d≡0), logo `M_k=E[m_k]` e o ordered-probit prevê **cada** momento da liga a partir
+da competitividade (não só o 3º) — *invariância de forma*. O **colapso de
+distribuição** (KS condicional à faixa de p_fav; o tamanho de efeito é a estatística
+KS, pois o p-valor satura com n grande) testa se, fixada a competitividade, a
+distribuição é a mesma entre ligas.
+
 ## 5. Competitividade odds-free (quebra de circularidade)
 
 Medir competitividade por p_fav (das odds) é circular. Constrói-se um **Elo só
