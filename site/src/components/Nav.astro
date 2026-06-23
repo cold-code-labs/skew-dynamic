@@ -1,0 +1,37 @@
+---
+const links = [
+  ['Finding', '#finding'],
+  ['Law', '#law'],
+  ['Invariance', '#invariance'],
+  ['Timeline', '#timeline'],
+  ['Reproduce', '#reproduce'],
+];
+---
+<nav class="nav">
+  <div class="container nav-inner">
+    <a class="brand" href="#top">
+      <span class="brand-mark" aria-hidden="true"></span>
+      skew<span class="brand-dim">-dynamic</span>
+    </a>
+    <div class="nav-links">
+      {links.map(([label, href]) => <a href={href}>{label}</a>)}
+    </div>
+    <a class="btn btn-ghost nav-cta" href="https://github.com/cold-code-labs/skew-dynamic" target="_blank" rel="noopener">GitHub ↗</a>
+  </div>
+</nav>
+<style>
+  .nav { position: sticky; top: 0; z-index: 40; backdrop-filter: saturate(160%) blur(12px);
+    background: rgba(252,253,255,.82); border-bottom: 1px solid var(--line-soft); }
+  .nav-inner { display: flex; align-items: center; gap: 20px; height: 60px; }
+  .brand { font-weight: 650; letter-spacing: -.02em; color: var(--ink); display: flex; align-items: center; gap: 9px; font-size: 1.04rem; }
+  .brand:hover { text-decoration: none; }
+  .brand-dim { color: var(--ink-faint); font-weight: 500; }
+  .brand-mark { width: 16px; height: 16px; border-radius: 5px;
+    background: linear-gradient(135deg, var(--accent), var(--navy)); box-shadow: 0 0 0 3px var(--accent-soft); }
+  .nav-links { display: none; gap: 22px; margin-left: auto; }
+  .nav-links a { color: var(--ink-soft); font-size: .92rem; font-weight: 500; }
+  .nav-links a:hover { color: var(--accent); text-decoration: none; }
+  .nav-cta { padding: 7px 14px; font-size: .86rem; }
+  @media (min-width: 860px) { .nav-links { display: flex; } .nav-cta { margin-left: 4px; } }
+  @media (max-width: 859px) { .nav-cta { margin-left: auto; } }
+</style>

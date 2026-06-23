@@ -1,0 +1,55 @@
+---
+import '../styles/global.css';
+const {
+  title = 'skew-dynamic — Structural Invariance of Return Skewness in Football Betting Markets',
+  description = 'An open research study by Cold Code Labs: the skewness of football betting returns is a structural invariant inherited from the competitive structure of the sport, not produced by pricing.',
+  path = '/',
+} = Astro.props;
+const url = new URL(path, Astro.site ?? 'https://skew-dynamic.coldcodelabs.com').href;
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={url} />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={url} />
+  <meta property="og:image" content="/og.svg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="theme-color" content="#07182e" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context":"https://schema.org","@type":"ScholarlyArticle",
+    "headline":"Structural Invariance of Return Skewness in Football Betting Markets",
+    "author":{"@type":"Organization","name":"Cold Code Labs","url":"https://coldcodelabs.com"},
+    "datePublished":"2026-06-23","url":url,"keywords":"skewness, favourite-longshot bias, betting markets, market efficiency, competitive balance"
+  })} />
+</head>
+<body>
+  <slot />
+  <div id="tip" class="tooltip"></div>
+  <script>
+    // reveal on scroll
+    const io = new IntersectionObserver((es) => {
+      for (const e of es) if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    }, { threshold: .12 });
+    document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+    // shared tooltip for [data-tip] elements
+    const tip = document.getElementById('tip');
+    const show = (e) => { const t = e.target.closest('[data-tip]'); if(!t) return;
+      tip.textContent = t.getAttribute('data-tip'); tip.style.opacity = '1';
+      tip.style.left = e.clientX + 'px'; tip.style.top = e.clientY + 'px'; };
+    const hide = (e) => { if (e.target.closest('[data-tip]')) tip.style.opacity = '0'; };
+    document.addEventListener('pointermove', (e)=>{ if(e.target.closest('[data-tip]')) show(e); });
+    document.addEventListener('pointerout', hide);
+  </script>
+</body>
+</html>

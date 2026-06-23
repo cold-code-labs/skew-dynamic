@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" font-family="Inter, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0d2a4d"/><stop offset="1" stop-color="#07182e"/>
+    </linearGradient>
+    <linearGradient id="cv" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#2f7fc7" stop-opacity="0"/>
+      <stop offset=".5" stop-color="#4a97d4"/>
+      <stop offset="1" stop-color="#9ec7e8" stop-opacity=".2"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <path d="M0 430 C 260 430, 320 150, 600 150 S 940 470, 1200 230" fill="none" stroke="url(#cv)" stroke-width="4" opacity=".5"/>
+  <g transform="translate(80,96)">
+    <text x="0" y="0" fill="#9ec7e8" font-size="26" font-family="IBM Plex Mono, monospace" letter-spacing="6">COLD CODE LABS · OPEN RESEARCH</text>
+    <text x="0" y="118" fill="#ffffff" font-size="72" font-weight="700" letter-spacing="-2">Risk asymmetry is inherited</text>
+    <text x="0" y="196" fill="#ffffff" font-size="72" font-weight="700" letter-spacing="-2">from the sport, not pricing.</text>
+    <text x="0" y="270" fill="#9fb6cf" font-size="32">Structural invariance of return skewness in football betting markets</text>
+  </g>
+  <g transform="translate(80,470)" font-family="IBM Plex Mono, monospace">
+    <text x="0" y="0" fill="#fff" font-size="48" font-weight="500">≈100%</text>
+    <text x="0" y="34" fill="#8fa8c4" font-size="20">mechanical core</text>
+    <text x="300" y="0" fill="#fff" font-size="48" font-weight="500">+0.91</text>
+    <text x="300" y="34" fill="#8fa8c4" font-size="20">odds ↔ structure</text>
+    <text x="600" y="0" fill="#fff" font-size="48" font-weight="500">β≈0</text>
+    <text x="600" y="34" fill="#8fa8c4" font-size="20">20-year trend</text>
+    <text x="860" y="0" fill="#fff" font-size="48" font-weight="500">205k</text>
+    <text x="860" y="34" fill="#8fa8c4" font-size="20">matches · 38 leagues</text>
+  </g>
+  <text x="80" y="586" fill="#6f87a4" font-family="IBM Plex Mono, monospace" font-size="20">skew-dynamic.coldcodelabs.com</text>
+</svg>

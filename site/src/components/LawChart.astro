@@ -1,0 +1,34 @@
+---
+import data from '../data/findings.json';
+const L = data.leagues, curve = data.model_curve;
+const W = 680, H = 440, P = { l: 54, r: 18, t: 18, b: 46 };
+const xlo = 0.43, xhi = 0.60, ylo = 0.06, yhi = 0.34;
+const X = (p) => P.l + ((p - xlo) / (xhi - xlo)) * (W - P.l - P.r);
+const Y = (s) => P.t + (1 - (s - ylo) / (yhi - ylo)) * (H - P.t - P.b);
+const cpts = curve.filter(d => d.p_fav >= xlo && d.p_fav <= xhi).map(d => `${X(d.p_fav).toFixed(1)},${Y(d.skew).toFixed(1)}`);
+const xticks = [0.45, 0.50, 0.55];
+const yticks = [0.10, 0.20, 0.30];
+// label a few notable leagues only, to avoid clutter
+const named = new Set(['N1','E0','ARG','I2','BRA','MEX']);
+---
+<figure class="chart-figure">
+  <svg viewBox={`0 0 ${W} ${H}`} class="law-svg" role="img" aria-label="League skewness versus competitiveness with derived curve">
+    {xticks.map(t => <text class="tick" x={X(t)} y={H-P.b+18} text-anchor="middle">{t.toFixed(2)}</text>)}
+    {yticks.map(t => <g><line class="axis" x1={P.l} y1={Y(t)} x2={W-P.r} y2={Y(t)} stroke-opacity=".35"/><text class="tick" x={P.l-10} y={Y(t)+4} text-anchor="end">{t.toFixed(2)}</text></g>)}
+    <polyline points={cpts.join(' ')} fill="none" stroke="var(--ink-faint)" stroke-width="2.5" stroke-dasharray="1 0" opacity=".8" />
+    {L.map(d => <circle cx={X(d.p_fav)} cy={Y(d.skew)} r="5.5" fill="var(--accent)" fill-opacity=".82" stroke="#fff" stroke-width="1"
+        data-tip={`${d.code}  skew=${d.skew.toFixed(3)}  upset=${d.upset.toFixed(2)}  Noll-Scully=${d.noll_scully.toFixed(2)}`} />)}
+    {L.filter(d => named.has(d.code)).map(d => <text class="lbl" x={X(d.p_fav)+8} y={Y(d.skew)+3}>{d.code}</text>)}
+    <text class="axis-label" x={W/2} y={H-6} text-anchor="middle">mean favourite probability  (more predictable →)</text>
+    <text class="axis-label" x="14" y={H/2} text-anchor="middle" transform={`rotate(-90 14 ${H/2})`}>league skewness</text>
+  </svg>
+  <figcaption class="chart-caption">
+    <span class="key"><span class="sw" style="background:var(--accent)"></span>league (38)</span>
+    <span class="key"><span class="sw line"></span>derived ordered-probit law</span>
+    — each league's third moment predicted from its first moment at r = +0.90 (RMSE 0.024). Hover any point.
+  </figcaption>
+</figure>
+<style>
+  .law-svg { width: 100%; height: auto; }
+  .law-svg .lbl { font-family: var(--mono); font-size: 11px; fill: var(--ink-soft); }
+</style>

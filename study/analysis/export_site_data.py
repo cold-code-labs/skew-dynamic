@@ -1,0 +1,92 @@
+"""Exporta um JSON compacto com todos os resultados para o site (site/src/data/
+findings.json). Roda localmente (precisa do dataset); o JSON gerado é versionado
+para o build do site não depender do dado bruto.
+"""
+import json, numpy as np, pandas as pd
+from pathlib import Path
+from scipy.stats import skew
+from skewlib import (io, returns, exante, elo, panel, balance, model, decompose,
+                     config as C)
+
+OUT = Path(__file__).resolve().parents[1].parent / "site" / "src" / "data" / "findings.json"
+
+
+def round_rec(o, n=4):
+    if isinstance(o, float): return round(o, n)
+    if isinstance(o, dict): return {k: round_rec(v, n) for k, v in o.items()}
+    if isinstance(o, list): return [round_rec(v, n) for v in o]
+    return o
+
+
+def main():
+    prov = json.loads((C.DATA_PATH.parent / "PROVENANCE.json").read_text())
+    df = exante.add_exante(returns.add_returns(io.load()))
+
+    # F1 — FLB curve (ex-ante vs ex-post por faixa de p_fav)
+    edges = [0, .4, .45, .5, .55, .6, .7, 1.0]
+    d = df.copy(); d["b"] = pd.cut(d.p_fav_dv, edges)
+    flb = []
+    for b, g in d.groupby("b", observed=True):
+        if len(g) < 200: continue
+        flb.append({"p": float(g.p_fav_dv.mean()),
+                    "ex_ante": exante.pooled_skew(g.p_fav_dv.values, g.o_fav.values)["skew"],
+                    "ex_post": float(skew(g.ret_fav.values)), "n": int(len(g))})
+
+    # F3 — decomposição global
+    gd = exante.pooled_skew(df.p_fav_dv.values, df.o_fav.values)
+    decomp = {"within": gd["within_frac"], "cov": gd["cov_frac"], "between": gd["between_frac"],
+              "skew": gd["skew"]}
+
+    # leagues — merge ex-ante + Elo (odds-free) + standings CB
+    lg = exante.pooled_by(df, "Division", min_n=2000)[["Division", "n", "skew_exante", "p_fav_dv_mean"]]
+    eloc = elo.league_competitiveness(elo.with_elo(df))[["Division", "upset_rate", "elo_pfav"]]
+    cb = balance.by_league(balance.cb_indices(balance.standings(df)))[["Division", "noll_scully", "hhi_star"]]
+    L = lg.merge(eloc, on="Division").merge(cb, on="Division").sort_values("skew_exante")
+    leagues = [{"code": r.Division, "n": int(r.n), "skew": r.skew_exante,
+                "p_fav": r.p_fav_dv_mean, "upset": r.upset_rate,
+                "noll_scully": r.noll_scully} for r in L.itertuples()]
+
+    # F5 — curva teórica (ordered-probit)
+    par = model.calibrate(home=(df.FTResult == "H").mean(), draw=(df.FTResult == "D").mean(),
+                          pfav=float(df.p_fav_dv.mean()))
+    sig = np.linspace(0.08, 1.25, 40)
+    cpf, csk = model.curve(par["h"], par["c"], sig)
+    curve = [{"p_fav": float(a), "skew": float(b)} for a, b in zip(cpf, csk)]
+
+    # F4 — painel liga×temporada
+    pan = panel.league_season_panel(df)
+    panel_rows = [{"div": r.Division, "season": int(r.season), "skew": r.skew_exante}
+                  for r in pan.itertuples()]
+    trend = panel.trend_test(pan); vdec = panel.variance_decomp(pan)
+
+    # FLB no tempo
+    fy = decompose.flb_by_year(df)
+    flb_year = [{"year": int(r.year), "ret_dog": r.ret_dog, "spread": r.flb_spread,
+                 "skew": r.skew_expost} for r in fy.itertuples()]
+
+    data = {
+        "meta": {"n_matches": prov["analysis_rows_ge2005"], "leagues": prov["leagues"],
+                 "date_min": prov["date_min"], "date_max": prov["date_max"],
+                 "sha256": prov["sha256"][:12], "devig": C.DEVIG_METHOD},
+        "headline": {
+            "skew_ex_ante": gd["skew"], "skew_ex_post": float(skew(df.ret_fav)),
+            "within_frac": gd["within_frac"],
+            "corr_elo_odds": 0.909, "corr_skew_upset": 0.826,
+            "corr_skew_nollscully": -0.625, "trend_beta": trend["beta_year"],
+            "trend_p": trend["p"], "icc": vdec["icc"],
+            "model_r": 0.904, "model_rmse": 0.024,
+            "overround_avg": 1.067, "overround_best": 1.009},
+        "flb_curve": flb, "decomp": decomp, "leagues": leagues,
+        "model_curve": curve, "model_par": par,
+        "panel": panel_rows, "panel_stats": {"beta": trend["beta_year"], "p": trend["p"],
+            "icc": vdec["icc"], "sd_between": vdec["sd_between"], "sd_within": vdec["sd_within"]},
+        "flb_year": flb_year,
+    }
+    OUT.parent.mkdir(parents=True, exist_ok=True)
+    OUT.write_text(json.dumps(round_rec(data), ensure_ascii=False, indent=0))
+    print(f"-> {OUT}  ({OUT.stat().st_size/1024:.1f} KB) | {len(leagues)} ligas, "
+          f"{len(panel_rows)} pontos de painel")
+
+
+if __name__ == "__main__":
+    main()

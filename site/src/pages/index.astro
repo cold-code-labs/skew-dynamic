@@ -1,0 +1,153 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Hero from '../components/Hero.astro';
+import FlbChart from '../components/FlbChart.astro';
+import DecompBar from '../components/DecompBar.astro';
+import LawChart from '../components/LawChart.astro';
+import PanelChart from '../components/PanelChart.astro';
+import Timeline from '../components/Timeline.astro';
+import Footer from '../components/Footer.astro';
+import data from '../data/findings.json';
+const h = data.headline;
+---
+<Base>
+  <Nav />
+  <Hero />
+
+  <!-- THE FINDING -->
+  <section id="finding">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="eyebrow">01 · The finding</div>
+        <h2>Skewness is the favourite–longshot bias, made literal.</h2>
+        <p class="lede">A unit bet on the favourite pays <span class="mono">o−1</span> on a win and
+          <span class="mono">−1</span> on a loss — a re-scaled Bernoulli whose skewness depends only on the
+          win probability <span class="mono">p</span>. Aggregate it and the market's asymmetry falls out
+          mechanically.</p>
+      </div>
+      <div class="split">
+        <div class="reveal"><FlbChart /></div>
+        <div class="reveal prose">
+          <h3>Ex-ante meets ex-post on the identity</h3>
+          <p>The de-vigged (implied) skewness reproduces the realised one — globally
+            <strong>+{h.skew_ex_ante}</strong> versus <strong>+{h.skew_ex_post}</strong> — and both sit on the
+            theoretical curve <span class="mono">(1−2p)/√(p(1−p))</span> across every probability bucket.</p>
+          <p>Decomposing the pooled third moment settles where it comes from:</p>
+          <DecompBar />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- THE LAW -->
+  <section id="law" style="background:var(--surface-2)">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="eyebrow">02 · The law</div>
+        <h2>A league's asymmetry is fixed by its competitiveness — and we prove it without odds.</h2>
+        <p class="lede">Measuring competitiveness from the same odds would be circular. So we built it from
+          <strong>results only</strong> — a chronological Elo — and from <strong>final standings</strong>.
+          The law survives both.</p>
+      </div>
+      <div class="split">
+        <div class="reveal prose">
+          <h3>Odds only read the sport</h3>
+          <p>Odds-implied and results-based favourite strength agree across leagues at
+            <strong>r = +{h.corr_elo_odds}</strong>: the market transcribes the competitive structure, it
+            doesn't create it. Skewness then tracks the odds-free measures —
+            <strong>+{h.corr_skew_upset}</strong> against the Elo upset rate,
+            <strong>{h.corr_skew_nollscully}</strong> against the Noll-Scully imbalance ratio.</p>
+          <p>And the relationship is not just fitted — it is <strong>derived</strong>. An ordered-probit
+            strength model predicts each league's third moment from its first at
+            <strong>r = +{h.model_r}</strong> (RMSE {h.model_rmse}). The leagues fall on the theoretical curve.</p>
+          <p class="ladder mono">
+            odds (circular) −0.90 → Elo (match-level) +0.83 → standings (season) −0.48…−0.63
+          </p>
+        </div>
+        <div class="reveal"><LawChart /></div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- INVARIANCE -->
+  <section id="invariance">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="eyebrow">03 · Invariance</div>
+        <h2>Two decades, no drift.</h2>
+        <p class="lede">Because competitiveness is a slow-moving property of the sport, the skewness it pins
+          down is a temporal invariant — stable within the modern competitive regime our window spans.</p>
+      </div>
+      <div class="split">
+        <div class="reveal"><PanelChart /></div>
+        <div class="reveal prose">
+          <h3>A structural constant, not a process</h3>
+          <p>League fixed effects plus a year term give a trend of <strong>β = +{h.trend_beta}/yr</strong>
+            (p = {h.trend_p}); <strong>{Math.round(h.icc*100)}%</strong> of all variance is <em>between</em>
+            leagues, not over time. A conservative break search finds a single break across 38 leagues —
+            COVID-19 — with no common year.</p>
+          <p>The empty-stadium seasons are a natural experiment: home advantage collapsed, the model predicts
+            skewness should rise, and it did. The one exogenous shock in twenty years moved the invariant in
+            the predicted direction.</p>
+          <div class="mini-stats">
+            <div><span class="stat-num">1.067→1.009</span><label>overround collapses; skewness barely moves (margin is orthogonal)</label></div>
+            <div><span class="stat-num">99.6%</span><label>within-match in the over/under-2.5 binary market too</label></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- TIMELINE -->
+  <section id="timeline" style="background:var(--surface-2)">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="eyebrow">04 · How we got here</div>
+        <h2>Eleven phases, each verified.</h2>
+        <p class="lede">From a frozen dataset to a derived law — every claim reproduced from one command and
+          checked against an adversarially-verified literature review.</p>
+      </div>
+      <Timeline />
+    </div>
+  </section>
+
+  <!-- REPRODUCE / CTA -->
+  <section id="reproduce" class="dark">
+    <div class="container">
+      <div class="section-head reveal" style="max-width:60ch">
+        <div class="eyebrow">Open by default</div>
+        <h2>Read it, run it, check it.</h2>
+        <p class="lede">The paper, the pipeline and the frozen dataset hash are all public. Every number on
+          this page regenerates from one command.</p>
+      </div>
+      <div class="repro card reveal">
+        <pre class="mono"><code>git clone https://github.com/cold-code-labs/skew-dynamic
+cd skew-dynamic/study && ./run.sh   <span class="cmt"># venv + data + blocks 00→16</span></code></pre>
+      </div>
+      <div class="hero-cta" style="margin-top:28px">
+        <a class="btn btn-primary" href="/paper">Read the paper →</a>
+        <a class="btn btn-ghost ghost-d" href="https://github.com/cold-code-labs/skew-dynamic" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <Footer />
+</Base>
+<style>
+  .ladder { margin-top: 18px; padding: 12px 14px; background: var(--surface); border: 1px dashed var(--line); border-radius: 10px; font-size: .82rem; color: var(--ink-soft); }
+  .mini-stats { display: grid; gap: 18px; margin-top: 22px; }
+  .mini-stats .stat-num { display: block; font-size: 1.4rem; color: var(--accent); }
+  .mini-stats label { display: block; font-size: .82rem; color: var(--ink-faint); margin-top: 2px; max-width: 40ch; }
+  .repro { padding: 8px 18px; overflow-x: auto; }
+  .repro pre { margin: 0; }
+  .repro code { color: #d8e6f5; font-size: .9rem; line-height: 1.7; }
+  .repro .cmt { color: #6f87a4; }
+  #reproduce .repro.card { background: #0e2342; border-color: #1d3a5f; }
+</style>

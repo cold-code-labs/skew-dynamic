@@ -1,0 +1,73 @@
+---
+import data from '../data/findings.json';
+const flb = data.flb_curve;
+// geometry
+const W = 680, H = 400, P = { l: 52, r: 20, t: 20, b: 44 };
+const xlo = 0.33, xhi = 0.80, ylo = -1.5, yhi = 0.85;
+const X = (p) => P.l + ((p - xlo) / (xhi - xlo)) * (W - P.l - P.r);
+const Y = (s) => P.t + (1 - (s - ylo) / (yhi - ylo)) * (H - P.t - P.b);
+const ident = [];
+for (let i = 0; i <= 160; i++) { const p = xlo + ((xhi - xlo) * i) / 160; ident.push(`${X(p).toFixed(1)},${Y((1-2*p)/Math.sqrt(p*(1-p))).toFixed(1)}`); }
+const xticks = [0.35, 0.45, 0.55, 0.65, 0.75];
+const yticks = [-1.5, -1.0, -0.5, 0, 0.5];
+const vb = `0 0 ${W} ${H}`;
+const rot = `rotate(-90 14 ${H / 2})`;
+---
+<figure class="chart-figure">
+  <div class="flb-readout">
+    <div><span class="stat-num" id="flb-p">0.50</span><label>favourite prob.</label></div>
+    <div><span class="stat-num" id="flb-s">0.00</span><label>skewness (1−2p)/√(p(1−p))</label></div>
+    <div class="flb-payoff"><span id="flb-win">win +1.00</span><span id="flb-lose">lose −1.00</span></div>
+  </div>
+  <svg viewBox={vb} class="flb-svg" role="img" aria-label="Skewness versus favourite probability">
+    <line class="axis" x1={P.l} y1={Y(0)} x2={W-P.r} y2={Y(0)} />
+    {xticks.map(t => <g><line class="axis" x1={X(t)} y1={P.t} x2={X(t)} y2={H-P.b} stroke-opacity=".4"/><text class="tick" x={X(t)} y={H-P.b+18} text-anchor="middle">{t.toFixed(2)}</text></g>)}
+    {yticks.map(t => <text class="tick" x={P.l-10} y={Y(t)+4} text-anchor="end">{t.toFixed(1)}</text>)}
+    <line class="axis" x1={X(0.5)} y1={P.t} x2={X(0.5)} y2={H-P.b} stroke-dasharray="3 3" stroke="var(--ink-faint)" stroke-opacity=".5"/>
+    <polyline points={ident.join(' ')} fill="none" stroke="var(--ink-faint)" stroke-width="2" />
+    {flb.map(d => <circle cx={X(d.p)} cy={Y(d.ex_post)} r="5" fill="var(--neg)" data-tip={`ex-post  p=${d.p.toFixed(2)}  skew=${d.ex_post.toFixed(2)}`} />)}
+    {flb.map(d => <circle cx={X(d.p)} cy={Y(d.ex_ante)} r="5" fill="var(--pos)" data-tip={`ex-ante  p=${d.p.toFixed(2)}  skew=${d.ex_ante.toFixed(2)}`} />)}
+    <g id="flb-marker"><line stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="2 2"/><circle r="7" fill="none" stroke="var(--accent)" stroke-width="2.5"/></g>
+    <text class="axis-label" x={(W)/2} y={H-6} text-anchor="middle">favourite probability  p</text>
+    <text class="axis-label" x="14" y={H/2} text-anchor="middle" transform={rot}>skewness</text>
+  </svg>
+  <input id="flb-slider" type="range" min="0.34" max="0.79" step="0.005" value="0.50" aria-label="favourite probability" />
+  <figcaption class="chart-caption">
+    <span class="key"><span class="sw" style="background:var(--pos)"></span>ex-ante (de-vigged)</span>
+    <span class="key"><span class="sw" style="background:var(--neg)"></span>ex-post (realised)</span>
+    <span class="key"><span class="sw line"></span>identity curve</span>
+    — drag to read the asymmetry of a single bet at any favourite strength.
+  </figcaption>
+</figure>
+<script define:vars={{ W, H, P, xlo, xhi, ylo, yhi }}>
+  const X = (p) => P.l + ((p - xlo) / (xhi - xlo)) * (W - P.l - P.r);
+  const Y = (s) => P.t + (1 - (s - ylo) / (yhi - ylo)) * (H - P.t - P.b);
+  const sl = document.getElementById('flb-slider');
+  const mk = document.getElementById('flb-marker');
+  const line = mk.querySelector('line'), dot = mk.querySelector('circle');
+  function upd() {
+    const p = +sl.value, s = (1 - 2*p)/Math.sqrt(p*(1-p));
+    const x = X(p), y = Y(s);
+    dot.setAttribute('cx', x); dot.setAttribute('cy', y);
+    line.setAttribute('x1', x); line.setAttribute('x2', x); line.setAttribute('y1', Y(0)); line.setAttribute('y2', y);
+    document.getElementById('flb-p').textContent = p.toFixed(2);
+    document.getElementById('flb-s').textContent = (s>=0?'+':'') + s.toFixed(2);
+    const o = 1/p;
+    document.getElementById('flb-win').textContent = `win +${(o-1).toFixed(2)}`;
+    document.getElementById('flb-win').style.opacity = p.toFixed(2);
+    document.getElementById('flb-lose').textContent = `lose −1.00`;
+  }
+  sl.addEventListener('input', upd); upd();
+</script>
+<style>
+  .flb-svg { width: 100%; height: auto; }
+  .flb-readout { display: flex; gap: 28px; align-items: flex-end; flex-wrap: wrap; margin-bottom: 8px; }
+  .flb-readout .stat-num { font-size: 1.9rem; color: var(--accent); }
+  .flb-readout label { display: block; font-size: .76rem; color: var(--ink-faint); }
+  .flb-payoff { display: flex; gap: 12px; font-family: var(--mono); font-size: .82rem; margin-left: auto; }
+  .flb-payoff #flb-win { color: var(--pos); } .flb-payoff #flb-lose { color: var(--neg); }
+  #flb-slider { width: 100%; margin-top: 6px; accent-color: var(--accent); }
+  .key { display: inline-flex; align-items: center; gap: 6px; margin-right: 14px; }
+  .key .sw { width: 11px; height: 11px; border-radius: 50%; display: inline-block; }
+  .key .sw.line { width: 16px; height: 2px; border-radius: 0; background: var(--ink-faint); }
+</style>

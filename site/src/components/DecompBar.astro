@@ -1,0 +1,35 @@
+---
+import data from '../data/findings.json';
+const d = data.decomp;
+const parts = [
+  { key: 'within',  label: 'within-match (Bernoulli / FLB)', val: d.within,  color: 'var(--pos)' },
+  { key: 'cov',     label: 'covariance (var × mean)',         val: d.cov,     color: 'var(--gold)' },
+  { key: 'between', label: 'between-match (pooling)',          val: d.between, color: 'var(--neg)' },
+];
+const pct = (x) => (x >= 0 ? '+' : '') + (x * 100).toFixed(1) + '%';
+const w = (x) => Math.min(100, Math.abs(x) * 100);
+---
+<div class="decomp">
+  {parts.map(p => (
+    <div class="row">
+      <div class="rl">{p.label}</div>
+      <div class="track"><span class="fill" style={`width:${w(p.val)}%;background:${p.color}`}></span></div>
+      <div class="rv stat-num">{pct(p.val)}</div>
+    </div>
+  ))}
+  <p class="decomp-note">
+    The pooled third moment of market returns is <strong>almost entirely</strong> the
+    per-match asymmetry of the win-probability distribution. Pooling heterogeneous
+    matches contributes <strong>nothing</strong>. Skewness <em>is</em> the favourite–longshot bias.
+  </p>
+</div>
+<style>
+  .decomp { display: grid; gap: 16px; }
+  .row { display: grid; grid-template-columns: 1fr; gap: 6px; align-items: center; }
+  @media (min-width: 640px) { .row { grid-template-columns: 230px 1fr 76px; gap: 16px; } }
+  .rl { font-size: .92rem; color: var(--ink-soft); }
+  .track { height: 14px; background: var(--surface-2); border-radius: 999px; overflow: hidden; border: 1px solid var(--line); }
+  .fill { display: block; height: 100%; border-radius: 999px; }
+  .rv { text-align: right; font-size: 1.05rem; }
+  .decomp-note { margin: 10px 0 0; color: var(--ink-soft); max-width: 60ch; }
+</style>

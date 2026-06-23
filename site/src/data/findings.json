@@ -1,0 +1,3875 @@
+{
+"meta": {
+"n_matches": 205435,
+"leagues": 38,
+"date_min": "2005-01-01",
+"date_max": "2025-06-01",
+"sha256": "6905ca5324df",
+"devig": "shin"
+},
+"headline": {
+"skew_ex_ante": 0.2356,
+"skew_ex_post": 0.2299,
+"within_frac": 1.0258,
+"corr_elo_odds": 0.909,
+"corr_skew_upset": 0.826,
+"corr_skew_nollscully": -0.625,
+"trend_beta": 0.0002,
+"trend_p": 0.7344,
+"icc": 0.6974,
+"model_r": 0.904,
+"model_rmse": 0.024,
+"overround_avg": 1.067,
+"overround_best": 1.009
+},
+"flb_curve": [
+{
+"p": 0.3778,
+"ex_ante": 0.5124,
+"ex_post": 0.5388,
+"n": 43830
+},
+{
+"p": 0.4241,
+"ex_ante": 0.3133,
+"ex_post": 0.3027,
+"n": 40997
+},
+{
+"p": 0.4733,
+"ex_ante": 0.1134,
+"ex_post": 0.1196,
+"n": 37542
+},
+{
+"p": 0.5244,
+"ex_ante": -0.0921,
+"ex_post": -0.1091,
+"n": 25330
+},
+{
+"p": 0.5733,
+"ex_ante": -0.2909,
+"ex_post": -0.3005,
+"n": 20750
+},
+{
+"p": 0.6434,
+"ex_ante": -0.5817,
+"ex_post": -0.611,
+"n": 22432
+},
+{
+"p": 0.7698,
+"ex_ante": -1.2155,
+"ex_post": -1.3476,
+"n": 14554
+}
+],
+"decomp": {
+"within": 1.0258,
+"cov": -0.0258,
+"between": -0.0,
+"skew": 0.2356
+},
+"leagues": [
+{
+"code": "N1",
+"n": 6135,
+"skew": 0.1006,
+"p_fav": 0.5637,
+"upset": 0.451,
+"noll_scully": 1.844
+},
+{
+"code": "AUT",
+"n": 2306,
+"skew": 0.1465,
+"p_fav": 0.5383,
+"upset": 0.5043,
+"noll_scully": 1.5467
+},
+{
+"code": "CHN",
+"n": 2532,
+"skew": 0.148,
+"p_fav": 0.5501,
+"upset": 0.4878,
+"noll_scully": 1.5367
+},
+{
+"code": "IRL",
+"n": 2367,
+"skew": 0.1481,
+"p_fav": 0.5447,
+"upset": 0.4812,
+"noll_scully": 1.7254
+},
+{
+"code": "B1",
+"n": 5420,
+"skew": 0.1553,
+"p_fav": 0.5248,
+"upset": 0.4803,
+"noll_scully": 1.5805
+},
+{
+"code": "USA",
+"n": 5233,
+"skew": 0.1623,
+"p_fav": 0.5031,
+"upset": 0.5091,
+"noll_scully": 1.1283
+},
+{
+"code": "E0",
+"n": 7735,
+"skew": 0.167,
+"p_fav": 0.5428,
+"upset": 0.4637,
+"noll_scully": 1.8408
+},
+{
+"code": "NOR",
+"n": 3092,
+"skew": 0.1674,
+"p_fav": 0.518,
+"upset": 0.4897,
+"noll_scully": 1.383
+},
+{
+"code": "SWE",
+"n": 3110,
+"skew": 0.1733,
+"p_fav": 0.5213,
+"upset": 0.4945,
+"noll_scully": 1.4977
+},
+{
+"code": "D1",
+"n": 6273,
+"skew": 0.1802,
+"p_fav": 0.5279,
+"upset": 0.501,
+"noll_scully": 1.5983
+},
+{
+"code": "I1",
+"n": 7726,
+"skew": 0.181,
+"p_fav": 0.5286,
+"upset": 0.4745,
+"noll_scully": 1.7946
+},
+{
+"code": "G1",
+"n": 4039,
+"skew": 0.1825,
+"p_fav": 0.5448,
+"upset": 0.4608,
+"noll_scully": 1.7081
+},
+{
+"code": "SUI",
+"n": 2272,
+"skew": 0.1931,
+"p_fav": 0.5025,
+"upset": 0.5198,
+"noll_scully": 1.4992
+},
+{
+"code": "SP1",
+"n": 7351,
+"skew": 0.1961,
+"p_fav": 0.5319,
+"upset": 0.4731,
+"noll_scully": 1.7272
+},
+{
+"code": "SC2",
+"n": 3565,
+"skew": 0.1969,
+"p_fav": 0.4991,
+"upset": 0.5105,
+"noll_scully": 1.5985
+},
+{
+"code": "T1",
+"n": 6210,
+"skew": 0.1979,
+"p_fav": 0.5106,
+"upset": 0.4855,
+"noll_scully": 1.5865
+},
+{
+"code": "SC3",
+"n": 3566,
+"skew": 0.2089,
+"p_fav": 0.4981,
+"upset": 0.5101,
+"noll_scully": 1.5175
+},
+{
+"code": "SC0",
+"n": 4539,
+"skew": 0.2162,
+"p_fav": 0.5346,
+"upset": 0.4823,
+"noll_scully": 1.8595
+},
+{
+"code": "P1",
+"n": 5491,
+"skew": 0.2173,
+"p_fav": 0.535,
+"upset": 0.4648,
+"noll_scully": 1.8479
+},
+{
+"code": "SC1",
+"n": 3549,
+"skew": 0.2178,
+"p_fav": 0.4959,
+"upset": 0.5418,
+"noll_scully": 1.4785
+},
+{
+"code": "DEN",
+"n": 2634,
+"skew": 0.2233,
+"p_fav": 0.494,
+"upset": 0.5205,
+"noll_scully": 1.3691
+},
+{
+"code": "EC",
+"n": 7096,
+"skew": 0.2258,
+"p_fav": 0.4863,
+"upset": 0.5403,
+"noll_scully": 1.5634
+},
+{
+"code": "RUS",
+"n": 3004,
+"skew": 0.2269,
+"p_fav": 0.5162,
+"upset": 0.496,
+"noll_scully": 1.5208
+},
+{
+"code": "BRA",
+"n": 4849,
+"skew": 0.2286,
+"p_fav": 0.5013,
+"upset": 0.5075,
+"noll_scully": 1.3387
+},
+{
+"code": "FIN",
+"n": 2354,
+"skew": 0.2288,
+"p_fav": 0.5012,
+"upset": 0.5076,
+"noll_scully": 1.404
+},
+{
+"code": "F1",
+"n": 7539,
+"skew": 0.2341,
+"p_fav": 0.5025,
+"upset": 0.5051,
+"noll_scully": 1.5384
+},
+{
+"code": "D2",
+"n": 6238,
+"skew": 0.245,
+"p_fav": 0.4779,
+"upset": 0.5414,
+"noll_scully": 1.2502
+},
+{
+"code": "ROM",
+"n": 3639,
+"skew": 0.2495,
+"p_fav": 0.502,
+"upset": 0.515,
+"noll_scully": 1.4232
+},
+{
+"code": "MEX",
+"n": 4080,
+"skew": 0.2607,
+"p_fav": 0.4774,
+"upset": 0.536,
+"noll_scully": 1.2552
+},
+{
+"code": "JAP",
+"n": 4089,
+"skew": 0.2653,
+"p_fav": 0.474,
+"upset": 0.5456,
+"noll_scully": 1.4066
+},
+{
+"code": "POL",
+"n": 3567,
+"skew": 0.2672,
+"p_fav": 0.4755,
+"upset": 0.545,
+"noll_scully": 1.1894
+},
+{
+"code": "E2",
+"n": 11019,
+"skew": 0.2691,
+"p_fav": 0.4712,
+"upset": 0.5367,
+"noll_scully": 1.4826
+},
+{
+"code": "E1",
+"n": 11181,
+"skew": 0.276,
+"p_fav": 0.4698,
+"upset": 0.551,
+"noll_scully": 1.4064
+},
+{
+"code": "E3",
+"n": 11090,
+"skew": 0.2942,
+"p_fav": 0.4587,
+"upset": 0.5602,
+"noll_scully": 1.2883
+},
+{
+"code": "SP2",
+"n": 8997,
+"skew": 0.2953,
+"p_fav": 0.4622,
+"upset": 0.5455,
+"noll_scully": 1.1968
+},
+{
+"code": "I2",
+"n": 8636,
+"skew": 0.3033,
+"p_fav": 0.4646,
+"upset": 0.5589,
+"noll_scully": 1.3163
+},
+{
+"code": "F2",
+"n": 7582,
+"skew": 0.3047,
+"p_fav": 0.4594,
+"upset": 0.5539,
+"noll_scully": 1.2341
+},
+{
+"code": "ARG",
+"n": 5330,
+"skew": 0.3134,
+"p_fav": 0.4644,
+"upset": 0.5535,
+"noll_scully": 1.2032
+}
+],
+"model_curve": [
+{
+"p_fav": 0.4405,
+"skew": 0.2902
+},
+{
+"p_fav": 0.4441,
+"skew": 0.3028
+},
+{
+"p_fav": 0.4502,
+"skew": 0.3021
+},
+{
+"p_fav": 0.4582,
+"skew": 0.2932
+},
+{
+"p_fav": 0.4674,
+"skew": 0.28
+},
+{
+"p_fav": 0.4775,
+"skew": 0.2646
+},
+{
+"p_fav": 0.488,
+"skew": 0.2485
+},
+{
+"p_fav": 0.4989,
+"skew": 0.2325
+},
+{
+"p_fav": 0.5099,
+"skew": 0.2169
+},
+{
+"p_fav": 0.521,
+"skew": 0.2018
+},
+{
+"p_fav": 0.5321,
+"skew": 0.1874
+},
+{
+"p_fav": 0.543,
+"skew": 0.1737
+},
+{
+"p_fav": 0.5538,
+"skew": 0.1607
+},
+{
+"p_fav": 0.5645,
+"skew": 0.1484
+},
+{
+"p_fav": 0.575,
+"skew": 0.1368
+},
+{
+"p_fav": 0.5852,
+"skew": 0.1258
+},
+{
+"p_fav": 0.5951,
+"skew": 0.1154
+},
+{
+"p_fav": 0.6049,
+"skew": 0.1056
+},
+{
+"p_fav": 0.6143,
+"skew": 0.0963
+},
+{
+"p_fav": 0.6235,
+"skew": 0.0876
+},
+{
+"p_fav": 0.6324,
+"skew": 0.0794
+},
+{
+"p_fav": 0.641,
+"skew": 0.0716
+},
+{
+"p_fav": 0.6494,
+"skew": 0.0642
+},
+{
+"p_fav": 0.6575,
+"skew": 0.0571
+},
+{
+"p_fav": 0.6653,
+"skew": 0.0505
+},
+{
+"p_fav": 0.6728,
+"skew": 0.0441
+},
+{
+"p_fav": 0.6802,
+"skew": 0.038
+},
+{
+"p_fav": 0.6872,
+"skew": 0.0323
+},
+{
+"p_fav": 0.694,
+"skew": 0.0269
+},
+{
+"p_fav": 0.7006,
+"skew": 0.0216
+},
+{
+"p_fav": 0.707,
+"skew": 0.0167
+},
+{
+"p_fav": 0.7132,
+"skew": 0.0119
+},
+{
+"p_fav": 0.7191,
+"skew": 0.0074
+},
+{
+"p_fav": 0.7248,
+"skew": 0.003
+},
+{
+"p_fav": 0.7304,
+"skew": -0.0012
+},
+{
+"p_fav": 0.7357,
+"skew": -0.0052
+},
+{
+"p_fav": 0.7409,
+"skew": -0.0091
+},
+{
+"p_fav": 0.7459,
+"skew": -0.0128
+},
+{
+"p_fav": 0.7508,
+"skew": -0.0164
+},
+{
+"p_fav": 0.7555,
+"skew": -0.0198
+}
+],
+"model_par": {
+"h": 0.2199,
+"c": 0.3728,
+"sigma_ref": 0.2907
+},
+"panel": [
+{
+"div": "ARG",
+"season": 2012,
+"skew": 0.3451
+},
+{
+"div": "ARG",
+"season": 2013,
+"skew": 0.3222
+},
+{
+"div": "ARG",
+"season": 2014,
+"skew": 0.3003
+},
+{
+"div": "ARG",
+"season": 2015,
+"skew": 0.297
+},
+{
+"div": "ARG",
+"season": 2016,
+"skew": 0.2877
+},
+{
+"div": "ARG",
+"season": 2017,
+"skew": 0.2587
+},
+{
+"div": "ARG",
+"season": 2018,
+"skew": 0.3048
+},
+{
+"div": "ARG",
+"season": 2019,
+"skew": 0.3079
+},
+{
+"div": "ARG",
+"season": 2020,
+"skew": 0.3187
+},
+{
+"div": "ARG",
+"season": 2021,
+"skew": 0.3105
+},
+{
+"div": "ARG",
+"season": 2022,
+"skew": 0.3274
+},
+{
+"div": "ARG",
+"season": 2023,
+"skew": 0.3476
+},
+{
+"div": "ARG",
+"season": 2024,
+"skew": 0.3332
+},
+{
+"div": "AUT",
+"season": 2013,
+"skew": 0.1372
+},
+{
+"div": "AUT",
+"season": 2014,
+"skew": 0.1549
+},
+{
+"div": "AUT",
+"season": 2015,
+"skew": 0.1404
+},
+{
+"div": "AUT",
+"season": 2016,
+"skew": 0.1575
+},
+{
+"div": "AUT",
+"season": 2017,
+"skew": 0.1783
+},
+{
+"div": "AUT",
+"season": 2018,
+"skew": 0.1415
+},
+{
+"div": "AUT",
+"season": 2019,
+"skew": 0.0967
+},
+{
+"div": "AUT",
+"season": 2020,
+"skew": 0.1055
+},
+{
+"div": "AUT",
+"season": 2021,
+"skew": 0.1546
+},
+{
+"div": "AUT",
+"season": 2022,
+"skew": 0.1474
+},
+{
+"div": "AUT",
+"season": 2023,
+"skew": 0.151
+},
+{
+"div": "B1",
+"season": 2005,
+"skew": 0.1688
+},
+{
+"div": "B1",
+"season": 2006,
+"skew": 0.1658
+},
+{
+"div": "B1",
+"season": 2007,
+"skew": 0.1408
+},
+{
+"div": "B1",
+"season": 2008,
+"skew": 0.1846
+},
+{
+"div": "B1",
+"season": 2009,
+"skew": 0.1542
+},
+{
+"div": "B1",
+"season": 2010,
+"skew": 0.1718
+},
+{
+"div": "B1",
+"season": 2011,
+"skew": 0.127
+},
+{
+"div": "B1",
+"season": 2012,
+"skew": 0.1394
+},
+{
+"div": "B1",
+"season": 2013,
+"skew": 0.1338
+},
+{
+"div": "B1",
+"season": 2014,
+"skew": 0.1962
+},
+{
+"div": "B1",
+"season": 2015,
+"skew": 0.1423
+},
+{
+"div": "B1",
+"season": 2016,
+"skew": 0.1914
+},
+{
+"div": "B1",
+"season": 2017,
+"skew": 0.1545
+},
+{
+"div": "B1",
+"season": 2018,
+"skew": 0.1251
+},
+{
+"div": "B1",
+"season": 2019,
+"skew": 0.094
+},
+{
+"div": "B1",
+"season": 2020,
+"skew": 0.1348
+},
+{
+"div": "B1",
+"season": 2021,
+"skew": 0.1737
+},
+{
+"div": "B1",
+"season": 2022,
+"skew": 0.1333
+},
+{
+"div": "B1",
+"season": 2023,
+"skew": 0.1335
+},
+{
+"div": "B1",
+"season": 2024,
+"skew": 0.1705
+},
+{
+"div": "B1",
+"season": 2025,
+"skew": 0.1923
+},
+{
+"div": "BRA",
+"season": 2012,
+"skew": 0.2195
+},
+{
+"div": "BRA",
+"season": 2013,
+"skew": 0.2185
+},
+{
+"div": "BRA",
+"season": 2014,
+"skew": 0.2201
+},
+{
+"div": "BRA",
+"season": 2015,
+"skew": 0.2206
+},
+{
+"div": "BRA",
+"season": 2016,
+"skew": 0.2141
+},
+{
+"div": "BRA",
+"season": 2017,
+"skew": 0.196
+},
+{
+"div": "BRA",
+"season": 2018,
+"skew": 0.2368
+},
+{
+"div": "BRA",
+"season": 2019,
+"skew": 0.231
+},
+{
+"div": "BRA",
+"season": 2020,
+"skew": 0.2589
+},
+{
+"div": "BRA",
+"season": 2021,
+"skew": 0.2545
+},
+{
+"div": "BRA",
+"season": 2022,
+"skew": 0.2288
+},
+{
+"div": "BRA",
+"season": 2023,
+"skew": 0.2351
+},
+{
+"div": "BRA",
+"season": 2024,
+"skew": 0.2328
+},
+{
+"div": "CHN",
+"season": 2014,
+"skew": 0.1718
+},
+{
+"div": "CHN",
+"season": 2015,
+"skew": 0.194
+},
+{
+"div": "CHN",
+"season": 2016,
+"skew": 0.1815
+},
+{
+"div": "CHN",
+"season": 2017,
+"skew": 0.1419
+},
+{
+"div": "CHN",
+"season": 2018,
+"skew": 0.1126
+},
+{
+"div": "CHN",
+"season": 2019,
+"skew": 0.1048
+},
+{
+"div": "CHN",
+"season": 2020,
+"skew": 0.1044
+},
+{
+"div": "CHN",
+"season": 2021,
+"skew": 0.1485
+},
+{
+"div": "CHN",
+"season": 2022,
+"skew": 0.1391
+},
+{
+"div": "CHN",
+"season": 2023,
+"skew": 0.1963
+},
+{
+"div": "CHN",
+"season": 2024,
+"skew": 0.108
+},
+{
+"div": "D1",
+"season": 2005,
+"skew": 0.1798
+},
+{
+"div": "D1",
+"season": 2006,
+"skew": 0.2034
+},
+{
+"div": "D1",
+"season": 2007,
+"skew": 0.2235
+},
+{
+"div": "D1",
+"season": 2008,
+"skew": 0.1665
+},
+{
+"div": "D1",
+"season": 2009,
+"skew": 0.1334
+},
+{
+"div": "D1",
+"season": 2010,
+"skew": 0.1932
+},
+{
+"div": "D1",
+"season": 2011,
+"skew": 0.195
+},
+{
+"div": "D1",
+"season": 2012,
+"skew": 0.1782
+},
+{
+"div": "D1",
+"season": 2013,
+"skew": 0.1956
+},
+{
+"div": "D1",
+"season": 2014,
+"skew": 0.1767
+},
+{
+"div": "D1",
+"season": 2015,
+"skew": 0.2013
+},
+{
+"div": "D1",
+"season": 2016,
+"skew": 0.2253
+},
+{
+"div": "D1",
+"season": 2017,
+"skew": 0.2051
+},
+{
+"div": "D1",
+"season": 2018,
+"skew": 0.2084
+},
+{
+"div": "D1",
+"season": 2019,
+"skew": 0.1123
+},
+{
+"div": "D1",
+"season": 2020,
+"skew": 0.1658
+},
+{
+"div": "D1",
+"season": 2021,
+"skew": 0.1455
+},
+{
+"div": "D1",
+"season": 2022,
+"skew": 0.1529
+},
+{
+"div": "D1",
+"season": 2023,
+"skew": 0.1959
+},
+{
+"div": "D1",
+"season": 2024,
+"skew": 0.1034
+},
+{
+"div": "D1",
+"season": 2025,
+"skew": 0.2048
+},
+{
+"div": "D2",
+"season": 2005,
+"skew": 0.1974
+},
+{
+"div": "D2",
+"season": 2006,
+"skew": 0.2442
+},
+{
+"div": "D2",
+"season": 2007,
+"skew": 0.1987
+},
+{
+"div": "D2",
+"season": 2008,
+"skew": 0.2114
+},
+{
+"div": "D2",
+"season": 2009,
+"skew": 0.2219
+},
+{
+"div": "D2",
+"season": 2010,
+"skew": 0.2389
+},
+{
+"div": "D2",
+"season": 2011,
+"skew": 0.2288
+},
+{
+"div": "D2",
+"season": 2012,
+"skew": 0.1995
+},
+{
+"div": "D2",
+"season": 2013,
+"skew": 0.2107
+},
+{
+"div": "D2",
+"season": 2014,
+"skew": 0.2656
+},
+{
+"div": "D2",
+"season": 2015,
+"skew": 0.2777
+},
+{
+"div": "D2",
+"season": 2016,
+"skew": 0.2923
+},
+{
+"div": "D2",
+"season": 2017,
+"skew": 0.2942
+},
+{
+"div": "D2",
+"season": 2018,
+"skew": 0.2731
+},
+{
+"div": "D2",
+"season": 2019,
+"skew": 0.2535
+},
+{
+"div": "D2",
+"season": 2020,
+"skew": 0.2956
+},
+{
+"div": "D2",
+"season": 2021,
+"skew": 0.2592
+},
+{
+"div": "D2",
+"season": 2022,
+"skew": 0.2408
+},
+{
+"div": "D2",
+"season": 2023,
+"skew": 0.2345
+},
+{
+"div": "D2",
+"season": 2024,
+"skew": 0.2156
+},
+{
+"div": "D2",
+"season": 2025,
+"skew": 0.1915
+},
+{
+"div": "DEN",
+"season": 2013,
+"skew": 0.2722
+},
+{
+"div": "DEN",
+"season": 2014,
+"skew": 0.2191
+},
+{
+"div": "DEN",
+"season": 2015,
+"skew": 0.2525
+},
+{
+"div": "DEN",
+"season": 2016,
+"skew": 0.2068
+},
+{
+"div": "DEN",
+"season": 2017,
+"skew": 0.2289
+},
+{
+"div": "DEN",
+"season": 2018,
+"skew": 0.1934
+},
+{
+"div": "DEN",
+"season": 2019,
+"skew": 0.213
+},
+{
+"div": "DEN",
+"season": 2020,
+"skew": 0.1853
+},
+{
+"div": "DEN",
+"season": 2021,
+"skew": 0.2386
+},
+{
+"div": "DEN",
+"season": 2022,
+"skew": 0.2523
+},
+{
+"div": "DEN",
+"season": 2023,
+"skew": 0.1822
+},
+{
+"div": "DEN",
+"season": 2024,
+"skew": 0.1443
+},
+{
+"div": "E0",
+"season": 2005,
+"skew": 0.2287
+},
+{
+"div": "E0",
+"season": 2006,
+"skew": 0.1674
+},
+{
+"div": "E0",
+"season": 2007,
+"skew": 0.1967
+},
+{
+"div": "E0",
+"season": 2008,
+"skew": 0.1633
+},
+{
+"div": "E0",
+"season": 2009,
+"skew": 0.1779
+},
+{
+"div": "E0",
+"season": 2010,
+"skew": 0.1454
+},
+{
+"div": "E0",
+"season": 2011,
+"skew": 0.1667
+},
+{
+"div": "E0",
+"season": 2012,
+"skew": 0.1375
+},
+{
+"div": "E0",
+"season": 2013,
+"skew": 0.1374
+},
+{
+"div": "E0",
+"season": 2014,
+"skew": 0.1544
+},
+{
+"div": "E0",
+"season": 2015,
+"skew": 0.2079
+},
+{
+"div": "E0",
+"season": 2016,
+"skew": 0.1771
+},
+{
+"div": "E0",
+"season": 2017,
+"skew": 0.155
+},
+{
+"div": "E0",
+"season": 2018,
+"skew": 0.1962
+},
+{
+"div": "E0",
+"season": 2019,
+"skew": 0.1598
+},
+{
+"div": "E0",
+"season": 2020,
+"skew": 0.1696
+},
+{
+"div": "E0",
+"season": 2021,
+"skew": 0.1677
+},
+{
+"div": "E0",
+"season": 2022,
+"skew": 0.1737
+},
+{
+"div": "E0",
+"season": 2023,
+"skew": 0.1468
+},
+{
+"div": "E0",
+"season": 2024,
+"skew": 0.1294
+},
+{
+"div": "E0",
+"season": 2025,
+"skew": 0.1112
+},
+{
+"div": "E1",
+"season": 2005,
+"skew": 0.2571
+},
+{
+"div": "E1",
+"season": 2006,
+"skew": 0.2737
+},
+{
+"div": "E1",
+"season": 2007,
+"skew": 0.2634
+},
+{
+"div": "E1",
+"season": 2008,
+"skew": 0.276
+},
+{
+"div": "E1",
+"season": 2009,
+"skew": 0.2731
+},
+{
+"div": "E1",
+"season": 2010,
+"skew": 0.2835
+},
+{
+"div": "E1",
+"season": 2011,
+"skew": 0.2641
+},
+{
+"div": "E1",
+"season": 2012,
+"skew": 0.2679
+},
+{
+"div": "E1",
+"season": 2013,
+"skew": 0.2915
+},
+{
+"div": "E1",
+"season": 2014,
+"skew": 0.2767
+},
+{
+"div": "E1",
+"season": 2015,
+"skew": 0.2747
+},
+{
+"div": "E1",
+"season": 2016,
+"skew": 0.2853
+},
+{
+"div": "E1",
+"season": 2017,
+"skew": 0.2679
+},
+{
+"div": "E1",
+"season": 2018,
+"skew": 0.2746
+},
+{
+"div": "E1",
+"season": 2019,
+"skew": 0.2689
+},
+{
+"div": "E1",
+"season": 2020,
+"skew": 0.3071
+},
+{
+"div": "E1",
+"season": 2021,
+"skew": 0.3038
+},
+{
+"div": "E1",
+"season": 2022,
+"skew": 0.2814
+},
+{
+"div": "E1",
+"season": 2023,
+"skew": 0.2455
+},
+{
+"div": "E1",
+"season": 2024,
+"skew": 0.2416
+},
+{
+"div": "E1",
+"season": 2025,
+"skew": 0.2628
+},
+{
+"div": "E2",
+"season": 2005,
+"skew": 0.2503
+},
+{
+"div": "E2",
+"season": 2006,
+"skew": 0.2717
+},
+{
+"div": "E2",
+"season": 2007,
+"skew": 0.2621
+},
+{
+"div": "E2",
+"season": 2008,
+"skew": 0.2599
+},
+{
+"div": "E2",
+"season": 2009,
+"skew": 0.2568
+},
+{
+"div": "E2",
+"season": 2010,
+"skew": 0.2566
+},
+{
+"div": "E2",
+"season": 2011,
+"skew": 0.2649
+},
+{
+"div": "E2",
+"season": 2012,
+"skew": 0.2725
+},
+{
+"div": "E2",
+"season": 2013,
+"skew": 0.2791
+},
+{
+"div": "E2",
+"season": 2014,
+"skew": 0.2884
+},
+{
+"div": "E2",
+"season": 2015,
+"skew": 0.2938
+},
+{
+"div": "E2",
+"season": 2016,
+"skew": 0.2956
+},
+{
+"div": "E2",
+"season": 2017,
+"skew": 0.2827
+},
+{
+"div": "E2",
+"season": 2018,
+"skew": 0.2943
+},
+{
+"div": "E2",
+"season": 2019,
+"skew": 0.2734
+},
+{
+"div": "E2",
+"season": 2020,
+"skew": 0.2765
+},
+{
+"div": "E2",
+"season": 2021,
+"skew": 0.2816
+},
+{
+"div": "E2",
+"season": 2022,
+"skew": 0.218
+},
+{
+"div": "E2",
+"season": 2023,
+"skew": 0.2427
+},
+{
+"div": "E2",
+"season": 2024,
+"skew": 0.191
+},
+{
+"div": "E2",
+"season": 2025,
+"skew": 0.2158
+},
+{
+"div": "E3",
+"season": 2005,
+"skew": 0.2499
+},
+{
+"div": "E3",
+"season": 2006,
+"skew": 0.2782
+},
+{
+"div": "E3",
+"season": 2007,
+"skew": 0.2834
+},
+{
+"div": "E3",
+"season": 2008,
+"skew": 0.2711
+},
+{
+"div": "E3",
+"season": 2009,
+"skew": 0.273
+},
+{
+"div": "E3",
+"season": 2010,
+"skew": 0.2851
+},
+{
+"div": "E3",
+"season": 2011,
+"skew": 0.2724
+},
+{
+"div": "E3",
+"season": 2012,
+"skew": 0.263
+},
+{
+"div": "E3",
+"season": 2013,
+"skew": 0.3272
+},
+{
+"div": "E3",
+"season": 2014,
+"skew": 0.3517
+},
+{
+"div": "E3",
+"season": 2015,
+"skew": 0.3
+},
+{
+"div": "E3",
+"season": 2016,
+"skew": 0.2855
+},
+{
+"div": "E3",
+"season": 2017,
+"skew": 0.2828
+},
+{
+"div": "E3",
+"season": 2018,
+"skew": 0.2889
+},
+{
+"div": "E3",
+"season": 2019,
+"skew": 0.3159
+},
+{
+"div": "E3",
+"season": 2020,
+"skew": 0.3172
+},
+{
+"div": "E3",
+"season": 2021,
+"skew": 0.3433
+},
+{
+"div": "E3",
+"season": 2022,
+"skew": 0.3086
+},
+{
+"div": "E3",
+"season": 2023,
+"skew": 0.2696
+},
+{
+"div": "E3",
+"season": 2024,
+"skew": 0.2265
+},
+{
+"div": "E3",
+"season": 2025,
+"skew": 0.2573
+},
+{
+"div": "EC",
+"season": 2011,
+"skew": 0.2315
+},
+{
+"div": "EC",
+"season": 2012,
+"skew": 0.24
+},
+{
+"div": "EC",
+"season": 2013,
+"skew": 0.2391
+},
+{
+"div": "EC",
+"season": 2014,
+"skew": 0.2251
+},
+{
+"div": "EC",
+"season": 2015,
+"skew": 0.1848
+},
+{
+"div": "EC",
+"season": 2016,
+"skew": 0.2058
+},
+{
+"div": "EC",
+"season": 2017,
+"skew": 0.1999
+},
+{
+"div": "EC",
+"season": 2018,
+"skew": 0.2289
+},
+{
+"div": "EC",
+"season": 2019,
+"skew": 0.273
+},
+{
+"div": "EC",
+"season": 2020,
+"skew": 0.2696
+},
+{
+"div": "EC",
+"season": 2021,
+"skew": 0.2162
+},
+{
+"div": "EC",
+"season": 2022,
+"skew": 0.1961
+},
+{
+"div": "EC",
+"season": 2023,
+"skew": 0.2174
+},
+{
+"div": "EC",
+"season": 2024,
+"skew": 0.2442
+},
+{
+"div": "F1",
+"season": 2005,
+"skew": 0.2859
+},
+{
+"div": "F1",
+"season": 2006,
+"skew": 0.2883
+},
+{
+"div": "F1",
+"season": 2007,
+"skew": 0.2693
+},
+{
+"div": "F1",
+"season": 2008,
+"skew": 0.2555
+},
+{
+"div": "F1",
+"season": 2009,
+"skew": 0.2416
+},
+{
+"div": "F1",
+"season": 2010,
+"skew": 0.2485
+},
+{
+"div": "F1",
+"season": 2011,
+"skew": 0.2223
+},
+{
+"div": "F1",
+"season": 2012,
+"skew": 0.2476
+},
+{
+"div": "F1",
+"season": 2013,
+"skew": 0.2223
+},
+{
+"div": "F1",
+"season": 2014,
+"skew": 0.2292
+},
+{
+"div": "F1",
+"season": 2015,
+"skew": 0.2545
+},
+{
+"div": "F1",
+"season": 2016,
+"skew": 0.2512
+},
+{
+"div": "F1",
+"season": 2017,
+"skew": 0.2158
+},
+{
+"div": "F1",
+"season": 2018,
+"skew": 0.2089
+},
+{
+"div": "F1",
+"season": 2019,
+"skew": 0.2597
+},
+{
+"div": "F1",
+"season": 2020,
+"skew": 0.2385
+},
+{
+"div": "F1",
+"season": 2021,
+"skew": 0.2309
+},
+{
+"div": "F1",
+"season": 2022,
+"skew": 0.1917
+},
+{
+"div": "F1",
+"season": 2023,
+"skew": 0.1446
+},
+{
+"div": "F1",
+"season": 2024,
+"skew": 0.1952
+},
+{
+"div": "F1",
+"season": 2025,
+"skew": 0.0966
+},
+{
+"div": "F2",
+"season": 2005,
+"skew": 0.3011
+},
+{
+"div": "F2",
+"season": 2006,
+"skew": 0.2984
+},
+{
+"div": "F2",
+"season": 2007,
+"skew": 0.2471
+},
+{
+"div": "F2",
+"season": 2008,
+"skew": 0.291
+},
+{
+"div": "F2",
+"season": 2009,
+"skew": 0.2955
+},
+{
+"div": "F2",
+"season": 2010,
+"skew": 0.2877
+},
+{
+"div": "F2",
+"season": 2011,
+"skew": 0.2757
+},
+{
+"div": "F2",
+"season": 2012,
+"skew": 0.2751
+},
+{
+"div": "F2",
+"season": 2013,
+"skew": 0.2571
+},
+{
+"div": "F2",
+"season": 2014,
+"skew": 0.2831
+},
+{
+"div": "F2",
+"season": 2015,
+"skew": 0.312
+},
+{
+"div": "F2",
+"season": 2016,
+"skew": 0.3377
+},
+{
+"div": "F2",
+"season": 2017,
+"skew": 0.3016
+},
+{
+"div": "F2",
+"season": 2018,
+"skew": 0.2796
+},
+{
+"div": "F2",
+"season": 2019,
+"skew": 0.3354
+},
+{
+"div": "F2",
+"season": 2020,
+"skew": 0.3898
+},
+{
+"div": "F2",
+"season": 2021,
+"skew": 0.3448
+},
+{
+"div": "F2",
+"season": 2022,
+"skew": 0.3544
+},
+{
+"div": "F2",
+"season": 2023,
+"skew": 0.3054
+},
+{
+"div": "F2",
+"season": 2024,
+"skew": 0.2942
+},
+{
+"div": "F2",
+"season": 2025,
+"skew": 0.2489
+},
+{
+"div": "FIN",
+"season": 2012,
+"skew": 0.2197
+},
+{
+"div": "FIN",
+"season": 2013,
+"skew": 0.246
+},
+{
+"div": "FIN",
+"season": 2014,
+"skew": 0.2586
+},
+{
+"div": "FIN",
+"season": 2015,
+"skew": 0.2344
+},
+{
+"div": "FIN",
+"season": 2016,
+"skew": 0.2637
+},
+{
+"div": "FIN",
+"season": 2017,
+"skew": 0.2176
+},
+{
+"div": "FIN",
+"season": 2018,
+"skew": 0.2519
+},
+{
+"div": "FIN",
+"season": 2019,
+"skew": 0.2759
+},
+{
+"div": "FIN",
+"season": 2021,
+"skew": 0.1925
+},
+{
+"div": "FIN",
+"season": 2022,
+"skew": 0.1822
+},
+{
+"div": "FIN",
+"season": 2023,
+"skew": 0.264
+},
+{
+"div": "FIN",
+"season": 2024,
+"skew": 0.1389
+},
+{
+"div": "G1",
+"season": 2006,
+"skew": 0.1794
+},
+{
+"div": "G1",
+"season": 2007,
+"skew": 0.1626
+},
+{
+"div": "G1",
+"season": 2008,
+"skew": 0.1842
+},
+{
+"div": "G1",
+"season": 2009,
+"skew": 0.195
+},
+{
+"div": "G1",
+"season": 2010,
+"skew": 0.1409
+},
+{
+"div": "G1",
+"season": 2013,
+"skew": 0.2094
+},
+{
+"div": "G1",
+"season": 2014,
+"skew": 0.1206
+},
+{
+"div": "G1",
+"season": 2015,
+"skew": 0.1066
+},
+{
+"div": "G1",
+"season": 2016,
+"skew": 0.163
+},
+{
+"div": "G1",
+"season": 2017,
+"skew": 0.1889
+},
+{
+"div": "G1",
+"season": 2018,
+"skew": 0.1792
+},
+{
+"div": "G1",
+"season": 2019,
+"skew": 0.1722
+},
+{
+"div": "G1",
+"season": 2020,
+"skew": 0.1862
+},
+{
+"div": "G1",
+"season": 2021,
+"skew": 0.2443
+},
+{
+"div": "I1",
+"season": 2005,
+"skew": 0.2089
+},
+{
+"div": "I1",
+"season": 2006,
+"skew": 0.2383
+},
+{
+"div": "I1",
+"season": 2007,
+"skew": 0.214
+},
+{
+"div": "I1",
+"season": 2008,
+"skew": 0.209
+},
+{
+"div": "I1",
+"season": 2009,
+"skew": 0.2016
+},
+{
+"div": "I1",
+"season": 2010,
+"skew": 0.2062
+},
+{
+"div": "I1",
+"season": 2011,
+"skew": 0.1995
+},
+{
+"div": "I1",
+"season": 2012,
+"skew": 0.1952
+},
+{
+"div": "I1",
+"season": 2013,
+"skew": 0.1791
+},
+{
+"div": "I1",
+"season": 2014,
+"skew": 0.1695
+},
+{
+"div": "I1",
+"season": 2015,
+"skew": 0.1891
+},
+{
+"div": "I1",
+"season": 2016,
+"skew": 0.1665
+},
+{
+"div": "I1",
+"season": 2017,
+"skew": 0.0835
+},
+{
+"div": "I1",
+"season": 2018,
+"skew": 0.1316
+},
+{
+"div": "I1",
+"season": 2019,
+"skew": 0.183
+},
+{
+"div": "I1",
+"season": 2020,
+"skew": 0.119
+},
+{
+"div": "I1",
+"season": 2021,
+"skew": 0.1581
+},
+{
+"div": "I1",
+"season": 2022,
+"skew": 0.1568
+},
+{
+"div": "I1",
+"season": 2023,
+"skew": 0.1939
+},
+{
+"div": "I1",
+"season": 2024,
+"skew": 0.1928
+},
+{
+"div": "I1",
+"season": 2025,
+"skew": 0.1589
+},
+{
+"div": "I2",
+"season": 2005,
+"skew": 0.2877
+},
+{
+"div": "I2",
+"season": 2006,
+"skew": 0.3063
+},
+{
+"div": "I2",
+"season": 2007,
+"skew": 0.2492
+},
+{
+"div": "I2",
+"season": 2008,
+"skew": 0.2588
+},
+{
+"div": "I2",
+"season": 2009,
+"skew": 0.3199
+},
+{
+"div": "I2",
+"season": 2010,
+"skew": 0.2993
+},
+{
+"div": "I2",
+"season": 2011,
+"skew": 0.2886
+},
+{
+"div": "I2",
+"season": 2012,
+"skew": 0.3048
+},
+{
+"div": "I2",
+"season": 2013,
+"skew": 0.2805
+},
+{
+"div": "I2",
+"season": 2014,
+"skew": 0.3252
+},
+{
+"div": "I2",
+"season": 2015,
+"skew": 0.307
+},
+{
+"div": "I2",
+"season": 2016,
+"skew": 0.2795
+},
+{
+"div": "I2",
+"season": 2017,
+"skew": 0.2626
+},
+{
+"div": "I2",
+"season": 2018,
+"skew": 0.2617
+},
+{
+"div": "I2",
+"season": 2019,
+"skew": 0.3202
+},
+{
+"div": "I2",
+"season": 2020,
+"skew": 0.3446
+},
+{
+"div": "I2",
+"season": 2021,
+"skew": 0.3506
+},
+{
+"div": "I2",
+"season": 2022,
+"skew": 0.2957
+},
+{
+"div": "I2",
+"season": 2023,
+"skew": 0.3245
+},
+{
+"div": "I2",
+"season": 2024,
+"skew": 0.3322
+},
+{
+"div": "I2",
+"season": 2025,
+"skew": 0.3396
+},
+{
+"div": "IRL",
+"season": 2012,
+"skew": 0.1712
+},
+{
+"div": "IRL",
+"season": 2013,
+"skew": 0.1468
+},
+{
+"div": "IRL",
+"season": 2014,
+"skew": 0.0883
+},
+{
+"div": "IRL",
+"season": 2015,
+"skew": 0.1416
+},
+{
+"div": "IRL",
+"season": 2016,
+"skew": 0.1501
+},
+{
+"div": "IRL",
+"season": 2017,
+"skew": 0.1176
+},
+{
+"div": "IRL",
+"season": 2018,
+"skew": 0.0909
+},
+{
+"div": "IRL",
+"season": 2019,
+"skew": 0.114
+},
+{
+"div": "IRL",
+"season": 2021,
+"skew": 0.1647
+},
+{
+"div": "IRL",
+"season": 2022,
+"skew": 0.1583
+},
+{
+"div": "IRL",
+"season": 2023,
+"skew": 0.1811
+},
+{
+"div": "IRL",
+"season": 2024,
+"skew": 0.2334
+},
+{
+"div": "JAP",
+"season": 2012,
+"skew": 0.2855
+},
+{
+"div": "JAP",
+"season": 2013,
+"skew": 0.2569
+},
+{
+"div": "JAP",
+"season": 2014,
+"skew": 0.2624
+},
+{
+"div": "JAP",
+"season": 2015,
+"skew": 0.2584
+},
+{
+"div": "JAP",
+"season": 2016,
+"skew": 0.238
+},
+{
+"div": "JAP",
+"season": 2017,
+"skew": 0.236
+},
+{
+"div": "JAP",
+"season": 2018,
+"skew": 0.2614
+},
+{
+"div": "JAP",
+"season": 2019,
+"skew": 0.3071
+},
+{
+"div": "JAP",
+"season": 2020,
+"skew": 0.2012
+},
+{
+"div": "JAP",
+"season": 2021,
+"skew": 0.2581
+},
+{
+"div": "JAP",
+"season": 2022,
+"skew": 0.2997
+},
+{
+"div": "JAP",
+"season": 2023,
+"skew": 0.2689
+},
+{
+"div": "JAP",
+"season": 2024,
+"skew": 0.2915
+},
+{
+"div": "MEX",
+"season": 2012,
+"skew": 0.2784
+},
+{
+"div": "MEX",
+"season": 2013,
+"skew": 0.2738
+},
+{
+"div": "MEX",
+"season": 2014,
+"skew": 0.289
+},
+{
+"div": "MEX",
+"season": 2015,
+"skew": 0.3014
+},
+{
+"div": "MEX",
+"season": 2016,
+"skew": 0.2586
+},
+{
+"div": "MEX",
+"season": 2017,
+"skew": 0.2646
+},
+{
+"div": "MEX",
+"season": 2018,
+"skew": 0.2585
+},
+{
+"div": "MEX",
+"season": 2019,
+"skew": 0.2336
+},
+{
+"div": "MEX",
+"season": 2020,
+"skew": 0.2489
+},
+{
+"div": "MEX",
+"season": 2021,
+"skew": 0.272
+},
+{
+"div": "MEX",
+"season": 2022,
+"skew": 0.3022
+},
+{
+"div": "MEX",
+"season": 2023,
+"skew": 0.197
+},
+{
+"div": "MEX",
+"season": 2024,
+"skew": 0.1749
+},
+{
+"div": "N1",
+"season": 2005,
+"skew": 0.1231
+},
+{
+"div": "N1",
+"season": 2006,
+"skew": 0.144
+},
+{
+"div": "N1",
+"season": 2007,
+"skew": 0.0505
+},
+{
+"div": "N1",
+"season": 2008,
+"skew": 0.1751
+},
+{
+"div": "N1",
+"season": 2009,
+"skew": 0.1372
+},
+{
+"div": "N1",
+"season": 2010,
+"skew": 0.0925
+},
+{
+"div": "N1",
+"season": 2011,
+"skew": 0.0604
+},
+{
+"div": "N1",
+"season": 2012,
+"skew": 0.0008
+},
+{
+"div": "N1",
+"season": 2013,
+"skew": 0.0871
+},
+{
+"div": "N1",
+"season": 2014,
+"skew": 0.0571
+},
+{
+"div": "N1",
+"season": 2015,
+"skew": 0.1069
+},
+{
+"div": "N1",
+"season": 2016,
+"skew": 0.1359
+},
+{
+"div": "N1",
+"season": 2017,
+"skew": 0.0928
+},
+{
+"div": "N1",
+"season": 2018,
+"skew": 0.0968
+},
+{
+"div": "N1",
+"season": 2019,
+"skew": 0.0674
+},
+{
+"div": "N1",
+"season": 2020,
+"skew": 0.0601
+},
+{
+"div": "N1",
+"season": 2021,
+"skew": 0.1256
+},
+{
+"div": "N1",
+"season": 2022,
+"skew": 0.1173
+},
+{
+"div": "N1",
+"season": 2023,
+"skew": 0.1165
+},
+{
+"div": "N1",
+"season": 2024,
+"skew": 0.0844
+},
+{
+"div": "N1",
+"season": 2025,
+"skew": 0.1457
+},
+{
+"div": "NOR",
+"season": 2012,
+"skew": 0.1569
+},
+{
+"div": "NOR",
+"season": 2013,
+"skew": 0.1776
+},
+{
+"div": "NOR",
+"season": 2014,
+"skew": 0.1664
+},
+{
+"div": "NOR",
+"season": 2015,
+"skew": 0.1327
+},
+{
+"div": "NOR",
+"season": 2016,
+"skew": 0.1467
+},
+{
+"div": "NOR",
+"season": 2017,
+"skew": 0.2063
+},
+{
+"div": "NOR",
+"season": 2018,
+"skew": 0.1975
+},
+{
+"div": "NOR",
+"season": 2019,
+"skew": 0.2094
+},
+{
+"div": "NOR",
+"season": 2020,
+"skew": 0.1919
+},
+{
+"div": "NOR",
+"season": 2021,
+"skew": 0.1558
+},
+{
+"div": "NOR",
+"season": 2022,
+"skew": 0.1367
+},
+{
+"div": "NOR",
+"season": 2023,
+"skew": 0.1105
+},
+{
+"div": "NOR",
+"season": 2024,
+"skew": 0.1593
+},
+{
+"div": "P1",
+"season": 2005,
+"skew": 0.1813
+},
+{
+"div": "P1",
+"season": 2006,
+"skew": 0.1541
+},
+{
+"div": "P1",
+"season": 2007,
+"skew": 0.1792
+},
+{
+"div": "P1",
+"season": 2008,
+"skew": 0.2078
+},
+{
+"div": "P1",
+"season": 2009,
+"skew": 0.2273
+},
+{
+"div": "P1",
+"season": 2010,
+"skew": 0.2098
+},
+{
+"div": "P1",
+"season": 2013,
+"skew": 0.1922
+},
+{
+"div": "P1",
+"season": 2014,
+"skew": 0.1915
+},
+{
+"div": "P1",
+"season": 2015,
+"skew": 0.2202
+},
+{
+"div": "P1",
+"season": 2016,
+"skew": 0.2384
+},
+{
+"div": "P1",
+"season": 2017,
+"skew": 0.2297
+},
+{
+"div": "P1",
+"season": 2018,
+"skew": 0.2
+},
+{
+"div": "P1",
+"season": 2019,
+"skew": 0.162
+},
+{
+"div": "P1",
+"season": 2020,
+"skew": 0.2362
+},
+{
+"div": "P1",
+"season": 2021,
+"skew": 0.2822
+},
+{
+"div": "P1",
+"season": 2022,
+"skew": 0.234
+},
+{
+"div": "P1",
+"season": 2023,
+"skew": 0.258
+},
+{
+"div": "P1",
+"season": 2024,
+"skew": 0.2392
+},
+{
+"div": "P1",
+"season": 2025,
+"skew": 0.2054
+},
+{
+"div": "POL",
+"season": 2013,
+"skew": 0.2635
+},
+{
+"div": "POL",
+"season": 2014,
+"skew": 0.2691
+},
+{
+"div": "POL",
+"season": 2015,
+"skew": 0.2928
+},
+{
+"div": "POL",
+"season": 2016,
+"skew": 0.2691
+},
+{
+"div": "POL",
+"season": 2017,
+"skew": 0.2586
+},
+{
+"div": "POL",
+"season": 2018,
+"skew": 0.2793
+},
+{
+"div": "POL",
+"season": 2019,
+"skew": 0.2871
+},
+{
+"div": "POL",
+"season": 2020,
+"skew": 0.2515
+},
+{
+"div": "POL",
+"season": 2021,
+"skew": 0.2708
+},
+{
+"div": "POL",
+"season": 2022,
+"skew": 0.2653
+},
+{
+"div": "POL",
+"season": 2023,
+"skew": 0.2684
+},
+{
+"div": "POL",
+"season": 2024,
+"skew": 0.2181
+},
+{
+"div": "ROM",
+"season": 2012,
+"skew": 0.213
+},
+{
+"div": "ROM",
+"season": 2013,
+"skew": 0.1593
+},
+{
+"div": "ROM",
+"season": 2014,
+"skew": 0.1628
+},
+{
+"div": "ROM",
+"season": 2015,
+"skew": 0.2797
+},
+{
+"div": "ROM",
+"season": 2016,
+"skew": 0.2294
+},
+{
+"div": "ROM",
+"season": 2017,
+"skew": 0.2325
+},
+{
+"div": "ROM",
+"season": 2018,
+"skew": 0.2541
+},
+{
+"div": "ROM",
+"season": 2019,
+"skew": 0.2688
+},
+{
+"div": "ROM",
+"season": 2020,
+"skew": 0.2426
+},
+{
+"div": "ROM",
+"season": 2021,
+"skew": 0.2995
+},
+{
+"div": "ROM",
+"season": 2022,
+"skew": 0.2914
+},
+{
+"div": "ROM",
+"season": 2023,
+"skew": 0.2659
+},
+{
+"div": "ROM",
+"season": 2024,
+"skew": 0.2596
+},
+{
+"div": "RUS",
+"season": 2012,
+"skew": 0.1759
+},
+{
+"div": "RUS",
+"season": 2013,
+"skew": 0.1736
+},
+{
+"div": "RUS",
+"season": 2014,
+"skew": 0.1898
+},
+{
+"div": "RUS",
+"season": 2015,
+"skew": 0.2274
+},
+{
+"div": "RUS",
+"season": 2016,
+"skew": 0.2145
+},
+{
+"div": "RUS",
+"season": 2017,
+"skew": 0.2569
+},
+{
+"div": "RUS",
+"season": 2018,
+"skew": 0.2565
+},
+{
+"div": "RUS",
+"season": 2019,
+"skew": 0.2724
+},
+{
+"div": "RUS",
+"season": 2020,
+"skew": 0.2494
+},
+{
+"div": "RUS",
+"season": 2021,
+"skew": 0.2238
+},
+{
+"div": "RUS",
+"season": 2022,
+"skew": 0.2061
+},
+{
+"div": "RUS",
+"season": 2023,
+"skew": 0.2173
+},
+{
+"div": "RUS",
+"season": 2024,
+"skew": 0.2385
+},
+{
+"div": "SC0",
+"season": 2005,
+"skew": 0.1575
+},
+{
+"div": "SC0",
+"season": 2006,
+"skew": 0.1663
+},
+{
+"div": "SC0",
+"season": 2007,
+"skew": 0.1443
+},
+{
+"div": "SC0",
+"season": 2008,
+"skew": 0.1727
+},
+{
+"div": "SC0",
+"season": 2009,
+"skew": 0.2129
+},
+{
+"div": "SC0",
+"season": 2010,
+"skew": 0.242
+},
+{
+"div": "SC0",
+"season": 2011,
+"skew": 0.2445
+},
+{
+"div": "SC0",
+"season": 2012,
+"skew": 0.2495
+},
+{
+"div": "SC0",
+"season": 2013,
+"skew": 0.2673
+},
+{
+"div": "SC0",
+"season": 2014,
+"skew": 0.2228
+},
+{
+"div": "SC0",
+"season": 2015,
+"skew": 0.2192
+},
+{
+"div": "SC0",
+"season": 2016,
+"skew": 0.2099
+},
+{
+"div": "SC0",
+"season": 2017,
+"skew": 0.1794
+},
+{
+"div": "SC0",
+"season": 2018,
+"skew": 0.1321
+},
+{
+"div": "SC0",
+"season": 2019,
+"skew": 0.1957
+},
+{
+"div": "SC0",
+"season": 2020,
+"skew": 0.1967
+},
+{
+"div": "SC0",
+"season": 2021,
+"skew": 0.2482
+},
+{
+"div": "SC0",
+"season": 2022,
+"skew": 0.2627
+},
+{
+"div": "SC0",
+"season": 2023,
+"skew": 0.2761
+},
+{
+"div": "SC0",
+"season": 2024,
+"skew": 0.2167
+},
+{
+"div": "SC1",
+"season": 2005,
+"skew": 0.1929
+},
+{
+"div": "SC1",
+"season": 2006,
+"skew": 0.17
+},
+{
+"div": "SC1",
+"season": 2007,
+"skew": 0.2036
+},
+{
+"div": "SC1",
+"season": 2008,
+"skew": 0.2477
+},
+{
+"div": "SC1",
+"season": 2009,
+"skew": 0.2614
+},
+{
+"div": "SC1",
+"season": 2010,
+"skew": 0.2343
+},
+{
+"div": "SC1",
+"season": 2011,
+"skew": 0.2725
+},
+{
+"div": "SC1",
+"season": 2012,
+"skew": 0.2437
+},
+{
+"div": "SC1",
+"season": 2013,
+"skew": 0.1758
+},
+{
+"div": "SC1",
+"season": 2014,
+"skew": 0.1217
+},
+{
+"div": "SC1",
+"season": 2015,
+"skew": 0.0386
+},
+{
+"div": "SC1",
+"season": 2016,
+"skew": 0.1296
+},
+{
+"div": "SC1",
+"season": 2017,
+"skew": 0.2154
+},
+{
+"div": "SC1",
+"season": 2018,
+"skew": 0.2272
+},
+{
+"div": "SC1",
+"season": 2019,
+"skew": 0.2457
+},
+{
+"div": "SC1",
+"season": 2021,
+"skew": 0.2425
+},
+{
+"div": "SC1",
+"season": 2022,
+"skew": 0.315
+},
+{
+"div": "SC1",
+"season": 2023,
+"skew": 0.2422
+},
+{
+"div": "SC1",
+"season": 2024,
+"skew": 0.2018
+},
+{
+"div": "SC2",
+"season": 2005,
+"skew": 0.2259
+},
+{
+"div": "SC2",
+"season": 2006,
+"skew": 0.1722
+},
+{
+"div": "SC2",
+"season": 2007,
+"skew": 0.1613
+},
+{
+"div": "SC2",
+"season": 2008,
+"skew": 0.2184
+},
+{
+"div": "SC2",
+"season": 2009,
+"skew": 0.2153
+},
+{
+"div": "SC2",
+"season": 2010,
+"skew": 0.2519
+},
+{
+"div": "SC2",
+"season": 2011,
+"skew": 0.2368
+},
+{
+"div": "SC2",
+"season": 2012,
+"skew": 0.2005
+},
+{
+"div": "SC2",
+"season": 2013,
+"skew": 0.1571
+},
+{
+"div": "SC2",
+"season": 2014,
+"skew": 0.1942
+},
+{
+"div": "SC2",
+"season": 2015,
+"skew": 0.1522
+},
+{
+"div": "SC2",
+"season": 2016,
+"skew": 0.17
+},
+{
+"div": "SC2",
+"season": 2017,
+"skew": 0.1941
+},
+{
+"div": "SC2",
+"season": 2018,
+"skew": 0.196
+},
+{
+"div": "SC2",
+"season": 2019,
+"skew": 0.2036
+},
+{
+"div": "SC2",
+"season": 2021,
+"skew": 0.2119
+},
+{
+"div": "SC2",
+"season": 2022,
+"skew": 0.1855
+},
+{
+"div": "SC2",
+"season": 2023,
+"skew": 0.1375
+},
+{
+"div": "SC2",
+"season": 2024,
+"skew": 0.2342
+},
+{
+"div": "SC3",
+"season": 2005,
+"skew": 0.1679
+},
+{
+"div": "SC3",
+"season": 2006,
+"skew": 0.1542
+},
+{
+"div": "SC3",
+"season": 2007,
+"skew": 0.1352
+},
+{
+"div": "SC3",
+"season": 2008,
+"skew": 0.1937
+},
+{
+"div": "SC3",
+"season": 2009,
+"skew": 0.2171
+},
+{
+"div": "SC3",
+"season": 2010,
+"skew": 0.2555
+},
+{
+"div": "SC3",
+"season": 2011,
+"skew": 0.2224
+},
+{
+"div": "SC3",
+"season": 2012,
+"skew": 0.1726
+},
+{
+"div": "SC3",
+"season": 2013,
+"skew": 0.2166
+},
+{
+"div": "SC3",
+"season": 2014,
+"skew": 0.2061
+},
+{
+"div": "SC3",
+"season": 2015,
+"skew": 0.1905
+},
+{
+"div": "SC3",
+"season": 2016,
+"skew": 0.1744
+},
+{
+"div": "SC3",
+"season": 2017,
+"skew": 0.2012
+},
+{
+"div": "SC3",
+"season": 2018,
+"skew": 0.1553
+},
+{
+"div": "SC3",
+"season": 2019,
+"skew": 0.1239
+},
+{
+"div": "SC3",
+"season": 2021,
+"skew": 0.2101
+},
+{
+"div": "SC3",
+"season": 2022,
+"skew": 0.2933
+},
+{
+"div": "SC3",
+"season": 2023,
+"skew": 0.2404
+},
+{
+"div": "SC3",
+"season": 2024,
+"skew": 0.2729
+},
+{
+"div": "SP1",
+"season": 2005,
+"skew": 0.2115
+},
+{
+"div": "SP1",
+"season": 2006,
+"skew": 0.2329
+},
+{
+"div": "SP1",
+"season": 2007,
+"skew": 0.2241
+},
+{
+"div": "SP1",
+"season": 2008,
+"skew": 0.2036
+},
+{
+"div": "SP1",
+"season": 2009,
+"skew": 0.2074
+},
+{
+"div": "SP1",
+"season": 2010,
+"skew": 0.1484
+},
+{
+"div": "SP1",
+"season": 2011,
+"skew": 0.1621
+},
+{
+"div": "SP1",
+"season": 2012,
+"skew": 0.1508
+},
+{
+"div": "SP1",
+"season": 2013,
+"skew": 0.1558
+},
+{
+"div": "SP1",
+"season": 2014,
+"skew": 0.1418
+},
+{
+"div": "SP1",
+"season": 2015,
+"skew": 0.1847
+},
+{
+"div": "SP1",
+"season": 2016,
+"skew": 0.1635
+},
+{
+"div": "SP1",
+"season": 2017,
+"skew": 0.1605
+},
+{
+"div": "SP1",
+"season": 2018,
+"skew": 0.1656
+},
+{
+"div": "SP1",
+"season": 2019,
+"skew": 0.2132
+},
+{
+"div": "SP1",
+"season": 2020,
+"skew": 0.2691
+},
+{
+"div": "SP1",
+"season": 2021,
+"skew": 0.212
+},
+{
+"div": "SP1",
+"season": 2022,
+"skew": 0.2268
+},
+{
+"div": "SP1",
+"season": 2023,
+"skew": 0.2369
+},
+{
+"div": "SP1",
+"season": 2024,
+"skew": 0.2141
+},
+{
+"div": "SP1",
+"season": 2025,
+"skew": 0.2032
+},
+{
+"div": "SP2",
+"season": 2005,
+"skew": 0.3342
+},
+{
+"div": "SP2",
+"season": 2006,
+"skew": 0.3447
+},
+{
+"div": "SP2",
+"season": 2007,
+"skew": 0.2805
+},
+{
+"div": "SP2",
+"season": 2008,
+"skew": 0.2971
+},
+{
+"div": "SP2",
+"season": 2009,
+"skew": 0.2861
+},
+{
+"div": "SP2",
+"season": 2010,
+"skew": 0.3003
+},
+{
+"div": "SP2",
+"season": 2011,
+"skew": 0.2745
+},
+{
+"div": "SP2",
+"season": 2012,
+"skew": 0.2335
+},
+{
+"div": "SP2",
+"season": 2013,
+"skew": 0.2369
+},
+{
+"div": "SP2",
+"season": 2014,
+"skew": 0.2561
+},
+{
+"div": "SP2",
+"season": 2015,
+"skew": 0.2567
+},
+{
+"div": "SP2",
+"season": 2016,
+"skew": 0.2639
+},
+{
+"div": "SP2",
+"season": 2017,
+"skew": 0.2694
+},
+{
+"div": "SP2",
+"season": 2018,
+"skew": 0.2631
+},
+{
+"div": "SP2",
+"season": 2019,
+"skew": 0.307
+},
+{
+"div": "SP2",
+"season": 2020,
+"skew": 0.3933
+},
+{
+"div": "SP2",
+"season": 2021,
+"skew": 0.3611
+},
+{
+"div": "SP2",
+"season": 2022,
+"skew": 0.3171
+},
+{
+"div": "SP2",
+"season": 2023,
+"skew": 0.3192
+},
+{
+"div": "SP2",
+"season": 2024,
+"skew": 0.2932
+},
+{
+"div": "SP2",
+"season": 2025,
+"skew": 0.2783
+},
+{
+"div": "SUI",
+"season": 2013,
+"skew": 0.2283
+},
+{
+"div": "SUI",
+"season": 2014,
+"skew": 0.225
+},
+{
+"div": "SUI",
+"season": 2015,
+"skew": 0.2226
+},
+{
+"div": "SUI",
+"season": 2016,
+"skew": 0.156
+},
+{
+"div": "SUI",
+"season": 2017,
+"skew": 0.145
+},
+{
+"div": "SUI",
+"season": 2018,
+"skew": 0.179
+},
+{
+"div": "SUI",
+"season": 2019,
+"skew": 0.1833
+},
+{
+"div": "SUI",
+"season": 2020,
+"skew": 0.196
+},
+{
+"div": "SUI",
+"season": 2021,
+"skew": 0.1951
+},
+{
+"div": "SUI",
+"season": 2022,
+"skew": 0.1775
+},
+{
+"div": "SUI",
+"season": 2023,
+"skew": 0.1703
+},
+{
+"div": "SUI",
+"season": 2024,
+"skew": 0.2108
+},
+{
+"div": "SWE",
+"season": 2012,
+"skew": 0.1849
+},
+{
+"div": "SWE",
+"season": 2013,
+"skew": 0.1628
+},
+{
+"div": "SWE",
+"season": 2014,
+"skew": 0.1841
+},
+{
+"div": "SWE",
+"season": 2015,
+"skew": 0.1516
+},
+{
+"div": "SWE",
+"season": 2016,
+"skew": 0.175
+},
+{
+"div": "SWE",
+"season": 2017,
+"skew": 0.1782
+},
+{
+"div": "SWE",
+"season": 2018,
+"skew": 0.1233
+},
+{
+"div": "SWE",
+"season": 2019,
+"skew": 0.1829
+},
+{
+"div": "SWE",
+"season": 2020,
+"skew": 0.1904
+},
+{
+"div": "SWE",
+"season": 2021,
+"skew": 0.1989
+},
+{
+"div": "SWE",
+"season": 2022,
+"skew": 0.1334
+},
+{
+"div": "SWE",
+"season": 2023,
+"skew": 0.1789
+},
+{
+"div": "SWE",
+"season": 2024,
+"skew": 0.1996
+},
+{
+"div": "T1",
+"season": 2005,
+"skew": 0.1054
+},
+{
+"div": "T1",
+"season": 2006,
+"skew": 0.1687
+},
+{
+"div": "T1",
+"season": 2007,
+"skew": 0.1733
+},
+{
+"div": "T1",
+"season": 2008,
+"skew": 0.1831
+},
+{
+"div": "T1",
+"season": 2009,
+"skew": 0.132
+},
+{
+"div": "T1",
+"season": 2010,
+"skew": 0.2472
+},
+{
+"div": "T1",
+"season": 2011,
+"skew": 0.2211
+},
+{
+"div": "T1",
+"season": 2012,
+"skew": 0.2071
+},
+{
+"div": "T1",
+"season": 2013,
+"skew": 0.2195
+},
+{
+"div": "T1",
+"season": 2014,
+"skew": 0.2069
+},
+{
+"div": "T1",
+"season": 2015,
+"skew": 0.2286
+},
+{
+"div": "T1",
+"season": 2016,
+"skew": 0.2
+},
+{
+"div": "T1",
+"season": 2017,
+"skew": 0.1695
+},
+{
+"div": "T1",
+"season": 2018,
+"skew": 0.162
+},
+{
+"div": "T1",
+"season": 2019,
+"skew": 0.1741
+},
+{
+"div": "T1",
+"season": 2020,
+"skew": 0.2126
+},
+{
+"div": "T1",
+"season": 2021,
+"skew": 0.2559
+},
+{
+"div": "T1",
+"season": 2022,
+"skew": 0.2176
+},
+{
+"div": "T1",
+"season": 2023,
+"skew": 0.1782
+},
+{
+"div": "T1",
+"season": 2024,
+"skew": 0.1768
+},
+{
+"div": "T1",
+"season": 2025,
+"skew": 0.1547
+},
+{
+"div": "USA",
+"season": 2012,
+"skew": 0.2369
+},
+{
+"div": "USA",
+"season": 2013,
+"skew": 0.2017
+},
+{
+"div": "USA",
+"season": 2014,
+"skew": 0.1834
+},
+{
+"div": "USA",
+"season": 2015,
+"skew": 0.195
+},
+{
+"div": "USA",
+"season": 2016,
+"skew": 0.1358
+},
+{
+"div": "USA",
+"season": 2017,
+"skew": 0.1274
+},
+{
+"div": "USA",
+"season": 2018,
+"skew": 0.092
+},
+{
+"div": "USA",
+"season": 2019,
+"skew": 0.0879
+},
+{
+"div": "USA",
+"season": 2020,
+"skew": 0.2018
+},
+{
+"div": "USA",
+"season": 2021,
+"skew": 0.1654
+},
+{
+"div": "USA",
+"season": 2022,
+"skew": 0.1709
+},
+{
+"div": "USA",
+"season": 2023,
+"skew": 0.1636
+},
+{
+"div": "USA",
+"season": 2024,
+"skew": 0.1493
+}
+],
+"panel_stats": {
+"beta": 0.0002,
+"p": 0.7344,
+"icc": 0.6974,
+"sd_between": 0.0516,
+"sd_within": 0.034
+},
+"flb_year": [
+{
+"year": 2005,
+"ret_dog": -0.1202,
+"spread": 0.0301,
+"skew": 0.2523
+},
+{
+"year": 2006,
+"ret_dog": -0.1555,
+"spread": 0.0923,
+"skew": 0.21
+},
+{
+"year": 2007,
+"ret_dog": -0.1041,
+"spread": 0.0277,
+"skew": 0.2344
+},
+{
+"year": 2008,
+"ret_dog": -0.1103,
+"spread": 0.0739,
+"skew": 0.1874
+},
+{
+"year": 2009,
+"ret_dog": -0.1201,
+"spread": 0.0765,
+"skew": 0.223
+},
+{
+"year": 2010,
+"ret_dog": -0.1046,
+"spread": 0.0674,
+"skew": 0.22
+},
+{
+"year": 2011,
+"ret_dog": -0.0716,
+"spread": 0.0232,
+"skew": 0.2394
+},
+{
+"year": 2012,
+"ret_dog": -0.0743,
+"spread": 0.0126,
+"skew": 0.2482
+},
+{
+"year": 2013,
+"ret_dog": -0.109,
+"spread": 0.0685,
+"skew": 0.2178
+},
+{
+"year": 2014,
+"ret_dog": -0.0813,
+"spread": 0.033,
+"skew": 0.2447
+},
+{
+"year": 2015,
+"ret_dog": -0.082,
+"spread": 0.0312,
+"skew": 0.2485
+},
+{
+"year": 2016,
+"ret_dog": -0.1197,
+"spread": 0.0795,
+"skew": 0.2215
+},
+{
+"year": 2017,
+"ret_dog": -0.1066,
+"spread": 0.0631,
+"skew": 0.2245
+},
+{
+"year": 2018,
+"ret_dog": -0.0966,
+"spread": 0.0621,
+"skew": 0.2029
+},
+{
+"year": 2019,
+"ret_dog": -0.0949,
+"spread": 0.0433,
+"skew": 0.2414
+},
+{
+"year": 2020,
+"ret_dog": -0.0608,
+"spread": 0.0136,
+"skew": 0.2502
+},
+{
+"year": 2021,
+"ret_dog": -0.1085,
+"spread": 0.0637,
+"skew": 0.2445
+},
+{
+"year": 2022,
+"ret_dog": -0.087,
+"spread": 0.0437,
+"skew": 0.2265
+},
+{
+"year": 2023,
+"ret_dog": -0.1389,
+"spread": 0.1031,
+"skew": 0.2093
+},
+{
+"year": 2024,
+"ret_dog": -0.1192,
+"spread": 0.0624,
+"skew": 0.2345
+},
+{
+"year": 2025,
+"ret_dog": -0.071,
+"spread": 0.0199,
+"skew": 0.2213
+}
+]
+}

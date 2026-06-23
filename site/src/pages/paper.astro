@@ -1,0 +1,48 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import fs from 'node:fs';
+import path from 'node:path';
+import { marked } from 'marked';
+
+// draft lives in the research tree; rendered at build time
+let html = '';
+try {
+  const md = fs.readFileSync(path.resolve(process.cwd(), '../study/docs/paper/draft.md'), 'utf-8');
+  marked.setOptions({ gfm: true, breaks: false });
+  html = marked.parse(md);
+} catch (e) {
+  html = '<p>The paper draft is available in the repository under <code>study/docs/paper/draft.md</code>.</p>';
+}
+---
+<Base title="The paper — skew-dynamic" path="/paper">
+  <Nav />
+  <main class="paper">
+    <div class="container">
+      <div class="paper-head">
+        <div class="eyebrow">Working draft · RSOS target</div>
+        <p class="muted">Cold Code Labs · code <a href="https://github.com/cold-code-labs/skew-dynamic/blob/main/study/docs/paper/draft.md" target="_blank" rel="noopener">view source ↗</a> · paper licensed CC-BY-4.0</p>
+      </div>
+      <article class="paper-body" set:html={html}></article>
+    </div>
+  </main>
+  <Footer />
+</Base>
+<style is:global>
+  .paper { padding: 56px 0 96px; }
+  .paper-head { max-width: 760px; margin: 0 auto 32px; }
+  .paper-body { max-width: 760px; margin: 0 auto; font-size: 1.04rem; }
+  .paper-body h1 { font-size: clamp(2rem,4.5vw,2.9rem); margin: .2em 0 .4em; }
+  .paper-body h2 { font-size: 1.6rem; margin: 1.8em 0 .5em; padding-top: .4em; border-top: 1px solid var(--line-soft); }
+  .paper-body h3 { font-size: 1.18rem; margin: 1.5em 0 .3em; color: var(--accent); }
+  .paper-body p, .paper-body li { color: var(--ink-soft); }
+  .paper-body strong { color: var(--ink); }
+  .paper-body hr { border: 0; border-top: 1px solid var(--line); margin: 2em 0; }
+  .paper-body table { width: 100%; border-collapse: collapse; font-size: .9rem; margin: 1.2em 0; display: block; overflow-x: auto; }
+  .paper-body th, .paper-body td { border: 1px solid var(--line); padding: 7px 10px; text-align: left; }
+  .paper-body th { background: var(--surface-2); font-family: var(--mono); font-size: .8rem; }
+  .paper-body code { background: var(--surface-2); padding: 1px 5px; border-radius: 5px; font-size: .86em; }
+  .paper-body em { color: var(--ink-soft); }
+  .paper-body blockquote { margin: 1.2em 0; padding: 4px 18px; border-left: 3px solid var(--accent); color: var(--ink-soft); background: var(--surface-2); border-radius: 0 8px 8px 0; }
+</style>

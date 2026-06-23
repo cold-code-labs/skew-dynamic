@@ -1,0 +1,33 @@
+---
+import data from '../data/findings.json';
+const rows = data.panel, st = data.panel_stats;
+const W = 680, H = 380, P = { l: 48, r: 16, t: 16, b: 40 };
+const xlo = 2005, xhi = 2025, ylo = 0.02, yhi = 0.42;
+const X = (s) => P.l + ((s - xlo) / (xhi - xlo)) * (W - P.l - P.r);
+const Y = (s) => P.t + (1 - (s - ylo) / (yhi - ylo)) * (H - P.t - P.b);
+// group by division
+const byDiv = {};
+for (const r of rows) (byDiv[r.div] ??= []).push(r);
+const lines = Object.values(byDiv).map(g => g.sort((a,b)=>a.season-b.season).map(r => `${X(r.season).toFixed(1)},${Y(r.skew).toFixed(1)}`).join(' '));
+// cross-league mean per season
+const seasons = [...new Set(rows.map(r=>r.season))].sort();
+const mean = seasons.map(yr => { const v = rows.filter(r=>r.season===yr).map(r=>r.skew); return { yr, m: v.reduce((a,b)=>a+b,0)/v.length }; });
+const meanPts = mean.map(d => `${X(d.yr).toFixed(1)},${Y(d.m).toFixed(1)}`).join(' ');
+const xticks = [2006, 2011, 2016, 2021];
+const yticks = [0.1, 0.2, 0.3, 0.4];
+---
+<figure class="chart-figure">
+  <svg viewBox={`0 0 ${W} ${H}`} class="panel-svg" role="img" aria-label="League-season skewness over time">
+    {yticks.map(t => <g><line class="axis" x1={P.l} y1={Y(t)} x2={W-P.r} y2={Y(t)} stroke-opacity=".3"/><text class="tick" x={P.l-9} y={Y(t)+4} text-anchor="end">{t.toFixed(1)}</text></g>)}
+    {xticks.map(t => <text class="tick" x={X(t)} y={H-P.b+18} text-anchor="middle">{t}</text>)}
+    {lines.map(l => <polyline points={l} fill="none" stroke="var(--accent)" stroke-width="1" opacity=".16" />)}
+    <polyline points={meanPts} fill="none" stroke="var(--neg)" stroke-width="2.5" />
+    <text class="axis-label" x={W/2} y={H-6} text-anchor="middle">season</text>
+  </svg>
+  <figcaption class="chart-caption">
+    <span class="key"><span class="sw line" style="background:var(--accent);opacity:.4"></span>38 leagues</span>
+    <span class="key"><span class="sw line" style="background:var(--neg)"></span>cross-league mean</span>
+    — trend β = {st.beta>=0?'+':''}{(st.beta).toFixed(5)}/yr (p = {st.p.toFixed(2)}); {Math.round(st.icc*100)}% of variance is between-league.
+  </figcaption>
+</figure>
+<style>.panel-svg { width: 100%; height: auto; }</style>

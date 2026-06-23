@@ -1,0 +1,36 @@
+---
+const phases = [
+  { tag: 'P0', kind: 'Foundation', title: 'Freeze & reproduce', body: '205,435 matches · 38 leagues · 2005–2025, frozen by content hash. The full 00→16 pipeline reproduces every number from one command.' },
+  { tag: 'W1', kind: 'Finding', title: 'The mechanical core', body: 'Ex-ante (de-vigged) skewness +0.236 ≈ ex-post +0.230. A law-of-total-cumulants split shows the third moment is +102.6% within-match — the FLB itself.' },
+  { tag: 'W2', kind: 'Mechanism', title: 'The law, without odds', body: 'A results-only Elo measures competitiveness with no market data. The law survives (skew ~ upset rate +0.83), and odds ↔ Elo agree at +0.91.' },
+  { tag: 'W3', kind: 'Invariance', title: 'No secular trend', body: 'League×season panel: β = +0.00015/yr (p = 0.73); 70% of variance is between-league. The COVID empty-stadium shock moved skewness the predicted way.' },
+  { tag: 'W4', kind: 'Separation', title: 'Margin is orthogonal', body: 'Best price collapses the overround 1.067→1.009 (return −4.8%→~0), yet skewness barely moves. Bookmakers compete on margin, not asymmetry.' },
+  { tag: 'W5', kind: 'Robustness', title: 'A second market', body: 'The over/under-2.5 binary market reproduces the identity (within-match 99.6%) — the core is not an artefact of the 1X2 structure.' },
+  { tag: 'P1', kind: 'Reframe', title: 'Intra-regime invariance', body: 'Just one structural break across 38 leagues (COVID); EPL zero. The regime shocks the literature cites predate our window — invariance is intra-regime.' },
+  { tag: 'P2', kind: 'Hardening', title: 'Standings-based balance', body: 'Noll-Scully, HHI* and Theil — odds-free, from final tables — reproduce the law (−0.63 / −0.59 / −0.48). Gini dropped (Utt & Fort).' },
+  { tag: 'P3', kind: 'Theory', title: 'The law, derived', body: 'An ordered-probit strength model predicts each league’s third moment from its first at r = +0.90 (RMSE 0.024). The leagues lie on the derived curve.' },
+  { tag: 'P4', kind: 'Confound', title: 'A stable bias', body: 'No significant FLB drift over 20 years; ex-ante and ex-post coincide yearly (|diff| 0.015). The invariance is not an artefact of a moving bias.' },
+  { tag: 'P5', kind: 'Positioning', title: 'Against the literature', body: 'Nearest analog (Csató) stops at the mean; we own the third moment. Adversarially-verified review anchors every claim.' },
+];
+---
+<ol class="timeline">
+  {phases.map(p => (
+    <li class="reveal">
+      <span class="dot"></span>
+      <div class="tl-head"><span class="tag">{p.tag}</span><span class="kind">{p.kind}</span></div>
+      <h3>{p.title}</h3>
+      <p>{p.body}</p>
+    </li>
+  ))}
+</ol>
+<style>
+  .timeline { list-style: none; margin: 0; padding: 0; position: relative; }
+  .timeline::before { content: ''; position: absolute; left: 7px; top: 6px; bottom: 6px; width: 2px; background: linear-gradient(var(--accent-soft), var(--line)); }
+  .timeline li { position: relative; padding: 0 0 30px 38px; }
+  .dot { position: absolute; left: 0; top: 4px; width: 16px; height: 16px; border-radius: 50%; background: var(--surface); border: 3px solid var(--accent); box-shadow: 0 0 0 4px var(--bg); }
+  .tl-head { display: flex; align-items: center; gap: 10px; margin-bottom: 2px; }
+  .tag { font-family: var(--mono); font-size: .72rem; font-weight: 500; color: #fff; background: var(--navy); padding: 2px 8px; border-radius: 6px; letter-spacing: .04em; }
+  .kind { font-family: var(--mono); font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); }
+  .timeline h3 { font-size: 1.12rem; margin: 2px 0 4px; }
+  .timeline p { color: var(--ink-soft); margin: 0; font-size: .96rem; max-width: 64ch; }
+</style>

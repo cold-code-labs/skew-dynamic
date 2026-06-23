@@ -1,0 +1,65 @@
+---
+import data from '../data/findings.json';
+const m = data.meta, h = data.headline;
+// decorative identity curve (1-2p)/sqrt(p(1-p)) sampled for the backdrop
+const W = 760, H = 420;
+const pts = [];
+for (let i = 0; i <= 120; i++) {
+  const p = 0.18 + (0.64 * i) / 120;
+  const s = (1 - 2 * p) / Math.sqrt(p * (1 - p));
+  const x = ((p - 0.18) / 0.64) * W;
+  const y = H / 2 - (s / 2.2) * (H / 2);
+  pts.push(`${x.toFixed(1)},${y.toFixed(1)}`);
+}
+---
+<header class="hero dark" id="top">
+  <svg class="hero-bg" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <defs>
+      <linearGradient id="cv" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#2f7fc7" stop-opacity="0"/>
+        <stop offset=".5" stop-color="#4a97d4" stop-opacity=".9"/>
+        <stop offset="1" stop-color="#9ec7e8" stop-opacity=".2"/>
+      </linearGradient>
+    </defs>
+    <line x1="0" y1={H/2} x2={W} y2={H/2} stroke="#1d3a5f" stroke-width="1"/>
+    <polyline points={pts.join(' ')} fill="none" stroke="url(#cv)" stroke-width="2.5"/>
+  </svg>
+
+  <div class="container hero-inner">
+    <div class="eyebrow">Cold Code Labs · open research</div>
+    <h1>The market's risk asymmetry is <span class="hl">inherited from the sport</span>, not produced by pricing.</h1>
+    <p class="lede">
+      The skewness of football betting returns is not a temporal process — it is a
+      <strong>structural invariant</strong>. We show it is the algebraic image of the
+      favourite–longshot bias, fixed by each league's competitiveness, and stable
+      across two decades.
+    </p>
+    <div class="hero-cta">
+      <a class="btn btn-primary" href="#finding">See the finding ↓</a>
+      <a class="btn btn-ghost ghost-d" href="/paper">Read the paper</a>
+      <a class="btn btn-ghost ghost-d" href="https://github.com/cold-code-labs/skew-dynamic" target="_blank" rel="noopener">Code & data ↗</a>
+    </div>
+
+    <div class="hero-stats">
+      <div><span class="stat-num">{h.within_frac >= 1 ? '≈100' : Math.round(h.within_frac*100)}%</span><label>within-match — the mechanical core</label></div>
+      <div><span class="stat-num">+{h.corr_elo_odds}</span><label>odds ↔ results-based structure</label></div>
+      <div><span class="stat-num">β≈0</span><label>secular trend over 20 years</label></div>
+      <div><span class="stat-num">{m.n_matches.toLocaleString('en')}</span><label>matches · {m.leagues} leagues · {m.date_min.slice(0,4)}–{m.date_max.slice(0,4)}</label></div>
+    </div>
+  </div>
+</header>
+<style>
+  .hero { position: relative; overflow: hidden; padding: clamp(90px,15vh,160px) 0 clamp(56px,8vh,96px); }
+  .hero-bg { position: absolute; inset: 0; width: 100%; height: 100%; opacity: .5; mask-image: linear-gradient(90deg, transparent, #000 30%, #000 70%, transparent); }
+  .hero-inner { position: relative; }
+  .hero h1 { max-width: 16ch; margin-top: 18px; }
+  .hl { background: linear-gradient(120deg, var(--ice), #fff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .hero .lede { max-width: 56ch; margin-top: 8px; }
+  .hero-cta { display: flex; flex-wrap: wrap; gap: 12px; margin: 30px 0 0; }
+  .ghost-d { color: #d8e6f5; border-color: #244463; }
+  .ghost-d:hover { border-color: var(--ice); background: rgba(255,255,255,.04); }
+  .hero-stats { display: grid; grid-template-columns: repeat(2,1fr); gap: 24px 32px; margin-top: 56px; padding-top: 32px; border-top: 1px solid #1d3a5f; }
+  .hero-stats .stat-num { display: block; font-size: clamp(1.7rem,3.5vw,2.4rem); color: #fff; }
+  .hero-stats label { display: block; font-size: .82rem; color: #8fa8c4; margin-top: 4px; max-width: 24ch; }
+  @media (min-width: 760px) { .hero-stats { grid-template-columns: repeat(4,1fr); } }
+</style>
