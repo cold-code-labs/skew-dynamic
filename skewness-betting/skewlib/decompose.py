@@ -25,6 +25,27 @@ def by_odds_bucket(df, edges=(0, .4, .45, .5, .55, .6, .7, 1.0)):
     return pd.DataFrame(rows)
 
 
+def flb_by_year(df, min_n=500):
+    """Barômetro do FLB por ano: retorno do azarão (mais negativo = FLB mais
+    forte), spread favorito−azarão, e erro de calibração do favorito (win% real −
+    p_fav implícita). Testa se o próprio viés deriva no tempo (Angelini &
+    De Angelis 2019), o que confundiria o teste de invariância da skewness."""
+    d = df.copy(); d["year"] = d.date.dt.year
+    rows = []
+    for y, g in d.groupby("year"):
+        if len(g) < min_n:
+            continue
+        row = {"year": int(y), "n": len(g),
+               "ret_dog": float(g.ret_dog.mean()),
+               "ret_fav": float(g.ret_fav.mean()),
+               "flb_spread": float(g.ret_fav.mean() - g.ret_dog.mean()),
+               "skew_expost": float(skew(g.ret_fav))}
+        if "p_fav_dv" in g:
+            row["calib_err"] = float((g.ret_fav > 0).mean() - g.p_fav_dv.mean())
+        rows.append(row)
+    return pd.DataFrame(rows)
+
+
 def by_league(df, min_games=2000):
     """Skewness por liga + previsibilidade média (p_fav)."""
     rows = []

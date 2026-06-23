@@ -296,6 +296,19 @@ window-overlap artefact: with disjoint windows the series is white noise
 quantifies how much within-league variation is mere sampling noise. Ex-ante and
 ex-post measures agree throughout.
 
+Finally, we guard against a specific confound: if the favourite–longshot bias
+itself drifted over the sample — recent work reports a weakening of the bias in
+European data [Angelini & De Angelis 2019] — a moving bias could masquerade as
+skewness invariance. It does not. Over 2005–2025 the bias barometer (the underdog
+return) shows no significant trend (correlation with year +0.27, 95% CI
+[−0.23, +0.67]; a faint, non-significant tendency in the reported direction), the
+favourite−underdog return spread is flat (corr −0.02), and the favourite's annual
+calibration error stays within [−0.004, +0.012]. Ex-ante and ex-post skewness
+coincide every year (mean absolute difference 0.015). The invariance is therefore
+not an artefact of a time-varying bias; and because skewness is mechanically set
+by the probability distribution, it is in any case robust to mild calibration
+drift.
+
 ## 7. Discussion
 
 Our results recast a familiar object. The favourite–longshot bias is usually read

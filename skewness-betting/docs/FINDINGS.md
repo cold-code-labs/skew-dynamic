@@ -273,3 +273,19 @@ agrupada S(σ_L)=E[m₃(p)]/E[σ²(p)]^{3/2}.
   (p_fav 0.44..0.76), bracketando o empírico.
 
 Artefatos: `skewlib/model.py`, `analysis/15_model.py`, `outputs/fig/f5_model.png`.
+
+## Fase P4 — Estabilidade do FLB no tempo (Angelini confound) (2026-06-23)
+Angelini & De Angelis (2019) acham FLB enfraquecendo em dados europeus recentes;
+um viés em movimento poderia fingir invariância de skewness. Testado 2005–2025:
+
+- **FLB sem tendência significativa:** ret_dog (barômetro) corr(ano)=+0.27
+  [−0.23,+0.67] (IC inclui 0; leve hint na direção de Angelini, não-significativo);
+  flb_spread corr −0.02; calib_err corr −0.13. Δ20a do spread ≈ −0.002.
+- **Calibração ano a ano intacta:** |skew_exante − skew_expost| médio = **0.015**;
+  erro de calibração do favorito ∈ [−0.004,+0.012] todo ano.
+- **Conclusão:** a invariância de skewness **não** é artefato de um FLB driftando
+  — o viés é estável e a skewness é mecânica na distribuição de p, robusta a
+  micro-drift de calibração.
+
+Artefatos: `skewlib/decompose.py` (flb_by_year), `analysis/16_flb_stability.py`,
+`outputs/flb_by_year.csv`.

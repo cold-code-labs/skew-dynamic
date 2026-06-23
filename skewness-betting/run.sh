@@ -76,6 +76,7 @@ for script in \
   analysis/13_regimes.py \
   analysis/14_balance_indices.py \
   analysis/15_model.py \
+  analysis/16_flb_stability.py \
   analysis/12_figures.py
 do
   echo
