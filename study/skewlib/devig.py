@@ -70,6 +70,30 @@ def _shin_z_vec(r, bsum, iters=80):
     return 0.5 * (lo + hi)
 
 
+def devig_odds(O, method=None):
+    """De-vig genérico para uma MATRIZ de odds (n_eventos, k_resultados) com k
+    arbitrário — a versão sport-agnóstica de `devig_frame`. Mesma matemática
+    (Shin vetorizado / multiplicative / power); devolve P (n_eventos, k) somando 1
+    por linha. Usado pela camada canônica (mercados de 2, 3, … resultados)."""
+    method = method or C.DEVIG_METHOD
+    O = np.asarray(O, float)
+    r = 1.0 / O
+    bsum = r.sum(axis=1)
+    if method == "shin":
+        z = np.zeros(len(r))
+        vig = bsum > 1.0
+        if vig.any():
+            z[vig] = _shin_z_vec(r[vig], bsum[vig])
+        zc = z[:, None]
+        P = (np.sqrt(zc * zc + 4 * (1 - zc) * r * r / bsum[:, None]) - zc) / (2 * (1 - zc))
+        return np.where(bsum[:, None] > 1.0, P, r / bsum[:, None])
+    if method == "multiplicative":
+        return r / bsum[:, None]
+    if method == "power":
+        return np.array([power(row) for row in O])
+    raise ValueError(f"método de-vig desconhecido: {method}")
+
+
 def devig_frame(df, method=None, cols=("OddHome", "OddDraw", "OddAway")):
     """Adiciona p_H, p_D, p_A de-vigadas + `overround` (e `shin_z` no Shin)."""
     method = method or C.DEVIG_METHOD

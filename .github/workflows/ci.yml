@@ -26,7 +26,7 @@ jobs:
           pip install pytest
       - name: Engine import smoke
         working-directory: study
-        run: python -c "import skewlib.exante, skewlib.skewmeter, skewlib.model; print('skewlib OK')"
-      - name: API /measure tests
+        run: python -c "import skewlib.exante, skewlib.skewmeter, skewlib.model, skewlib.canonical; print('skewlib OK')"
+      - name: Tests (canonical core + /measure API)
         working-directory: study
-        run: python -m pytest api/test_api.py -q
+        run: python -m pytest tests/test_canonical.py api/test_api.py -q

@@ -12,6 +12,11 @@ competitividade da liga. Ver `docs/FINDINGS.md` para o estado atual.
   e importam de `skewlib` — **não duplicar lógica** nos scripts.
 - Adicionar capacidade nova = função em `skewlib`, depois um script fino que a usa.
 - Parâmetros (janela, passo, recorte) só em `skewlib/config.py`.
+- **Multi-esporte:** o núcleo (`skewlib/canonical.py` + `skewmeter`) é sport-agnóstico
+  e consome a tabela canônica (`docs/DATA-SCHEMA.md`). Adicionar um esporte/mercado =
+  um adaptador em `skewlib/adapters/` (mapeia bruto→canônico + taxonomia), registrado
+  em `adapters/__init__.py`. **Não** ramificar o núcleo por esporte. O futebol delega
+  a de-vig ao caminho congelado → números bit-idênticos (asserção em `47_canonical.py`).
 
 ## Dados
 - `data/` nunca é commitado. Apontar `config.DATA_PATH` para o dump local.

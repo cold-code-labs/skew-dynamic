@@ -105,6 +105,7 @@ for script in \
   analysis/44_var.py \
   analysis/45_skewmeter.py \
   analysis/46_bettype.py \
+  analysis/47_canonical.py \
   analysis/12_figures.py
 do
   echo
