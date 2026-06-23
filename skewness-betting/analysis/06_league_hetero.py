@@ -7,9 +7,10 @@ def main():
     print("E — skewness por liga:")
     tab = decompose.by_league(df)
     print(tab.to_string(index=False))
-    print(f"\ndispersão: média={tab.skew.mean():.3f} sd={tab.skew.std():.3f} "
-          f"range=[{tab.skew.min():.2f},{tab.skew.max():.2f}]")
-    print(f"corr(previsibilidade da liga, skewness) = {tab.p_fav_mean.corr(tab.skew):+.3f}")
+    sk = tab["skew"]  # tab.skew colidiria com o método DataFrame.skew()
+    print(f"\ndispersão: média={sk.mean():.3f} sd={sk.std():.3f} "
+          f"range=[{sk.min():.2f},{sk.max():.2f}]")
+    print(f"corr(previsibilidade da liga, skewness) = {tab.p_fav_mean.corr(sk):+.3f}")
 
     print("\nF — ligas ativas por ano (origem do blip):")
     df = df.copy(); df["yr"] = df.date.dt.year

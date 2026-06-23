@@ -1,0 +1,12 @@
+{
+  "frozen_utc": "2026-06-23T05:31:49Z",
+  "source_url": "https://raw.githubusercontent.com/xgabora/Club-Football-Match-Data-2000-2025/main/data/Matches.csv",
+  "source_note": "xgabora mirror = football-data.co.uk normalizado (main + extra/SA leagues), 2000-2025",
+  "sha256": "6905ca5324df95282fefcdc2b320caed40745254055f38a3e5a768b8a073ec2b",
+  "bytes": 43632197,
+  "raw_rows": 230557,
+  "analysis_rows_ge2005": 205435,
+  "leagues": 38,
+  "date_min": "2005-01-01",
+  "date_max": "2025-06-01"
+}
