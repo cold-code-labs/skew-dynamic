@@ -113,6 +113,18 @@ PHASES = [
     {"id": "F3", "frente": "Team structure", "tag": "evidence/frente-F", "commit": "e5b04e1",
      "title": "Decomposição por time (dispersão de força)", "blocks": ["31_team_decomposition"],
      "figures": ["f19"], "metrics": {"corr_elo_teamskew": -0.444, "corr_elosd_leagueskew": -0.601}},
+    {"id": "H2", "frente": "Open vs closed", "tag": "evidence/H2", "commit": "e0bc9fd",
+     "title": "Liga aberta vs fechada (MLS na lei)", "blocks": ["32_open_vs_closed"],
+     "figures": ["f20"], "metrics": {"mls_p_fav": 0.503, "mls_skew": 0.162,
+     "mls_pfav_rank": 22, "mls_residual": -0.059}},
+    {"id": "C3", "frente": "Staking", "tag": "evidence/C3", "commit": "e0bc9fd",
+     "title": "Kelly/staking sob a estrutura de skewness", "blocks": ["33_kelly_staking"],
+     "figures": ["f21"], "metrics": {"frac_positive_ev": 0.0, "skew_term_dog": 0.598,
+     "skew_term_fav": 0.010}},
+    {"id": "E3", "frente": "Theory", "tag": "evidence/E3", "commit": "e0bc9fd",
+     "title": "Calibração por liga (cutoff de empate endógeno)", "blocks": ["34_per_league_calibration"],
+     "figures": ["f22"], "metrics": {"corr_sigma_pfav": 0.874, "corr_c_draw": 0.906,
+     "skew_model_r": 0.905}},
 ]
 
 

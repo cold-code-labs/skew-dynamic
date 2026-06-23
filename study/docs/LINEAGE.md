@@ -6,7 +6,7 @@
 > 38 ligas). Volte a qualquer estado com
 > `git checkout <tag>`; audite mudança de resultado com `--check`.
 
-**HEAD na geração:** `e5b04e16`  ⚠️ working tree DIRTY
+**HEAD na geração:** `e0bc9fd8`  ⚠️ working tree DIRTY
 
 | Fase | Frente | Achado | Blocos | Figuras | Números-título | Commit | Tag |
 |------|--------|--------|--------|---------|----------------|--------|-----|
@@ -35,6 +35,9 @@
 | **F1** | Within-season | Sazonalidade intra-temporada (drift leve) | 29_intraseason | f17 | global_span=0.0149 · shift_mean=-0.0078 · shift_ci_lo=-0.0131 · shift_ci_hi=-0.0015 | `e5b04e1` (2026-06-23) | `evidence/frente-F` |
 | **F2** | Tail cancellation | Contribuição ao M₃ por competitividade do jogo | 30_game_contribution | f18 | share_weak_fav=1.26 · share_strong_fav=-0.26 | `e5b04e1` (2026-06-23) | `evidence/frente-F` |
 | **F3** | Team structure | Decomposição por time (dispersão de força) | 31_team_decomposition | f19 | corr_elo_teamskew=-0.444 · corr_elosd_leagueskew=-0.601 | `e5b04e1` (2026-06-23) | `evidence/frente-F` |
+| **H2** | Open vs closed | Liga aberta vs fechada (MLS na lei) | 32_open_vs_closed | f20 | mls_p_fav=0.503 · mls_skew=0.162 · mls_pfav_rank=22 · mls_residual=-0.059 | `e0bc9fd` (2026-06-23) | `evidence/H2` |
+| **C3** | Staking | Kelly/staking sob a estrutura de skewness | 33_kelly_staking | f21 | frac_positive_ev=0.0 · skew_term_dog=0.598 · skew_term_fav=0.01 | `e0bc9fd` (2026-06-23) | `evidence/C3` |
+| **E3** | Theory | Calibração por liga (cutoff de empate endógeno) | 34_per_league_calibration | f22 | corr_sigma_pfav=0.874 · corr_c_draw=0.906 · skew_model_r=0.905 | `e0bc9fd` (2026-06-23) | `evidence/E3` |
 
 ## Tags de versionamento (`evidence/*`)
 Uma tag anotada por marco de evidência aponta o commit que estabeleceu
