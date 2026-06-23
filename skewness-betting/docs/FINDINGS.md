@@ -148,3 +148,23 @@ overround 1.068). Fechada, sem ruído amostral.
 
 Artefatos: `skewlib/devig.py`, `skewlib/exante.py`, `analysis/07_devig_exante.py`,
 `outputs/exante_by_league.csv`.
+
+## Fase 2 / W2 — Mecanismo odds-free: a lei não é tautológica (2026-06-23)
+Competitividade medida por **Elo construído só de resultados** (sem odds; passo
+cronológico multi-liga + mapa rating-diff→(P_H,P_D,P_A) por MNLogit calibrado
+nos resultados — P(H) 0.444 = real 0.444, P(D) 0.264 = real 0.264).
+
+- **Odds e Elo medem a MESMA estrutura:** corr(elo_pfav, p_fav_dv)=**+0.909**
+  [0.83,0.97]. As odds apenas *leem* a competitividade esportiva (eficiência
+  estrutural) — não a criam.
+- **A lei skewness=f(competitividade) SOBREVIVE sem odds:**
+  skew ~ upset_rate **+0.826** [0.71,0.91] · skew ~ elo_entropy **+0.719**
+  [0.50,0.89] · skew ~ elo_pfav **−0.748** · skew ~ elo_disp **−0.731**. Todas
+  com IC95% longe de zero. Referência circular (odds p_fav): −0.900.
+- **Atenuação −0.90→−0.75/+0.83 = ruído de medida** no proxy Elo (errors-in-
+  variables), não evidência contra a lei: corr(elo,odds)=0.91 mostra que medem
+  o mesmo latente. A assimetria de risco é **herdada da estrutura competitiva**
+  da liga, não do apreçamento.
+
+Artefatos: `skewlib/elo.py`, `skewlib/stats.py` (bootstrap_corr, ols),
+`analysis/08_mechanism_elo.py`, `outputs/mechanism_elo.csv`.

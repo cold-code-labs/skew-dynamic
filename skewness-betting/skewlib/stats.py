@@ -38,6 +38,27 @@ def ar1(ser):
     return {"phi": phi, "phi_p": float(m.pvalues[1]), "half_life": hl}
 
 
+def bootstrap_corr(x, y, B=5000, seed=42):
+    """Pearson r + IC bootstrap (reamostra pares). Para n pequeno (ligas)."""
+    x = np.asarray(x, float); y = np.asarray(y, float)
+    rng = np.random.default_rng(seed); n = len(x)
+    r = float(np.corrcoef(x, y)[0, 1])
+    cs = [np.corrcoef(x[i], y[i])[0, 1]
+          for i in (rng.integers(0, n, n) for _ in range(B))]
+    lo, hi = np.percentile(cs, [2.5, 97.5])
+    return {"r": r, "ci_lo": float(lo), "ci_hi": float(hi)}
+
+
+def ols(y, x):
+    """Regressão simples y~x: slope, intercepto, R², r. (1 regressor)."""
+    x = np.asarray(x, float); y = np.asarray(y, float)
+    b, a = np.polyfit(x, y, 1)
+    yhat = a + b * x
+    ss = ((y - yhat) ** 2).sum(); st = ((y - y.mean()) ** 2).sum()
+    return {"slope": float(b), "intercept": float(a),
+            "r2": float(1 - ss / st), "r": float(np.corrcoef(x, y)[0, 1])}
+
+
 def breakpoints(ser, min_size=20, pen_mult=2.0):
     """Quebras estruturais endógenas na média (PELT, modelo l2)."""
     import ruptures as rpt
