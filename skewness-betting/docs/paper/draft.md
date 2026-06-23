@@ -20,14 +20,15 @@ moment). The cross-league level tracks competitiveness, and the relation
 survives a competitiveness measure built **without odds** — a results-only Elo
 (skewness vs upset rate r = +0.83) — while odds- and Elo-based favourite strength
 agree at r = 0.91, implying the market merely *reads* the sporting structure. A
-league×season panel shows **no secular trend** over twenty years
-(β = +0.00015/yr, p = 0.73; 70% of variance is between-league), and a COVID-19
-natural experiment (empty-stadium home-advantage collapse) moves skewness in the
+league×season panel shows **no secular trend** within the modern competitive
+regime spanning our 2005–2025 window (β = +0.00015/yr, p = 0.73; a single
+structural break across 38 leagues, COVID-19 in France; 70% of variance is
+between-league), and the COVID-19 empty-stadium shock moves skewness in the
 predicted direction. Bookmaker margin is orthogonal to asymmetry, and the
 identity reappears in the binary over/under-2.5 market. We conclude that the
-market's risk asymmetry is **inherited from the competitive structure of the
-sport**, not produced by pricing — a structural invariant stable across two
-decades of market growth.
+market's risk asymmetry is a **league-specific structural baseline inherited from
+the competitive structure of the sport**, stable within a competitive regime
+rather than produced by the pricing of it.
 
 **Keywords:** skewness; favourite–longshot bias; betting markets; market
 efficiency; implied probabilities; structural invariance.
@@ -66,10 +67,17 @@ matches. This converts the natural objection ("isn't this tautological?") into
 the result itself. Second, we establish the **structural law** skewness =
 *f*(competitiveness) using a competitiveness measure constructed **without any
 market information** (a results-only Elo), breaking the circularity that would
-otherwise undermine the claim. Third, we document **temporal invariance** across
-twenty years as a statement about market efficiency and microstructure: despite
-the enormous growth of online betting, exchanges and algorithmic pricing over
-this period, the risk-asymmetry structure of the market did not move.
+otherwise undermine the claim. Third, we document **intra-regime temporal
+invariance** as a statement about market efficiency and microstructure: despite
+the enormous growth of online betting, exchanges and algorithmic pricing over this
+period, the risk-asymmetry structure of the market did not move. We are careful
+here: the competitive-balance literature documents *real* regime breaks in English
+football tied to institutional shocks — the Champions League expansion (1994/95),
+the Bosman ruling (1995) and rising revenue inequality around 2003 [Lee & Fort
+2012; Basini et al. 2023]. These all predate our ≥2005 sample, which therefore
+sits within a single modern regime; our claim is invariance of a league-specific
+baseline *within* that regime, not atemporality, and we test for within-window
+breaks directly.
 
 ## 2. Data
 
@@ -189,6 +197,17 @@ trendless and mean-reverting — consistent with the white-noise dynamics found 
 the time-series tests (variance ratios 0.94/0.94/1.00; AR(1) φ = −0.06, p = 0.39).
 The structural league invariant dominates the temporal component roughly 2:1.
 
+We test directly for within-window regime breaks. A conservative PELT search on
+each league's season-by-season series finds a *single* break across all 38
+leagues — France 2020 (a −0.064 shift, i.e. COVID) — with no common break year
+across leagues, and zero breaks for the English top flight (E0: mean 0.165,
+sd 0.027). This is consistent with, not contrary to, the competitive-balance
+literature: the regime breaks identified for English football [Lee & Fort 2012;
+Basini et al. 2023] are tied to shocks (Bosman, the Champions League expansion,
+the early-2000s revenue divergence) that predate our sample, so 2005–2025 is
+effectively a single regime. The invariance we document is therefore an
+*intra-regime* property of a league-specific baseline.
+
 As a natural experiment, the COVID-19 empty-stadium seasons sharply reduced home
 advantage (home-win rate 0.447 → 0.417 in 2020). The structural law predicts that
 weaker home favourites should shift the probability distribution toward parity and
@@ -271,9 +290,13 @@ Limitations. Competitiveness is a latent construct; our Elo proxy, though odds-
 free, is noisier than the odds themselves, attenuating the estimated law. Team
 identities are matched by name across a global pool, which may conflate rare
 homonyms. The dataset is a normalised mirror; primary-source provenance from
-football-data.co.uk is a natural pre-submission step. Finally, our evidence is
-from football; whether the same invariance holds in sports with different
-competitive structures (tennis, basketball) is left for external validation.
+football-data.co.uk is a natural pre-submission step. Our window is one
+competitive regime by construction; extending the odds record back through the
+mid-1990s shocks would let us test whether the *baseline itself* shifts across
+regimes (the prediction being that it does, in the direction of the documented
+competitive-balance changes). Finally, our evidence is from football; whether the
+same invariance holds in sports with different competitive structures (tennis,
+basketball) is left for external validation.
 
 ## 8. Conclusion
 
@@ -281,7 +304,8 @@ The skewness of football betting returns is a structural invariant. It is, to
 within sampling error, the algebraic image of the win-probability distribution
 (the favourite–longshot bias); its league-level value is fixed by sporting
 competitiveness — a relation that survives an odds-free measure of competitiveness
-— and it shows no secular drift over twenty years. Bookmaker margin is orthogonal
+— and it shows no secular drift within the modern competitive regime that spans
+our window. Bookmaker margin is orthogonal
 to it, and the identity holds in a second, binary market. The market's risk
 asymmetry is inherited from the sport, not produced by the pricing of it.
 

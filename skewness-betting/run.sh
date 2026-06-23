@@ -73,6 +73,7 @@ for script in \
   analysis/09_panel_temporal.py \
   analysis/10_overunder.py \
   analysis/11_margin_robustness.py \
+  analysis/13_regimes.py \
   analysis/12_figures.py
 do
   echo

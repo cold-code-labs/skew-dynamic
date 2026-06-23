@@ -86,6 +86,26 @@ def per_league_trends(panel, min_seasons=8):
     return pd.DataFrame(rows)
 
 
+def league_breaks(panel, min_seasons=10, pen_mult=3.0):
+    """Quebras estruturais (PELT) na série de skewness de CADA liga + o salto de
+    nível. Penalidade conservadora p/ não sobre-segmentar séries curtas (~20
+    pontos). Usado para distinguir mudança de regime real de ruído idiossincrático."""
+    import ruptures as rpt
+    rows = []
+    for lg, g in panel.groupby("Division"):
+        g = g.sort_values("season")
+        if len(g) < min_seasons:
+            continue
+        y = g.skew_exante.values
+        bk = rpt.Pelt(model="l2", min_size=4).fit(y).predict(
+            pen=np.log(len(y)) * y.var() * pen_mult)[:-1]
+        for b in bk:
+            rows.append({"Division": lg, "break_season": int(g.season.values[b]),
+                         "shift": float(y[b:].mean() - y[:b].mean()),
+                         "seasons": len(g)})
+    return pd.DataFrame(rows)
+
+
 def covid_vignette(panel, year=2020):
     """Desvio da skewness de `year` vs a média da própria liga (em SD da liga)."""
     rows = []

@@ -218,3 +218,22 @@ Artefatos: `skewlib/overunder.py`, `analysis/10_overunder.py`, `outputs/overunde
   artefato da escolha de de-vig.
 
 Artefatos: `skewlib/exante.py` (market_skew), `analysis/11_margin_robustness.py`.
+
+## Fase P1 — Reframe: invariância INTRA-REGIME (2026-06-23)
+A literatura (Lee & Fort 2012; Basini 2023; ver `docs/LITERATURA.md`) acha
+quebras de regime **reais** na competitividade da EPL ligadas a choques
+institucionais (Champions League 94/95, Bosman 95, desigualdade de receita
+~2003) — **todos anteriores** ao recorte ≥2005. Reposicionamos a tese de
+"constante atemporal" para **baseline estrutural específico-da-liga, estável
+DENTRO do regime competitivo**.
+
+- **Teste de quebras intra-janela (PELT conservador):** só **1 quebra em 38
+  ligas** (F1/França 2020 = COVID, salto −0.064); **nenhum ano comum** de quebra
+  (máx 1 liga/ano) → sem regime market-wide em 2005–2025.
+- **EPL (E0):** **0 quebras** no recorte; média 0.165, sd 0.027 — estável
+  intra-regime, coerente com os choques de regime da EPL serem pré-2005.
+- **Conclusão:** 2005–2025 ≈ regime moderno único; "sem tendência" (β≈0) é
+  **invariância intra-regime**, não atemporalidade absoluta. Confronta Lee &
+  Fort/Basini de frente e os usa como moldura — a contra-evidência vira aliada.
+
+Artefatos: `skewlib/panel.py` (league_breaks), `analysis/13_regimes.py`.
