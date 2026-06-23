@@ -1,10 +1,9 @@
 # skew-dynamic — build the Astro site, serve static via nginx
 FROM node:22-alpine AS build
 WORKDIR /app
-RUN corepack enable
 COPY site/package.json site/pnpm-lock.yaml* ./site/
 WORKDIR /app/site
-RUN pnpm install --no-frozen-lockfile
+RUN corepack enable && corepack prepare pnpm@9.15.0 --activate && pnpm install --frozen-lockfile
 WORKDIR /app
 COPY site ./site
 COPY study/docs ./study/docs
