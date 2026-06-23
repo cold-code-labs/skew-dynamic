@@ -755,6 +755,7 @@ Artefatos: `skewlib/extras.py` (shannon_entropy, entropy_by_league),
 
 > **2ª rodada no dataset (I–N) concluída** (2026-06-23): cross-model Poisson,
 > dinâmica HT→FT, diversificação, HFA secular, cauda realizada, entropia+co-momento.
-> 36 fases no ledger. O dataset congelado está agora muito amplamente explorado;
+> 34 fases no ledger (35 cards no timeline do site). O dataset congelado está agora
+> muito amplamente explorado;
 > fronteiras restantes exigem dado externo (outros esportes, odds de abertura,
 > mudanças de regra). Lineage completo em `lineage.json`/`docs/LINEAGE.md`.
