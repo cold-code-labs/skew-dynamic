@@ -685,3 +685,22 @@ prob de vitória do favorito pré-jogo se atualiza com o placar do HT, e a skewn
 Artefatos: `skewlib/inplay.py` (fav_state, conditional_table, martingale_check),
 `analysis/36_inplay_resolution.py`, `outputs/inplay_conditional.csv`,
 `outputs/fig/f24_inplay.png`.
+
+## Fase K — Diversificação: a skewness é fenômeno de aposta única (2026-06-23)
+A skewness padronizada do retorno MÉDIO de N apostas (quase) independentes escala
+skew(X)/√N. Uma banca diversificada tende ao gaussiano; a aposta isolada é
+fortemente assimétrica.
+
+- **Aposta única:** skew realizada favorito **+0.230**, azarão **+2.254**
+  (lotérica). O retorno médio de N apostas decai como skew/√N (empírico ≈ previsto).
+- **Diversificar mata a assimetria:** favorito vira ~gaussiano (skew<0.1) em **~6**
+  apostas; o azarão precisa de **~509** (muito mais skewed). O sindicato
+  diversificado vê retornos ~gaussianos — só o EV negativo.
+- **Conclusão:** a assimetria que o apostador "ama" (Golec-Tamarkin) é da aposta
+  ISOLADA; ela some sob diversificação. O FLB sobrevive porque o apostador
+  RECREATIVO concentra poucas apostas lotéricas — o canal microeconômico que
+  sustenta o viés ser EV-negativo (complementa C3).
+
+Artefatos: `skewlib/portfolio.py` (skew_decay, n_to_gaussian),
+`analysis/37_diversification.py`, `outputs/diversification.csv`,
+`outputs/fig/f25_diversification.png`.

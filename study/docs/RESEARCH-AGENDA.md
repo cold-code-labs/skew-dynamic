@@ -165,12 +165,11 @@ parâmetros de preferência (CPT) são eles próprios invariantes.
 > skew −3.91; calibração martingale |p0−q|=0.0035. O núcleo mecânico é DINÂMICO
 > (vale a cada estado de info). `skewlib/inplay.py`, `analysis/36_inplay_resolution.py`.
 
-## Frente K — Diversificação / portfólio  [dataset]
-A skewness é fenômeno de aposta ÚNICA? Para N apostas (quase) independentes, a
-skewness padronizada do retorno médio escala ~1/√N → uma banca diversificada de
-favoritos é ~gaussiana, enquanto a variância não some. Implica: o viés/preferência
-por skew importa para o apostador RECREATIVO (poucas apostas), não para o sindicato.
-Quantificar com os retornos realizados (`ret_fav`).
+## Frente K — Diversificação / portfólio  ✅ FEITA (2026-06-23)
+> **Concluída** (Fase K): skew da aposta única favorito +0.230 / azarão +2.254; o
+> retorno médio de N apostas decai skew/√N → ~gaussiano em ~6 apostas (favorito) /
+> ~509 (azarão). A assimetria é fenômeno de aposta ISOLADA; o FLB sobrevive pelo
+> apostador recreativo concentrado. `skewlib/portfolio.py`, `analysis/37_diversification.py`.
 
 ## Frente L — Vantagem de casa secular vs invariância  [dataset]
 A vantagem de casa caiu ao longo das décadas (e no choque COVID, W3). Traçar a HFA
