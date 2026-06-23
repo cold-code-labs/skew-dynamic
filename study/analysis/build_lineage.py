@@ -125,6 +125,11 @@ PHASES = [
      "title": "Calibração por liga (cutoff de empate endógeno)", "blocks": ["34_per_league_calibration"],
      "figures": ["f22"], "metrics": {"corr_sigma_pfav": 0.874, "corr_c_draw": 0.906,
      "skew_model_r": 0.905}},
+    # ── 2ª rodada (dataset congelado) ──
+    {"id": "I", "frente": "Cross-model", "tag": "evidence/frente-I", "commit": "7a45759",
+     "title": "Validação cruzada do mecanismo (Poisson de gols)", "blocks": ["35_poisson_crossmodel"],
+     "figures": ["f23"], "metrics": {"corr_pfav": 0.972, "corr_skew": 0.925,
+     "league_r_poisson": 0.85, "n_league_seasons": 617}},
 ]
 
 

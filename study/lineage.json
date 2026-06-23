@@ -1,6 +1,6 @@
 {
   "schema": "skew-dynamic/lineage@1",
-  "generated_at_head": "e0bc9fd8",
+  "generated_at_head": "7a457597",
   "head_dirty": true,
   "data": {
     "sha256": "6905ca5324df9528",
@@ -531,6 +531,26 @@
         "corr_sigma_pfav": 0.874,
         "corr_c_draw": 0.906,
         "skew_model_r": 0.905
+      },
+      "commit_date": "2026-06-23"
+    },
+    {
+      "id": "I",
+      "frente": "Cross-model",
+      "tag": "evidence/frente-I",
+      "commit": "7a45759",
+      "title": "Validação cruzada do mecanismo (Poisson de gols)",
+      "blocks": [
+        "35_poisson_crossmodel"
+      ],
+      "figures": [
+        "f23"
+      ],
+      "metrics": {
+        "corr_pfav": 0.972,
+        "corr_skew": 0.925,
+        "league_r_poisson": 0.85,
+        "n_league_seasons": 617
       },
       "commit_date": "2026-06-23"
     }

@@ -6,7 +6,7 @@
 > 38 ligas). Volte a qualquer estado com
 > `git checkout <tag>`; audite mudança de resultado com `--check`.
 
-**HEAD na geração:** `e0bc9fd8`  ⚠️ working tree DIRTY
+**HEAD na geração:** `7a457597`  ⚠️ working tree DIRTY
 
 | Fase | Frente | Achado | Blocos | Figuras | Números-título | Commit | Tag |
 |------|--------|--------|--------|---------|----------------|--------|-----|
@@ -38,6 +38,7 @@
 | **H2** | Open vs closed | Liga aberta vs fechada (MLS na lei) | 32_open_vs_closed | f20 | mls_p_fav=0.503 · mls_skew=0.162 · mls_pfav_rank=22 · mls_residual=-0.059 | `e0bc9fd` (2026-06-23) | `evidence/H2` |
 | **C3** | Staking | Kelly/staking sob a estrutura de skewness | 33_kelly_staking | f21 | frac_positive_ev=0.0 · skew_term_dog=0.598 · skew_term_fav=0.01 | `e0bc9fd` (2026-06-23) | `evidence/C3` |
 | **E3** | Theory | Calibração por liga (cutoff de empate endógeno) | 34_per_league_calibration | f22 | corr_sigma_pfav=0.874 · corr_c_draw=0.906 · skew_model_r=0.905 | `e0bc9fd` (2026-06-23) | `evidence/E3` |
+| **I** | Cross-model | Validação cruzada do mecanismo (Poisson de gols) | 35_poisson_crossmodel | f23 | corr_pfav=0.972 · corr_skew=0.925 · league_r_poisson=0.85 · n_league_seasons=617 | `7a45759` (2026-06-23) | `evidence/frente-I` |
 
 ## Tags de versionamento (`evidence/*`)
 Uma tag anotada por marco de evidência aponta o commit que estabeleceu
