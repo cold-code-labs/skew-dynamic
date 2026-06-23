@@ -149,6 +149,13 @@ PHASES = [
     {"id": "N", "frente": "Indices", "tag": "evidence/frente-LMN", "commit": "f22f163",
      "title": "Entropia + co-momento entre mercados", "blocks": ["40_entropy_comoment"],
      "figures": ["f28"], "metrics": {"corr_entropy_skew": 0.827, "corr_1x2_ou_skew": 0.146}},
+    # ── 3ª rodada (independência de modelo) ──
+    {"id": "O", "frente": "Model battery", "tag": "evidence/frente-O", "commit": "ece5117",
+     "title": "Bateria de modelos geradores (independência de modelo)",
+     "blocks": ["41_model_battery"], "figures": ["f29"],
+     "metrics": {"corr_skew_poisson": 0.925, "corr_skew_dixoncoles": 0.874,
+     "corr_skew_btd": 0.840, "corr_skew_elo": 0.786, "r_curve_elo": 0.96,
+     "n_league_seasons": 617, "n_models": 5}},
 ]
 
 

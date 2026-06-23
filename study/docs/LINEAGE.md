@@ -6,7 +6,7 @@
 > 38 ligas). Volte a qualquer estado com
 > `git checkout <tag>`; audite mudança de resultado com `--check`.
 
-**HEAD na geração:** `f22f163b`  ⚠️ working tree DIRTY
+**HEAD na geração:** `ece51176`  ⚠️ working tree DIRTY
 
 | Fase | Frente | Achado | Blocos | Figuras | Números-título | Commit | Tag |
 |------|--------|--------|--------|---------|----------------|--------|-----|
@@ -44,6 +44,7 @@
 | **L** | Confound | Vantagem de casa secular vs invariância | 38_home_advantage | f26 | hfa_beta=-0.00133 · skew_beta=-9e-05 · corr_hfa_skew=-0.244 | `f22f163` (2026-06-23) | `evidence/frente-LMN` |
 | **M** | Tail risk | Risco de cauda realizado das estratégias | 39_tail_risk | f27 | skew_fav=0.23 · skew_dog=2.254 · maxdd_fav=-9922.9 · maxdd_dog=-20934.0 | `f22f163` (2026-06-23) | `evidence/frente-LMN` |
 | **N** | Indices | Entropia + co-momento entre mercados | 40_entropy_comoment | f28 | corr_entropy_skew=0.827 · corr_1x2_ou_skew=0.146 | `f22f163` (2026-06-23) | `evidence/frente-LMN` |
+| **O** | Model battery | Bateria de modelos geradores (independência de modelo) | 41_model_battery | f29 | corr_skew_poisson=0.925 · corr_skew_dixoncoles=0.874 · corr_skew_btd=0.84 · corr_skew_elo=0.786 · r_curve_elo=0.96 · n_league_seasons=617 · n_models=5 | `ece5117` (2026-06-23) | `evidence/frente-O` |
 
 ## Tags de versionamento (`evidence/*`)
 Uma tag anotada por marco de evidência aponta o commit que estabeleceu
