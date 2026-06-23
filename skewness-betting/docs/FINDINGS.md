@@ -168,3 +168,26 @@ nos resultados — P(H) 0.444 = real 0.444, P(D) 0.264 = real 0.264).
 
 Artefatos: `skewlib/elo.py`, `skewlib/stats.py` (bootstrap_corr, ols),
 `analysis/08_mechanism_elo.py`, `outputs/mechanism_elo.csv`.
+
+## Fase 3 / W3 — Invariância temporal: painel liga×temporada (2026-06-23)
+Tratar (liga,temporada) como unidade dissolve o confound de composição do
+Bloco F por construção. 638 obs, 38 ligas, 2005–2025.
+
+- **Sem tendência secular:** FE de liga + ano linear (SE cluster por liga):
+  β=**+0.00015/ano** (p=0.73, IC95% [−0.0007,+0.0010]). Deriva em 20 anos
+  ≈ +0.003 vs sd entre-ligas 0.052 → nula.
+- **Domínio estrutural:** sd between-liga **0.052** vs within-liga 0.034;
+  ICC=**0.70**. Descontando o ruído amostral (SE bootstrap 0.019), a flutuação
+  temporal *real* é sd≈0.028 — pequena, **sem tendência e revertendo à média**
+  (coerente com o ruído branco do Bloco C). O invariante de liga domina ~2:1.
+- **Por liga:** desvios idiossincráticos e minúsculos (|slope| médio
+  0.0024/ano; quebras raras, provável sobre-segmentação do PELT em séries de
+  ~20 pontos). Nenhum regime market-wide.
+- **Vinheta COVID (experimento natural):** estádios vazios 2020 derrubaram a
+  vitória do mandante (0.447→0.417). A lei prevê: HFA↓ → mais paridade →
+  skewness↑. Observado: z médio **+0.42** SD, **21/33 ligas com z>0**. O único
+  choque exógeno de competitividade em 20 anos moveu a skewness na direção
+  prevista — corrobora a *causa* sem violar a invariância secular.
+
+Artefatos: `skewlib/panel.py`, `analysis/09_panel_temporal.py`,
+`outputs/panel_league_season.csv`.
