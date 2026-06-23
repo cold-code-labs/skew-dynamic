@@ -1,35 +1,20 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# data (large, regenerable; frozen by hash in study/data/PROVENANCE.json)
+study/data/*.csv
+study/outputs/*.csv
+study/outputs/*.png
+study/outputs/*.log
+study/outputs/fig/*.png
 
-# dependencies
-/node_modules
+# python
+__pycache__/
+*.pyc
+.venv/
 
-# next.js
-/.next/
-/out/
+# node / astro
+site/node_modules/
+site/dist/
+site/.astro/
+node_modules/
 
-# production
-/build
-
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-
-# env files
-.env*
-!.env.example
-
-# typescript
-*.tsbuildinfo
-next-env.d.ts
-# pnpm content-addressable store (created if pnpm runs in-repo)
-.pnpm-store/
-
-# PocketBase local dev state — NEVER commit. Schema is versioned as code in
-# pocketbase/pb_migrations/*.js (applied on `pocketbase serve` at boot); the
-# actual data lives only in the deployed /pb_data volume. `pnpm pb:dev` /
-# `pnpm dev:local` create ./pb_data here — keep it out of git.
-/pb_data/
-# PocketBase binary cached by pb:dev (downloaded per OS/arch).
-/.pb/
+# os
+.DS_Store

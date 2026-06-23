@@ -1,0 +1,27 @@
+cff-version: 1.2.0
+title: "Structural Invariance of Return Skewness in Football Betting Markets"
+message: "If you use this study, data pipeline, or findings, please cite it."
+type: dataset
+authors:
+  - given-names: Vitor
+    family-names: Alves
+    affiliation: "Cold Code Labs"
+repository-code: "https://github.com/cold-code-labs/skew-dynamic"
+url: "https://skew-dynamic.coldcodelabs.com"
+abstract: >-
+  An open empirical study by Cold Code Labs showing that the skewness of returns
+  implied by football betting markets is a structural invariant: ~100% the
+  within-match Bernoulli asymmetry of the win-probability distribution (the
+  favourite-longshot bias), with a league-level value fixed by sporting
+  competitiveness — a relation that survives a competitiveness measure built
+  without odds — and no secular drift within the modern competitive regime.
+keywords:
+  - skewness
+  - favourite-longshot bias
+  - betting markets
+  - market efficiency
+  - implied probabilities
+  - structural invariance
+  - competitive balance
+license: Apache-2.0
+date-released: 2026-06-23
