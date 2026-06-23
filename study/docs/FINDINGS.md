@@ -870,6 +870,47 @@ Artefatos: `skewlib/fdcanon.py` (WH), `analysis/43_pre2005.py`,
 ---
 
 > **3ª rodada (dado externo) concluída** (2026-06-23): D1 (abertura→fechamento),
-> H1 (VAR), P6 (pré-2005). 38 fases no ledger. Fronteiras restantes: outros esportes
-> (decisão: futebol exclusivamente) e odds pré-2000 (inexistentes). Lineage completo
-> em `lineage.json`/`docs/LINEAGE.md`.
+> H1 (VAR), P6 (pré-2005). 38 fases no ledger.
+
+---
+
+# 4ª RODADA — síntese: SIMILARIDADE DE ASSIMETRIAS (objetivo-raiz)
+
+> O objetivo original do projeto era **medir a similaridade de assimetrias**. Toda a
+> evidência acima vira um único APARELHO (`skewlib/skewmeter.py`) que mede a assinatura
+> de assimetria de uma entidade e a distância entre assimetrias de duas.
+
+## Fase Q — skew-meter: a similaridade de assimetrias, operacionalizada (2026-06-23)
+Aparelho que mede, por liga/era/mercado/janela: assinatura (skew/forma + competitividade),
+distância BRUTA, distância RESIDUAL (descontada a competitividade pela lei fechada),
+piso amostral e veredito de equivalência. 38 ligas.
+
+- **Similaridade de assimetrias = similaridade de competitividade.** Distância bruta
+  |Δskew| mediana entre ligas **0.051**; descontada a competitividade por **1 parâmetro**
+  (média p_fav), cai para residual **0.023** — 1 número explica **R²=0.82** da variância.
+- **Escada de suficiência (resultado novo, corrige a 1ª leitura):** 1 parâmetro
+  R²=**0.82** → 2 momentos (média+variância de p_fav) R²=**0.98** → distribuição INTEIRA
+  R²=**0.99** (resíduo = piso amostral). A **estatística suficiente mínima é a
+  distribuição de p_fav**; a média sozinha deixa um resíduo **estável** (split-half
+  temporal r=**0.98**), que é a **curvatura da lei** (capturada pelo 2º momento), não ruído.
+- **Aparelho de POUCOS parâmetros:** sem Shin (inverse-odds, ~0 custo) corr **0.997** ·
+  1 parâmetro **0.90** · odds-free (só W/D/L) **0.83**. Convergência em tempo real:
+  SE 0.026 em 200 jogos, **0.018 em 400** (< sd entre-ligas 0.051 → já ranqueia).
+- **Veredito por EQUIVALÊNCIA (TOST), não significância** (com n enorme tudo rejeita):
+  margem ½·sd=0.026. **E0 vs E3** (Premier vs 4ª divisão inglesa): skew bruto 0.167 vs
+  0.294 (muito diferente) → residual **0.009** → **EQUIVALENTES** (competitividade explica
+  93%). E0 vs SP1 equivalentes; N1 vs I2 e BRA vs ARG distintas (resíduo real).
+- **Conclusão:** "quão parecidas são as assimetrias de A e B?" reduz-se a "quão parecidas
+  são as competitividades de A e B?" — medível com 1 número, em tempo real, até sem odds.
+  A distribuição de p_fav é o que torna a redução EXATA.
+
+Artefatos: `skewlib/skewmeter.py`, `analysis/45_skewmeter.py`,
+`outputs/fig/f33_skewmeter.png`. Subagentes (rigor + produto) anexaram a subseção do
+paper (§4.8) e a spec do widget `SkewMeter.astro`.
+
+---
+
+> **4ª rodada (síntese)** (2026-06-23): skew-meter — o objetivo-raiz "similaridade de
+> assimetrias" virou aparelho com escada de suficiência e veredito de equivalência.
+> 39 fases no ledger. Fronteiras restantes: outros esportes (decisão: futebol
+> exclusivamente) e odds pré-2000 (inexistentes). Lineage em `lineage.json`/`LINEAGE.md`.

@@ -25,7 +25,13 @@ regime spanning our 2005–2025 window (β = +0.00015/yr, p = 0.73; a single
 structural break across 38 leagues, COVID-19 in France; 70% of variance is
 between-league), and the COVID-19 empty-stadium shock moves skewness in the
 predicted direction. Bookmaker margin is orthogonal to asymmetry, and the
-identity reappears in the binary over/under-2.5 market. We conclude that the
+identity reappears in the binary over/under-2.5 market. We cast these invariances as
+a single instrument for the *similarity of asymmetries*: a competitiveness-conditioned
+distance shows that one competitiveness parameter explains 82% of the between-league
+asymmetry variance, the first two moments of the win-probability distribution 98%, and
+the full distribution reduces the residual to the sampling floor — so the win-
+probability distribution is the minimal sufficient statistic for a league's asymmetry.
+We conclude that the
 market's risk asymmetry is a **league-specific structural baseline inherited from
 the competitive structure of the sport**, stable within a competitive regime
 rather than produced by the pricing of it.
@@ -369,6 +375,45 @@ competitiveness (r = −0.45). The probability weighting behind the bias is a st
 structural constant, not a moving process — the invariance holds on the preference
 side as well as on the risk side [Snowberg & Wolfers 2010; Barberis & Huang 2008].
 
+### 4.8 Similarity of asymmetries: a calibrated instrument (Figure 18)
+
+The preceding results are most naturally read through a single question: *how similar
+are the return asymmetries of two competitions?* We make this operational. For two
+entities A and B (leagues, eras, markets, or windows) we measure each one's signature
+— its pooled ex-ante skewness and the mean of its favourite-probability distribution
+— and define a raw distance D_raw = |skew_A − skew_B| and a *competitiveness-
+conditioned* residual distance D_res = |r_A − r_B|, where r_X = skew_X − Ŝ(p̄_X)
+subtracts the asymmetry that the closed-form law S(·) attributes to each side's
+competitiveness. Across the thirty-eight leagues the median raw distance is 0.051 —
+almost exactly the between-league standard deviation — and conditioning on a single
+competitiveness parameter cuts it to a median residual of 0.023, so **one number
+explains 82% of the between-league asymmetry variance**.
+
+The collapse is not yet complete at one parameter, and the reason is informative.
+The single-parameter residual is not sampling noise: it is a stable, reproducible
+league trait (its split-half correlation across alternating seasons is r = 0.98),
+reflecting the *curvature* of the concave law that a mean cannot carry. Adding the
+*variance* of the favourite-probability distribution raises the explained variance to
+**R² = 0.98**, and conditioning on the *entire* favourite-probability distribution
+drives the residual to the per-league sampling floor (≈ 0.005), with a correlation of
+0.997 between observed and predicted league skewness. **The full win-probability
+distribution is thus the minimal sufficient statistic for a league's asymmetry; its
+mean is 82%-sufficient and its first two moments 98%-sufficient.** The same signature
+is recoverable from minimal inputs — inverse-odds without any de-vig reproduce the
+league skewness at r = 0.997, and a results-only competitiveness proxy (no market data
+at all) at r = 0.83 — and a rolling estimate converges to within the between-league
+spread in about half a season (standard error 0.018 at 400 matches).
+
+Because the sample is large, every pairwise significance test rejects equality, so we
+report a calibrated *equivalence* verdict instead. Fixing a margin of half a between-
+league standard deviation (Δ = 0.026) and applying two one-sided tests, the English
+and Spanish top flights — and, strikingly, the English first and *fourth* tiers, whose
+raw skewness differs by 0.13 — are equivalent in conditioned asymmetry, while the Dutch
+top flight and the Italian second tier are not. The similarity of asymmetries is
+therefore, to first order, the similarity of competitiveness: measurable with one
+parameter, made exact by the full probability distribution, and verdicted by an
+equivalence test rather than a null-rejection.
+
 ## 5. Mechanism
 
 The results cohere under one principle. The skewness of a fixed-odds bet is the
@@ -621,6 +666,10 @@ asymmetry is inherited from the sport, not produced by the pricing of it.
 - **Figure 17.** Pre-2005 regime: the league-demeaned global skewness series shows no
   break at the 2005 cutoff (left), and the per-league baseline is preserved between
   2000–2004 and the modern era (r = 0.76, right).
+- **Figure 18.** Similarity of asymmetries: the pairwise raw |Δskew| matrix across
+  leagues (left) collapses once competitiveness is conditioned out (middle), and the
+  sufficiency ladder shows one parameter explains 82%, the first two moments 98%, and
+  the full win-probability distribution is sufficient (right).
 
 ## References
 

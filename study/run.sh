@@ -103,6 +103,7 @@ for script in \
   analysis/40_entropy_comoment.py \
   analysis/41_model_battery.py \
   analysis/44_var.py \
+  analysis/45_skewmeter.py \
   analysis/12_figures.py
 do
   echo
