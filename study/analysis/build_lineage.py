@@ -79,6 +79,18 @@ PHASES = [
     {"id": "E2", "frente": "Robustness", "tag": "evidence/frente-E", "commit": "a70b790",
      "title": "Robustez da distribuição de força", "blocks": ["22_force_robustness"],
      "figures": ["f11"], "metrics": {"max_dS_overall": 0.0320, "sd_between_leagues": 0.0518}},
+    {"id": "G1", "frente": "Reliability", "tag": "evidence/frente-G", "commit": "a326910",
+     "title": "De-vig confiável + invariância de método", "blocks": ["23_devig_reliability"],
+     "figures": ["f12"], "metrics": {"rel_global": 0.0000, "rel_sd_league": 0.0003,
+     "skew_devig_range": 0.039}},
+    {"id": "G2", "frente": "Robustness", "tag": "evidence/frente-G", "commit": "a326910",
+     "title": "Painel balanceado estrito (composição morta)", "blocks": ["24_balanced_panel"],
+     "figures": ["f13"], "metrics": {"n_balanced": 15, "beta_balanced": -0.00013,
+     "delta20_balanced": -0.003}},
+    {"id": "G3", "frente": "Confidence", "tag": "evidence/frente-G", "commit": "a326910",
+     "title": "IC por block-bootstrap sobre temporadas", "blocks": ["25_block_bootstrap"],
+     "figures": [], "metrics": {"skew_ci_lo": 0.232, "skew_ci_hi": 0.239,
+     "corr_ci_lo": -0.922, "corr_ci_hi": -0.876}},
 ]
 
 

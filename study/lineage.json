@@ -1,6 +1,6 @@
 {
   "schema": "skew-dynamic/lineage@1",
-  "generated_at_head": "a70b7902",
+  "generated_at_head": "a3269108",
   "head_dirty": true,
   "data": {
     "sha256": "6905ca5324df9528",
@@ -303,6 +303,62 @@
       "metrics": {
         "max_dS_overall": 0.032,
         "sd_between_leagues": 0.0518
+      },
+      "commit_date": "2026-06-23"
+    },
+    {
+      "id": "G1",
+      "frente": "Reliability",
+      "tag": "evidence/frente-G",
+      "commit": "a326910",
+      "title": "De-vig confiável + invariância de método",
+      "blocks": [
+        "23_devig_reliability"
+      ],
+      "figures": [
+        "f12"
+      ],
+      "metrics": {
+        "rel_global": 0.0,
+        "rel_sd_league": 0.0003,
+        "skew_devig_range": 0.039
+      },
+      "commit_date": "2026-06-23"
+    },
+    {
+      "id": "G2",
+      "frente": "Robustness",
+      "tag": "evidence/frente-G",
+      "commit": "a326910",
+      "title": "Painel balanceado estrito (composição morta)",
+      "blocks": [
+        "24_balanced_panel"
+      ],
+      "figures": [
+        "f13"
+      ],
+      "metrics": {
+        "n_balanced": 15,
+        "beta_balanced": -0.00013,
+        "delta20_balanced": -0.003
+      },
+      "commit_date": "2026-06-23"
+    },
+    {
+      "id": "G3",
+      "frente": "Confidence",
+      "tag": "evidence/frente-G",
+      "commit": "a326910",
+      "title": "IC por block-bootstrap sobre temporadas",
+      "blocks": [
+        "25_block_bootstrap"
+      ],
+      "figures": [],
+      "metrics": {
+        "skew_ci_lo": 0.232,
+        "skew_ci_hi": 0.239,
+        "corr_ci_lo": -0.922,
+        "corr_ci_hi": -0.876
       },
       "commit_date": "2026-06-23"
     }

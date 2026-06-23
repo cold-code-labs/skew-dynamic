@@ -6,7 +6,7 @@
 > 38 ligas). Volte a qualquer estado com
 > `git checkout <tag>`; audite mudança de resultado com `--check`.
 
-**HEAD na geração:** `a70b7902`  ⚠️ working tree DIRTY
+**HEAD na geração:** `a3269108`  ⚠️ working tree DIRTY
 
 | Fase | Frente | Achado | Blocos | Figuras | Números-título | Commit | Tag |
 |------|--------|--------|--------|---------|----------------|--------|-----|
@@ -26,6 +26,9 @@
 | **C2** | Preference | CPT invariante (γ) | 20_cpt | f9 | gamma=0.958 · gamma_sd_season=0.02 · gamma_sd_league=0.04 · trend_beta=0.0003 | `2b2d423` (2026-06-23) | `evidence/frente-C` |
 | **E1** | Theory | Forma fechada de S(σ_L) | 21_closed_form | f10 | max_mc_err=0.0015 · p0=0.4392 · S0=0.2449 · sigma_peak=0.1226 · league_r=0.903 | `a70b790` (2026-06-23) | `evidence/frente-E` |
 | **E2** | Robustness | Robustez da distribuição de força | 22_force_robustness | f11 | max_dS_overall=0.032 · sd_between_leagues=0.0518 | `a70b790` (2026-06-23) | `evidence/frente-E` |
+| **G1** | Reliability | De-vig confiável + invariância de método | 23_devig_reliability | f12 | rel_global=0.0 · rel_sd_league=0.0003 · skew_devig_range=0.039 | `a326910` (2026-06-23) | `evidence/frente-G` |
+| **G2** | Robustness | Painel balanceado estrito (composição morta) | 24_balanced_panel | f13 | n_balanced=15 · beta_balanced=-0.00013 · delta20_balanced=-0.003 | `a326910` (2026-06-23) | `evidence/frente-G` |
+| **G3** | Confidence | IC por block-bootstrap sobre temporadas | 25_block_bootstrap | — | skew_ci_lo=0.232 · skew_ci_hi=0.239 · corr_ci_lo=-0.922 · corr_ci_hi=-0.876 | `a326910` (2026-06-23) | `evidence/frente-G` |
 
 ## Tags de versionamento (`evidence/*`)
 Uma tag anotada por marco de evidência aponta o commit que estabeleceu
