@@ -1,0 +1,7 @@
+data/*.csv
+outputs/*.csv
+outputs/*.png
+__pycache__/
+*.pyc
+.venv/
+.DS_Store
