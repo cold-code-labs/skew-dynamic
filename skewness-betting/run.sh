@@ -67,7 +67,13 @@ for script in \
   analysis/03_decomposition.py \
   analysis/04_dynamics.py \
   analysis/05_cross_book.py \
-  analysis/06_league_hetero.py
+  analysis/06_league_hetero.py \
+  analysis/07_devig_exante.py \
+  analysis/08_mechanism_elo.py \
+  analysis/09_panel_temporal.py \
+  analysis/10_overunder.py \
+  analysis/11_margin_robustness.py \
+  analysis/12_figures.py
 do
   echo
   echo "================================================================"

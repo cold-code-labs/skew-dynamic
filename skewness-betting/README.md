@@ -23,22 +23,29 @@ football-data.co.uk — na sua infra, empilhe todas as temporadas/ligas.
 
 ```
 skewlib/              módulo reutilizável
-  config.py           parâmetros (janela, passo, recorte, paths)
+  config.py           parâmetros (janela, passo, recorte, de-vig, paths)
   io.py               carga + limpeza
   returns.py          retornos ex-post (favorito, azarão, Max*, demeaned)
   series.py           série deslizante de skewness + bootstrap
-  stats.py            estacionariedade, persistência, variance-ratio, AR(1), quebras
+  stats.py            estacionariedade, i.i.d., quebras, bootstrap_corr, ols
   decompose.py        decomposição por estratégia / faixa de odds / liga
+  devig.py            de-vigging 1X2 (multiplicative / Shin / power)
+  exante.py           skewness ex-ante (implícita) + cumulantes totais [objeto primário]
+  elo.py              Elo só de resultados → competitividade odds-free
+  panel.py            painel liga×temporada, tendência, variância, COVID
+  overunder.py        mercado binário over/under 2.5
 analysis/             scripts finos que importam skewlib (um por bloco)
   00_fetch_data.py    baixa o dataset
-  01_baseline.py      série + estatísticas globais
-  02_robustness.py    Bloco A — demeaning, overlap, tamanho de janela
-  03_decomposition.py Bloco B — FLB, mecanismo da estabilidade
-  04_dynamics.py      Bloco C — i.i.d.? variance-ratio, AR(1)
-  05_cross_book.py    Bloco D — odd média vs melhor odd
-  06_league_hetero.py Bloco E+F — heterogeneidade entre ligas, blip
-docs/                 metodologia, achados, rascunho do paper
-outputs/              séries e tabelas geradas (não versionado)
+  01..06              Blocos A–F originais (ver docs/FINDINGS.md)
+  07_devig_exante.py  W1 — skewness ex-ante + decomposição mecânica
+  08_mechanism_elo.py W2 — lei skewness~competitividade ODDS-FREE
+  09_panel_temporal.py W3 — invariância temporal (painel, COVID)
+  10_overunder.py     W5 — mercado binário over/under 2.5
+  11_margin_robustness.py W4 — margem ortogonal + robustez de-vig
+  12_figures.py       figuras do paper (F1–F4)
+docs/                 metodologia, achados (log de fases), outline + abstract
+outputs/              séries, tabelas, figuras geradas (não versionado)
+data/PROVENANCE.json  hash + recorte do dataset congelado (versionado)
 ```
 
 ## Como rodar
@@ -60,13 +67,13 @@ PYTHONPATH=. python analysis/01_baseline.py # ou qualquer 0X_*
 
 ## Achados (resumo)
 
-| Bloco | Resultado |
+| Frente | Resultado |
 |---|---|
-| A robustez | estacionariedade blindada; persistência aparente era artefato de overlap |
-| B decomposição | FLB confirmado; skewness monotônica na improbabilidade; cancelamento de caudas |
-| C dinâmica | ruído branco (VR≈1, AR(1) não-significativo) — sem dinâmica temporal |
-| D cross-casa | margem é spread entre casas (−4.8%→−0.2%); skewness invariante à casa (corr 0.98) |
-| E ligas | skewness = f(competitividade), corr −0.83; cada liga tem seu invariante |
-| F forense | única "quebra" em 20 anos = dataset crescendo 21→37 ligas em 2012 |
+| A–F (originais) | estacionariedade blindada; FLB; ruído branco; margem=spread; skew=f(liga) |
+| W1 mecânico | skewness ex-ante ≈ ex-post (+0.236/+0.230); M₃ **+102.6% intra-jogo** (= imagem do FLB) |
+| W2 odds-free | lei sobrevive: skew~zebra +0.83, ~entropia +0.72; corr(Elo,odds)=0.91 |
+| W3 temporal | painel sem tendência (β=+0.0002/ano, p=0.73); ICC 0.70; COVID corrobora a causa |
+| W4 margem | overround 1.067→1.009, skewness +0.236→+0.254 (ortogonal); robusto ao de-vig |
+| W5 binário | over/under 2.5: identidade vale fora do 1X2 (within 99.6%) |
 
-Detalhes em `docs/FINDINGS.md`.
+Detalhes e log de fases em `docs/FINDINGS.md`; metodologia em `docs/METHODOLOGY.md`.
