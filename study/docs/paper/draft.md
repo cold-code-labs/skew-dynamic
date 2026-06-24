@@ -589,9 +589,31 @@ most a faint, endpoint-sensitive drift in level (the modern era ≈ 0.018 above
 The institutional regime breaks the literature identifies, however, are earlier
 still (Bosman 1995, the Champions League expansion of 1994/95), and 1X2 odds do not
 exist before ≈ 2000, so the prediction that the *baseline itself* shifts across those
-1990s shocks remains beyond the reach of betting data. Finally, our evidence is from
-football; whether the same invariance holds in sports with different competitive
-structures (tennis, basketball) is left for external validation.
+1990s shocks remains beyond the reach of betting data.
+
+**External validity.** A natural objection is that our evidence is from a single
+sport, and might reflect something idiosyncratic to football or to the three-outcome
+1X2 contract rather than to competition itself. We address this directly. The analysis
+machinery requires, per bet, only a de-vigged probability, a decimal odd and an
+outcome; we therefore factor it behind a sport-agnostic canonical layer
+(`skewlib/canonical.py`; data contract in `docs/DATA-SCHEMA.md`) and port it,
+unchanged, to two further sports whose odds come from independent
+providers. **Tennis** (tennis-data.co.uk, ATP and WTA, 62,865 matches) is a
+two-outcome match-odds market with no draw; **basketball** (sportsbookreviewsonline.com,
+NBA, sixteen seasons, 19,621 games) is a two-outcome moneyline market, also with no
+draw. In both, the de-vig remains calibrated out of sample (mean favourite probability
+0.688 vs realised 0.692 in tennis; 0.694 vs 0.685 in basketball, the residual being the
+favourite–longshot bias itself), so the implied distribution is trustworthy. And in
+both, the structural law reappears at full strength: the favourite bet is most negative
+where the competition is most lopsided — corr(skewness, competitiveness) = −1.00 (ATP)
+and −0.98 (WTA) across tournament tiers, and −0.95 across NBA seasons, against −0.90 in
+football — while the underdog is lottery-like at +2.31 (tennis) and +2.61 (basketball),
+all but identical to football's +2.35. Placed on a single competitiveness axis
+(Figure 19), the three sports trace one curve: football at the balanced end, tennis
+and basketball overlapping in the more lopsided regime, the favourite falling and the
+underdog rising with imbalance throughout. The asymmetry is not an artefact of the 1X2
+contract, of the football-data source, or of association football — it is a property of
+the sport as a competitive system, exactly as the mechanism predicts.
 
 ## 8. Conclusion
 
@@ -706,6 +728,12 @@ audit.
   leagues (left) collapses once competitiveness is conditioned out (middle), and the
   sufficiency ladder shows one parameter explains 82%, the first two moments 98%, and
   the full win-probability distribution is sufficient (right).
+- **Figure 19.** External validity across sports: ex-ante skewness against
+  competitiveness (mean favourite probability) for the favourite bet (left) and the
+  underdog bet (right), pooling football leagues, tennis tiers (ATP+WTA) and
+  basketball seasons (NBA). The three sports — three two-outcome/three-outcome
+  markets, three independent odds sources — trace one descending (favourite) and one
+  rising (underdog) curve.
 
 ## References
 

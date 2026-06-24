@@ -153,5 +153,15 @@ echo "================================================================"
   && "$PY" analysis/48_tennis.py ) \
   || echo "   (pulado — sem tennis.csv/rede/openpyxl; o núcleo está completo)"
 
+# 8) validade externa (basquete, sportsbookreviewsonline.com): baixa só se ausente e
+#    roda o bloco 49 (mercado moneyline, NBA). Não aborta a pipeline se a rede falhar.
+echo
+echo "================================================================"
+echo "==> validade externa (basquete): fetch + bloco 49"
+echo "================================================================"
+( { [ -f data/basketball.csv ] || "$PY" analysis/00c_fetch_basketball.py; } \
+  && "$PY" analysis/49_basketball.py ) \
+  || echo "   (pulado — sem basketball.csv/rede; o núcleo está completo)"
+
 echo
 echo "==> pipeline concluída. Séries/tabelas em outputs/; evidências em lineage.json"

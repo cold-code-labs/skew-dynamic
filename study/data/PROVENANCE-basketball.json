@@ -1,0 +1,15 @@
+{
+  "frozen_utc": "2026-06-23T00:00:00Z",
+  "source_url": "https://www.sportsbookreviewsonline.com/scoresoddsarchives/nba-odds-{season}",
+  "source_note": "sportsbookreviewsonline.com NBA (tabela HTML por temporada). ToS restringe redistribuição.",
+  "fetch_cmd": "python analysis/00c_fetch_basketball.py --from 2007 --to 2022",
+  "sha256": "520c1aaf19c66a12a95438e0c25816fb055fc432f45dbfbc7b495813eacee655",
+  "bytes": 1050260,
+  "rows": 19635,
+  "leagues": [
+    "NBA"
+  ],
+  "seasons": 16,
+  "date_min": "2007-10-30",
+  "date_max": "2023-01-16"
+}

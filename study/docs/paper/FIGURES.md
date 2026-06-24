@@ -28,6 +28,7 @@ Regenerate all figures: `cd study && ./run.sh` (or run the listed script).
 | **Figure 16** — VAR natural experiment | `f31_var.png` | `44_var.py` | H1 |
 | **Figure 17** — pre-2005 regime continuity | `f32_pre2005.png` | `43_pre2005.py` | P6 |
 | **Figure 18** — similarity of asymmetries (skew-meter) | `f33_skewmeter.png` | `45_skewmeter.py` | Q |
+| **Figure 19** — external validity across sports (football+tennis+basketball) | `f36_crosssport.png` | `49_basketball.py` | T |
 
 **Not currently in the manuscript** (available as supplementary / product
 material): `f14_sharp_soft` (D2), `f15_shin_z` (D3), `f16_asian_handicap` (D4),

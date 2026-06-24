@@ -98,6 +98,21 @@ falls out of `select(...,"fav")` as the lower-odds side — sometimes the winner
 sometimes the loser (an upset). `competition` defaults to the tournament tier
 (`Series`/`Tier`) or `Surface`. Draw bets return empty (`DRAW_ROLE is None`).
 
+**Basketball (`adapters/basketball.py`, implemented).** Source:
+sportsbookreviewsonline.com (NBA; fetch with `analysis/00c_fetch_basketball.py` via the
+stdlib `html.parser`, no extra deps, raw not redistributed). Moneyline market, two
+outcomes, no draw:
+
+```python
+SPORT="basketball"; MARKET="moneyline"; OUTCOMES=["away","home"]
+ROLES={"away":"away","home":"home"}; DRAW_ROLE=None
+```
+
+Each game is two source rows (visitor/home); American moneylines are converted to
+decimal odds, `won` comes from the final score, and a sane-overround filter drops dirty
+rows (spreads that leaked into the ML column, sub-100% books). `competition` defaults to
+the NBA `season` (competitive balance varies year to year). Draw bets return empty.
+
 **Adding any sport** is the same three things: a `to_canonical` that emits the table,
 a taxonomy (`OUTCOMES`/`ROLES`/`DRAW_ROLE`), and a registry entry — the core never
 changes.

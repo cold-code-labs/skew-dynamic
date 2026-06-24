@@ -982,3 +982,38 @@ Artefatos: `skewlib/adapters/tennis.py`, `analysis/00b_fetch_tennis.py`,
 > odds independentes), via a camada canônica sem mudar o núcleo. 41 fases no ledger.
 > Adicionar um esporte = um adaptador (`docs/DATA-SCHEMA.md`). Lineage em
 > `lineage.json`/`LINEAGE.md`.
+
+## Fase T — Validade externa: basquete (bloco 49)
+
+Um **3º esporte** sobre a mesma camada canônica, sem tocar no núcleo. Plugando a
+**NBA** (sportsbookreviewsonline.com, 16 temporadas 2007–08…2022–23, snapshot
+congelado em `data/PROVENANCE-basketball.json`), mercado **moneyline** (2 resultados,
+sem empate) e **fonte de odds independente** do futebol e do tênis, sobre **19.621
+jogos** e ZERO ciência nova:
+
+- **Calibração:** p_fav médio **0.694** ≈ vitória real do favorito **0.685** — o
+  de-vig é confiável também no moneyline da NBA (a folga de ~0.9pp é o próprio viés
+  favorito-azarão, com o favorito levemente sobreprecificado).
+- **A lei reaparece:** skew do favorito mais negativo nas temporadas mais
+  desbalanceadas — corr(skew_fav, p_fav) por temporada = **−0.95** (16 temporadas;
+  futebol −0.90, tênis −1.00/−0.98). A NBA mais lopsided (2007–08, p_fav 0.71) tem o
+  favorito mais negativo; a mais equilibrada (2022–23, p_fav 0.66) o menos.
+- **O azarão é lotérico:** skew **+2.609** ≈ futebol **+2.349**, tênis **+2.314**.
+
+Na curva cross-esporte (f36), o tênis e o basquete **se sobrepõem** na mesma região
+lopsided (~0.66–0.75), ambos sobre a curva descendente do favorito e ascendente do
+azarão que o futebol traça em competitividade menor. Três esportes, três mercados (1X2,
+match-odds, moneyline), três fontes de odds, uma lei estrutural.
+
+Artefatos: `skewlib/adapters/basketball.py`, `analysis/00c_fetch_basketball.py`,
+`analysis/49_basketball.py`, `outputs/fig/f36_crosssport.png`,
+`outputs/basketball_by_season.csv`. Núcleo (`canonical`/`skewmeter`) inalterado; sem
+dependências novas (o fetch usa `html.parser` da stdlib).
+
+---
+
+> **7ª rodada (validade externa, 3º esporte)** (2026-06-23): basquete — a lei
+> skew=f(competitividade) e o azarão lotérico reaparecem num 3º esporte (NBA, mercado
+> moneyline, odds independentes), via a camada canônica sem mudar o núcleo. 42 fases no
+> ledger. A f36 põe futebol+tênis+basquete numa só curva. Lineage em
+> `lineage.json`/`LINEAGE.md`.
