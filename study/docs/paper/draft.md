@@ -644,7 +644,8 @@ statistic in this article are openly available: the per-league and per-season
 aggregate tables (`study/outputs/*.csv`), the consolidated results artifact
 (`site/src/data/findings.json`), and the figures, all with a data dictionary
 (`study/outputs/README.md`). These are archived at Zenodo
-(doi:10.5281/zenodo.XXXXXXX — minted on acceptance) and version-controlled at the
+(doi:10.5281/zenodo.20822121 — concept DOI, resolving to the latest version) and
+version-controlled at the
 repository below. The underlying raw match-and-odds file is sourced from
 football-data.co.uk; its terms of use restrict redistribution, so it is **not**
 deposited. It is regenerated deterministically by `analysis/00_fetch_data.py`,

@@ -9,7 +9,7 @@ authors:
     orcid: "https://orcid.org/0009-0008-3522-1694"
 repository-code: "https://github.com/cold-code-labs/skew-dynamic"
 url: "https://skew-dynamic.coldcodelabs.com"
-# doi: "10.5281/zenodo.XXXXXXX"  # minted by Zenodo on the first GitHub release
+doi: "10.5281/zenodo.20822121"  # concept DOI (all versions) — minted by Zenodo
 abstract: >-
   An open empirical study by Cold Code Labs showing that the skewness of returns
   implied by football betting markets is a structural invariant: ~100% the
