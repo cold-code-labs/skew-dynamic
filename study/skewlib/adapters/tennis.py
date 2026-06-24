@@ -62,14 +62,24 @@ def to_canonical(df=None, odds=None, comp_col=None):
     if "date" not in df.columns:                       # df cru passado direto
         df["date"] = pd.to_datetime(df.get("Date"), errors="coerce")
     ow, ol = odds or _pick(df, ODDS_SOURCES, "odds")
-    comp = comp_col or _pick(df, COMP_CANDIDATES, "competição")
     d = df.dropna(subset=[ow, ol, "Winner", "Loser", "date"]).copy()
     d = d[(d[ow] > C.MIN_ODD) & (d[ol] > C.MIN_ODD)].reset_index(drop=True)
+    # competição: coalesce dos candidatos (ATP usa Series, WTA usa Tier, …)
+    if comp_col:
+        comp = d[comp_col].astype(str)
+    else:
+        present = [c for c in COMP_CANDIDATES if c in d.columns]
+        if not present:
+            raise KeyError(f"nenhuma coluna de competição: {COMP_CANDIDATES}")
+        comp = d[present[0]]
+        for c in present[1:]:
+            comp = comp.fillna(d[c])
+        comp = comp.astype(str)
     n = len(d)
     base = pd.DataFrame({
         "event_id": np.arange(n),
         "sport": SPORT, "market": MARKET,
-        "competition": d[comp].astype(str).to_numpy(),
+        "competition": comp.to_numpy(),
         "date": d["date"].to_numpy(),
     })
     parts = []

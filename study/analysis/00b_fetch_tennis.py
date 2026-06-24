@@ -17,7 +17,9 @@ import sys
 import pandas as pd
 from pathlib import Path
 
-BASE = "https://www.tennis-data.co.uk"
+# NB: o HTTPS do tennis-data.co.uk está quebrado (TLSV1_ALERT_INTERNAL_ERROR);
+# o site serve os arquivos em HTTP puro.
+BASE = "http://www.tennis-data.co.uk"
 KEEP = ["tour", "Date", "Series", "Tier", "Surface", "Court", "Round", "Best of",
         "Winner", "Loser", "WRank", "LRank",
         "B365W", "B365L", "PSW", "PSL", "AvgW", "AvgL", "MaxW", "MaxL"]
