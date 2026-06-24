@@ -10,6 +10,7 @@
 [![license](https://img.shields.io/badge/code-Apache--2.0-blue)](LICENSE)
 [![paper](https://img.shields.io/badge/paper-CC--BY--4.0-green)](study/docs/paper/draft.md)
 [![reproducible](https://img.shields.io/badge/pipeline-reproducible-brightgreen)](study/run.sh)
+[![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.20822121-blue)](https://doi.org/10.5281/zenodo.20822121)
 
 </div>
 
@@ -45,7 +46,7 @@ frozen by content hash.
 ```
 study/        the research — fully reproducible Python pipeline
   skewlib/    reusable library (de-vig, ex-ante skewness, Elo, panel, model…)
-  analysis/   thin scripts, one per block (00–20)
+  analysis/   thin scripts, one per block (00–51)
   docs/       FINDINGS (phase log), METHODOLOGY, LITERATURA, paper/ (draft)
   data/PROVENANCE.json   frozen dataset hash + scope
   run.sh      one command: venv + deps + fetch + all blocks
@@ -56,7 +57,7 @@ site/         the showcase frontend (Astro) — skew-dynamic.coldcodelabs.com
 
 ```bash
 cd study
-./run.sh            # venv + deps + dataset + blocks 00→20 (figures in outputs/fig)
+./run.sh            # venv + deps + dataset + all blocks (figures in outputs/fig)
 ```
 
 Every reported number regenerates from the frozen dataset (sha256 in
@@ -79,7 +80,8 @@ See [`CITATION.cff`](CITATION.cff), or:
   author = {Alves, Vitor},
   year   = {2026},
   note   = {Cold Code Labs},
-  url    = {https://skew-dynamic.coldcodelabs.com}
+  doi    = {10.5281/zenodo.20822121},
+  url    = {https://doi.org/10.5281/zenodo.20822121}
 }
 ```
 

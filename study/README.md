@@ -57,8 +57,9 @@ data/PROVENANCE.json  hash + window of the frozen dataset (versioned)
 
 ## How to run
 
-Full pipeline in one command (creates venv, installs deps, fetches the data and
-runs blocks 00→06 in order):
+Full pipeline in one command (creates venv, installs deps, fetches the data,
+runs every analysis block in order, regenerates `findings.json`, and audits the
+evidence ledger for result drift):
 
 ```bash
 ./run.sh                # everything; --no-fetch skips the download, --no-venv uses the current python
@@ -86,6 +87,15 @@ PYTHONPATH=. python analysis/01_baseline.py # or any 0X_*
 | P2 standings CB | odds-independent law: skew~Noll-Scully −0.63, ~HHI* −0.59, ~Theil −0.48 |
 | P3 derivation | ordered-probit predicts the 3rd moment from the 1st: r=+0.90, RMSE 0.024 (F5) |
 | P4 stable FLB | no drift in the bias (yearly corr +0.27 n.s.); year-on-year calibration intact |
+
+The table above is the original core (W1–P4). The study has since extended through
+fronts B/C/E and F–U — shape invariance and distribution collapse, the closed-form
+law, price discovery (open→close), a generative-model battery, a VAR natural
+experiment, the pre-2005 regime, temporal **equivalence** (TOST, not just a high
+*p*-value), and **external validity** across three sports (football, tennis,
+basketball) via a sport-agnostic canonical layer (`skewlib/canonical.py` +
+`skewlib/adapters/`). The calibrated instrument is also exposed as a thin
+`/measure` service (`api/`). The full per-phase log lives in `docs/FINDINGS.md`.
 
 Details and phase log in `docs/FINDINGS.md`; methodology in `docs/METHODOLOGY.md`;
 literature in `docs/LITERATURA.md`; paper draft in `docs/paper/draft.md`.
