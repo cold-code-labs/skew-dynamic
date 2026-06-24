@@ -88,14 +88,29 @@ PYTHONPATH=. python analysis/01_baseline.py # or any 0X_*
 | P3 derivation | ordered-probit predicts the 3rd moment from the 1st: r=+0.90, RMSE 0.024 (F5) |
 | P4 stable FLB | no drift in the bias (yearly corr +0.27 n.s.); year-on-year calibration intact |
 
-The table above is the original core (W1–P4). The study has since extended through
-fronts B/C/E and F–U — shape invariance and distribution collapse, the closed-form
-law, price discovery (open→close), a generative-model battery, a VAR natural
-experiment, the pre-2005 regime, temporal **equivalence** (TOST, not just a high
-*p*-value), and **external validity** across three sports (football, tennis,
-basketball) via a sport-agnostic canonical layer (`skewlib/canonical.py` +
-`skewlib/adapters/`). The calibrated instrument is also exposed as a thin
-`/measure` service (`api/`). The full per-phase log lives in `docs/FINDINGS.md`.
+The table above is the original core (W1–P4). The study then extended it across
+many more fronts — each pinned to an evidence tag and a figure in the ledger
+(`lineage.json` / `docs/LINEAGE.md`):
+
+| Front | Result | Fig |
+|---|---|---|
+| B shape | the invariance is the whole *shape*: skew **and** excess kurtosis lie on the derived curve (r +0.90/+0.89); standardised returns collapse within a competitiveness band | F6, F7 |
+| C pricing | no league-level premium beyond the mechanical FLB; the fitted CPT preference (γ) is invariant across leagues/seasons | F8, F9 |
+| E theory | closed-form `S(σ_L)` by quadrature matches Monte-Carlo (max │Δ│ 0.0015); the law is robust to the strength distribution (t / skew-normal / uniform); per-league calibration holds (r +0.90) | F10, F11 |
+| G robustness | de-vig is reliable and method-invariant; the law survives a strict 15-league balanced panel; block-bootstrap CIs over seasons | F12, F13 |
+| D micro / discovery | the asymmetry is in the **opening** quote (open=close r 0.998) while the margin shrinks; identity holds in sharp books, Shin-z series, and the Asian handicap | F14–F16 |
+| F micro | mild intra-season seasonality; M₃ contribution by match competitiveness; per-team strength-dispersion decomposition | — |
+| H experiments | staggered **VAR** adoption: institutional shock does not move skewness; open vs closed league (MLS) on the law | F16 |
+| I–N | cross-model validation (goals Poisson), dynamic identity HT→FT, diversification (≈1/√N), secular home advantage, realised tail risk, entropy co-moment | — |
+| O model battery | five independent generators + the market fall on one curve → the law is not an artefact of any functional form | F14 |
+| P6 regime | the modern regime already holds back to 2000 — no 2005 break | F17 |
+| Q skew-meter | similarity-of-asymmetries instrument: one parameter explains 82%, two moments 98% | F18 |
+| R bet-type | the law `skew=f(competitiveness)` holds across every side of the book | — |
+| S–T external validity | the same law reappears in **tennis** and **basketball** (independent odds sources) via the sport-agnostic canonical layer | F19 |
+| U equivalence | "no drift" established as a formal **equivalence** result (TOST against a pre-set margin) — evidence *of* absence, not absence of evidence | F20 |
+
+The calibrated instrument is also exposed as a thin `/measure` service (`api/`).
+The full per-phase log lives in `docs/FINDINGS.md`.
 
 Details and phase log in `docs/FINDINGS.md`; methodology in `docs/METHODOLOGY.md`;
 literature in `docs/LITERATURA.md`; paper draft in `docs/paper/draft.md`.
