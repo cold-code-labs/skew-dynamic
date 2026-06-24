@@ -1,0 +1,15 @@
+{
+  "frozen_utc": "2026-06-23T00:00:00Z",
+  "source_url": "http://www.tennis-data.co.uk/{year}{w}/{year}.xlsx",
+  "source_note": "tennis-data.co.uk ATP+WTA (HTTP; HTTPS quebrado server-side). ToS restringe redistribuição.",
+  "fetch_cmd": "python analysis/00b_fetch_tennis.py --tour both --from 2005 --to 2025",
+  "sha256": "2fb2b8a7c1b3fba21d1247a1dd4c980aa52c40b61ddf92916e6181313fcaa488",
+  "bytes": 7900966,
+  "rows": 63564,
+  "tours": [
+    "ATP",
+    "WTA"
+  ],
+  "date_min": "2012-12-30",
+  "date_max": "2025-11-16"
+}

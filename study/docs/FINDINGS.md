@@ -948,3 +948,37 @@ com-odds/odds-free, monitor `/integrity`). Dados em `export_site_data.py` (bloco
 > (radar de tipo de aposta + curva de diversificação + Mahalanobis). 40 fases no
 > ledger. Fronteiras restantes: outros esportes (decisão: futebol exclusivamente) e
 > odds pré-2000 (inexistentes). Lineage em `lineage.json`/`LINEAGE.md`.
+
+---
+
+## Fase S — Validade externa: tênis (bloco 48)
+
+A camada CANÔNICA (`skewlib/canonical.py` + `adapters/`) deixou o núcleo
+sport-agnóstico — só precisa de `(p, o, won)` por aposta. Plugando o **tênis**
+(tennis-data.co.uk, ATP+WTA 2005–2025, snapshot congelado em
+`data/PROVENANCE-tennis.json`), um esporte com mercado de **2 resultados** (sem
+empate) e **fonte de odds independente**, sobre **62.865 partidas** e ZERO ciência
+nova:
+
+- **Calibração:** p_fav médio **0.688** ≈ vitória real do favorito **0.692** — o
+  de-vig é confiável fora do futebol.
+- **A lei reaparece:** skew do favorito mais negativo onde o torneio é mais
+  desbalanceado — corr(skew_fav, p_fav) por tier = **−1.00 (ATP)** / **−0.98 (WTA)**
+  (futebol −0.90). Grand Slam (mais desbalanceado) tem o favorito mais negativo nos
+  dois tours.
+- **O azarão é lotérico:** skew **+2.314** ≈ futebol **+2.349**.
+
+A invariância estrutural não é artefato do 1X2 nem do futebol: é propriedade do
+ESPORTE como sistema competitivo. Validade externa para o §7 (limitação "um esporte").
+
+Artefatos: `skewlib/adapters/tennis.py`, `analysis/00b_fetch_tennis.py`,
+`analysis/48_tennis.py`, `outputs/fig/f35_crosssport.png`,
+`outputs/tennis_by_tier.csv`. Núcleo (`canonical`/`skewmeter`) inalterado.
+
+---
+
+> **6ª rodada (validade externa)** (2026-06-23): tênis — a lei skew=f(competitividade)
+> e o azarão lotérico reaparecem num 2º esporte (ATP+WTA, mercado de 2 resultados,
+> odds independentes), via a camada canônica sem mudar o núcleo. 41 fases no ledger.
+> Adicionar um esporte = um adaptador (`docs/DATA-SCHEMA.md`). Lineage em
+> `lineage.json`/`LINEAGE.md`.

@@ -74,6 +74,7 @@ redistribute** (they contain no row-level licensed data).
 | `open_vs_closed.csv` | open vs closed | skew_exante, p_fav_dv_mean, noll_scully, **closed** (0/1) |
 | `pre2005_by_league.csv` | pre-2005 regime | pre2005, modern, delta (skew levels), n_pre |
 | `bettype_by_league.csv` | every side (Fig f34) | p_fav_mean, **skew_fav / skew_draw / skew_dog** (ex-ante skew of each bet object) |
+| `tennis_by_tier.csv` | external validity (Fig f35) | tour (ATP/WTA), competition (tier), n, p_fav_mean, skew_fav, skew_dog — tennis via the canonical layer |
 | `diversification.csv` | portfolio decay | N (bets in portfolio), skew, skew_pred (≈skew/√N), exkurt, std, bet (fav/dog) |
 | `inplay_conditional.csv` | in-play resolution | state, share, p0_mean, q_cond, skew_cond |
 | `skew_series.csv` | raw realised returns | per-match favourite return (units of stake) |

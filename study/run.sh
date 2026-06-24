@@ -143,5 +143,15 @@ echo "================================================================"
   && "$PY" analysis/43_pre2005.py ) \
   || echo "   (puladas — sem rede/fonte canônica; o resto da pipeline está completo)"
 
+# 7) validade externa (tênis, tennis-data.co.uk via HTTP): baixa só se ausente e
+#    roda o bloco 48. Também não aborta a pipeline se a rede/fonte falhar.
+echo
+echo "================================================================"
+echo "==> validade externa (tênis): fetch + bloco 48"
+echo "================================================================"
+( { [ -f data/tennis.csv ] || "$PY" analysis/00b_fetch_tennis.py; } \
+  && "$PY" analysis/48_tennis.py ) \
+  || echo "   (pulado — sem tennis.csv/rede/openpyxl; o núcleo está completo)"
+
 echo
 echo "==> pipeline concluída. Séries/tabelas em outputs/; evidências em lineage.json"
