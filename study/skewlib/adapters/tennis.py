@@ -1,17 +1,18 @@
-"""Adaptador TÊNIS → tabela canônica (mercado match-odds, 2 resultados, sem empate).
+"""TENNIS adapter → canonical table (match-odds market, 2 outcomes, no draw).
 
-Fonte: tennis-data.co.uk (irmã da football-data.co.uk) — ATP/WTA, um arquivo por
-ano com resultados + odds de casas. As odds são rotuladas pelo resultado realizado:
-B365W/B365L = odds do VENCEDOR / PERDEDOR da partida (idem PSW/PSL, AvgW/AvgL,
-MaxW/MaxL). Logo cada partida tem dois objetos de aposta — o vencedor (odds W,
-won=1) e o perdedor (odds L, won=0) — e o FAVORITO é o de menor odd (= maior p),
-que às vezes é o vencedor e às vezes o perdedor (zebra). É o setup padrão do
-favourite-longshot em tênis, e cai exatamente no contrato canônico.
+Source: tennis-data.co.uk (sister of football-data.co.uk) — ATP/WTA, one file per
+year with results + bookmaker odds. The odds are labelled by the realised outcome:
+B365W/B365L = odds of the match WINNER / LOSER (likewise PSW/PSL, AvgW/AvgL,
+MaxW/MaxL). So each match has two betting objects — the winner (odds W,
+won=1) and the loser (odds L, won=0) — and the FAVOURITE is the one with the lower
+odd (= higher p), which is sometimes the winner and sometimes the loser (upset). It
+is the standard favourite-longshot setup in tennis, and maps exactly onto the
+canonical contract.
 
-Baixe o dado com `python analysis/00b_fetch_tennis.py` (ver lá: ToS restringe
-redistribuição; o bruto não é versionado). Depois:
+Fetch the data with `python analysis/00b_fetch_tennis.py` (see there: the ToS
+restricts redistribution; the raw data is not versioned). Then:
     from skewlib.adapters import tennis
-    can = tennis.to_canonical()               # lê data/tennis.csv
+    can = tennis.to_canonical()               # reads data/tennis.csv
 """
 import numpy as np
 import pandas as pd
@@ -22,55 +23,55 @@ SPORT = "tennis"
 MARKET = "match_odds"
 OUTCOMES = ["winner", "loser"]
 ROLES = {"winner": "won", "loser": "lost"}
-DRAW_ROLE = None                                   # tênis não tem empate
+DRAW_ROLE = None                                   # tennis has no draw
 
 DATA = Path("data/tennis.csv")
-# fontes de odds, em ordem de preferência (par vencedor/perdedor)
+# odds sources, in order of preference (winner/loser pair)
 ODDS_SOURCES = [("B365W", "B365L"), ("PSW", "PSL"), ("AvgW", "AvgL"), ("MaxW", "MaxL")]
-COMP_CANDIDATES = ["Series", "Tier", "Surface"]    # análogo de "liga" em tênis
+COMP_CANDIDATES = ["Series", "Tier", "Surface"]    # analogue of "league" in tennis
 
 
 def _load(path=None):
     path = Path(path or DATA)
     if not path.exists():
         raise FileNotFoundError(
-            f"{path} ausente — rode `python analysis/00b_fetch_tennis.py` "
-            f"(precisa de rede + openpyxl).")
+            f"{path} missing — run `python analysis/00b_fetch_tennis.py` "
+            f"(needs network + openpyxl).")
     df = pd.read_csv(path, low_memory=False)
     df["date"] = pd.to_datetime(df.get("Date"), errors="coerce")
     return df
 
 
 def _pick(df, candidates, label):
-    """Primeiro candidato presente. Cada candidato é uma coluna (str) ou um par
-    de colunas (tupla) que precisam existir juntas."""
+    """First candidate present. Each candidate is a column (str) or a pair
+    of columns (tuple) that must exist together."""
     for c in candidates:
         if isinstance(c, str):
             if c in df.columns:
                 return c
         elif all(x in df.columns for x in c):
             return c
-    raise KeyError(f"nenhuma coluna de {label} encontrada: {candidates}")
+    raise KeyError(f"no {label} column found: {candidates}")
 
 
 def to_canonical(df=None, odds=None, comp_col=None):
-    """Mapeia o dado de tênis para a tabela canônica. `odds` = par (col_vencedor,
-    col_perdedor); `comp_col` = coluna de agrupamento (default: Series/Tier/Surface)."""
+    """Maps the tennis data to the canonical table. `odds` = pair (winner_col,
+    loser_col); `comp_col` = grouping column (default: Series/Tier/Surface)."""
     if df is None:
         df = _load()
     df = df.copy()
-    if "date" not in df.columns:                       # df cru passado direto
+    if "date" not in df.columns:                       # raw df passed directly
         df["date"] = pd.to_datetime(df.get("Date"), errors="coerce")
     ow, ol = odds or _pick(df, ODDS_SOURCES, "odds")
     d = df.dropna(subset=[ow, ol, "Winner", "Loser", "date"]).copy()
     d = d[(d[ow] > C.MIN_ODD) & (d[ol] > C.MIN_ODD)].reset_index(drop=True)
-    # competição: coalesce dos candidatos (ATP usa Series, WTA usa Tier, …)
+    # competition: coalesce the candidates (ATP uses Series, WTA uses Tier, …)
     if comp_col:
         comp = d[comp_col].astype(str)
     else:
         present = [c for c in COMP_CANDIDATES if c in d.columns]
         if not present:
-            raise KeyError(f"nenhuma coluna de competição: {COMP_CANDIDATES}")
+            raise KeyError(f"no competition column: {COMP_CANDIDATES}")
         comp = d[present[0]]
         for c in present[1:]:
             comp = comp.fillna(d[c])

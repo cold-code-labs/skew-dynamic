@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
-# run.sh — pipeline completa do estudo de skewness, num comando.
+# run.sh — full skewness study pipeline, in one command.
 #
-# Faz, em ordem: prepara ambiente (venv + deps), baixa o dataset e roda os
-# blocos de análise 00→06. Cada script de analysis/ importa de skewlib/ e
-# precisa do diretório do projeto no PYTHONPATH (nomes de módulo começam com
-# dígito, então invocamos por caminho, não com `python -m`).
+# Does, in order: prepares the environment (venv + deps), fetches the dataset and
+# runs analysis blocks 00→06. Each analysis/ script imports from skewlib/ and
+# needs the project directory on PYTHONPATH (module names start with a digit,
+# so we invoke by path, not with `python -m`).
 #
-# Uso:
-#   ./run.sh                # tudo: setup + fetch + análises
-#   ./run.sh --no-fetch     # pula o download (usa data/matches.csv existente)
-#   ./run.sh --no-venv      # usa o python atual, sem criar .venv
-#   SKEW_PY=python3.11 ./run.sh   # escolhe o interpretador base
+# Usage:
+#   ./run.sh                # everything: setup + fetch + analyses
+#   ./run.sh --no-fetch     # skips the download (uses existing data/matches.csv)
+#   ./run.sh --no-venv      # uses the current python, without creating .venv
+#   SKEW_PY=python3.11 ./run.sh   # choose the base interpreter
 set -euo pipefail
 
 cd "$(dirname "$0")"
@@ -22,16 +22,16 @@ for arg in "$@"; do
     --no-fetch) FETCH=0 ;;
     --no-venv)  USE_VENV=0 ;;
     -h|--help)  sed -n '2,14p' "$0"; exit 0 ;;
-    *) echo "argumento desconhecido: $arg" >&2; exit 2 ;;
+    *) echo "unknown argument: $arg" >&2; exit 2 ;;
   esac
 done
 
 PY="${SKEW_PY:-python3}"
 
-# 1) ambiente: venv + dependências (idempotente)
+# 1) environment: venv + dependencies (idempotent)
 if [ "$USE_VENV" -eq 1 ]; then
   if [ ! -d .venv ]; then
-    echo "==> criando .venv"
+    echo "==> creating .venv"
     "$PY" -m venv .venv
   fi
   # shellcheck disable=SC1091
@@ -39,28 +39,28 @@ if [ "$USE_VENV" -eq 1 ]; then
   PY=python
 fi
 
-echo "==> instalando dependências (requirements.txt)"
+echo "==> installing dependencies (requirements.txt)"
 "$PY" -m pip install --quiet --upgrade pip
 "$PY" -m pip install --quiet -r requirements.txt
 
-# o projeto precisa de si mesmo no path para `from skewlib import ...`
+# the project needs itself on the path for `from skewlib import ...`
 export PYTHONPATH="$PWD:${PYTHONPATH:-}"
 
-# 2) dados: baixa só se necessário
+# 2) data: fetch only if needed
 if [ "$FETCH" -eq 1 ] && [ ! -f data/matches.csv ]; then
-  echo "==> 00 fetch — baixando dataset"
+  echo "==> 00 fetch — downloading dataset"
   "$PY" analysis/00_fetch_data.py
 else
-  echo "==> 00 fetch — pulado (data/matches.csv presente ou --no-fetch)"
+  echo "==> 00 fetch — skipped (data/matches.csv present or --no-fetch)"
 fi
 
 if [ ! -f data/matches.csv ]; then
-  echo "ERRO: data/matches.csv ausente. Rode sem --no-fetch ou aponte" >&2
-  echo "      skewlib/config.py:DATA_PATH para o seu dump." >&2
+  echo "ERROR: data/matches.csv missing. Run without --no-fetch or point" >&2
+  echo "       skewlib/config.py:DATA_PATH to your dump." >&2
   exit 1
 fi
 
-# 3) análises 01→06 (a ordem não importa entre si, mas seguimos a numeração)
+# 3) analyses 01→06 (their order does not matter, but we follow the numbering)
 for script in \
   analysis/01_baseline.py \
   analysis/02_robustness.py \
@@ -116,53 +116,53 @@ do
   "$PY" "$script"
 done
 
-# 4) dados do site/serviço: (re)gera site/src/data/findings.json a partir das
-#    mesmas computações auditadas (alimenta o widget e a API /measure).
+# 4) site/service data: (re)generates site/src/data/findings.json from the
+#    same audited computations (feeds the widget and the /measure API).
 echo
 echo "================================================================"
 echo "==> export — findings.json (site + API)"
 echo "================================================================"
 "$PY" analysis/export_site_data.py
 
-# 5) ledger de evidências: (re)gera lineage.json + docs/LINEAGE.md e audita drift
+# 5) evidence ledger: (re)generates lineage.json + docs/LINEAGE.md and audits drift
 echo
 echo "================================================================"
-echo "==> lineage — ledger de evidências + auditoria de drift"
+echo "==> lineage — evidence ledger + drift audit"
 echo "================================================================"
 "$PY" analysis/build_lineage.py
 "$PY" analysis/build_lineage.py --check
 
-# 6) frentes de DADO EXTERNO (football-data.co.uk canônico): odds de abertura→
-#    fechamento (D1) e histórico pré-2005 (P6). Precisam de rede para baixar
-#    data/canonical/. Não abortam a pipeline se a rede/fonte falhar.
+# 6) EXTERNAL DATA fronts (canonical football-data.co.uk): opening→closing odds
+#    (D1) and pre-2005 history (P6). They need the network to download
+#    data/canonical/. They do not abort the pipeline if the network/source fails.
 echo
 echo "================================================================"
-echo "==> frentes de dado externo (canônico): fetch + D1 + pré-2005"
+echo "==> external-data fronts (canonical): fetch + D1 + pre-2005"
 echo "================================================================"
 ( "$PY" analysis/50_fetch_canonical.py \
   && "$PY" analysis/42_open_close.py \
   && "$PY" analysis/43_pre2005.py ) \
-  || echo "   (puladas — sem rede/fonte canônica; o resto da pipeline está completo)"
+  || echo "   (skipped — no network/canonical source; the rest of the pipeline is complete)"
 
-# 7) validade externa (tênis, tennis-data.co.uk via HTTP): baixa só se ausente e
-#    roda o bloco 48. Também não aborta a pipeline se a rede/fonte falhar.
+# 7) external validity (tennis, tennis-data.co.uk via HTTP): fetches only if absent
+#    and runs block 48. Also does not abort the pipeline if the network/source fails.
 echo
 echo "================================================================"
-echo "==> validade externa (tênis): fetch + bloco 48"
+echo "==> external validity (tennis): fetch + block 48"
 echo "================================================================"
 ( { [ -f data/tennis.csv ] || "$PY" analysis/00b_fetch_tennis.py; } \
   && "$PY" analysis/48_tennis.py ) \
-  || echo "   (pulado — sem tennis.csv/rede/openpyxl; o núcleo está completo)"
+  || echo "   (skipped — no tennis.csv/network/openpyxl; the core is complete)"
 
-# 8) validade externa (basquete, sportsbookreviewsonline.com): baixa só se ausente e
-#    roda o bloco 49 (mercado moneyline, NBA). Não aborta a pipeline se a rede falhar.
+# 8) external validity (basketball, sportsbookreviewsonline.com): fetches only if absent
+#    and runs block 49 (moneyline market, NBA). Does not abort the pipeline if the network fails.
 echo
 echo "================================================================"
-echo "==> validade externa (basquete): fetch + bloco 49"
+echo "==> external validity (basketball): fetch + block 49"
 echo "================================================================"
 ( { [ -f data/basketball.csv ] || "$PY" analysis/00c_fetch_basketball.py; } \
   && "$PY" analysis/49_basketball.py ) \
-  || echo "   (pulado — sem basketball.csv/rede; o núcleo está completo)"
+  || echo "   (skipped — no basketball.csv/network; the core is complete)"
 
 echo
-echo "==> pipeline concluída. Séries/tabelas em outputs/; evidências em lineage.json"
+echo "==> pipeline complete. Series/tables in outputs/; evidence in lineage.json"

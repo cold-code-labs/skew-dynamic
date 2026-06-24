@@ -1,8 +1,8 @@
-"""34 — E3: calibração do modelo POR liga (cutoff de empate endógeno). O bloco 15
-calibra (h, c, σ) GLOBAL. Aqui calibramos os três POR liga a partir das taxas
-marginais de cada uma — vantagem de casa, cutoff de empate c (ligas mais
-"empatadeiras") e dispersão de força σ_L endógenos. Pergunta: a lei melhora quando
-cada liga tem seu próprio (h,c,σ)? E o σ_L estimado é a competitividade?
+"""34 — E3: model calibration PER league (endogenous draw cutoff). Block 15
+calibrates (h, c, σ) GLOBALLY. Here we calibrate all three PER league from each
+one's marginal rates — endogenous home advantage, draw cutoff c (more "draw-prone"
+leagues) and strength dispersion σ_L. Question: does the law improve when each league
+has its own (h,c,σ)? And is the estimated σ_L the competitiveness?
 """
 import numpy as np
 import matplotlib
@@ -14,34 +14,34 @@ from skewlib import io, returns, exante, model, stats, provenance as prov, confi
 def main():
     df = exante.add_exante(returns.add_returns(io.load()))
     obs = exante.pooled_by(df, "Division", min_n=3000)[["Division", "skew_exante", "p_fav_dv_mean"]]
-    print(f"N={len(df):,} | calibrando (h,c,σ) por liga...", flush=True)
+    print(f"N={len(df):,} | calibrating (h,c,σ) by league...", flush=True)
     P = model.calibrate_by_league(df, n=120000, min_n=3000)
     M = P.merge(obs, on="Division")
-    print(f"  {len(M)} ligas calibradas")
+    print(f"  {len(M)} leagues calibrated")
 
-    print(f"\nPARÂMETROS ENDÓGENOS por liga:")
-    print(f"  h (casa):  média {P.h.mean():.3f} · range [{P.h.min():.3f},{P.h.max():.3f}]")
-    print(f"  c (empate): média {P.c.mean():.3f} · range [{P.c.min():.3f},{P.c.max():.3f}]"
-          f"  ← cutoff de empate endógeno (ligas mais/menos empatadeiras)")
-    print(f"  σ_L (força): média {P['sigma_L'].mean():.3f} · "
+    print(f"\nENDOGENOUS PARAMETERS by league:")
+    print(f"  h (home):  mean {P.h.mean():.3f} · range [{P.h.min():.3f},{P.h.max():.3f}]")
+    print(f"  c (draw):  mean {P.c.mean():.3f} · range [{P.c.min():.3f},{P.c.max():.3f}]"
+          f"  ← endogenous draw cutoff (more/less draw-prone leagues)")
+    print(f"  σ_L (strength): mean {P['sigma_L'].mean():.3f} · "
           f"range [{P['sigma_L'].min():.3f},{P['sigma_L'].max():.3f}]")
 
-    # σ_L estimado é a competitividade observável?
+    # is the estimated σ_L the observable competitiveness?
     rsp = stats.bootstrap_corr(M.sigma_L.values, M.p_fav_dv_mean.values)
-    print(f"\n  corr(σ_L estimado, p_fav observado) = {rsp['r']:+.3f} "
-          f"[{rsp['ci_lo']:+.2f},{rsp['ci_hi']:+.2f}] — σ_L recupera a competitividade")
-    # c endógeno correlaciona com a taxa de empate da liga?
+    print(f"\n  corr(estimated σ_L, observed p_fav) = {rsp['r']:+.3f} "
+          f"[{rsp['ci_lo']:+.2f},{rsp['ci_hi']:+.2f}] — σ_L recovers the competitiveness")
+    # does the endogenous c correlate with the league's draw rate?
     rcd = stats.bootstrap_corr(M.c.values, M.draw.values)
-    print(f"  corr(c endógeno, taxa de empate) = {rcd['r']:+.3f} "
-          f"[{rcd['ci_lo']:+.2f},{rcd['ci_hi']:+.2f}] — c capta a 'empatabilidade'")
+    print(f"  corr(endogenous c, draw rate) = {rcd['r']:+.3f} "
+          f"[{rcd['ci_lo']:+.2f},{rcd['ci_hi']:+.2f}] — c captures the 'draw-proneness'")
 
-    # a skew prevista pelo modelo da PRÓPRIA liga vs observada
+    # the skew predicted by the league's OWN model vs observed
     r = float(np.corrcoef(M.skew_model.values, M.skew_exante.values)[0, 1])
     rmse = float(np.sqrt(np.mean((M.skew_model - M.skew_exante) ** 2)))
-    print(f"\n  skew_model (por liga) vs observada: r={r:+.3f}, RMSE={rmse:.3f}")
-    print(f"  (global do bloco 15: r=+0.90, RMSE 0.024 — calibração por liga mantém a lei)")
-    print("  → a invariância sobrevive ao cutoff de empate endógeno; (h,c,σ) por liga")
-    print("    não muda a história: σ_L (competitividade) continua governando a skew.")
+    print(f"\n  skew_model (by league) vs observed: r={r:+.3f}, RMSE={rmse:.3f}")
+    print(f"  (global from block 15: r=+0.90, RMSE 0.024 — per-league calibration keeps the law)")
+    print("  → the invariance survives the endogenous draw cutoff; (h,c,σ) per league")
+    print("    does not change the story: σ_L (competitiveness) still governs the skew.")
 
     C.OUTDIR.mkdir(exist_ok=True)
     M.sort_values("sigma_L").to_csv(C.OUTDIR / "per_league_calibration.csv", index=False)

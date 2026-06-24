@@ -1,11 +1,11 @@
-"""Decomposições: por estratégia, por faixa de odds, por liga."""
+"""Decompositions: by strategy, by odds band, by league."""
 import pandas as pd
 from scipy.stats import skew
 from .returns import strategy_return
 
 
 def by_strategy(df, picks=("fav", "dog", "H", "D", "A")):
-    """Skewness/retorno por estratégia fixa."""
+    """Skewness/return per fixed strategy."""
     rows = []
     for p in picks:
         r = strategy_return(df, p)
@@ -15,7 +15,7 @@ def by_strategy(df, picks=("fav", "dog", "H", "D", "A")):
 
 
 def by_odds_bucket(df, edges=(0, .4, .45, .5, .55, .6, .7, 1.0)):
-    """Favorite-longshot bias: retorno e skewness por faixa de prob. do favorito."""
+    """Favorite-longshot bias: return and skewness per favourite prob. band."""
     d = df.copy(); d["bucket"] = pd.cut(d["p_fav"], list(edges))
     rows = []
     for b, g in d.groupby("bucket", observed=True):
@@ -26,10 +26,10 @@ def by_odds_bucket(df, edges=(0, .4, .45, .5, .55, .6, .7, 1.0)):
 
 
 def flb_by_year(df, min_n=500):
-    """Barômetro do FLB por ano: retorno do azarão (mais negativo = FLB mais
-    forte), spread favorito−azarão, e erro de calibração do favorito (win% real −
-    p_fav implícita). Testa se o próprio viés deriva no tempo (Angelini &
-    De Angelis 2019), o que confundiria o teste de invariância da skewness."""
+    """FLB barometer per year: longshot return (more negative = stronger FLB),
+    favourite−longshot spread, and favourite calibration error (real win% −
+    implied p_fav). Tests whether the bias itself drifts over time (Angelini &
+    De Angelis 2019), which would confound the skewness invariance test."""
     d = df.copy(); d["year"] = d.date.dt.year
     rows = []
     for y, g in d.groupby("year"):
@@ -47,7 +47,7 @@ def flb_by_year(df, min_n=500):
 
 
 def by_league(df, min_games=2000):
-    """Skewness por liga + previsibilidade média (p_fav)."""
+    """Skewness per league + mean predictability (p_fav)."""
     rows = []
     for lg, g in df.groupby("Division"):
         if len(g) < min_games: continue

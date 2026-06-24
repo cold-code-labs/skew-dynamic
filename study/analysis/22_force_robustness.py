@@ -1,16 +1,16 @@
-"""22 — Robustez da distribuição de força (Frente E2): o modelo derivado assume
-força gaussiana, r ~ N(0, σ_L²). A lei skewness=f(competitividade) sobrevive se
-a força for cauda-pesada (t-Student), assimétrica (skew-normal) ou de suporte
-limitado (uniforme)?
+"""22 — Robustness of the strength distribution (Front E2): the derived model
+assumes Gaussian strength, r ~ N(0, σ_L²). Does the law skewness=f(competitiveness)
+survive if the strength is heavy-tailed (Student-t), asymmetric (skew-normal) or of
+bounded support (uniform)?
 
-Predição teórica: a diferença de força de um jogo é d = rᵢ − rⱼ. Para QUALQUER
-força iid, d é SIMÉTRICO (X−Y é simétrico em torno de 0). Logo a ASSIMETRIA da
-força não pode enviesar a lei — só a CAUDA (kurtose de d) pode mover algo. Então:
-  • skew-normal (±α) deve colapsar quase exatamente sobre a gaussiana;
-  • t-Student (caudas pesadas) é o teste real; uniforme (caudas curtas) o oposto.
-Reparametrizamos pela competitividade OBSERVÁVEL (mean p_fav) e medimos quanto a
-curva skew×p_fav se desloca entre famílias — se quase nada, a lei é geometria da
-mistura, não da hipótese gaussiana.
+Theoretical prediction: a match's strength difference is d = rᵢ − rⱼ. For ANY iid
+strength, d is SYMMETRIC (X−Y is symmetric about 0). Hence the ASYMMETRY of the
+strength cannot bias the law — only the TAIL (kurtosis of d) can shift anything. So:
+  • skew-normal (±α) should collapse almost exactly onto the Gaussian;
+  • Student-t (heavy tails) is the real test; uniform (short tails) the opposite.
+We reparametrise by the OBSERVABLE competitiveness (mean p_fav) and measure how much
+the skew×p_fav curve shifts across families — if almost nothing, the law is geometry
+of the mixture, not of the Gaussian assumption.
 """
 import numpy as np, pandas as pd
 import matplotlib
@@ -33,7 +33,7 @@ N = 600_000
 def main():
     df = exante.add_exante(returns.add_returns(io.load()))
     print(f"N={len(df):,} | de-vig={C.DEVIG_METHOD}")
-    print("Calibrando ordered-probit (força gaussiana) p/ fixar h, c...", flush=True)
+    print("Calibrating ordered-probit (Gaussian strength) to fix h, c...", flush=True)
     par = model.calibrate(home=(df.FTResult == "H").mean(),
                           draw=(df.FTResult == "D").mean(),
                           pfav=float(df.p_fav_dv.mean()))
@@ -42,14 +42,14 @@ def main():
 
     sig = np.linspace(0.05, 1.30, 36)
     curves = {}
-    print("\nkurtose de d (cauda da força) por família @σ_ref:")
+    print("\nkurtosis of d (strength tail) by family @σ_ref:")
     for fam, kw, lab, _ in FAMILIES:
         pf, sk = model.curve_family(h, c, sig, family=fam, n=N, seed=11, **kw)
         curves[lab] = (pf, sk)
         d = model.force_diff(sref, 400_000, 5, fam, **kw)
         print(f"  {lab:30} exc.kurt(d) = {kurtosis(d):+.3f}")
 
-    # reparametrizar pela competitividade observável (mean p_fav) e comparar -----
+    # reparametrise by observable competitiveness (mean p_fav) and compare --------
     base_pf, base_sk = curves["N(0,σ²) — baseline"]
     lo = max(c[0].min() for c in curves.values())
     hi = min(c[0].max() for c in curves.values())
@@ -60,9 +60,9 @@ def main():
         return np.interp(pgrid, pf[o], sk[o])
 
     base_i = interp_on_pgrid(base_pf, base_sk)
-    print(f"\nDesvio da curva skew×p_fav vs gaussiana (p_fav ∈ [{lo:.2f},{hi:.2f}], "
-          f"reparametrizada pela competitividade):")
-    print(f"  {'família':30} {'max|ΔS|':>9} {'RMS ΔS':>9}")
+    print(f"\nDeviation of the skew×p_fav curve vs Gaussian (p_fav ∈ [{lo:.2f},{hi:.2f}], "
+          f"reparametrised by competitiveness):")
+    print(f"  {'family':30} {'max|ΔS|':>9} {'RMS ΔS':>9}")
     rows = []
     for fam, kw, lab, _ in FAMILIES:
         pf, sk = curves[lab]
@@ -72,25 +72,25 @@ def main():
         print(f"  {lab:30} {dmax:>9.4f} {drms:>9.4f}")
         rows.append({"family": lab, "max_dS": dmax, "rms_dS": drms})
 
-    # ponto operacional do futebol (p_fav ≈ valor empírico) ---------------------
+    # football operating point (p_fav ≈ empirical value) ------------------------
     pf_emp = float(df.p_fav_dv.mean())
     if lo < pf_emp < hi:
         sk_at = {lab: float(np.interp(pf_emp, *(lambda pf, sk: (np.sort(pf),
                  sk[np.argsort(pf)]))(*curves[lab]))) for lab in curves}
         vals = np.array(list(sk_at.values()))
-        print(f"\nNo ponto operacional do futebol (p_fav={pf_emp:.3f}): "
+        print(f"\nAt the football operating point (p_fav={pf_emp:.3f}): "
               f"skew ∈ [{vals.min():+.4f},{vals.max():+.4f}], "
-              f"amplitude entre famílias = {vals.max()-vals.min():.4f}")
+              f"range across families = {vals.max()-vals.min():.4f}")
 
-    print("\nLeitura: skew-normal (±α) cola na gaussiana (d simétrico ⇒ a assimetria")
-    print("da força não conta); só a cauda (t pesada / uniforme) desloca, e pouco —")
-    print("a lei skewness=f(competitividade) é robusta à distribuição de força.")
+    print("\nReading: skew-normal (±α) sticks to the Gaussian (d symmetric ⇒ the strength")
+    print("asymmetry does not count); only the tail (heavy t / uniform) shifts, and little —")
+    print("the law skewness=f(competitiveness) is robust to the strength distribution.")
 
     C.OUTDIR.mkdir(exist_ok=True)
     pd.DataFrame(rows).to_csv(C.OUTDIR / "force_robustness.csv", index=False)
     print(f"\n  -> {C.OUTDIR / 'force_robustness.csv'}")
 
-    # figura --------------------------------------------------------------------
+    # figure --------------------------------------------------------------------
     FIG = C.OUTDIR / "fig"; FIG.mkdir(parents=True, exist_ok=True)
     fig, ax = plt.subplots(figsize=(7, 4.5))
     for fam, kw, lab, col in FAMILIES:

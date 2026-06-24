@@ -1,7 +1,7 @@
-"""20 — CPT invariante (Frente C2): a ponderação de probabilidade (a preferência
-por trás do FLB) é ela própria um INVARIANTE — estável entre ligas e no tempo?
-Ajusta γ de Tversky-Kahneman à curva de calibração (q implícita ≈ w(π objetiva))
-globalmente, por liga e por temporada.
+"""20 — Invariant CPT (Front C2): is the probability weighting (the preference
+behind the FLB) itself an INVARIANT — stable across leagues and over time?
+Fits the Tversky-Kahneman γ to the calibration curve (implied q ≈ w(objective π))
+globally, by league and by season.
 """
 import numpy as np, pandas as pd
 import matplotlib
@@ -17,37 +17,37 @@ def main():
 
     cal = cpt.calibration(df, nbins=25)
     g0 = cpt.fit_gamma(cal)
-    print(f"\nGLOBAL — γ de Tversky-Kahneman = {g0:.3f}  "
-          f"({'inverse-S (overweight de azarão) = FLB' if g0 < 1 else 'sem inverse-S'})")
-    print("  curva de calibração (q implícita vs π objetiva), por faixa de q:")
+    print(f"\nGLOBAL — Tversky-Kahneman γ = {g0:.3f}  "
+          f"({'inverse-S (underdog overweight) = FLB' if g0 < 1 else 'no inverse-S'})")
+    print("  calibration curve (implied q vs objective π), by q band:")
     sub = cal.iloc[::4]
     print(sub.to_string(index=False, formatters={"q": "{:.3f}".format,
           "pi": "{:.3f}".format}))
 
-    # invariância cross-sectional: γ por liga
+    # cross-sectional invariance: γ by league
     gl = cpt.gamma_by(df, "Division", min_n=4000, nbins=15).sort_values("gamma")
-    print(f"\nINVARIÂNCIA ENTRE LIGAS ({len(gl)} ligas):")
-    print(f"  γ médio = {gl.gamma.mean():.3f} | sd = {gl.gamma.std():.3f} | "
+    print(f"\nINVARIANCE ACROSS LEAGUES ({len(gl)} leagues):")
+    print(f"  mean γ = {gl.gamma.mean():.3f} | sd = {gl.gamma.std():.3f} | "
           f"range [{gl.gamma.min():.3f}, {gl.gamma.max():.3f}]")
     rcp = stats.bootstrap_corr(gl.gamma.values, gl.p_fav_dv.values)
     print(f"  corr(γ, p_fav) = {rcp['r']:+.3f} [{rcp['ci_lo']:+.2f},{rcp['ci_hi']:+.2f}]"
-          f"  (γ ~constante ⇒ preferência não depende da competitividade)")
+          f"  (γ ~constant ⇒ preference does not depend on competitiveness)")
 
-    # invariância temporal: γ por temporada + tendência
+    # temporal invariance: γ by season + trend
     gy = cpt.gamma_by(df, "season", min_n=4000, nbins=15).sort_values("season")
     ry = stats.ols(gy.gamma.values, gy.season.values - gy.season.mean())
-    print(f"\nINVARIÂNCIA TEMPORAL ({len(gy)} temporadas):")
-    print(f"  γ médio = {gy.gamma.mean():.3f} | sd = {gy.gamma.std():.3f}")
-    print(f"  tendência: β = {ry['slope']:+.5f}/ano (r={ry['r']:+.2f}) — "
-          f"{'sem drift' if abs(ry['slope']) < 0.005 else 'drift'} "
-          f"(Δ20a ≈ {ry['slope']*20:+.3f}); a ponderação é estável no tempo.")
+    print(f"\nTEMPORAL INVARIANCE ({len(gy)} seasons):")
+    print(f"  mean γ = {gy.gamma.mean():.3f} | sd = {gy.gamma.std():.3f}")
+    print(f"  trend: β = {ry['slope']:+.5f}/yr (r={ry['r']:+.2f}) — "
+          f"{'no drift' if abs(ry['slope']) < 0.005 else 'drift'} "
+          f"(Δ20yr ≈ {ry['slope']*20:+.3f}); the weighting is stable over time.")
 
     C.OUTDIR.mkdir(exist_ok=True)
     gl.to_csv(C.OUTDIR / "cpt_by_league.csv", index=False)
     gy.to_csv(C.OUTDIR / "cpt_by_season.csv", index=False)
     print(f"\n  -> {C.OUTDIR / 'cpt_by_league.csv'} | {C.OUTDIR / 'cpt_by_season.csv'}")
 
-    # figura: (a) w(p) ajustada + pontos de calibração; (b) γ por liga e por ano
+    # figure: (a) fitted w(p) + calibration points; (b) γ by league and by year
     FIG = C.OUTDIR / "fig"; FIG.mkdir(parents=True, exist_ok=True)
     fig, axes = plt.subplots(1, 2, figsize=(10, 4))
     pp = np.linspace(0.01, 0.99, 200)

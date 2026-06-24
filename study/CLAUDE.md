@@ -1,61 +1,63 @@
-# CLAUDE.md — convenções do projeto
+# CLAUDE.md — project conventions
 
-Contexto para o Claude Code ao continuar este estudo.
+Context for Claude Code when continuing this study.
 
-## O que é
-Estudo empírico de skewness em mercados de apostas de futebol. Objetivo final:
-um paper. Tese: skewness é invariante estrutural (não dinâmico), função da
-competitividade da liga. Ver `docs/FINDINGS.md` para o estado atual.
+## What it is
+Empirical study of skewness in football betting markets. Final goal: a paper.
+Thesis: skewness is a structural invariant (not dynamic), a function of league
+competitiveness. See `docs/FINDINGS.md` for the current state.
 
-## Arquitetura
-- Toda lógica reutilizável vive em `skewlib/`. Scripts em `analysis/` são finos
-  e importam de `skewlib` — **não duplicar lógica** nos scripts.
-- Adicionar capacidade nova = função em `skewlib`, depois um script fino que a usa.
-- Parâmetros (janela, passo, recorte) só em `skewlib/config.py`.
-- **Multi-esporte:** o núcleo (`skewlib/canonical.py` + `skewmeter`) é sport-agnóstico
-  e consome a tabela canônica (`docs/DATA-SCHEMA.md`). Adicionar um esporte/mercado =
-  um adaptador em `skewlib/adapters/` (mapeia bruto→canônico + taxonomia), registrado
-  em `adapters/__init__.py`. **Não** ramificar o núcleo por esporte. O futebol delega
-  a de-vig ao caminho congelado → números bit-idênticos (asserção em `47_canonical.py`).
+## Architecture
+- All reusable logic lives in `skewlib/`. Scripts in `analysis/` are thin and
+  import from `skewlib` — **do not duplicate logic** in the scripts.
+- Adding a new capability = a function in `skewlib`, then a thin script that uses it.
+- Parameters (window, step, cut-off) only in `skewlib/config.py`.
+- **Multi-sport:** the core (`skewlib/canonical.py` + `skewmeter`) is sport-agnostic
+  and consumes the canonical table (`docs/DATA-SCHEMA.md`). Adding a sport/market =
+  one adapter in `skewlib/adapters/` (maps raw→canonical + taxonomy), registered in
+  `adapters/__init__.py`. **Do not** branch the core per sport. Football delegates
+  de-vig to the frozen path → bit-identical numbers (assertion in `47_canonical.py`).
 
-## Dados
-- `data/` nunca é commitado. Apontar `config.DATA_PATH` para o dump local.
-- Na infra própria, preferir football-data.co.uk como fonte canônica e empilhar
-  todas as temporadas/ligas (mais cobertura que o mirror de bootstrap).
-- Sempre filtrar odds inválidas (`MIN_ODD`) — o dado tem zeros/valores sujos.
+## Data
+- `data/` is never committed. Point `config.DATA_PATH` at the local dump.
+- On our own infra, prefer football-data.co.uk as the canonical source and stack
+  all seasons/leagues (more coverage than the bootstrap mirror).
+- Always filter invalid odds (`MIN_ODD`) — the data has zeros/dirty values.
 
-## Rigor estatístico (não regredir)
-- Para inferência, usar **janelas não-sobrepostas** (`overlap=False`). A
-  sobreposição infla autocorrelação — foi o que mascarou "persistência" na v1.
-- Skewness é momento de 3ª ordem → erro-padrão por bootstrap, nunca assumir normal.
-- Confirmação dupla de estacionariedade (ADF + KPSS).
-- Reportar sensibilidade a tamanho de janela como robustez.
+## Statistical rigour (do not regress)
+- For inference, use **non-overlapping windows** (`overlap=False`). Overlap inflates
+  autocorrelation — that is what masked "persistence" in v1.
+- Skewness is a 3rd-order moment → standard error by bootstrap, never assume normal.
+- Double confirmation of stationarity (ADF + KPSS).
+- Report sensitivity to window size as robustness.
 
-## Estado e próximas frentes
-Tese central **provada** (W1–W5 + P1–P5 + B + C + E, blocos 00–22; ver
-`docs/FINDINGS.md`). **Frentes abertas, priorizadas e detalhadas em
-`docs/RESEARCH-AGENDA.md`** — restantes no dataset: G (robustez adversarial,
-próxima), F (micro), D2–D4 (microestrutura), H2 (aberto×fechado), C3 (Kelly), E3
-(calibração por liga). `docs/LITERATURA.md` ancora tudo.
+## State and next fronts
+Central thesis **proven** (W1–W5 + P1–P5 + B + C + E, blocks 00–22; see
+`docs/FINDINGS.md`). **Open fronts, prioritised and detailed in
+`docs/RESEARCH-AGENDA.md`** — remaining in the dataset: G (adversarial robustness,
+next), F (micro), D2–D4 (microstructure), H2 (open×close), C3 (Kelly), E3
+(per-league calibration). `docs/LITERATURA.md` anchors everything.
 
-## Lineage / proveniência / versionamento (NÃO pular)
-Cada achado é pinado à versão exata que o produziu. Disciplina ao fechar uma frente:
-1. **Carimbar** — todo bloco novo termina com
-   `prov.write_stamp("NN_nome", metrics={...})` (números-título), gravando git
-   sha + hash do dataset + libs em `outputs/_provenance/` (regenerável).
-2. **Timeline** — adicionar a fase ao `docs/FINDINGS.md` (Fase X) **e** ao
-   `site/src/components/Timeline.astro` (uma entrada por sub-achado).
-3. **Ledger** — registrar a fase em `analysis/build_lineage.py:PHASES` (blocos,
-   figuras, números, commit, tag), rodar `python analysis/build_lineage.py` p/
-   regenerar `lineage.json` + `docs/LINEAGE.md`.
-4. **Versionar** — commit; depois `git tag -a evidence/<frente> <sha> -m "..."`
-   no commit que estabeleceu os números (`--tags` sugere os comandos).
-5. **Auditar** — `python analysis/build_lineage.py --check` compara os carimbos de
-   execução com o ledger e acusa **DRIFT** (script mudou ⇒ número mudou). O
-   `run.sh` já roda isso no fim da pipeline. Se houver drift legítimo, atualizar o
-   ledger + nova tag — o git guarda o histórico do número antigo.
-`git checkout evidence/frente-E` recupera o código exato de qualquer evidência.
+## Lineage / provenance / versioning (DO NOT skip)
+Every finding is pinned to the exact version that produced it. Discipline when
+closing a front:
+1. **Stamp** — every new block ends with
+   `prov.write_stamp("NN_name", metrics={...})` (headline numbers), writing the git
+   sha + dataset hash + libs to `outputs/_provenance/` (regenerable).
+2. **Timeline** — add the phase to `docs/FINDINGS.md` (Phase X) **and** to
+   `site/src/components/Timeline.astro` (one entry per sub-finding).
+3. **Ledger** — register the phase in `analysis/build_lineage.py:PHASES` (blocks,
+   figures, numbers, commit, tag), run `python analysis/build_lineage.py` to
+   regenerate `lineage.json` + `docs/LINEAGE.md`.
+4. **Version** — commit; then `git tag -a evidence/<front> <sha> -m "..."` on the
+   commit that established the numbers (`--tags` suggests the commands).
+5. **Audit** — `python analysis/build_lineage.py --check` compares the run stamps
+   against the ledger and flags **DRIFT** (script changed ⇒ number changed).
+   `run.sh` already runs this at the end of the pipeline. If there is legitimate
+   drift, update the ledger + a new tag — git keeps the history of the old number.
+`git checkout evidence/frente-E` recovers the exact code of any evidence (existing
+tags keep their original `frente-` names).
 
-## Estilo
-- Português nos comentários e docs. Código limpo, funções pequenas.
+## Style
+- English in comments and docs. Clean code, small functions.
 - Stack: Python, pandas/numpy/scipy/statsmodels/ruptures.

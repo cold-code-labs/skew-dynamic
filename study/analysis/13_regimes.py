@@ -1,11 +1,10 @@
-"""13 — Regime vs invariância (P1): a tese é invariância INTRA-REGIME.
+"""13 — Regime vs invariance (P1): the thesis is WITHIN-REGIME invariance.
 
-A literatura (Lee & Fort 2012; Basini et al. 2023) acha quebras estruturais reais
-na competitividade da EPL, ligadas a choques institucionais — Champions League
-(1994/95), Bosman (1995), desigualdade de receita (~2003). TODOS anteriores ao
-nosso recorte ≥2005. Predição sob a visão de regime: DENTRO de 2005–2025
-(regime moderno único) deve haver poucas quebras e SEM ano comum entre ligas.
-Testamos exatamente isso.
+The literature (Lee & Fort 2012; Basini et al. 2023) finds real structural breaks
+in EPL competitiveness, tied to institutional shocks — Champions League (1994/95),
+Bosman (1995), revenue inequality (~2003). ALL prior to our ≥2005 sample. Prediction
+under the regime view: WITHIN 2005–2025 (a single modern regime) there should be few
+breaks and NO common year across leagues. We test exactly that.
 """
 from skewlib import io, returns, exante, panel, config as C
 
@@ -14,38 +13,38 @@ def main():
     df = exante.add_exante(returns.add_returns(io.load()))
     pan = panel.league_season_panel(df)
 
-    print("=== Quebras por liga dentro de 2005–2025 (PELT conservador) ===")
+    print("=== Per-league breaks within 2005–2025 (conservative PELT) ===")
     bks = panel.league_breaks(pan)
     n_leagues = pan[pan.groupby("Division").Division.transform("size") >= 10].Division.nunique()
-    print(f"  ligas testadas (≥10 temporadas): {n_leagues}")
-    print(f"  quebras detectadas: {len(bks)} em {bks.Division.nunique()} ligas")
+    print(f"  leagues tested (≥10 seasons): {n_leagues}")
+    print(f"  breaks detected: {len(bks)} across {bks.Division.nunique()} leagues")
     if len(bks):
         print(bks.sort_values("break_season").to_string(index=False,
               formatters={"shift": "{:+.3f}".format}))
-        print("\n  Histograma de ANO de quebra (regime market-wide = ano comum):")
+        print("\n  Histogram of break YEAR (market-wide regime = common year):")
         h = bks.break_season.value_counts().sort_index()
         for yr, c in h.items():
             print(f"    {yr}: {'█'*c} ({c})")
-        print(f"  → máx. de ligas quebrando no MESMO ano: {h.max()} "
-              f"({'sem regime comum' if h.max() <= 2 else 'possível regime comum'})")
-        sh = bks["shift"]  # bks.shift colidiria com DataFrame.shift()
-        print(f"  → salto médio |.| nas quebras: {sh.abs().mean():.3f} "
-              f"(vs sd between-liga 0.052) | sinal misto: "
+        print(f"  → max leagues breaking in the SAME year: {h.max()} "
+              f"({'no common regime' if h.max() <= 2 else 'possible common regime'})")
+        sh = bks["shift"]  # bks.shift would clash with DataFrame.shift()
+        print(f"  → mean |shift| at the breaks: {sh.abs().mean():.3f} "
+              f"(vs between-league sd 0.052) | mixed sign: "
               f"{(sh>0).sum()}↑ / {(sh<0).sum()}↓")
 
-    print("\n=== Foco EPL (E0) — Lee & Fort acham regimes PRÉ-1995/2003 ===")
+    print("\n=== EPL focus (E0) — Lee & Fort find PRE-1995/2003 regimes ===")
     e0 = pan[pan.Division == "E0"].sort_values("season")
-    print(f"  E0 skewness 2005–2025: média={e0.skew_exante.mean():.3f} "
+    print(f"  E0 skewness 2005–2025: mean={e0.skew_exante.mean():.3f} "
           f"sd={e0.skew_exante.std():.3f} "
           f"range=[{e0.skew_exante.min():.3f},{e0.skew_exante.max():.3f}]")
     e0bk = bks[bks.Division == "E0"]
-    print(f"  quebras E0 no nosso recorte: {len(e0bk)} "
-          f"→ {'estável intra-regime (consistente: choques EPL são pré-2005)' if len(e0bk)==0 else 'investigar'}")
+    print(f"  E0 breaks in our sample: {len(e0bk)} "
+          f"→ {'within-regime stable (consistent: EPL shocks are pre-2005)' if len(e0bk)==0 else 'investigate'}")
 
-    print("\n=== Enquadramento ===")
-    print("  Choques de regime (Bosman 95, CL 94/95, ~2003) são ANTERIORES ao recorte.")
-    print("  2005–2025 ≈ regime moderno único → 'sem tendência' = invariância")
-    print("  INTRA-REGIME, não atemporalidade absoluta. Baseline é específico da liga.")
+    print("\n=== Framing ===")
+    print("  Regime shocks (Bosman 95, CL 94/95, ~2003) are PRIOR to the sample.")
+    print("  2005–2025 ≈ a single modern regime → 'no trend' = WITHIN-REGIME")
+    print("  invariance, not absolute timelessness. Baseline is league-specific.")
 
 
 if __name__ == "__main__":

@@ -1,15 +1,15 @@
-"""48 — Frente S: VALIDADE EXTERNA (tênis). A lei skew=f(competitividade) e o
-formato lotérico do azarão são propriedades do ESPORTE, não do futebol?
+"""48 — Front S: EXTERNAL VALIDITY (tennis). Are the law skew=f(competitiveness) and
+the underdog's lottery-like shape properties of the SPORT, not of football?
 
-Usa a camada canônica (skewlib/canonical + adapters/tennis) — zero ciência nova —
-sobre o snapshot congelado de tênis (ATP+WTA, tennis-data.co.uk; hash em
-data/PROVENANCE-tennis.json). Compara, na MESMA curva, o futebol (38 ligas, de
-findings.json) e o tênis (tiers ATP/WTA).
+Uses the canonical layer (skewlib/canonical + adapters/tennis) — zero new science —
+on the frozen tennis snapshot (ATP+WTA, tennis-data.co.uk; hash in
+data/PROVENANCE-tennis.json). Compares, on the SAME curve, football (38 leagues, from
+findings.json) and tennis (ATP/WTA tiers).
 
-Achado: a assinatura reaparece num 2º esporte, com mercado de 2 resultados (sem
-empate) e fonte de odds independente — favorito mais negativo onde o torneio é mais
-desbalanceado; azarão lotérico (~+2.3, como o futebol). A invariância estrutural não
-é um artefato do 1X2 nem do futebol.
+Finding: the signature reappears in a 2nd sport, with a 2-outcome market (no draw)
+and an independent odds source — favourite more negative where the tournament is more
+imbalanced; lottery-like underdog (~+2.3, like football). The structural invariance is
+not an artefact of 1X2 nor of football.
 """
 import hashlib, json
 import numpy as np
@@ -32,7 +32,7 @@ def _verify_hash():
         for c in iter(lambda: f.read(1 << 20), b""):
             h.update(c)
     got = h.hexdigest()
-    assert got == want, f"tennis.csv mudou: {got[:12]} != snapshot {want[:12]}"
+    assert got == want, f"tennis.csv changed: {got[:12]} != snapshot {want[:12]}"
     print(f"snapshot OK — sha256 {got[:12]} == PROVENANCE-tennis.json", flush=True)
 
 
@@ -40,18 +40,18 @@ def main():
     _verify_hash()
     raw = pd.read_csv(TENNIS, low_memory=False)
 
-    # assinatura global + calibração (o de-vig é confiável em tênis?)
+    # global signature + calibration (is de-vig reliable in tennis?)
     can = tennis.to_canonical(raw)
     canonical.validate(can)
     n = can.event_id.nunique()
     fav = canonical.select(can, "fav"); dog = canonical.select(can, "dog")
     sf = canonical.signature(fav, "fav"); sd = canonical.signature(dog, "dog")
     calib_p, calib_w = float(fav.p.mean()), float(fav.won.mean())
-    print(f"\nTÊNIS — {n:,} partidas (ATP+WTA), mercado match_odds (2 resultados):")
-    print(f"  favorito skew = {sf['skew']:+.3f} | azarão skew = {sd['skew']:+.3f}")
-    print(f"  calibração: p_fav médio {calib_p:.3f} ≈ vitória real do favorito {calib_w:.3f}")
+    print(f"\nTENNIS — {n:,} matches (ATP+WTA), match_odds market (2 outcomes):")
+    print(f"  favourite skew = {sf['skew']:+.3f} | underdog skew = {sd['skew']:+.3f}")
+    print(f"  calibration: mean p_fav {calib_p:.3f} ≈ actual favourite win {calib_w:.3f}")
 
-    # a lei por tier, por tour
+    # the law by tier, by tour
     tiers = []
     law = {}
     for tour in ["ATP", "WTA"]:
@@ -60,10 +60,10 @@ def main():
         bt.insert(0, "tour", tour)
         tiers.append(bt)
         law[tour] = float(np.corrcoef(bt.skew_fav, bt.p_fav_mean)[0, 1])
-        print(f"  lei {tour}: corr(skew_fav, p_fav) por tier = {law[tour]:+.2f} ({len(bt)} tiers)")
+        print(f"  {tour} law: corr(skew_fav, p_fav) by tier = {law[tour]:+.2f} ({len(bt)} tiers)")
     tiers = pd.concat(tiers, ignore_index=True)
 
-    # futebol (findings.json) p/ a sobreposição
+    # football (findings.json) for the overlay
     fb = json.loads(FINDINGS.read_text())["bettype"]["leagues"]
     fb = pd.DataFrame(fb)
 
@@ -85,8 +85,8 @@ def main():
     fig.tight_layout()
     fig.savefig(FIG / "f35_crosssport.png", dpi=C.FIG_DPI, bbox_inches="tight"); plt.close(fig)
     print(f"\n  -> {FIG / 'f35_crosssport.png'} | {C.OUTDIR / 'tennis_by_tier.csv'}")
-    print("  → a lei é do ESPORTE, não do futebol: 2º esporte, mercado de 2 resultados, "
-          "odds independentes.")
+    print("  → the law belongs to the SPORT, not to football: 2nd sport, 2-outcome market, "
+          "independent odds.")
 
     prov.write_stamp("48_tennis", metrics={
         "n_matches": int(n), "skew_fav": sf["skew"], "skew_dog": sd["skew"],

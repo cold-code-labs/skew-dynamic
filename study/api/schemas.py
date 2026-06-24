@@ -1,4 +1,4 @@
-"""Contratos de entrada/saída do /measure (pydantic v2)."""
+"""Input/output contracts for /measure (pydantic v2)."""
 from typing import List, Optional, Literal
 from pydantic import BaseModel, Field, model_validator
 
@@ -6,19 +6,19 @@ from pydantic import BaseModel, Field, model_validator
 class MeasureRequest(BaseModel):
     mode: Literal["with-odds", "odds-free"] = "with-odds"
 
-    # modo com-odds: uma das duas formas de entrada
+    # with-odds mode: one of the two input forms
     odds_hda: Optional[List[List[float]]] = Field(
-        None, description="odds decimais 1X2 por jogo: [[H,D,A], ...]")
+        None, description="decimal 1X2 odds per match: [[H,D,A], ...]")
     p_fav: Optional[List[float]] = Field(
-        None, description="prob de-vigada do favorito por jogo (alternativa a odds_hda)")
+        None, description="de-vigged favourite probability per match (alternative to odds_hda)")
     o_fav: Optional[List[float]] = Field(
-        None, description="odd do favorito por jogo; default = odds justas 1/p_fav")
+        None, description="favourite odds per match; default = fair odds 1/p_fav")
 
-    # modo odds-free
+    # odds-free mode
     upset_rate: Optional[float] = Field(
-        None, ge=0.0, le=1.0, description="taxa de zebra do Elo (só resultados)")
+        None, ge=0.0, le=1.0, description="Elo upset rate (results only)")
 
-    bootstrap: int = Field(300, ge=50, le=2000, description="réplicas do SE bootstrap")
+    bootstrap: int = Field(300, ge=50, le=2000, description="bootstrap SE replicates")
 
     @model_validator(mode="after")
     def _check(self):

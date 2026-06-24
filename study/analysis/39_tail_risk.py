@@ -1,7 +1,7 @@
-"""39 — Frente M: risco de cauda realizado das estratégias. Lado prático: momentos
-realizados, VaR/CVaR (cauda esquerda) e max drawdown do P&L acumulado de
-sempre-favorito vs sempre-azarão (aposta unitária, ordem cronológica). Conecta a
-estrutura de skewness ao risco de banca de fato — a leitura quant da assimetria.
+"""39 — Front M: realised tail risk of the strategies. The practical side: realised
+moments, VaR/CVaR (left tail) and max drawdown of the cumulative P&L of
+always-favourite vs always-underdog (unit stake, chronological order). Connects the
+skewness structure to actual bankroll risk — the quant reading of the asymmetry.
 """
 import numpy as np
 import matplotlib
@@ -12,11 +12,11 @@ from skewlib import io, returns, exante, extras, provenance as prov, config as C
 
 def main():
     df = exante.add_exante(returns.add_returns(io.load())).sort_values("date")
-    print(f"N={len(df):,} | aposta unitária, ordem cronológica")
+    print(f"N={len(df):,} | unit stake, chronological order")
 
     strat = {"favorito": df.ret_fav.values, "azarão": df.ret_dog.values}
-    print(f"\n{'estratégia':10} {'média':>8} {'desv':>7} {'skew':>7} {'exkurt':>8} "
-          f"{'CVaR5%':>8} {'maxDD':>9} {'P&L final':>10}")
+    print(f"\n{'strategy':10} {'mean':>8} {'std':>7} {'skew':>7} {'exkurt':>8} "
+          f"{'CVaR5%':>8} {'maxDD':>9} {'final P&L':>10}")
     out = {}
     for name, r in strat.items():
         tm = extras.tail_metrics(r)
@@ -25,9 +25,9 @@ def main():
         print(f"{name:10} {tm['mean']:>+8.4f} {tm['std']:>7.3f} {tm['skew']:>+7.3f} "
               f"{tm['exkurt']:>+8.2f} {tm['cvar5']:>+8.3f} {dd['max_drawdown']:>+9.1f} "
               f"{dd['final_pnl']:>+10.1f}")
-    print("\n  → ambas sangram a margem (P&L final negativo), mas o azarão é a cauda:")
-    print("    skew/kurtose muito maiores e drawdown mais fundo (sequências longas de")
-    print("    perdas pontuadas por raros prêmios grandes) — a 'lotérica' em risco real.")
+    print("\n  → both bleed the vig (negative final P&L), but the underdog is the tail:")
+    print("    much larger skew/kurtosis and a deeper drawdown (long runs of losses")
+    print("    punctuated by rare big payouts) — the 'lottery' in real risk.")
 
     C.OUTDIR.mkdir(exist_ok=True)
     FIG = C.OUTDIR / "fig"; FIG.mkdir(parents=True, exist_ok=True)

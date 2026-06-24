@@ -1,30 +1,30 @@
 ---
-// SkewMeter — instrumento interativo de SIMILARIDADE DE ASSIMETRIAS (Fase Q).
-// Mede a assinatura de assimetria de uma liga (gauge + banda de incerteza), mostra
-// o resíduo contra a lei, e responde "esta liga é como X, diferente de Y".
-// Sem backend: lê findings.json + JS no cliente. Idioma de LawChart/FlbChart.
+// SkewMeter — interactive instrument for SIMILARITY OF ASYMMETRIES (Phase Q).
+// Measures the asymmetry signature of a league (gauge + uncertainty band), shows
+// the residual against the law, and answers "this league is like X, unlike Y".
+// No backend: reads findings.json + client-side JS. Language of LawChart/FlbChart.
 import data from '../data/findings.json';
-// junta o exkurt por liga (moments.leagues) p/ a distância de FORMA de Mahalanobis
+// joins the per-league exkurt (moments.leagues) for the Mahalanobis SHAPE distance
 const EK = Object.fromEntries(data.moments.leagues.map(d=>[d.code,d.exkurt]));
 const L = [...data.leagues].sort((a,b)=>a.skew-b.skew).map(d=>({...d, exkurt: EK[d.code]}));
 const SM = data.skewmeter, CV = data.convergence, curve = SM.curve;
-const CINV = SM.shape_cov_inv;        // métrica de Mahalanobis auditada (bloco 45)
+const CINV = SM.shape_cov_inv;        // audited Mahalanobis metric (block 45)
 const def = L.find(d=>d.code==='E0') ? 'E0' : L[Math.floor(L.length/2)].code;
-// tetos de explicação: com odds (lei, p_fav) vs sem odds (upset do Elo)
+// explanation ceilings: with odds (law, p_fav) vs without odds (Elo upset)
 const corrOdds = SM.r2_1param, corrFree = SM.corr_oddsfree;
 
-// Painel A — gauge horizontal (skew −0.05 … 0.40)
+// Panel A — horizontal gauge (skew −0.05 … 0.40)
 const GW=720, GH=120, glo=-0.05, ghi=0.40, gpad=46;
 const gx = (s)=> gpad + ((s-glo)/(ghi-glo))*(GW-2*gpad);
 const gticks=[0.0,0.1,0.2,0.3];
 
-// Painel B — lei (reusa a geometria do LawChart)
+// Panel B — law (reuses the LawChart geometry)
 const W=680,H=360,P={l:54,r:18,t:18,b:42}, xlo=0.43,xhi=0.60,ylo=0.06,yhi=0.34;
 const X=(p)=>P.l+((p-xlo)/(xhi-xlo))*(W-P.l-P.r);
 const Y=(s)=>P.t+(1-(s-ylo)/(yhi-ylo))*(H-P.t-P.b);
 const cpts = curve.filter(d=>d.p_fav>=xlo&&d.p_fav<=xhi).map(d=>`${X(d.p_fav).toFixed(1)},${Y(d.skew).toFixed(1)}`);
 
-// Painel D — tipo de aposta (bloco 46): três séries skew vs competitividade
+// Panel D — bet type (block 46): three series skew vs competitiveness
 const BT = data.bettype, btL = BT.leagues;
 const BW=680,BH=300,BP={l:46,r:14,t:16,b:40};
 const bxlo=Math.min(...btL.map(d=>d.p_fav))-0.006, bxhi=Math.max(...btL.map(d=>d.p_fav))+0.006;
@@ -33,7 +33,7 @@ const BX=(p)=>BP.l+((p-bxlo)/(bxhi-bxlo))*(BW-BP.l-BP.r);
 const BY=(s)=>BP.t+(1-(s/bymax))*(BH-BP.t-BP.b);
 const BETS=[['dog','underdog','#d05a4f'],['draw','draw','#9a8c5a'],['fav','favourite','#4a78b5']];
 
-// Painel E — diversificação (bloco 37): skewness do retorno médio de N apostas
+// Panel E — diversification (block 37): skewness of the average return of N bets
 const DV = data.diversification, sizes=DV.sizes, Nmax=sizes[sizes.length-1];
 const DW=680,DH=300,DP={l:46,r:14,t:16,b:40};
 const dymax=Math.ceil(Math.max(DV.base_dog, ...DV.dog)*10)/10;
@@ -156,12 +156,12 @@ const dpred=(base)=>sizes.map(N=>`${lx(N).toFixed(1)},${dy(base/Math.sqrt(N)).to
   const X=(p)=>P.l+((p-xlo)/(xhi-xlo))*(W-P.l-P.r);
   const Y=(s)=>P.t+(1-(s-ylo)/(yhi-ylo))*(H-P.t-P.b);
   const byCode = Object.fromEntries(L.map(d=>[d.code,d]));
-  // predict_skew(p) — interp linear sobre a curva da lei (= np.interp)
+  // predict_skew(p) — linear interp over the law curve (= np.interp)
   const predict = (p)=>{ const c=curve;
     if(p<=c[0].p_fav) return c[0].skew;
     for(let i=1;i<c.length;i++) if(p<=c[i].p_fav){const a=c[i-1],b=c[i],t=(p-a.p_fav)/(b.p_fav-a.p_fav);return a.skew+t*(b.skew-a.skew);}
     return c[c.length-1].skew; };
-  // SE interpolada na janela K (sobre o array de convergência)
+  // SE interpolated at window K (over the convergence array)
   const seAt = (K)=>{ const k=CV.k, s=CV.se;
     if(K<=k[0]) return s[0]; if(K>=k[k.length-1]) return s[s.length-1];
     for(let i=1;i<k.length;i++) if(K<=k[i]){const t=(K-k[i-1])/(k[i]-k[i-1]);return s[i-1]+t*(s[i]-s[i-1]);}
@@ -186,10 +186,10 @@ const dpred=(base)=>sizes.map(N=>`${lx(N).toFixed(1)},${dy(base/Math.sqrt(N)).to
     $('sm-drop').setAttribute('x2',cx); $('sm-drop').setAttribute('y2',cyhat);
     document.querySelectorAll('.sm-dot').forEach(el=>{ const on=el.getAttribute('data-code')===code;
       el.setAttribute('fill-opacity', on?'0.95':'0.3'); el.setAttribute('r', on?'6':'5'); });
-    // PANEL C — vizinhos raw vs residual
+    // PANEL C — neighbours raw vs residual
     $('sm-name').textContent = code;
     const others = L.filter(x=>x.code!==code);
-    // distância de forma de MAHALANOBIS em (skew, exkurt) — métrica auditada (CINV)
+    // MAHALANOBIS shape distance in (skew, exkurt) — audited metric (CINV)
     const maha = (x)=>{ const u=x.skew-d.skew, v=x.exkurt-d.exkurt;
       return Math.sqrt(u*(CINV[0][0]*u+CINV[0][1]*v) + v*(CINV[1][0]*u+CINV[1][1]*v)); };
     const raw = [...others].sort((a,b)=>Math.abs(a.skew-d.skew)-Math.abs(b.skew-d.skew));
@@ -199,13 +199,13 @@ const dpred=(base)=>sizes.map(N=>`${lx(N).toFixed(1)},${dy(base/Math.sqrt(N)).to
     $('sm-raw').innerHTML = raw.slice(0,4).map(x=>row(x,Math.abs(x.skew-d.skew),0.22)).join('');
     $('sm-shape').innerHTML = shp.slice(0,4).map(x=>row(x,maha(x),Math.max(...others.map(maha)))).join('');
     $('sm-res').innerHTML = res.slice(0,4).map(x=>row(x,Math.abs(x.residual-d.residual),0.22)).join('');
-    // PANEL D — destaca a liga nas três séries + guia vertical
+    // PANEL D — highlights the league across the three series + vertical guide
     document.querySelectorAll('.bt-pt').forEach(el=>{ const on=el.getAttribute('data-code')===code;
       el.setAttribute('r', on?'6':'4'); el.setAttribute('fill-opacity', on?'1':'.5'); el.style.stroke=on?'#222':'#fff'; });
     const bg=$('bt-guide'), any=document.querySelector(`.bt-pt[data-code="${code}"]`);
     if(bg&&any){ const cx=any.getAttribute('cx'); bg.setAttribute('x1',cx); bg.setAttribute('x2',cx); bg.setAttribute('opacity','.5'); }
-    // verdict: o caso pedagógico é "parece diferente, é a MESMA forma" — a liga
-    // MAIS distante no skew bruto que ainda é equivalente no resíduo.
+    // verdict: the pedagogical case is "looks different, is the SAME shape" — the
+    // league FURTHEST in raw skew that is still equivalent in the residual.
     const eq = others.filter(x=>Math.abs(x.residual-d.residual) < SM.margin)
                      .sort((a,b)=>Math.abs(b.skew-d.skew)-Math.abs(a.skew-d.skew));
     const nb = eq.length ? eq[0] : res[0];
@@ -218,7 +218,7 @@ const dpred=(base)=>sizes.map(N=>`${lx(N).toFixed(1)},${dy(base/Math.sqrt(N)).to
   const sel=$('sm-league'), kk=$('sm-k');
   const go=()=>{ $('sm-kval').textContent=kk.value; render(sel.value, +kk.value); };
   sel.addEventListener('change', go); kk.addEventListener('input', go);
-  // segmented control do tipo de aposta: realça uma série (esmaece as outras)
+  // bet-type segmented control: emphasises one series (fades the others)
   const seg=$('bt-seg'), svg=$('bt-svg');
   if(seg) seg.addEventListener('click', e=>{ const b=e.target.closest('button'); if(!b) return;
     seg.querySelectorAll('button').forEach(x=>x.classList.toggle('on', x===b));

@@ -1,11 +1,11 @@
-"""47 — camada CANÔNICA: validação + demonstração multi-mercado.
+"""47 — CANONICAL layer: validation + multi-market demonstration.
 
-Não é uma frente nova de evidência: é a verificação de que a abstração canônica
-(skewlib/canonical + adapters) REPRODUZ o caminho de futebol congelado e generaliza
-para mercados de 2 resultados. Ver docs/DATA-SCHEMA.md.
+Not a new evidence front: it is the verification that the canonical abstraction
+(skewlib/canonical + adapters) REPRODUCES the frozen football path and generalises
+to 2-outcome markets. See docs/DATA-SCHEMA.md.
 
-  A) Equivalência: canonical.bettype_by(football:1x2) == exante.bettype_by — bit-a-bit.
-  B) Generalidade: o mesmo núcleo mede o mercado over/under 2.5 (n=2 resultados).
+  A) Equivalence: canonical.bettype_by(football:1x2) == exante.bettype_by — bit-for-bit.
+  B) Generality: the same core measures the over/under 2.5 market (n=2 outcomes).
 """
 import numpy as np
 from skewlib import io, returns, exante, canonical
@@ -16,7 +16,7 @@ def main():
     df = exante.add_exante(returns.add_returns(io.load()))
     print(f"N={len(df):,}", flush=True)
 
-    # A) EQUIVALÊNCIA — a via canônica reproduz exante.bettype_by exatamente
+    # A) EQUIVALENCE — the canonical path reproduces exante.bettype_by exactly
     ref = exante.bettype_by(df, min_n=2000).set_index("Division").sort_index()
     can = football.to_canonical(df)
     canonical.validate(can)
@@ -24,25 +24,25 @@ def main():
         .set_index("competition").sort_index()
     cols = ["skew_fav", "skew_draw", "skew_dog", "p_fav_mean"]
     diff = float(np.max(np.abs(ref[cols].to_numpy() - bt.loc[ref.index, cols].to_numpy())))
-    print(f"\nA) EQUIVALÊNCIA canônico vs congelado ({len(ref)} ligas): "
+    print(f"\nA) EQUIVALENCE canonical vs frozen ({len(ref)} leagues): "
           f"max|Δ| = {diff:.2e}")
-    assert diff < 1e-9, f"DRIFT: a via canônica divergiu do congelado ({diff:.2e})"
-    print("   ✓ bit-idêntico — a abstração não muda nenhum número de futebol.")
+    assert diff < 1e-9, f"DRIFT: the canonical path diverged from the frozen one ({diff:.2e})"
+    print("   ✓ bit-identical — the abstraction changes no football number.")
 
-    # B) GENERALIDADE — o mesmo núcleo mede um mercado de 2 resultados (over/under)
+    # B) GENERALITY — the same core measures a 2-outcome market (over/under)
     ou = football.OU.to_canonical(df)
     canonical.validate(ou)
     n_ev = ou.event_id.nunique()
     sig_over = canonical.signature(canonical.select(ou, "fav"), "fav")
     sig_dog = canonical.signature(canonical.select(ou, "dog"), "dog")
     sig_draw = canonical.signature(canonical.select(ou, "draw", football.OU.DRAW_ROLE))
-    print(f"\nB) MERCADO over/under 2.5 ({n_ev:,} eventos, 2 resultados):")
-    print(f"   skew do favorito (lado mais provável) = {sig_over['skew']:+.3f}")
-    print(f"   skew do azarão  (lado menos provável) = {sig_dog['skew']:+.3f}")
-    print(f"   aposta de 'empate' = {sig_draw}  (mercado sem empate → None)")
-    assert sig_draw is None, "O/U não deveria ter objeto de empate"
-    print("\n  → o núcleo (canonical + skewmeter) é sport/mercado-agnóstico; "
-          "adicionar um esporte = um adaptador.")
+    print(f"\nB) over/under 2.5 MARKET ({n_ev:,} events, 2 outcomes):")
+    print(f"   favourite skew (more likely side)  = {sig_over['skew']:+.3f}")
+    print(f"   underdog skew  (less likely side)  = {sig_dog['skew']:+.3f}")
+    print(f"   'draw' bet = {sig_draw}  (market without draw → None)")
+    assert sig_draw is None, "O/U should not have a draw object"
+    print("\n  → the core (canonical + skewmeter) is sport/market-agnostic; "
+          "adding a sport = one adapter.")
 
 
 if __name__ == "__main__":

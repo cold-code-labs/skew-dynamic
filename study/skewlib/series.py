@@ -1,14 +1,14 @@
-"""Série temporal deslizante de skewness + bootstrap do erro-padrão."""
+"""Rolling time series of skewness + bootstrap of the standard error."""
 import numpy as np, pandas as pd
 from scipy.stats import skew
 from . import config as C
 
 
 def rolling_skew(df, col="ret_fav", window=None, step=None, overlap=True):
-    """Skewness numa janela deslizante de `window` jogos.
+    """Skewness in a rolling window of `window` matches.
 
-    overlap=False usa janelas disjuntas (step=window) — recomendado para
-    inferência, pois a sobreposição induz autocorrelação artificial.
+    overlap=False uses disjoint windows (step=window) — recommended for
+    inference, since overlap induces artificial autocorrelation.
     """
     window = window or C.WINDOW
     step = (step or C.STEP) if overlap else window
@@ -22,7 +22,7 @@ def rolling_skew(df, col="ret_fav", window=None, step=None, overlap=True):
 
 
 def bootstrap_se(x, B=None, seed=None):
-    """Erro-padrão da skewness por bootstrap (skewness é momento de 3ª ordem)."""
+    """Standard error of the skewness by bootstrap (skewness is a 3rd-order moment)."""
     B = B or C.BOOT_B
     rng = np.random.default_rng(seed or C.SEED)
     x = np.asarray(x); n = len(x)

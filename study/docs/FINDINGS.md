@@ -1,1056 +1,1094 @@
-# Estabilidade da Skewness em Mercados de Apostas de Futebol
-## Resultados aprofundados — 6 frentes
+# Stability of Skewness in Football Betting Markets
+## In-depth results — 6 fronts
 
-**Amostra:** 205.435 jogos · 38 ligas · 2005–2025 · football-data mirror
-**Estratégia base:** aposta unitária no favorito (menor odd), retorno ex-post.
-
----
-
-## TESE CENTRAL (revisada e fortalecida)
-
-> A skewness do mercado de apostas **não é um processo dinâmico — é um
-> invariante estrutural**. Cada liga tem um nível de skewness próprio,
-> fixo no tempo, determinado pela sua competitividade. A flutuação observada
-> é ruído amostral puro, não memória de mercado. A assimetria é propriedade
-> do gerador esportivo, exógena ao apreçamento das casas.
-
-Evoluiu de "estável-com-memória" (rascunho v1) → **"constante estrutural +
-ruído branco"** (confirmado por 3 testes independentes). E de **invariância de
-skewness** → **invariância de FORMA** (Fases B1/B2): não só o 3º momento, mas a
-distribuição implícita inteira (var/skew/kurtose) é função única da competitividade
-— colapsa entre ligas quando se condiciona nela.
+**Sample:** 205,435 matches · 38 leagues · 2005–2025 · football-data mirror
+**Baseline strategy:** unit bet on the favourite (shortest odds), ex-post return.
 
 ---
 
-## BLOCO A — Robustez (o achado sobrevive aos confounds?)
+## CENTRAL THESIS (revised and strengthened)
 
-| Configuração | ADF | KPSS | Ljung-Box | ACF(1) |
+> The skewness of the betting market **is not a dynamic process — it is a
+> structural invariant**. Each league has its own level of skewness, fixed in
+> time, determined by its competitiveness. The observed fluctuation is pure
+> sampling noise, not market memory. The asymmetry is a property of the sporting
+> generator, exogenous to the bookmakers' pricing.
+
+It evolved from "stable-with-memory" (draft v1) → **"structural constant +
+white noise"** (confirmed by 3 independent tests). And from **skewness
+invariance** → **SHAPE invariance** (Phases B1/B2): not only the 3rd moment, but
+the entire implied distribution (var/skew/kurtosis) is a unique function of
+competitiveness — it collapses across leagues once conditioned on it.
+
+---
+
+## BLOCK A — Robustness (does the finding survive the confounds?)
+
+| Configuration | ADF | KPSS | Ljung-Box | ACF(1) |
 |---|---|---|---|---|
 | baseline (overlap) | <0.001 | 0.10 | <0.001 | 0.74 |
 | league-demeaned (overlap) | <0.001 | 0.10 | <0.001 | 0.74 |
-| **não-overlap** | <0.001 | 0.10 | **0.71** | **−0.08** |
-| league-demeaned não-overlap | <0.001 | 0.10 | 0.70 | −0.08 |
+| **non-overlap** | <0.001 | 0.10 | **0.71** | **−0.08** |
+| league-demeaned non-overlap | <0.001 | 0.10 | 0.70 | −0.08 |
 
-- **Estacionariedade: blindada.** Sobrevive a demeaning, não-overlap e janelas
-  de 500 a 3000 jogos. ADF<0.001 e KPSS=0.10 em todas as 10 configs.
-- **Persistência: era artefato.** O ACF=0.74 vinha 100% da sobreposição de
-  janelas. Sem overlap → ruído branco (LB p=0.71). **Correção honesta vs v1.**
-- Composição de liga **não** é confound: demeaning quase não move nada.
-- sd cai monotonicamente com tamanho de janela → variação é erro amostral.
+- **Stationarity: armoured.** Survives demeaning, non-overlap and windows of
+  500 to 3000 matches. ADF<0.001 and KPSS=0.10 in all 10 configs.
+- **Persistence: it was an artefact.** The ACF=0.74 came 100% from window
+  overlap. Without overlap → white noise (LB p=0.71). **An honest correction
+  vs v1.**
+- League composition is **not** a confound: demeaning moves almost nothing.
+- sd falls monotonically with window size → the variation is sampling error.
 
-## BLOCO B — De onde vem a skewness?
+## BLOCK B — Where does the skewness come from?
 
-**B1 — por estratégia:** skewness monotônica na improbabilidade da aposta.
-favorito +0.23 · empate +1.27 · azarão +2.26 · "sempre fora" +2.40.
-Retorno médio acompanha (favorito −4.8%, azarão −10.2%) = FLB clássico.
+**B1 — by strategy:** skewness monotone in the improbability of the bet.
+favourite +0.23 · draw +1.27 · longshot +2.26 · "always away" +2.40.
+Mean return follows along (favourite −4.8%, longshot −10.2%) = classic FLB.
 
-**B2 — favorite-longshot bias (a tabela-chave):** skewness desce monotonicamente
-conforme o favorito fortalece, cruzando zero em p≈0.50:
+**B2 — favourite-longshot bias (the key table):** skewness falls monotonically
+as the favourite strengthens, crossing zero at p≈0.50:
 
-| p_favorito | ret médio | skewness | win% |
+| p_favourite | mean ret | skewness | win% |
 |---|---|---|---|
 | (0.40] | −7.5% | +0.59 | 36% |
 | (0.45,0.50] | −4.7% | +0.19 | 45% |
 | (0.55,0.60] | −3.5% | −0.22 | 56% |
 | (0.70,1.0] | −1.6% | −1.19 | 77% |
 
-**B3 — o mecanismo da estabilidade:** corr(força do favorito, variância)=**−0.90**
-mas corr(força, skewness)=−0.21 e corr(variância, skewness)≈0. A variância é
-sensível à composição; a skewness **não**, porque as contribuições das duas
-caudas (favoritos fracos→+, fortes→−) se cancelam de forma estável.
+**B3 — the mechanism of stability:** corr(favourite strength, variance)=**−0.90**
+but corr(strength, skewness)=−0.21 and corr(variance, skewness)≈0. The variance is
+sensitive to composition; the skewness is **not**, because the contributions of the
+two tails (weak favourites→+, strong→−) cancel in a stable way.
 
-## BLOCO C — A série é mesmo i.i.d.?
+## BLOCK C — Is the series really i.i.d.?
 
 - Variance Ratio(2,4,8) = 0.94, 0.94, 1.00 (=1 → i.i.d.)
-- AR(1) φ = −0.06, **não-significativo** (p=0.39), half-life ≈ 0
-- **Conclusão:** ruído branco confirmado por 3 testes. Sem dinâmica temporal.
+- AR(1) φ = −0.06, **non-significant** (p=0.39), half-life ≈ 0
+- **Conclusion:** white noise confirmed by 3 tests. No temporal dynamics.
 
-## BLOCO D — Cross-casa (odd média vs melhor odd) — 2º achado
+## BLOCK D — Cross-bookmaker (average odd vs best odd) — 2nd finding
 
-| métrica | odd média | melhor odd |
+| metric | average odd | best odd |
 |---|---|---|
 | skewness | 0.229 | 0.242 |
-| retorno médio | −4.75% | **−0.16%** |
+| mean return | −4.75% | **−0.16%** |
 | overround | 1.067 | 1.009 |
 
-- **A margem da casa é majoritariamente spread entre casas.** Arbitrar odds
-  recupera 4.6 p.p. de retorno; a margem "irredutível" é ~0.2%.
-- **A skewness é invariante à casa:** corr temporal das duas séries = **0.984**.
-  Casas competem na margem (nível); a skewness é exógena a essa competição.
-- Separa apreçamento (margem, varia) de estrutura (skewness, fixa).
+- **The bookmaker's margin is mostly spread across bookmakers.** Arbitraging
+  odds recovers 4.6 p.p. of return; the "irreducible" margin is ~0.2%.
+- **Skewness is invariant to the bookmaker:** temporal corr of the two series =
+  **0.984**. Bookmakers compete on the margin (level); the skewness is exogenous
+  to that competition.
+- Separates pricing (margin, varies) from structure (skewness, fixed).
 
-## BLOCO E — Heterogeneidade entre ligas (achado mais rico)
+## BLOCK E — Heterogeneity across leagues (the richest finding)
 
-- Skewness **não** é universal: varia de 0.10 (Holanda) a 0.33 (Itália B), sd=0.06.
-- **corr(previsibilidade da liga, skewness) = −0.83.** Quase determinística.
-- Ligas com favoritos fortes (poucos dominam) → skewness baixa; ligas parelhas
-  (2ªs divisões) → skewness alta.
-- **Generalização:** cada liga tem skewness-invariante = f(competitividade).
-  O mesmo mecanismo de B3 (escala intra-janela) reaparece entre ligas (escala
-  cross-sectional). Um princípio único explica as duas escalas.
-- BRA +0.18, ARG +0.31 — ligas sul-americanas no extremo competitivo/assimétrico.
+- Skewness is **not** universal: it ranges from 0.10 (Netherlands) to 0.33 (Italy B), sd=0.06.
+- **corr(league predictability, skewness) = −0.83.** Almost deterministic.
+- Leagues with strong favourites (a few dominate) → low skewness; balanced leagues
+  (2nd divisions) → high skewness.
+- **Generalisation:** each league has a skewness-invariant = f(competitiveness).
+  The same mechanism as B3 (within-window scale) reappears across leagues
+  (cross-sectional scale). A single principle explains both scales.
+- BRA +0.18, ARG +0.31 — South American leagues at the competitive/asymmetric extreme.
 
-## BLOCO F — Forense do blip 2012/13
+## BLOCK F — Forensics of the 2012/13 blip
 
-- A única "quebra estrutural" em 20 anos era **artefato de amostragem**: o
-  dataset saltou de 21→37 ligas em 2012 (entraram ARG, MEX, BRA, JAP, POL,
-  ROM...), muitas de alta skewness, inflando a média da janela temporariamente.
-- **Não havia evento de mercado.** Reforça a estabilidade real e valida o
-  controle de composição.
-
----
-
-## SÍNTESE PARA O PAPER
-
-Três níveis de resultado, coesos sob um princípio:
-
-1. **Cross-sectional:** FLB confirmado; skewness monotônica na improbabilidade.
-2. **Temporal:** skewness é constante + ruído branco (sem dinâmica) — robusto.
-3. **Estrutural:** o nível é f(competitividade da liga); estabilidade temporal
-   decorre de a competitividade ser uma propriedade lenta (escala de décadas).
-
-**Princípio unificador:** competitividade estrutural gera assimetria; como ela
-muda devagar, a skewness é um invariante temporal. A margem das casas é
-ortogonal a isso (afeta nível de retorno, não assimetria).
-
-## Próximas frentes (não exploradas ainda)
-- Drift abertura→fechamento: a skewness do movimento de preço (precisa de odds
-  de abertura, dataset tem parcial).
-- Sazonalidade intra-temporada controlada por liga (início vs fim).
-- Testar invariância em outro esporte (basquete/tênis) — generalização externa.
+- The only "structural break" in 20 years was a **sampling artefact**: the
+  dataset jumped from 21→37 leagues in 2012 (ARG, MEX, BRA, JAP, POL,
+  ROM... came in), many high-skewness, temporarily inflating the window mean.
+- **There was no market event.** It reinforces the real stability and validates
+  the composition control.
 
 ---
 
-# LOG DE FASES (rumo ao paper)
+## SYNTHESIS FOR THE PAPER
 
-> Dataset congelado em `data/PROVENANCE.json` (sha256 `6905ca53…`, 205.435
-> jogos ≥2005, 38 ligas, 2005-01→2025-06). Baseline reproduzida em
-> `outputs/phase0_baseline.log`. Cada fase abaixo adiciona um bloco ao paper.
+Three levels of result, cohesive under one principle:
 
-## Fase 0 — Reprodução + congelamento (2026-06-23)
-Blocos 00–06 reproduzem `FINDINGS` exatamente contra o arquivo completo de 38
-ligas. Bug corrigido em `06_league_hetero` (`tab.skew` colidia com
-`DataFrame.skew()`). Dataset congelado por hash.
+1. **Cross-sectional:** FLB confirmed; skewness monotone in improbability.
+2. **Temporal:** skewness is constant + white noise (no dynamics) — robust.
+3. **Structural:** the level is f(league competitiveness); temporal stability
+   follows from competitiveness being a slow property (decadal scale).
 
-## Fase 1 / W1 — Skewness ex-ante e o núcleo mecânico (2026-06-23)
-Objeto primário redefinido: **skewness implícita (de-vigada)** da aposta no
-favorito, via modelo de **Shin** (z médio 3.4% de dinheiro informado;
-overround 1.068). Fechada, sem ruído amostral.
+**Unifying principle:** structural competitiveness generates asymmetry; since it
+changes slowly, skewness is a temporal invariant. The bookmakers' margin is
+orthogonal to this (it affects the level of return, not the asymmetry).
 
-- **Ex-ante ≈ ex-post.** Skew global ex-ante **+0.236** vs realizada **+0.230**
-  → o objeto implícito reproduz o realizado; odds bem calibradas no agregado.
-- **Decomposição (lei dos cumulantes totais) — assume o núcleo mecânico:**
-  M3 = **+102.6% intra-jogo (Bernoulli/FLB)** − 2.6% covariância − 0.0%
-  entre-jogos. A skewness de mercado é, a ~100%, a assimetria intra-jogo da
-  distribuição de p — não artefato de pooling. `within_frac` ≈ 1.00 em **todas**
-  as faixas de p_fav. Converte a crítica de "tautologia" na própria tese: a
-  assimetria de risco É a imagem algébrica do FLB.
-- **Cross-liga (objeto limpo):** corr(ex-ante, ex-post)=**+0.872**;
-  corr(p_fav, skew)=**−0.900** — porém ainda circular (p vem das odds). Alvo
-  do W2: reproduzir com competitividade **odds-free**.
+## Next fronts (not yet explored)
+- Opening→closing drift: the skewness of the price movement (needs opening
+  odds; the dataset has partial coverage).
+- Intra-season seasonality controlled per league (start vs end).
+- Testing the invariance in another sport (basketball/tennis) — external
+  generalisation.
 
-Artefatos: `skewlib/devig.py`, `skewlib/exante.py`, `analysis/07_devig_exante.py`,
+---
+
+# PHASE LOG (towards the paper)
+
+> Dataset frozen in `data/PROVENANCE.json` (sha256 `6905ca53…`, 205,435
+> matches ≥2005, 38 leagues, 2005-01→2025-06). Baseline reproduced in
+> `outputs/phase0_baseline.log`. Each phase below adds a block to the paper.
+
+## Phase 0 — Reproduction + freezing (2026-06-23)
+Blocks 00–06 reproduce `FINDINGS` exactly against the full 38-league archive.
+Bug fixed in `06_league_hetero` (`tab.skew` collided with `DataFrame.skew()`).
+Dataset frozen by hash.
+
+## Phase 1 / W1 — Ex-ante skewness and the mechanical core (2026-06-23)
+Primary object redefined: **implied (de-vigged) skewness** of the bet on the
+favourite, via the **Shin** model (mean z 3.4% of informed money; overround
+1.068). Closed-form, free of sampling noise.
+
+- **Ex-ante ≈ ex-post.** Global ex-ante skew **+0.236** vs realised **+0.230**
+  → the implied object reproduces the realised; odds well calibrated in the
+  aggregate.
+- **Decomposition (law of total cumulants) — establishes the mechanical core:**
+  M3 = **+102.6% within-match (Bernoulli/FLB)** − 2.6% covariance − 0.0%
+  between-match. The market skewness is, at ~100%, the within-match asymmetry of
+  the distribution of p — not a pooling artefact. `within_frac` ≈ 1.00 in **all**
+  p_fav bands. It turns the "tautology" criticism into the thesis itself: the
+  risk asymmetry IS the algebraic image of the FLB.
+- **Cross-league (clean object):** corr(ex-ante, ex-post)=**+0.872**;
+  corr(p_fav, skew)=**−0.900** — but still circular (p comes from the odds).
+  Target of W2: reproduce with **odds-free** competitiveness.
+
+Artefacts: `skewlib/devig.py`, `skewlib/exante.py`, `analysis/07_devig_exante.py`,
 `outputs/exante_by_league.csv`.
 
-## Fase 2 / W2 — Mecanismo odds-free: a lei não é tautológica (2026-06-23)
-Competitividade medida por **Elo construído só de resultados** (sem odds; passo
-cronológico multi-liga + mapa rating-diff→(P_H,P_D,P_A) por MNLogit calibrado
-nos resultados — P(H) 0.444 = real 0.444, P(D) 0.264 = real 0.264).
+## Phase 2 / W2 — Odds-free mechanism: the law is not tautological (2026-06-23)
+Competitiveness measured by **Elo built from results only** (no odds;
+chronological multi-league step + rating-diff→(P_H,P_D,P_A) map via MNLogit
+calibrated on the results — P(H) 0.444 = real 0.444, P(D) 0.264 = real 0.264).
 
-- **Odds e Elo medem a MESMA estrutura:** corr(elo_pfav, p_fav_dv)=**+0.909**
-  [0.83,0.97]. As odds apenas *leem* a competitividade esportiva (eficiência
-  estrutural) — não a criam.
-- **A lei skewness=f(competitividade) SOBREVIVE sem odds:**
+- **Odds and Elo measure the SAME structure:** corr(elo_pfav, p_fav_dv)=**+0.909**
+  [0.83,0.97]. The odds merely *read off* sporting competitiveness (structural
+  efficiency) — they do not create it.
+- **The law skewness=f(competitiveness) SURVIVES without odds:**
   skew ~ upset_rate **+0.826** [0.71,0.91] · skew ~ elo_entropy **+0.719**
-  [0.50,0.89] · skew ~ elo_pfav **−0.748** · skew ~ elo_disp **−0.731**. Todas
-  com IC95% longe de zero. Referência circular (odds p_fav): −0.900.
-- **Atenuação −0.90→−0.75/+0.83 = ruído de medida** no proxy Elo (errors-in-
-  variables), não evidência contra a lei: corr(elo,odds)=0.91 mostra que medem
-  o mesmo latente. A assimetria de risco é **herdada da estrutura competitiva**
-  da liga, não do apreçamento.
+  [0.50,0.89] · skew ~ elo_pfav **−0.748** · skew ~ elo_disp **−0.731**. All
+  with CI95 far from zero. Circular reference (odds p_fav): −0.900.
+- **Attenuation −0.90→−0.75/+0.83 = measurement noise** in the Elo proxy
+  (errors-in-variables), not evidence against the law: corr(elo,odds)=0.91 shows
+  they measure the same latent. The risk asymmetry is **inherited from the
+  competitive structure** of the league, not from the pricing.
 
-Artefatos: `skewlib/elo.py`, `skewlib/stats.py` (bootstrap_corr, ols),
+Artefacts: `skewlib/elo.py`, `skewlib/stats.py` (bootstrap_corr, ols),
 `analysis/08_mechanism_elo.py`, `outputs/mechanism_elo.csv`.
 
-## Fase 3 / W3 — Invariância temporal: painel liga×temporada (2026-06-23)
-Tratar (liga,temporada) como unidade dissolve o confound de composição do
-Bloco F por construção. 638 obs, 38 ligas, 2005–2025.
+## Phase 3 / W3 — Temporal invariance: league×season panel (2026-06-23)
+Treating (league,season) as a unit dissolves the composition confound of Block F
+by construction. 638 obs, 38 leagues, 2005–2025.
 
-- **Sem tendência secular:** FE de liga + ano linear (SE cluster por liga):
-  β=**+0.00015/ano** (p=0.73, IC95% [−0.0007,+0.0010]). Deriva em 20 anos
-  ≈ +0.003 vs sd entre-ligas 0.052 → nula.
-- **Domínio estrutural:** sd between-liga **0.052** vs within-liga 0.034;
-  ICC=**0.70**. Descontando o ruído amostral (SE bootstrap 0.019), a flutuação
-  temporal *real* é sd≈0.028 — pequena, **sem tendência e revertendo à média**
-  (coerente com o ruído branco do Bloco C). O invariante de liga domina ~2:1.
-- **Por liga:** desvios idiossincráticos e minúsculos (|slope| médio
-  0.0024/ano; quebras raras, provável sobre-segmentação do PELT em séries de
-  ~20 pontos). Nenhum regime market-wide.
-- **Vinheta COVID (experimento natural):** estádios vazios 2020 derrubaram a
-  vitória do mandante (0.447→0.417). A lei prevê: HFA↓ → mais paridade →
-  skewness↑. Observado: z médio **+0.42** SD, **21/33 ligas com z>0**. O único
-  choque exógeno de competitividade em 20 anos moveu a skewness na direção
-  prevista — corrobora a *causa* sem violar a invariância secular.
+- **No secular trend:** league FE + linear year (cluster SE by league):
+  β=**+0.00015/year** (p=0.73, CI95 [−0.0007,+0.0010]). Drift over 20 years
+  ≈ +0.003 vs between-league sd 0.052 → null.
+- **Structural dominance:** between-league sd **0.052** vs within-league 0.034;
+  ICC=**0.70**. Netting out the sampling noise (bootstrap SE 0.019), the *real*
+  temporal fluctuation is sd≈0.028 — small, **with no trend and mean-reverting**
+  (consistent with the white noise of Block C). The league invariant dominates ~2:1.
+- **Per league:** idiosyncratic and tiny deviations (mean |slope|
+  0.0024/year; breaks rare, likely PELT over-segmentation in series of ~20
+  points). No market-wide regime.
+- **COVID vignette (natural experiment):** empty stadiums in 2020 lowered the
+  home win (0.447→0.417). The law predicts: HFA↓ → more parity →
+  skewness↑. Observed: mean z **+0.42** SD, **21/33 leagues with z>0**. The only
+  exogenous competitiveness shock in 20 years moved the skewness in the predicted
+  direction — corroborates the *cause* without violating the secular invariance.
 
-Artefatos: `skewlib/panel.py`, `analysis/09_panel_temporal.py`,
+Artefacts: `skewlib/panel.py`, `analysis/09_panel_temporal.py`,
 `outputs/panel_league_season.csv`.
 
-## Fase 4 / W5 — Mercado binário over/under 2.5: identidade fora do 1X2 (2026-06-23)
-148.261 jogos com odds O/U 2.5 (de-vig Shin; overround 1.067, z **0.067** — mais
-dinheiro informado que no 1X2). Calibração impecável: over real 0.490 =
-p_over de-vigada 0.492.
+## Phase 4 / W5 — Binary over/under 2.5 market: identity beyond 1X2 (2026-06-23)
+148,261 matches with O/U 2.5 odds (Shin de-vig; overround 1.067, z **0.067** —
+more informed money than in 1X2). Impeccable calibration: real over 0.490 =
+de-vigged p_over 0.492.
 
-- **Mesma identidade, mercado diferente:** aposta no lado favorito → skew
-  ex-ante **−0.210** (within intra-jogo **99.6%**), ex-post −0.217. A fórmula
-  fechada (1-2p)/√(p(1-p)) bate exatamente per-match (max|dif|=0). Por faixa de
-  p, ex-ante e ex-post andam colados (p=0.52→−0.09; p=0.74→−1.05).
-- **Conclusão:** o núcleo mecânico do W1 **não** é artefato da estrutura de 3
-  vias do 1X2 — vale num mercado binário de gols. within≈100% se replica.
+- **Same identity, different market:** bet on the favourite side → ex-ante skew
+  **−0.210** (within-match **99.6%**), ex-post −0.217. The closed form
+  (1-2p)/√(p(1-p)) matches exactly per-match (max|diff|=0). By p band, ex-ante
+  and ex-post move in lockstep (p=0.52→−0.09; p=0.74→−1.05).
+- **Conclusion:** the mechanical core of W1 is **not** an artefact of the 3-way
+  structure of 1X2 — it holds in a binary goals market. within≈100% replicates.
 
-Artefatos: `skewlib/overunder.py`, `analysis/10_overunder.py`, `outputs/overunder.csv`.
+Artefacts: `skewlib/overunder.py`, `analysis/10_overunder.py`, `outputs/overunder.csv`.
 
-## Fase 5 / W4 — Margem ortogonal + robustez ao de-vig (2026-06-23)
-- **Margem vs estrutura (odds média vs máxima, 202.760 jogos):** tomar o melhor
-  preço do mercado colapsa o overround **1.067→1.009** (retorno −4.8%→~0) mas a
-  skewness ex-ante quase não anda: **+0.236→+0.254** (corr p_fav por jogo
-  **0.996**). A casa compete na MARGEM (nível), não na assimetria — margem
-  largamente ortogonal à skewness.
-- **Robustez ao método de de-vig:** skew global 0.224 (power) / 0.236 (shin) /
-  0.263 (mult) — ±8% no nível; mas a **lei cross-liga é invariante**:
-  corr(p_fav,skew) = −0.906 / −0.900 / −0.891. O achado estrutural não é
-  artefato da escolha de de-vig.
+## Phase 5 / W4 — Orthogonal margin + de-vig robustness (2026-06-23)
+- **Margin vs structure (average vs maximum odds, 202,760 matches):** taking the
+  best market price collapses the overround **1.067→1.009** (return −4.8%→~0) but
+  the ex-ante skewness barely moves: **+0.236→+0.254** (per-match corr p_fav
+  **0.996**). The bookmaker competes on the MARGIN (level), not on the asymmetry —
+  the margin is largely orthogonal to the skewness.
+- **Robustness to the de-vig method:** global skew 0.224 (power) / 0.236 (shin) /
+  0.263 (mult) — ±8% in level; but the **cross-league law is invariant**:
+  corr(p_fav,skew) = −0.906 / −0.900 / −0.891. The structural finding is not a
+  de-vig-choice artefact.
 
-Artefatos: `skewlib/exante.py` (market_skew), `analysis/11_margin_robustness.py`.
+Artefacts: `skewlib/exante.py` (market_skew), `analysis/11_margin_robustness.py`.
 
-## Fase P1 — Reframe: invariância INTRA-REGIME (2026-06-23)
-A literatura (Lee & Fort 2012; Basini 2023; ver `docs/LITERATURA.md`) acha
-quebras de regime **reais** na competitividade da EPL ligadas a choques
-institucionais (Champions League 94/95, Bosman 95, desigualdade de receita
-~2003) — **todos anteriores** ao recorte ≥2005. Reposicionamos a tese de
-"constante atemporal" para **baseline estrutural específico-da-liga, estável
-DENTRO do regime competitivo**.
+## Phase P1 — Reframe: INTRA-REGIME invariance (2026-06-23)
+The literature (Lee & Fort 2012; Basini 2023; see `docs/LITERATURA.md`) finds
+**real** regime breaks in EPL competitiveness tied to institutional shocks
+(Champions League 94/95, Bosman 95, revenue inequality ~2003) — **all prior** to
+the ≥2005 cut-off. We reposition the thesis from a "timeless constant" to a
+**league-specific structural baseline, stable WITHIN the competitive regime**.
 
-- **Teste de quebras intra-janela (PELT conservador):** só **1 quebra em 38
-  ligas** (F1/França 2020 = COVID, salto −0.064); **nenhum ano comum** de quebra
-  (máx 1 liga/ano) → sem regime market-wide em 2005–2025.
-- **EPL (E0):** **0 quebras** no recorte; média 0.165, sd 0.027 — estável
-  intra-regime, coerente com os choques de regime da EPL serem pré-2005.
-- **Conclusão:** 2005–2025 ≈ regime moderno único; "sem tendência" (β≈0) é
-  **invariância intra-regime**, não atemporalidade absoluta. Confronta Lee &
-  Fort/Basini de frente e os usa como moldura — a contra-evidência vira aliada.
+- **Intra-window break test (conservative PELT):** only **1 break across 38
+  leagues** (F1/France 2020 = COVID, jump −0.064); **no common break year** (max
+  1 league/year) → no market-wide regime in 2005–2025.
+- **EPL (E0):** **0 breaks** in the cut-off; mean 0.165, sd 0.027 — stable
+  intra-regime, consistent with the EPL's regime shocks being pre-2005.
+- **Conclusion:** 2005–2025 ≈ a single modern regime; "no trend" (β≈0) is
+  **intra-regime invariance**, not absolute timelessness. It confronts Lee &
+  Fort/Basini head-on and uses them as a frame — the counter-evidence becomes an ally.
 
-Artefatos: `skewlib/panel.py` (league_breaks), `analysis/13_regimes.py`.
+Artefacts: `skewlib/panel.py` (league_breaks), `analysis/13_regimes.py`.
 
-## Fase P2 — CB canônico odds-independente da classificação (2026-06-23)
-Hardening da W2 com os índices size-robust da literatura (Gini fora, Utt & Fort
-2002), computados da **classificação final** (resultados, sem odds nem Elo) —
-ataque mais forte à circularidade.
+## Phase P2 — Canonical odds-independent CB from standings (2026-06-23)
+Hardening of W2 with the size-robust indices from the literature (Gini out,
+Utt & Fort 2002), computed from the **final standings** (results, no odds or Elo)
+— a stronger attack on circularity.
 
-- **Lei reproduzida, sinal previsto (desequilíbrio → skewness↓):**
+- **Law reproduced, sign predicted (imbalance → skewness↓):**
   skew ~ Noll-Scully **−0.625** [−0.83,−0.36] · ~ HHI* (Owen 2007) −0.593 · ~
-  Theil/GE1 (Borooah-Mangan) −0.478. Todas IC95% excluem zero.
-- **Escada de errors-in-variables limpa:** odds (circular) −0.90 > Elo
-  (match-level) +0.83 > classificação (season-level) 0.48–0.63. Quanto mais perto
-  do p-por-jogo, mais forte o corr — o latente é forte, medido por proxies de
-  fidelidade variável.
-- Time a time bate: N1/EPL (NS~1.84, dominância) skew baixa; MLS (NS 1.13, salary
-  cap) e Argentina (NS 1.20) skew alta. Mecanismo visível na classificação.
+  Theil/GE1 (Borooah-Mangan) −0.478. All CI95 exclude zero.
+- **A clean errors-in-variables ladder:** odds (circular) −0.90 > Elo
+  (match-level) +0.83 > standings (season-level) 0.48–0.63. The closer to per-match
+  p, the stronger the corr — the latent is strong, measured by proxies of varying
+  fidelity.
+- Team by team it holds: N1/EPL (NS~1.84, dominance) low skew; MLS (NS 1.13,
+  salary cap) and Argentina (NS 1.20) high skew. The mechanism is visible in the
+  standings.
 
-Artefatos: `skewlib/balance.py`, `analysis/14_balance_indices.py`,
+Artefacts: `skewlib/balance.py`, `analysis/14_balance_indices.py`,
 `outputs/balance_indices.csv`.
 
-## Fase P3 — Derivação formal: skewness = f(dispersão de força) (2026-06-23)
-A lei vira **consequência de um modelo**, não ajuste. Ordered-probit
-(Goddard-Asimakopoulos 2004; Koning 2000): força r~N(0,σ_L²), margem latente
-y*=d+h+ε, cutoffs ±c → (A,D,H); favorito p=max; sob odds justas a skewness
-agrupada S(σ_L)=E[m₃(p)]/E[σ²(p)]^{3/2}.
+## Phase P3 — Formal derivation: skewness = f(force dispersion) (2026-06-23)
+The law becomes a **consequence of a model**, not a fit. Ordered-probit
+(Goddard-Asimakopoulos 2004; Koning 2000): force r~N(0,σ_L²), latent margin
+y*=d+h+ε, cutoffs ±c → (A,D,H); favourite p=max; under fair odds the pooled
+skewness S(σ_L)=E[m₃(p)]/E[σ²(p)]^{3/2}.
 
-- **Calibração** (taxas pooled H 0.444 / D 0.264 / p_fav 0.499): h=0.220,
+- **Calibration** (pooled rates H 0.444 / D 0.264 / p_fav 0.499): h=0.220,
   c=0.373, σ_ref=0.291.
-- **Validação 1ª→3ª ordem:** o modelo prevê a skewness de cada liga a partir só
-  do mean p_fav: **corr(previsto, observado)=+0.904**, RMSE **0.024** (< metade
-  do sd entre ligas 0.051). As 38 ligas caem na curva derivada (F5).
-- **Leitura:** a lei skewness~competitividade é consequência analítica do modelo
-  de força do esporte + a identidade FLB — fecha "o gap" (ninguém amarrou 3º
-  momento de odds a um modelo de força). Curva teórica cobre skew −0.03..+0.30
-  (p_fav 0.44..0.76), bracketando o empírico.
+- **1st→3rd order validation:** the model predicts the skewness of each league
+  from the mean p_fav alone: **corr(predicted, observed)=+0.904**, RMSE **0.024**
+  (< half the between-league sd 0.051). The 38 leagues fall on the derived curve (F5).
+- **Reading:** the law skewness~competitiveness is an analytic consequence of the
+  sport's force model + the FLB identity — it closes "the gap" (no one had tied
+  the 3rd moment of odds to a force model). The theoretical curve covers skew
+  −0.03..+0.30 (p_fav 0.44..0.76), bracketing the empirical range.
 
-Artefatos: `skewlib/model.py`, `analysis/15_model.py`, `outputs/fig/f5_model.png`.
+Artefacts: `skewlib/model.py`, `analysis/15_model.py`, `outputs/fig/f5_model.png`.
 
-## Fase P4 — Estabilidade do FLB no tempo (Angelini confound) (2026-06-23)
-Angelini & De Angelis (2019) acham FLB enfraquecendo em dados europeus recentes;
-um viés em movimento poderia fingir invariância de skewness. Testado 2005–2025:
+## Phase P4 — FLB stability over time (Angelini confound) (2026-06-23)
+Angelini & De Angelis (2019) find the FLB weakening in recent European data; a
+bias in motion could fake skewness invariance. Tested 2005–2025:
 
-- **FLB sem tendência significativa:** ret_dog (barômetro) corr(ano)=+0.27
-  [−0.23,+0.67] (IC inclui 0; leve hint na direção de Angelini, não-significativo);
-  flb_spread corr −0.02; calib_err corr −0.13. Δ20a do spread ≈ −0.002.
-- **Calibração ano a ano intacta:** |skew_exante − skew_expost| médio = **0.015**;
-  erro de calibração do favorito ∈ [−0.004,+0.012] todo ano.
-- **Conclusão:** a invariância de skewness **não** é artefato de um FLB driftando
-  — o viés é estável e a skewness é mecânica na distribuição de p, robusta a
-  micro-drift de calibração.
+- **FLB with no significant trend:** ret_dog (barometer) corr(year)=+0.27
+  [−0.23,+0.67] (CI includes 0; a mild hint in Angelini's direction,
+  non-significant); flb_spread corr −0.02; calib_err corr −0.13. Δ20yr of the
+  spread ≈ −0.002.
+- **Year-by-year calibration intact:** mean |skew_exante − skew_expost| = **0.015**;
+  the favourite's calibration error ∈ [−0.004,+0.012] every year.
+- **Conclusion:** the skewness invariance is **not** an artefact of a drifting FLB
+  — the bias is stable and the skewness is mechanical in the distribution of p,
+  robust to calibration micro-drift.
 
-Artefatos: `skewlib/decompose.py` (flb_by_year), `analysis/16_flb_stability.py`,
+Artefacts: `skewlib/decompose.py` (flb_by_year), `analysis/16_flb_stability.py`,
 `outputs/flb_by_year.csv`.
 
-## Fase B1 — Invariância de FORMA: não só o 3º momento (2026-06-23)
-Generalização da decomposição de momentos da mistura (lei dos momentos totais) para
-var/skew/**kurtose**/5ª–6ª ordem, e teste de cada um contra a curva derivada do
-ordered-probit (P3 fez só p/ a skew). Object: a distribuição implícita inteira é
-invariante após controlar competitividade?
+## Phase B1 — SHAPE invariance: not only the 3rd moment (2026-06-23)
+Generalisation of the mixture's moment decomposition (law of total moments) to
+var/skew/**kurtosis**/5th–6th order, and a test of each against the curve derived
+from the ordered-probit (P3 did only the skew). Object: is the entire implied
+distribution invariant after controlling for competitiveness?
 
-- **Toda a forma é MECÂNICA (intra-jogo), não pooling:** a fração `within` (parte
-  vinda da assimetria/forma intra-jogo, o FLB, vs dispersão entre jogos) é ≈1 em
-  **todas as ordens** — m2 +1.000, m3 +1.026, m4 +1.006, m5 +1.026, m6 +1.016. A
-  forma inteira é a imagem algébrica da distribuição de p, não artefato de mistura.
-- **O modelo de força prevê a forma inteira pelo p_fav:** corr(previsto, observado)
-  entre as 38 ligas = **var +0.987 · skew +0.904 · exkurt +0.890**. Skew e exkurt
-  (padronizados, scale-free) batem em **nível e ordenação**; a var segue a ordenação
-  (r=0.99) com offset de escala do overround (odds reais o<1/p). Global: skew
-  **+0.236** (boot SE 0.001), exkurt **−1.683** (forte caudas-curtas, esperado de
-  mistura de Bernoullis), std5 +0.85, std6 +2.18.
-- **Conclusão:** "invariância de skewness" se fortalece para **invariância de FORMA**
-  — a distribuição implícita inteira é uma função única da competitividade da liga.
+- **The whole shape is MECHANICAL (within-match), not pooling:** the `within`
+  fraction (the part coming from within-match asymmetry/shape, the FLB, vs
+  between-match dispersion) is ≈1 at **all orders** — m2 +1.000, m3 +1.026,
+  m4 +1.006, m5 +1.026, m6 +1.016. The whole shape is the algebraic image of the
+  distribution of p, not a mixture artefact.
+- **The force model predicts the entire shape from p_fav:** corr(predicted,
+  observed) across the 38 leagues = **var +0.987 · skew +0.904 · exkurt +0.890**.
+  Skew and exkurt (standardised, scale-free) match in **level and ordering**;
+  the var follows the ordering (r=0.99) with an overround scale offset (real odds
+  o<1/p). Global: skew **+0.236** (boot SE 0.001), exkurt **−1.683** (strongly
+  short-tailed, expected from a mixture of Bernoullis), std5 +0.85, std6 +2.18.
+- **Conclusion:** "skewness invariance" strengthens to **SHAPE invariance** —
+  the entire implied distribution is a unique function of league competitiveness.
 
-Artefatos: `skewlib/exante.py` (pooled_moments, per_match_central_moments),
+Artefacts: `skewlib/exante.py` (pooled_moments, per_match_central_moments),
 `skewlib/model.py` (league_moments, curve_moments), `analysis/17_moments.py`,
 `outputs/moments_by_league.csv`, `outputs/fig/f6_moments.png`.
 
-## Fase B2 — Colapso de distribuição: forma = f(competitividade) (2026-06-23)
-Teste tipo "data collapse" (física estatística): a forma é universal, ou colapsa
-sob a competitividade? KS sobre o retorno do favorito (efeito = estatística KS, pois
-o p-valor satura com n grande).
+## Phase B2 — Distribution collapse: shape = f(competitiveness) (2026-06-23)
+A "data collapse" test (statistical physics): is the shape universal, or does it
+collapse under competitiveness? KS on the favourite's return (effect = KS
+statistic, since the p-value saturates with large n).
 
-- **Sem controlar competitividade** (retornos z-scored por liga, 38 ligas): KS
-  par-a-par com estatística mediana **0.474**, 100% dos pares rejeitam — a forma
-  padronizada **difere** entre ligas (a skew varia), logo não é universal.
-- **Controlando competitividade** (one-vs-rest dentro de 8 faixas de p_fav, 264
-  testes): estatística KS mediana **0.059** — **queda de 87%**. Dentro de cada faixa
-  as ligas ficam quase indistinguíveis; a identidade da liga não acrescenta nada
-  além da competitividade.
-- **Conclusão:** a distribuição **colapsa** quando se condiciona na competitividade —
-  fato estilizado de que a forma é função (única) da competitividade, não da liga.
+- **Without controlling for competitiveness** (per-league z-scored returns, 38
+  leagues): pairwise KS with median statistic **0.474**, 100% of pairs reject —
+  the standardised shape **differs** across leagues (the skew varies), so it is
+  not universal.
+- **Controlling for competitiveness** (one-vs-rest within 8 p_fav bands, 264
+  tests): median KS statistic **0.059** — **an 87% drop**. Within each band the
+  leagues are nearly indistinguishable; the league identity adds nothing beyond
+  competitiveness.
+- **Conclusion:** the distribution **collapses** when conditioned on
+  competitiveness — a stylised fact that the shape is a (unique) function of
+  competitiveness, not of the league.
 
-Artefatos: `skewlib/collapse.py`, `analysis/18_collapse.py`,
+Artefacts: `skewlib/collapse.py`, `analysis/18_collapse.py`,
 `outputs/collapse_ks.csv`, `outputs/fig/f7_collapse.png`.
 
-## Fase C1 — Prêmio de skewness: nada além do FLB mecânico (2026-06-23)
-Decomposição do retorno do favorito (identidade exata) em margem + nível FLB
-mecânico + resíduo, e teste do resíduo contra a skewness implícita por liga.
+## Phase C1 — Skewness premium: nothing beyond the mechanical FLB (2026-06-23)
+Decomposition of the favourite's return (exact identity) into margin + mechanical
+FLB level + residual, and a test of the residual against the per-league implied
+skewness.
 
-- **Retorno = margem + FLB (calibração):** global ret −4.82% = **vig −4.97%** +
-  **FLB +0.15%**. A perda é quase toda margem; o FLB do favorito é pequeno e
-  positivo (favoritos levemente subapreçados). Curva mecânica do FLB monotônica em
-  p_fav (favoritos fracos contribuem −, fortes +).
-- **Sem prêmio de skewness por liga ALÉM do mecânico:** corr(resíduo, skew) =
-  **+0.11** [−0.20,+0.38] (IC inclui 0); corr(FLB total, skew) −0.04; corr(vig,
-  skew) −0.29. O resíduo de mispricing não acompanha a skewness da liga — a casa
-  não deixa prêmio extra atrelado à assimetria. Coerente com a margem ortogonal (W4).
-- **Conclusão:** o "prêmio de skewness" é inteiramente o FLB mecânico (entre tipos
-  de aposta, já em W1/Bloco B); no nível da liga não sobra prêmio puro — o
-  apreçamento é eficiente até a margem + o viés mecânico.
+- **Return = margin + FLB (calibration):** global ret −4.82% = **vig −4.97%** +
+  **FLB +0.15%**. The loss is almost all margin; the favourite's FLB is small and
+  positive (favourites slightly underpriced). The mechanical FLB curve is monotone
+  in p_fav (weak favourites contribute −, strong +).
+- **No per-league skewness premium BEYOND the mechanical:** corr(residual, skew) =
+  **+0.11** [−0.20,+0.38] (CI includes 0); corr(total FLB, skew) −0.04; corr(vig,
+  skew) −0.29. The mispricing residual does not track the league's skewness — the
+  bookmaker leaves no extra premium attached to the asymmetry. Consistent with the
+  orthogonal margin (W4).
+- **Conclusion:** the "skewness premium" is entirely the mechanical FLB (across
+  bet types, already in W1/Block B); at the league level no pure premium remains —
+  the pricing is efficient up to the margin + the mechanical bias.
 
-Artefatos: `skewlib/premium.py`, `analysis/19_premium.py`,
+Artefacts: `skewlib/premium.py`, `analysis/19_premium.py`,
 `outputs/return_decomp.csv`, `outputs/fig/f8_premium.png`.
 
-## Fase C2 — A preferência (CPT) é ela própria invariante (2026-06-23)
-Ajuste da ponderação de probabilidade de Tversky-Kahneman `w(p)=p^γ/(p^γ+(1−p)^γ)^{1/γ}`
-à curva de calibração (implícito PROPORCIONAL `q` vs acerto objetivo `π`; o de-vig de
-Shin apagaria o viés a medir, então usa-se o proporcional).
+## Phase C2 — The preference (CPT) is itself invariant (2026-06-23)
+Fit of the Tversky-Kahneman probability weighting `w(p)=p^γ/(p^γ+(1−p)^γ)^{1/γ}`
+to the calibration curve (PROPORTIONAL implied `q` vs objective hit `π`; the Shin
+de-vig would erase the bias to be measured, so the proportional is used).
 
-- **Inverse-S confirmado (γ<1 = FLB):** γ global **0.958**; calibração revela o viés
-  (azarão q 0.101 vs π 0.086 = superposto; favorito q 0.711 vs π 0.743 = subposto).
-- **γ é um invariante TEMPORAL:** por temporada γ médio 0.955, sd 0.020, tendência
-  **β=+0.0003/ano** (r=+0.08, Δ20a ≈ +0.006) — **sem drift em 20 anos**. A preferência
-  de ponderação é estável no tempo, espelhando a invariância da skewness (e o FLB
-  estável do P4).
-- **Quase invariante entre ligas:** γ médio 0.945, sd **0.040**, range [0.85,1.00] —
-  apertado. Mostra associação leve com a competitividade (corr(γ,p_fav) −0.45
-  [−0.74,−0.10]), nuance honesta (pode refletir a faixa de p amostrada por liga),
-  não uma quebra da estabilidade temporal.
-- **Conclusão:** o parâmetro de preferência por trás do FLB é uma constante
-  estrutural estável (não um processo) — a invariância vale também do lado da
-  preferência, não só da assinatura de risco.
+- **Inverse-S confirmed (γ<1 = FLB):** global γ **0.958**; the calibration reveals
+  the bias (longshot q 0.101 vs π 0.086 = overweighted; favourite q 0.711 vs π
+  0.743 = underweighted).
+- **γ is a TEMPORAL invariant:** by season mean γ 0.955, sd 0.020, trend
+  **β=+0.0003/year** (r=+0.08, Δ20yr ≈ +0.006) — **no drift over 20 years**. The
+  weighting preference is stable over time, mirroring the skewness invariance (and
+  the stable FLB of P4).
+- **Nearly invariant across leagues:** mean γ 0.945, sd **0.040**, range [0.85,1.00]
+  — tight. It shows a mild association with competitiveness (corr(γ,p_fav) −0.45
+  [−0.74,−0.10]), an honest nuance (it may reflect the range of p sampled per
+  league), not a break in temporal stability.
+- **Conclusion:** the preference parameter behind the FLB is a stable structural
+  constant (not a process) — the invariance holds also on the preference side, not
+  only on the risk signature.
 
-Artefatos: `skewlib/cpt.py`, `analysis/20_cpt.py`, `outputs/cpt_by_league.csv`,
+Artefacts: `skewlib/cpt.py`, `analysis/20_cpt.py`, `outputs/cpt_by_league.csv`,
 `outputs/cpt_by_season.csv`, `outputs/fig/f9_cpt.png`.
 
-## Fase E1 — Forma fechada de S(σ_L): a derivação sai do Monte Carlo (2026-06-23)
-O P3/bloco 15 traça a lei skewness=f(competitividade) por SIMULAÇÃO sobre a força
-`d`. Aqui mostramos que a esperança é um INTEGRAL gaussiano 1-D em `d` e o
-avaliamos por QUADRATURA — a forma fechada de `S(σ_L)=E[m₃(p_fav(d))]/E[σ²(p_fav(d))]^{3/2}`,
-`d~N(0,2σ_L²)`, determinística e sem ruído de MC.
+## Phase E1 — Closed form of S(σ_L): the derivation leaves Monte Carlo (2026-06-23)
+P3/block 15 traces the law skewness=f(competitiveness) by SIMULATION over the
+force `d`. Here we show that the expectation is a 1-D Gaussian INTEGRAL in `d` and
+evaluate it by QUADRATURE — the closed form of
+`S(σ_L)=E[m₃(p_fav(d))]/E[σ²(p_fav(d))]^{3/2}`, `d~N(0,2σ_L²)`, deterministic and
+free of MC noise.
 
-- **A quadratura reproduz o MC, sem ruído:** max|MC−exato| = **0.0015** (com
-  n=4·10⁵; é a magnitude do próprio ruído de MC), médio 0.0006, em toda a grade de
-  σ_L. A curva teórica vira exata e suave — a "derivação por simulação" passa a ser
-  derivação fechada.
-- **Limite balanceado em forma fechada:** `S(σ_L→0) = (1−2p₀)/√(p₀(1−p₀)) = +0.2449`,
-  com `p₀=Φ(h−c)=0.4392` (o favorito de equilíbrio = mandante). É a identidade por
-  jogo avaliada em p₀ — o intercepto da lei sai analítico. A curvatura líder
-  `S₂=+8.44>0` (a skew SOBE ao sair do equilíbrio), válida p/ σ_L≲0.1.
-- **A curva NÃO é monótona (caracterização exata):** côncava, com **pico em σ*=0.123
-  (S_max=+0.304, p_fav*=0.446)** e zerando em σ_L≈1.09 (favorito forte ⇒ skew→0 e
-  vira negativa). Corrige o "monótona" do docstring antigo.
-- **Honestidade matemática:** `p_fav(d)=max(p_H,p_D,p_A)` tem QUINAS onde o favorito
-  troca → `S(σ_L)` é C^∞ mas **não-analítica global** (a série de Taylor diverge além
-  do regime near-balance, confirmado numericamente). A forma fechada legítima é o
-  integral (quadratura), não uma série elementar; a expansão S₀+S₂σ² é a âncora
-  analítica local.
-- **Prevê as 38 ligas pela curva fechada:** corr(previsto,observado) = **+0.903**,
-  RMSE 0.024 — idêntico ao bloco 15 por MC (r=0.904), agora sem reamostragem.
-- **Conclusão:** a lei skewness=f(competitividade) é uma consequência fechada do
-  modelo de força + FLB, derivada do integral gaussiano, não um ajuste nem um
-  artefato de simulação.
+- **The quadrature reproduces the MC, without noise:** max|MC−exact| = **0.0015**
+  (with n=4·10⁵; this is the magnitude of the MC noise itself), mean 0.0006, over
+  the whole σ_L grid. The theoretical curve becomes exact and smooth — the
+  "derivation by simulation" becomes a closed-form derivation.
+- **Balanced limit in closed form:** `S(σ_L→0) = (1−2p₀)/√(p₀(1−p₀)) = +0.2449`,
+  with `p₀=Φ(h−c)=0.4392` (the equilibrium favourite = home team). It is the
+  per-match identity evaluated at p₀ — the law's intercept comes out analytically.
+  The leading curvature `S₂=+8.44>0` (the skew RISES on leaving equilibrium), valid
+  for σ_L≲0.1.
+- **The curve is NOT monotone (exact characterisation):** concave, with a **peak at
+  σ*=0.123 (S_max=+0.304, p_fav*=0.446)** and crossing zero at σ_L≈1.09 (a strong
+  favourite ⇒ skew→0 and turns negative). It corrects the "monotone" of the old
+  docstring.
+- **Mathematical honesty:** `p_fav(d)=max(p_H,p_D,p_A)` has KINKS where the
+  favourite switches → `S(σ_L)` is C^∞ but **globally non-analytic** (the Taylor
+  series diverges beyond the near-balance regime, confirmed numerically). The
+  legitimate closed form is the integral (quadrature), not an elementary series;
+  the expansion S₀+S₂σ² is the local analytic anchor.
+- **Predicts the 38 leagues from the closed curve:** corr(predicted,observed) =
+  **+0.903**, RMSE 0.024 — identical to block 15 by MC (r=0.904), now without
+  resampling.
+- **Conclusion:** the law skewness=f(competitiveness) is a closed-form consequence
+  of the force model + FLB, derived from the Gaussian integral, not a fit nor a
+  simulation artefact.
 
-Artefatos: `skewlib/model.py` (league_moments_exact, league_skew_exact,
+Artefacts: `skewlib/model.py` (league_moments_exact, league_skew_exact,
 mean_pfav_exact, smallsigma_coeffs/skew, fav_switch_points, curve_exact),
 `analysis/21_closed_form.py`, `outputs/closed_form_curve.csv`,
 `outputs/fig/f10_closed_form.png`.
 
-## Fase E2 — Robustez da distribuição de força (2026-06-23)
-O modelo assume força gaussiana, `r~N(0,σ_L²)`. A lei sobrevive se a força for
-cauda-pesada (t-Student), assimétrica (skew-normal) ou de suporte limitado
-(uniforme)? Predição teórica: a diferença de força `d=rᵢ−rⱼ` é **simétrica p/
-qualquer força iid** — a assimetria da força não pode enviesar a lei; só a CAUDA
-(kurtose de `d`) pode mover algo.
+## Phase E2 — Robustness of the force distribution (2026-06-23)
+The model assumes Gaussian force, `r~N(0,σ_L²)`. Does the law survive if the force
+is heavy-tailed (Student-t), skewed (skew-normal) or bounded-support (uniform)?
+Theoretical prediction: the force difference `d=rᵢ−rⱼ` is **symmetric for any iid
+force** — the asymmetry of the force cannot bias the law; only the TAIL (kurtosis
+of `d`) can move anything.
 
-- **A teoria bate:** exc.kurt(d) = normal 0.0, t₅ +2.8, **t₃ +42.6** (cauda
-  pesadíssima), skew-normal ±0.3, uniforme −0.6. skew(d)≈0 em TODAS (incl. as
-  skew-normais) — a força assimétrica gera diferença simétrica.
-- **A curva skew×competitividade quase não se move:** reparametrizando pela
-  competitividade observável (mean p_fav) e comparando à gaussiana, max|ΔS| =
-  t₅ **0.017**, t₃ **0.032**, skew-normal ±0.012, uniforme 0.011 — todos abaixo do
-  sd entre ligas (0.051). O deslocamento escala com a CAUDA de `d` (t₃ é o maior),
-  não com sua assimetria (skew-normal cola na gaussiana, como previsto).
-- **No ponto operacional do futebol** (p_fav=0.499): skew ∈ [+0.223,+0.250],
-  amplitude entre famílias = **0.027** (pequena perante o efeito da competitividade,
-  que varre +0.30→−0.02).
-- **Conclusão:** a lei é **geometria da mistura**, não da hipótese gaussiana —
-  robusta a caudas pesadas e a assimetria de força. A gaussianidade é conveniência,
-  não premissa carregando o resultado.
+- **The theory holds:** exc.kurt(d) = normal 0.0, t₅ +2.8, **t₃ +42.6** (very
+  heavy tail), skew-normal ±0.3, uniform −0.6. skew(d)≈0 in ALL (incl. the
+  skew-normals) — the skewed force generates a symmetric difference.
+- **The skew×competitiveness curve barely moves:** reparametrising by observable
+  competitiveness (mean p_fav) and comparing to the Gaussian, max|ΔS| =
+  t₅ **0.017**, t₃ **0.032**, skew-normal ±0.012, uniform 0.011 — all below the
+  between-league sd (0.051). The shift scales with the TAIL of `d` (t₃ is the
+  largest), not with its asymmetry (skew-normal sticks to the Gaussian, as predicted).
+- **At football's operating point** (p_fav=0.499): skew ∈ [+0.223,+0.250],
+  amplitude across families = **0.027** (small relative to the competitiveness
+  effect, which sweeps +0.30→−0.02).
+- **Conclusion:** the law is **mixture geometry**, not the Gaussian hypothesis —
+  robust to heavy tails and force asymmetry. Gaussianity is convenience, not a
+  premise carrying the result.
 
-Artefatos: `skewlib/model.py` (force_diff, curve_family), `analysis/22_force_robustness.py`,
+Artefacts: `skewlib/model.py` (force_diff, curve_family), `analysis/22_force_robustness.py`,
 `outputs/force_robustness.csv`, `outputs/fig/f11_force_robustness.png`.
 
-## Fase G1 — De-vig confiável e invariante (2026-06-23)
-Robustez adversarial: o de-vig de Shin é confiável e a skewness não é artefato do
-método? Reliability diagram + decomposição de Brier (Murphy: BS=REL−RES+UNC) do
-favorito por liga/ano, e skewness sob 5 de-vigs/casas.
+## Phase G1 — Reliable and invariant de-vig (2026-06-23)
+Adversarial robustness: is the Shin de-vig reliable and the skewness not a method
+artefact? Reliability diagram + Brier decomposition (Murphy: BS=REL−RES+UNC) of
+the favourite by league/year, and skewness under 5 de-vigs/bookmakers.
 
-- **De-vig calibrado quase perfeitamente:** acerto do favorito 0.501 vs prob média
-  0.499; **REL (erro de calibração) global = 0.0000**. Brier 0.236 = REL 0.000 −
+- **De-vig calibrated almost perfectly:** favourite hit 0.501 vs mean prob
+  0.499; **global REL (calibration error) = 0.0000**. Brier 0.236 = REL 0.000 −
   RES 0.014 + UNC 0.250.
-- **REL pequeno e homogêneo:** entre 32 ligas média 0.0005 (sd 0.0003, max 0.0014);
-  entre 21 temporadas média 0.0002 (sd 0.0001). Nenhuma liga/ano mal calibrado — o
-  resíduo do de-vig é estável (não há viés escondido que produza a assimetria).
-- **Skewness invariante ao método/casa:** shin·odd +0.236, shin·max +0.254,
-  mult +0.263, power +0.224, consenso multi-casa +0.252 — amplitude **0.039**,
-  todos positivos. Estende W4: o achado não depende do de-vig nem da casa.
-- **Conclusão:** a skewness não é fabricada pelo de-vig; a assimetria implícita é
-  bem calibrada contra os resultados e robusta à escolha de método.
+- **REL small and homogeneous:** across 32 leagues mean 0.0005 (sd 0.0003, max
+  0.0014); across 21 seasons mean 0.0002 (sd 0.0001). No league/year miscalibrated
+  — the de-vig residual is stable (no hidden bias producing the asymmetry).
+- **Skewness invariant to method/bookmaker:** shin·odd +0.236, shin·max +0.254,
+  mult +0.263, power +0.224, multi-bookmaker consensus +0.252 — amplitude **0.039**,
+  all positive. Extends W4: the finding depends on neither the de-vig nor the bookmaker.
+- **Conclusion:** the skewness is not manufactured by the de-vig; the implied
+  asymmetry is well calibrated against the results and robust to the method choice.
 
-Artefatos: `skewlib/adversarial.py` (fav_won, reliability, brier_decomp,
+Artefacts: `skewlib/adversarial.py` (fav_won, reliability, brier_decomp,
 reliability_by, skew_by_devig), `analysis/23_devig_reliability.py`,
 `outputs/reliability_by_league.csv`, `outputs/fig/f12_reliability.png`.
 
-## Fase G2 — Painel balanceado estrito (composição morta) (2026-06-23)
-A série GLOBAL de skewness refeita usando SÓ as ligas presentes em todas as 21
-temporadas (15 ligas: B1,D1,D2,E0–E3,F1,F2,I1,I2,N1,SP1,SP2,T1) — mata 100% o
-confound de composição que P1 atacou por-liga.
+## Phase G2 — Strictly balanced panel (composition killed) (2026-06-23)
+The GLOBAL skewness series rebuilt using ONLY the leagues present in all 21
+seasons (15 leagues: B1,D1,D2,E0–E3,F1,F2,I1,I2,N1,SP1,SP2,T1) — killing 100% of
+the composition confound that P1 attacked per-league.
 
-- **Sem tendência com cesta fixa:** β = **−0.00013/ano** (r=−0.06, Δ20a −0.003) na
-  série balanceada vs −0.00009 na cheia; KPSS p=0.10 (estacionária). Nível médio
-  **+0.243 (sd 0.014)** — apertadíssimo.
-- **Conclusão:** a invariância temporal NÃO vem de a cesta de ligas mudar ano a ano;
-  com o núcleo fixo a série global continua plana. O "sem drift" é real.
+- **No trend with a fixed basket:** β = **−0.00013/year** (r=−0.06, Δ20yr −0.003)
+  in the balanced series vs −0.00009 in the full one; KPSS p=0.10 (stationary).
+  Mean level **+0.243 (sd 0.014)** — extremely tight.
+- **Conclusion:** the temporal invariance does NOT come from the league basket
+  changing year on year; with the core fixed the global series stays flat. The "no
+  drift" is real.
 
-Artefatos: `skewlib/adversarial.py` (balanced_leagues, global_series_balanced),
+Artefacts: `skewlib/adversarial.py` (balanced_leagues, global_series_balanced),
 `analysis/24_balanced_panel.py`, `outputs/balanced_global_series.csv`,
 `outputs/fig/f13_balanced_panel.png`.
 
-## Fase G3 — IC por block-bootstrap sobre temporadas (2026-06-23)
-ICs honestos reamostrando TEMPORADAS inteiras (com reposição), respeitando a
-dependência intra-ano que a reamostragem de jogos quebraria.
+## Phase G3 — CI by block-bootstrap over seasons (2026-06-23)
+Honest CIs resampling whole SEASONS (with replacement), respecting the intra-year
+dependence that match resampling would break.
 
-- **Skewness global +0.236**, IC95 **[+0.232, +0.239]** (SE 0.0019) — exclui 0 com
-  folga.
-- **Lei estrutural corr(skew_liga, p_fav_liga) = −0.900**, IC95 **[−0.922, −0.876]**
-  (SE 0.011) — a relação skewness↔competitividade sobrevive à reamostragem de anos.
-- **Retorno do favorito −4.82%**, IC95 [−5.37%, −4.43%].
-- **Conclusão:** os números-título carregam IC por reamostragem de temporadas; o
-  sinal e a magnitude não dependem de uma janela específica de anos.
+- **Global skewness +0.236**, CI95 **[+0.232, +0.239]** (SE 0.0019) — excludes 0
+  comfortably.
+- **Structural law corr(skew_league, p_fav_league) = −0.900**, CI95 **[−0.922, −0.876]**
+  (SE 0.011) — the skewness↔competitiveness relation survives the year resampling.
+- **Favourite return −4.82%**, CI95 [−5.37%, −4.43%].
+- **Conclusion:** the headline numbers carry a CI from season resampling; the sign
+  and magnitude do not depend on a specific window of years.
 
-Artefatos: `skewlib/adversarial.py` (season_block_bootstrap, stat_global_skew,
+Artefacts: `skewlib/adversarial.py` (season_block_bootstrap, stat_global_skew,
 stat_league_corr), `analysis/25_block_bootstrap.py`.
 
-## Fase D2 — Sharp vs soft: a margem é ortogonal também na melhor odd (2026-06-23)
-A skewness diverge entre a odd MÉDIA do mercado (Odd*, soft) e a MELHOR odd
-(Max*, ~sharp/arb)? Por liga.
+## Phase D2 — Sharp vs soft: the margin is orthogonal also in the best odd (2026-06-23)
+Does the skewness diverge between the market's AVERAGE odd (Odd*, soft) and the
+BEST odd (Max*, ~sharp/arb)? By league.
 
-- **Melhor preço quase zera a margem:** overround soft 1.069 → sharp 1.008.
-- **Skew mal se move e uniformemente:** soft +0.218 → sharp +0.238 (Δ médio
-  **+0.020**, sd 0.006). corr(skew_soft, skew_sharp) entre ligas = **+0.993** — a
-  ordenação das ligas é idêntica; a **lei estrutural sobrevive na sharp**
-  (corr(skew_sharp, p_fav) = −0.876).
-- **Conclusão:** tirar a margem desloca a skew pouco e de forma uniforme; a casa
-  compete em margem, não em assimetria (aprofunda W4) — a lei é invariante ao livro.
+- **Best price almost zeroes the margin:** overround soft 1.069 → sharp 1.008.
+- **Skew barely moves, and uniformly:** soft +0.218 → sharp +0.238 (mean Δ
+  **+0.020**, sd 0.006). corr(skew_soft, skew_sharp) across leagues = **+0.993** —
+  the ordering of the leagues is identical; the **structural law survives in the
+  sharp** (corr(skew_sharp, p_fav) = −0.876).
+- **Conclusion:** removing the margin shifts the skew little and uniformly; the
+  bookmaker competes on margin, not on asymmetry (deepens W4) — the law is invariant
+  to the book.
 
-Artefatos: `skewlib/microstructure.py` (skew_by_book_league),
+Artefacts: `skewlib/microstructure.py` (skew_by_book_league),
 `analysis/26_sharp_soft.py`, `outputs/sharp_soft_by_league.csv`,
 `outputs/fig/f14_sharp_soft.png`.
 
-## Fase D3 — z de Shin (dinheiro informado) como série (2026-06-23)
-z é subproduto do de-vig de Shin: a fração do book atribuída a insiders. z por
-liga/ano, sua estabilidade e relação com competitividade/overround.
+## Phase D3 — Shin's z (informed money) as a series (2026-06-23)
+z is a by-product of the Shin de-vig: the fraction of the book attributed to
+insiders. z by league/year, its stability and its relation to
+competitiveness/overround.
 
-- **z baixo e apertado:** global 0.034 (3.4% de dinheiro informado no 1X2); entre
-  38 ligas média 0.035, sd 0.004, range [0.023, 0.042].
-- **z é essencialmente a margem reparametrizada:** corr(z, overround) = **+0.999**
-  (quase tautológico no modelo de Shin — z é monótono no booksum). O útil é a
-  **ortogonalidade à competitividade**: corr(z, p_fav) = −0.04 [−0.37, +0.30] —
-  o conteúdo informacional não dirige a lei de skewness.
-- **No tempo:** leve compressão (β=−0.0009/ano, Δ20a −0.019), espelhando a queda
-  suave de margem; magnitude pequena.
-- **Conclusão:** o dinheiro informado precificado é uma constante estrutural baixa,
-  ligada à margem e ortogonal à competitividade — consistente com a invariância.
+- **z low and tight:** global 0.034 (3.4% of informed money in 1X2); across 38
+  leagues mean 0.035, sd 0.004, range [0.023, 0.042].
+- **z is essentially the margin reparametrised:** corr(z, overround) = **+0.999**
+  (almost tautological in the Shin model — z is monotone in the booksum). The useful
+  part is the **orthogonality to competitiveness**: corr(z, p_fav) = −0.04 [−0.37,
+  +0.30] — the informational content does not drive the skewness law.
+- **Over time:** a slight compression (β=−0.0009/year, Δ20yr −0.019), mirroring the
+  smooth decline in the margin; small magnitude.
+- **Conclusion:** the priced-in informed money is a low structural constant, tied
+  to the margin and orthogonal to competitiveness — consistent with the invariance.
 
-Artefatos: `skewlib/microstructure.py` (shin_z_frame, z_by),
+Artefacts: `skewlib/microstructure.py` (shin_z_frame, z_by),
 `analysis/27_shin_z_series.py`, `outputs/shin_z_by_league.csv`,
 `outputs/fig/f15_shin_z.png`.
 
-## Fase D4 — Handicap asiático: a identidade num 3º mercado (2026-06-23)
-Além de 1X2 (W1) e O/U 2.5 (W5), o AH é um mercado de 2 vias com linha MÓVEL que
-equilibra o jogo para ~50/50. Teste mais nítido da identidade num regime de p_fav
-diferente.
+## Phase D4 — Asian handicap: the identity in a 3rd market (2026-06-23)
+Beyond 1X2 (W1) and O/U 2.5 (W5), the AH is a 2-way market with a MOVING line that
+balances the match to ~50/50. The sharpest test of the identity in a different
+p_fav regime.
 
-- **Linha equilibra p/ ~0.5:** 150.003 jogos com AH válido, p_fav médio **0.533**
-  (vs 0.44 no 1X2). overround AH 1.044.
-- **Mesma identidade, sinal oposto:** skew ex-ante AGRUPADA = **−0.104** (within-match
-  102.7% = mecânico), pois p_fav>0.5 (favorito cobre com frequência ⇒ skew negativa)
-  — espelho do 1X2 (+0.236, p_fav<0.5). Ex-post (70.965 liquidados) **−0.117** ≈
-  ex-ante −0.112.
-- **Por liga na curva:** skew_ah vs identidade (1−2p)/√(p(1−p)) no p_fav do AH →
-  **r=+0.80**.
-- **Conclusão:** um TERCEIRO mercado independente confirma o núcleo mecânico — a
-  skewness é função de p (o sinal é fixado por qual lado de 0.5 o favorito cai), não
-  artefato da estrutura de 3 vias do 1X2.
+- **The line balances to ~0.5:** 150,003 matches with a valid AH, mean p_fav
+  **0.533** (vs 0.44 in 1X2). AH overround 1.044.
+- **Same identity, opposite sign:** pooled ex-ante skew = **−0.104** (within-match
+  102.7% = mechanical), because p_fav>0.5 (the favourite covers frequently ⇒
+  negative skew) — a mirror of 1X2 (+0.236, p_fav<0.5). Ex-post (70,965 settled)
+  **−0.117** ≈ ex-ante −0.112.
+- **By league on the curve:** skew_ah vs the identity (1−2p)/√(p(1−p)) at the AH's
+  p_fav → **r=+0.80**.
+- **Conclusion:** a THIRD independent market confirms the mechanical core — the
+  skewness is a function of p (the sign is fixed by which side of 0.5 the favourite
+  falls), not an artefact of the 3-way structure of 1X2.
 
-Artefatos: `skewlib/microstructure.py` (prep_ah, ah_league),
+Artefacts: `skewlib/microstructure.py` (prep_ah, ah_league),
 `analysis/28_asian_handicap.py`, `outputs/asian_handicap_by_league.csv`,
 `outputs/fig/f16_asian_handicap.png`.
 
-## Fase F1 — Sazonalidade intra-temporada: invariância vale dentro do ano (2026-06-23)
-A skewness se move do início ao fim da temporada (Ago→Jul, terços por data)?
+## Phase F1 — Intra-season seasonality: the invariance holds within the year (2026-06-23)
+Does the skewness move from the start to the end of the season (Aug→Jul, thirds
+by date)?
 
-- **Drift LEVE e previsto:** global por fase +0.243 → +0.235 → +0.229 (amplitude
-  **0.015**); p_fav sobe 0.494 → 0.503 (favoritos um pouco mais fortes no fim, com a
-  classificação cristalizando). Δskew(fim−início) por liga: média **−0.008**, IC95
-  [−0.013, −0.0015] (exclui 0 por pouco).
-- **Conclusão:** existe uma cristalização pequena — mas ~3–4× menor que o sd entre
-  ligas (0.05) e **prevista pela própria lei** (mais p_fav ⇒ menos skew). A
-  invariância vale também DENTRO da temporada, a menos desse drift mínimo.
+- **MILD and predicted drift:** global by phase +0.243 → +0.235 → +0.229
+  (amplitude **0.015**); p_fav rises 0.494 → 0.503 (favourites a bit stronger at
+  the end, as the standings crystallise). Δskew(end−start) by league: mean
+  **−0.008**, CI95 [−0.013, −0.0015] (just excludes 0).
+- **Conclusion:** there is a small crystallisation — but ~3–4× smaller than the
+  between-league sd (0.05) and **predicted by the law itself** (more p_fav ⇒ less
+  skew). The invariance holds also WITHIN the season, up to this minimal drift.
 
-Artefatos: `skewlib/intraleague.py` (add_season_phase, skew_by_phase,
+Artefacts: `skewlib/intraleague.py` (add_season_phase, skew_by_phase,
 phase_shift_by_league), `analysis/29_intraseason.py`,
 `outputs/intraseason_shift_by_league.csv`, `outputs/fig/f17_intraseason.png`.
 
-## Fase F2 — Que jogos carregam a skewness (cancelamento de caudas) (2026-06-23)
-Decomposição do 3º momento agrupado por faixa de competitividade do JOGO (p_fav):
-quais jogos contribuem a assimetria.
+## Phase F2 — Which matches carry the skewness (tail cancellation) (2026-06-23)
+Decomposition of the pooled 3rd moment by MATCH competitiveness band (p_fav):
+which matches contribute the asymmetry.
 
-- **Lei no nível do jogo:** skew por faixa vai de **+0.465** (p_fav 0.39, favorito
-  fraco) a **−1.055** (p_fav 0.73, favorito forte) — exatamente a identidade
-  (1−2p)/√(p(1−p)). Jogos de favorito FRACO (p<0.5) somam **+126%** do M₃; favorito
-  FORTE (p>0.5) **−26%**.
-- **Conclusão:** a skewness da liga é a soma líquida de contribuições que o
-  cancelamento de caudas quase zera; a competitividade no nível do JOGO fixa o sinal
-  e a magnitude de cada contribuição — a lei macro emerge do micro.
+- **Law at the match level:** skew by band ranges from **+0.465** (p_fav 0.39,
+  weak favourite) to **−1.055** (p_fav 0.73, strong favourite) — exactly the
+  identity (1−2p)/√(p(1−p)). WEAK-favourite matches (p<0.5) sum **+126%** of M₃;
+  STRONG-favourite (p>0.5) **−26%**.
+- **Conclusion:** the league skewness is the net sum of contributions that tail
+  cancellation nearly zeroes; competitiveness at the MATCH level fixes the sign and
+  magnitude of each contribution — the macro law emerges from the micro.
 
-Artefatos: `skewlib/intraleague.py` (m3_contribution_by_bin),
+Artefacts: `skewlib/intraleague.py` (m3_contribution_by_bin),
 `analysis/30_game_contribution.py`, `outputs/m3_contribution_by_bin.csv`,
 `outputs/fig/f18_game_contribution.png`.
 
-## Fase F3 — Decomposição por time: a assinatura vem da dispersão de força (2026-06-23)
-Por clube: dominância (Elo médio) vs skewness média dos jogos que disputa.
+## Phase F3 — Per-team decomposition: the signature comes from force dispersion (2026-06-23)
+By club: dominance (mean Elo) vs the mean skewness of the matches it plays.
 
-- **Clubes dominantes puxam p/ skew negativa:** Barcelona (Elo 1983, favorito 97%)
-  skew dos jogos **−1.10**, Bayern −1.09, Real Madrid −0.90; clubes fracos (Lahti
-  Elo 1182) **+0.06**. corr(Elo, skew dos jogos) = **−0.44** [−0.53,−0.34].
-- **A lei, vista por dentro:** corr(dispersão de Elo da liga, skew da liga) =
-  **−0.60** [−0.77,−0.42] — ligas com mais super-clubes têm skew mais baixa.
-- **Conclusão:** a assinatura de skew da liga é função da sua dispersão de força no
-  nível dos TIMES — a versão micro de skewness=f(competitividade).
+- **Dominant clubs pull towards negative skew:** Barcelona (Elo 1983, favourite
+  97%) match skew **−1.10**, Bayern −1.09, Real Madrid −0.90; weak clubs (Lahti
+  Elo 1182) **+0.06**. corr(Elo, match skew) = **−0.44** [−0.53,−0.34].
+- **The law, seen from inside:** corr(league Elo dispersion, league skew) =
+  **−0.60** [−0.77,−0.42] — leagues with more super-clubs have lower skew.
+- **Conclusion:** the league's skew signature is a function of its force dispersion
+  at the TEAM level — the micro version of skewness=f(competitiveness).
 
-Artefatos: `skewlib/intraleague.py` (team_long, team_dominance),
+Artefacts: `skewlib/intraleague.py` (team_long, team_dominance),
 `analysis/31_team_decomposition.py`, `outputs/team_dominance.csv`,
 `outputs/fig/f19_team_decomposition.png`.
 
-## Fase H2 — Liga aberta vs fechada: a MLS na lei (2026-06-23)
-A MLS (USA) é a única liga FECHADA da amostra (salary cap, draft, sem
-rebaixamento), desenhada para comprimir a dispersão de força; as europeias são
-abertas. Predição: estrutura fechada ⇒ mais competitividade ⇒ skew balanceada.
+## Phase H2 — Open vs closed league: the MLS on the law (2026-06-23)
+The MLS (USA) is the only CLOSED league in the sample (salary cap, draft, no
+relegation), designed to compress force dispersion; the European ones are open.
+Prediction: a closed structure ⇒ more competitiveness ⇒ balanced skew.
 
-- **MLS é a mais balanceada por medida estrutural:** Noll-Scully **1.13, rank 1/38**
-  (a mais competitiva da amostra) — exatamente o que cap + sem-rebaixamento preveem.
-  Skew ex-ante **+0.162**, abaixo da média das abertas (+0.219); p_fav 0.503.
-- **Na curva, com nuance honesta:** resíduo vs a lei das abertas −0.06 (~1 sd) — a
-  MLS fica no extremo competitivo/balanceado, consistente com a teoria open-vs-closed.
-- **Conclusão:** a liga fechada não quebra a lei — sua estrutura aperta a
-  competitividade e a skewness segue para o balanceado. Não é teste nítido (1 só liga
-  fechada na amostra; pleno exige mais ligas fechadas = dado externo).
+- **MLS is the most balanced by structural measure:** Noll-Scully **1.13, rank 1/38**
+  (the most competitive in the sample) — exactly what a cap + no-relegation predict.
+  Ex-ante skew **+0.162**, below the open mean (+0.219); p_fav 0.503.
+- **On the curve, with an honest nuance:** residual vs the open-league law −0.06
+  (~1 sd) — the MLS sits at the competitive/balanced extreme, consistent with the
+  open-vs-closed theory.
+- **Conclusion:** the closed league does not break the law — its structure tightens
+  competitiveness and the skewness moves towards the balanced. It is not a sharp test
+  (only 1 closed league in the sample; a full test needs more closed leagues =
+  external data).
 
-Artefatos: `analysis/32_open_vs_closed.py`, `outputs/open_vs_closed.csv`,
+Artefacts: `analysis/32_open_vs_closed.py`, `outputs/open_vs_closed.csv`,
 `outputs/fig/f20_open_vs_closed.png`.
 
-## Fase C3 — Kelly/staking: o crescimento sob a estrutura de skewness (2026-06-23)
-O que a assimetria implica para o crescimento ótimo de banca?
+## Phase C3 — Kelly/staking: growth under the skewness structure (2026-06-23)
+What does the asymmetry imply for optimal bankroll growth?
 
-- **Kelly manda NÃO apostar:** sob a margem real, **0.0%** das apostas têm EV>0 (f*=0
-  em todas) — após a vig não há crescimento a extrair (ecoa a eficiência do C1).
-- **A skewness é o canal do FLB:** decompondo o log-crescimento (g ≈ μ − σ²/2 +
-  m₃/3) a uma fração fixa, o termo de SKEWNESS do azarão é **+0.60** (×1e3) vs **+0.01**
-  do favorito — a assimetria positiva compensa parte do EV negativo no
-  crescimento/utilidade. É o canal pelo qual a preferência por skew (FLB) sobrevive a
-  ser EV-negativa.
-- **Conclusão:** a estrutura de skewness não abre crescimento (mercado eficiente),
-  mas explica quantitativamente por que o apostador de azarão paga EV em troca de
-  assimetria — o prêmio de skewness em termos de crescimento/utilidade.
+- **Kelly says DON'T bet:** under the real margin, **0.0%** of bets have EV>0 (f*=0
+  in all) — after the vig there is no growth to extract (echoes the C1 efficiency).
+- **Skewness is the FLB channel:** decomposing the log-growth (g ≈ μ − σ²/2 +
+  m₃/3) at a fixed fraction, the longshot SKEWNESS term is **+0.60** (×1e3) vs
+  **+0.01** for the favourite — the positive asymmetry offsets part of the negative
+  EV in growth/utility. It is the channel through which the preference for skew (FLB)
+  survives being EV-negative.
+- **Conclusion:** the skewness structure does not open growth (efficient market),
+  but it quantitatively explains why the longshot bettor pays EV in exchange for
+  asymmetry — the skewness premium in growth/utility terms.
 
-Artefatos: `skewlib/staking.py` (kelly_fraction, growth_rate, moment_growth_terms),
+Artefacts: `skewlib/staking.py` (kelly_fraction, growth_rate, moment_growth_terms),
 `analysis/33_kelly_staking.py`, `outputs/fig/f21_kelly.png`.
 
-## Fase E3 — Calibração por liga (cutoff de empate endógeno) (2026-06-23)
-Calibração de (h, c, σ_L) POR liga (vs global do P3/bloco 15): vantagem de casa,
-cutoff de empate e dispersão de força endógenos.
+## Phase E3 — Per-league calibration (endogenous draw cutoff) (2026-06-23)
+Calibration of (h, c, σ_L) PER league (vs the global of P3/block 15): endogenous
+home advantage, draw cutoff and force dispersion.
 
-- **Parâmetros endógenos plausíveis** (32 ligas): h [0.085, 0.350], **c [0.297,
-  0.449]** (cutoff de empate por liga), σ_L [0.137, 0.436]. corr(c, taxa de empate) =
-  **+0.906** — c capta a "empatabilidade" da liga; corr(σ_L, p_fav) = **+0.874** —
-  σ_L recupera a competitividade observável.
-- **A lei sobrevive:** skew prevista pelo modelo da PRÓPRIA liga vs observada r =
-  **+0.905**, RMSE 0.026 — igual ao global (r=+0.90). Calibrar (h,c,σ) por liga não
-  muda a história.
-- **Conclusão:** a invariância sobrevive ao cutoff de empate endógeno; σ_L
-  (competitividade) continua governando a skewness, liga a liga.
+- **Plausible endogenous parameters** (32 leagues): h [0.085, 0.350], **c [0.297,
+  0.449]** (per-league draw cutoff), σ_L [0.137, 0.436]. corr(c, draw rate) =
+  **+0.906** — c captures the league's "draw-proneness"; corr(σ_L, p_fav) = **+0.874**
+  — σ_L recovers observable competitiveness.
+- **The law survives:** skew predicted by each league's OWN model vs observed r =
+  **+0.905**, RMSE 0.026 — equal to the global (r=+0.90). Calibrating (h,c,σ) per
+  league does not change the story.
+- **Conclusion:** the invariance survives the endogenous draw cutoff; σ_L
+  (competitiveness) keeps governing the skewness, league by league.
 
-Artefatos: `skewlib/model.py` (calibrate_by_league),
+Artefacts: `skewlib/model.py` (calibrate_by_league),
 `analysis/34_per_league_calibration.py`, `outputs/per_league_calibration.csv`,
 `outputs/fig/f22_per_league_calib.png`.
 
 ---
 
-> **1ª rodada no dataset congelado EXAURIDA** (2026-06-23): W1–W5 · P1–P5 · B1–B2 ·
-> C1–C3 · E1–E3 · D2–D4 · F1–F3 · G1–G3 · H2. Segue a **2ª rodada** (I…) explorando
-> veias intocadas do MESMO dataset. Lineage em `lineage.json` / `docs/LINEAGE.md`.
+> **1st round on the frozen dataset EXHAUSTED** (2026-06-23): W1–W5 · P1–P5 · B1–B2 ·
+> C1–C3 · E1–E3 · D2–D4 · F1–F3 · G1–G3 · H2. The **2nd round** (I…) follows, exploring
+> untouched veins of the SAME dataset. Lineage in `lineage.json` / `docs/LINEAGE.md`.
 
-## Fase I — Validação cruzada do mecanismo: modelo de gols (Poisson) (2026-06-23)
-A lei skewness=f(competitividade) foi derivada de um ordered-probit sobre a margem
-latente. Aqui um modelo COMPLETAMENTE diferente — Poisson de GOLS (ataque/defesa +
-mando por liga-temporada, resultado via Skellam) — gera as probabilidades e a
-skewness. 617 liga-temporadas ajustadas.
+## Phase I — Cross-validation of the mechanism: goals model (Poisson) (2026-06-23)
+The law skewness=f(competitiveness) was derived from an ordered-probit over the
+latent margin. Here a COMPLETELY different model — a Poisson of GOALS
+(attack/defence + home advantage by league-season, result via Skellam) — generates
+the probabilities and the skewness. 617 league-seasons fitted.
 
-- **O modelo de gols recupera a competitividade:** corr(p_fav Poisson, p_fav
-  empírico) entre 38 ligas = **+0.972** [+0.95,+0.99].
-- **E reproduz a skewness:** corr(skew Poisson, skew empírico) = **+0.925**
-  [+0.85,+0.97]; o Poisson cai na curva do ordered-probit com r=**+0.85** (vs
-  empírico +0.90). Nível um pouco menor (skew Poisson médio +0.177 vs +0.215) porque
-  o Poisson subdispersa levemente o p_fav — a LEI (ordenação) é o que importa.
-- **Conclusão:** três modelos independentes — margem latente (ordered-probit), gols
-  (Poisson) e o mercado (empírico) — caem na MESMA curva. A lei é independente do
-  modelo gerador; não é artefato de uma forma funcional escolhida.
+- **The goals model recovers competitiveness:** corr(p_fav Poisson, empirical
+  p_fav) across 38 leagues = **+0.972** [+0.95,+0.99].
+- **And reproduces the skewness:** corr(skew Poisson, empirical skew) = **+0.925**
+  [+0.85,+0.97]; the Poisson falls on the ordered-probit curve with r=**+0.85** (vs
+  empirical +0.90). The level is slightly lower (mean skew Poisson +0.177 vs +0.215)
+  because the Poisson slightly underdisperses p_fav — the LAW (ordering) is what matters.
+- **Conclusion:** three independent models — latent margin (ordered-probit), goals
+  (Poisson) and the market (empirical) — fall on the SAME curve. The law is
+  independent of the generating model; it is not an artefact of a chosen functional form.
 
-Artefatos: `skewlib/goals.py` (fit_match_probs, league_season_table, by_league),
+Artefacts: `skewlib/goals.py` (fit_match_probs, league_season_table, by_league),
 `analysis/35_poisson_crossmodel.py`, `outputs/poisson_crossmodel_by_league.csv`,
 `outputs/fig/f23_poisson_crossmodel.png`.
 
-## Fase J — Chegada de informação (HT→FT): o núcleo mecânico é dinâmico (2026-06-23)
-Sem odds de abertura (D1 fora), o RESULTADO do intervalo é o choque de informação. A
-prob de vitória do favorito pré-jogo se atualiza com o placar do HT, e a skewness do
-"resto do jogo" é de novo a identidade (1−2q)/√(q(1−q)) na prob condicional q.
-150.950 jogos com HT.
+## Phase J — Information arrival (HT→FT): the mechanical core is dynamic (2026-06-23)
+Without opening odds (D1 out), the HALF-TIME RESULT is the information shock. The
+favourite's pre-match win probability updates with the HT scoreline, and the
+skewness of the "rest of the match" is again the identity (1−2q)/√(q(1−q)) at the
+conditional probability q. 150,950 matches with HT.
 
-- **A assimetria RESOLVE com a informação:** estado do favorito no HT → skew do resto
-  do jogo: **atrás** (20.6%) q=0.139, skew **+2.08** (virou lotérica); **empatado**
-  (42.4%) q=0.402, skew +0.40; **+1** (26.1%) q=0.757, skew **−1.20**; **+2 ou mais**
-  (10.9%) q=0.945, skew **−3.91** (quase certo). A identidade mecânica vale a CADA
-  estado de info, não só no apito inicial.
-- **Calibração dinâmica (martingale):** E[q condicional do HT | faixa de p0] ≈ p0,
-  erro médio |p0−q| = **0.0035** — a prob pré-jogo é bem calibrada e o HT a refina sem
-  viés.
-- **Conclusão:** o FLB/identidade é um fato DINÂMICO — a skewness implícita acompanha
-  a prob de vitória em qualquer instante; ela não "descobre" um valor eficiente ao
-  longo do tempo, ela já É a imagem algébrica da prob corrente. Extensão temporal do W1.
+- **The asymmetry RESOLVES with information:** the favourite's HT state → the skew
+  of the rest of the match: **behind** (20.6%) q=0.139, skew **+2.08** (turned
+  lottery-like); **level** (42.4%) q=0.402, skew +0.40; **+1** (26.1%) q=0.757, skew
+  **−1.20**; **+2 or more** (10.9%) q=0.945, skew **−3.91** (almost certain). The
+  mechanical identity holds at EVERY info state, not only at kick-off.
+- **Dynamic calibration (martingale):** E[q conditional on the HT | p0 band] ≈ p0,
+  mean error |p0−q| = **0.0035** — the pre-match probability is well calibrated and
+  the HT refines it without bias.
+- **Conclusion:** the FLB/identity is a DYNAMIC fact — the implied skewness tracks
+  the win probability at any instant; it does not "discover" an efficient value over
+  time, it already IS the algebraic image of the current probability. A temporal
+  extension of W1.
 
-Artefatos: `skewlib/inplay.py` (fav_state, conditional_table, martingale_check),
+Artefacts: `skewlib/inplay.py` (fav_state, conditional_table, martingale_check),
 `analysis/36_inplay_resolution.py`, `outputs/inplay_conditional.csv`,
 `outputs/fig/f24_inplay.png`.
 
-## Fase K — Diversificação: a skewness é fenômeno de aposta única (2026-06-23)
-A skewness padronizada do retorno MÉDIO de N apostas (quase) independentes escala
-skew(X)/√N. Uma banca diversificada tende ao gaussiano; a aposta isolada é
-fortemente assimétrica.
+## Phase K — Diversification: skewness is a single-bet phenomenon (2026-06-23)
+The standardised skewness of the MEAN return of N (nearly) independent bets scales
+as skew(X)/√N. A diversified bankroll tends to the Gaussian; the isolated bet is
+strongly asymmetric.
 
-- **Aposta única:** skew realizada favorito **+0.230**, azarão **+2.254**
-  (lotérica). O retorno médio de N apostas decai como skew/√N (empírico ≈ previsto).
-- **Diversificar mata a assimetria:** favorito vira ~gaussiano (skew<0.1) em **~6**
-  apostas; o azarão precisa de **~509** (muito mais skewed). O sindicato
-  diversificado vê retornos ~gaussianos — só o EV negativo.
-- **Conclusão:** a assimetria que o apostador "ama" (Golec-Tamarkin) é da aposta
-  ISOLADA; ela some sob diversificação. O FLB sobrevive porque o apostador
-  RECREATIVO concentra poucas apostas lotéricas — o canal microeconômico que
-  sustenta o viés ser EV-negativo (complementa C3).
+- **Single bet:** realised skew favourite **+0.230**, longshot **+2.254**
+  (lottery-like). The mean return of N bets decays as skew/√N (empirical ≈ predicted).
+- **Diversifying kills the asymmetry:** the favourite becomes ~Gaussian (skew<0.1)
+  in **~6** bets; the longshot needs **~509** (much more skewed). The diversified
+  syndicate sees ~Gaussian returns — only the negative EV.
+- **Conclusion:** the asymmetry the bettor "loves" (Golec-Tamarkin) is that of the
+  ISOLATED bet; it vanishes under diversification. The FLB survives because the
+  RECREATIONAL bettor concentrates a few lottery-like bets — the microeconomic
+  channel that sustains the bias being EV-negative (complements C3).
 
-Artefatos: `skewlib/portfolio.py` (skew_decay, n_to_gaussian),
+Artefacts: `skewlib/portfolio.py` (skew_decay, n_to_gaussian),
 `analysis/37_diversification.py`, `outputs/diversification.csv`,
 `outputs/fig/f25_diversification.png`.
 
-## Fase L — Vantagem de casa secular vs invariância da skewness (2026-06-23)
-A vantagem de casa (HFA) caiu nas décadas recentes; a skewness acompanha?
+## Phase L — Secular home advantage vs skewness invariance (2026-06-23)
+Home advantage (HFA) has fallen in recent decades; does the skewness follow?
 
-- **HFA cai, skew não:** taxa de vitória do mandante 0.449 (2005) → 0.431 (2025),
-  β=**−0.00133/ano** (Δ20a −0.027, queda marcada); skewness β=−0.00009/ano (Δ20a
-  −0.002, plana). corr(HFA, skew) ano a ano = **−0.24** [−0.72,+0.55] (IC inclui 0).
-- **Conclusão:** a assimetria depende da DISPERSÃO de p_fav (competitividade), não
-  do nível do mando — fecha o confound pelo lado da vantagem de casa.
+- **HFA falls, skew does not:** home win rate 0.449 (2005) → 0.431 (2025),
+  β=**−0.00133/year** (Δ20yr −0.027, a marked fall); skewness β=−0.00009/year
+  (Δ20yr −0.002, flat). corr(HFA, skew) year by year = **−0.24** [−0.72,+0.55] (CI
+  includes 0).
+- **Conclusion:** the asymmetry depends on the DISPERSION of p_fav
+  (competitiveness), not on the level of home advantage — closes the confound on
+  the home-advantage side.
 
-Artefatos: `skewlib/extras.py` (hfa_and_skew_by_year),
+Artefacts: `skewlib/extras.py` (hfa_and_skew_by_year),
 `analysis/38_home_advantage.py`, `outputs/hfa_by_year.csv`,
 `outputs/fig/f26_home_advantage.png`.
 
-## Fase M — Risco de cauda realizado das estratégias (2026-06-23)
-Lado quant: momentos realizados, VaR/CVaR e max drawdown do P&L acumulado
-(aposta unitária, ordem cronológica).
+## Phase M — Realised tail risk of the strategies (2026-06-23)
+The quant side: realised moments, VaR/CVaR and max drawdown of the cumulative P&L
+(unit bet, chronological order).
 
-- **Favorito vs azarão:** favorito ret −4.82%, skew +0.23, exkurt −1.7, maxDD
-  **−9.9k** unidades; azarão ret −10.2%, skew +2.25, exkurt +8.2, maxDD **−20.9k**.
-  Ambas sangram a margem (P&L final negativo), mas o azarão é a CAUDA — drawdown
-  ~2× mais fundo, sequências longas de perdas pontuadas por prêmios raros.
-- **Conclusão:** a estrutura de skewness se traduz em risco de banca concreto — a
-  "lotérica" do azarão é drawdown profundo + caudas grossas, não só um momento.
+- **Favourite vs longshot:** favourite ret −4.82%, skew +0.23, exkurt −1.7, maxDD
+  **−9.9k** units; longshot ret −10.2%, skew +2.25, exkurt +8.2, maxDD **−20.9k**.
+  Both bleed the margin (negative final P&L), but the longshot is the TAIL —
+  drawdown ~2× deeper, long losing streaks punctuated by rare prizes.
+- **Conclusion:** the skewness structure translates into concrete bankroll risk —
+  the longshot "lottery" is a deep drawdown + thick tails, not only a moment.
 
-Artefatos: `skewlib/extras.py` (tail_metrics, max_drawdown),
+Artefacts: `skewlib/extras.py` (tail_metrics, max_drawdown),
 `analysis/39_tail_risk.py`, `outputs/fig/f27_tail_risk.png`.
 
-## Fase N — Entropia + co-momento entre mercados (2026-06-23)
-(1) Entropia de Shannon da distribuição 1X2 como índice de competitividade
-odds-based; (2) a skew do 1X2 e a do O/U compartilham um fator comum?
+## Phase N — Entropy + cross-market co-moment (2026-06-23)
+(1) Shannon entropy of the 1X2 distribution as an odds-based competitiveness
+index; (2) do the 1X2 skew and the O/U skew share a common factor?
 
-- **Entropia é a competitividade:** média 1.004 nats (máx 3-vias 1.099);
-  corr(entropia, skew) = **+0.827** [+0.70,+0.91] — índice alternativo robusto
-  (mais entropia/mais parelho ⇒ mais skew positiva).
-- **NULO honesto no co-momento:** corr(skew 1X2, skew O/U 2.5) = **+0.15**
-  [−0.39,+0.65] (IC inclui 0). As duas assimetrias NÃO são um fator único: o 1X2
-  mede dispersão de quem-vence (competitividade), o O/U mede o ambiente de GOLS —
-  dimensões largamente ortogonais. Cada mercado precifica uma feição estrutural
-  diferente.
-- **Conclusão:** entropia confirma a lei por mais um índice; mas a assimetria não é
-  um latente único entre mercados — é específica à dimensão que cada mercado mede.
+- **Entropy is competitiveness:** mean 1.004 nats (3-way max 1.099);
+  corr(entropy, skew) = **+0.827** [+0.70,+0.91] — a robust alternative index
+  (more entropy/more balanced ⇒ more positive skew).
+- **An honest NULL in the co-moment:** corr(skew 1X2, skew O/U 2.5) = **+0.15**
+  [−0.39,+0.65] (CI includes 0). The two asymmetries are NOT a single factor: 1X2
+  measures the dispersion of who-wins (competitiveness), O/U measures the GOALS
+  environment — largely orthogonal dimensions. Each market prices a different
+  structural feature.
+- **Conclusion:** entropy confirms the law via one more index; but the asymmetry is
+  not a single latent across markets — it is specific to the dimension each market
+  measures.
 
-Artefatos: `skewlib/extras.py` (shannon_entropy, entropy_by_league),
+Artefacts: `skewlib/extras.py` (shannon_entropy, entropy_by_league),
 `analysis/40_entropy_comoment.py`, `outputs/entropy_comoment.csv`,
 `outputs/fig/f28_entropy_comoment.png`.
 
-## Fase O — Bateria de modelos geradores: a lei é independente do modelo (2026-06-23)
-A Frente I validou a lei com UM gerador alternativo (Poisson de gols). Aqui a
-submetemos a uma BATERIA de geradores genuinamente distintos, cada um produzindo
-(pH,pD,pA) por jogo por liga-temporada, e medimos se todos reproduzem a lei e caem
-na curva S(σ_L) do ordered-probit. 617 liga-temporadas, 38 ligas.
+## Phase O — Battery of generating models: the law is model-independent (2026-06-23)
+Front I validated the law with ONE alternative generator (a Poisson of goals).
+Here we subject it to a BATTERY of genuinely distinct generators, each producing
+(pH,pD,pA) per match per league-season, and measure whether they all reproduce the
+law and fall on the ordered-probit curve S(σ_L). 617 league-seasons, 38 leagues.
 
-- **Cinco famílias + o mercado, uma curva.** corr(skew do modelo, skew empírico)
-  entre 38 ligas: **Poisson +0.925** [+0.85,+0.97] · **Dixon-Coles +0.874**
-  [+0.77,+0.94] · **Bradley-Terry-Davidson +0.840** [+0.71,+0.93] · **Elo de
-  resultados (odds-free) +0.786** [+0.59,+0.90]. Todos recuperam a competitividade
-  (corr p_fav +0.91…+0.97) e caem na curva derivada (r na curva +0.85…+0.96 vs
-  empírico +0.90).
-- **O Dixon-Coles aproxima o NÍVEL do mercado:** a correção de dependência em
-  placares baixos (ρ médio −0.05, empurra empates 0-0/1-1) sobe a skew para **+0.199**
-  (vs Poisson +0.177), mais perto do empírico +0.215 — o modelo canônico do futebol
-  é o que melhor casa o nível, não só a ordenação.
-- **Família SEM gols também cai na lei:** o Bradley-Terry-Davidson (forças
-  multiplicativas + empate, comparação pareada logística — nenhum gol) reproduz a
-  ordenação a **+0.84**. E o gerador ODDS-FREE (Elo de resultados → mapa ordinal, a
-  máquina da W2) cai exatamente na curva (r=**+0.96**).
-- **Modelos desenhados para desviar COLAPSAM ao Poisson:** gols de futebol são
-  Poisson independente quase puro — covariância casa×fora mediana **−0.07** (Poisson
-  bivariado λ₃≈0) e super-dispersão ≈0 (Negative-Binomial α≈0). Ambos colapsam ao
-  Poisson e nada acrescentam — reportados como robustez, não como série.
-- **Nota de reprodução (hardening):** sob o stack novo (pandas 3 / numpy 2 /
-  statsmodels atual) o GLM de uma liga-temporada patológica (JAP 2017) sofre
-  separação quase-completa (p_fav≈1 em todo jogo vs ~0.48 empírico), explodindo a
-  skewness de odds-justas. Adicionado `goals.degenerate_fit` (guard de separação);
-  a Frente I volta exatamente ao ledger (corr_skew +0.925) e a bateria fica blindada.
-- **Conclusão:** a lei skewness=f(competitividade) não é artefato de nenhuma forma
-  funcional — margem-probit, gols-Poisson, gols-com-dependência, forças-logísticas
-  e ratings-de-resultados convergem todos à MESMA curva. É geometria da mistura de
-  apostas de dois pontos sobre a distribuição de competitividade da liga.
+- **Five families + the market, one curve.** corr(model skew, empirical skew)
+  across 38 leagues: **Poisson +0.925** [+0.85,+0.97] · **Dixon-Coles +0.874**
+  [+0.77,+0.94] · **Bradley-Terry-Davidson +0.840** [+0.71,+0.93] · **results Elo
+  (odds-free) +0.786** [+0.59,+0.90]. All recover competitiveness
+  (corr p_fav +0.91…+0.97) and fall on the derived curve (r on the curve +0.85…+0.96 vs
+  empirical +0.90).
+- **Dixon-Coles approximates the market LEVEL:** the dependence correction at low
+  scores (mean ρ −0.05, pushes 0-0/1-1 draws) raises the skew to **+0.199**
+  (vs Poisson +0.177), closer to the empirical +0.215 — the canonical football model
+  best matches the level, not only the ordering.
+- **A family WITHOUT goals also falls on the law:** Bradley-Terry-Davidson
+  (multiplicative forces + draw, logistic pairwise comparison — no goals) reproduces
+  the ordering at **+0.84**. And the ODDS-FREE generator (results Elo → ordinal map,
+  the W2 machine) falls exactly on the curve (r=**+0.96**).
+- **Models designed to deviate COLLAPSE to the Poisson:** football goals are nearly
+  pure independent Poisson — median home×away covariance **−0.07** (bivariate
+  Poisson λ₃≈0) and over-dispersion ≈0 (Negative-Binomial α≈0). Both collapse to the
+  Poisson and add nothing — reported as robustness, not as a series.
+- **Reproduction note (hardening):** under the new stack (pandas 3 / numpy 2 /
+  current statsmodels) the GLM of a pathological league-season (JAP 2017) suffers
+  quasi-complete separation (p_fav≈1 in every match vs ~0.48 empirical), exploding
+  the fair-odds skewness. Added `goals.degenerate_fit` (a separation guard); Front I
+  returns exactly to the ledger (corr_skew +0.925) and the battery is armoured.
+- **Conclusion:** the law skewness=f(competitiveness) is not an artefact of any
+  functional form — margin-probit, goals-Poisson, goals-with-dependence,
+  logistic-forces and results-ratings all converge to the SAME curve. It is the
+  geometry of the mixture of two-point bets over the league's competitiveness
+  distribution.
 
-Artefatos: `skewlib/crossmodel.py` (dc_probs, dc_rho, btd_probs, elo_by_league,
+Artefacts: `skewlib/crossmodel.py` (dc_probs, dc_rho, btd_probs, elo_by_league,
 battery_table), `skewlib/goals.py` (fit_rates, degenerate_fit),
 `analysis/41_model_battery.py`, `outputs/model_battery_by_league.csv`,
 `outputs/fig/f29_model_battery.png`.
 
 ---
 
-> **2ª rodada no dataset (I–N) concluída** (2026-06-23): cross-model Poisson,
-> dinâmica HT→FT, diversificação, HFA secular, cauda realizada, entropia+co-momento.
-> **Fase O (2026-06-23):** bateria de modelos geradores — 5 famílias independentes +
-> o mercado na mesma curva (independência de modelo).
+> **2nd round on the dataset (I–N) completed** (2026-06-23): cross-model Poisson,
+> HT→FT dynamics, diversification, secular HFA, realised tail, entropy+co-moment.
+> **Phase O (2026-06-23):** battery of generating models — 5 independent families +
+> the market on the same curve (model independence).
 
 ---
 
-# 3ª RODADA — frentes de DADO EXTERNO (football-data.co.uk canônico)
+# 3rd ROUND — EXTERNAL-DATA fronts (canonical football-data.co.uk)
 
-> A 1ª/2ª rodadas exauriram o mirror congelado. Estas frentes usam o
-> football-data.co.uk **canônico** (`data/canonical/`, baixado por
-> `analysis/50_fetch_canonical.py`), que traz o que o mirror não tem: odds de
-> ABERTURA vs FECHAMENTO e profundidade pré-2005. VAR (H1) usa o mirror congelado.
-> Proveniência do dado canônico em `canonical_hash()` (carimbada em cada fase).
+> The 1st/2nd rounds exhausted the frozen mirror. These fronts use the
+> **canonical** football-data.co.uk (`data/canonical/`, downloaded by
+> `analysis/50_fetch_canonical.py`), which brings what the mirror lacks: OPENING vs
+> CLOSING odds and pre-2005 depth. VAR (H1) uses the frozen mirror.
+> Provenance of the canonical data in `canonical_hash()` (stamped in each phase).
 
-## Fase D1 — Descoberta de preço: a assimetria já nasce na abertura (2026-06-23) [canônico]
-O mirror só tem o fechamento; o canônico traz odds de ABERTURA (Avg*) e FECHAMENTO
-(Avg*C) do mesmo jogo (2019/20–2023/24, 21 ligas, 34.659 jogos). Teste da tese no
-eixo TEMPORAL da formação de preço: a skewness é herdada da estrutura (presente já
-na abertura) ou produzida pela negociação (construída até o fechamento)?
+## Phase D1 — Price discovery: the asymmetry is born at the open (2026-06-23) [canonical]
+The mirror has only the close; the canonical brings OPENING odds (Avg*) and
+CLOSING (Avg*C) for the same match (2019/20–2023/24, 21 leagues, 34,659 matches).
+A test of the thesis on the TEMPORAL axis of price formation: is the skewness
+inherited from the structure (present already at the open) or produced by trading
+(built up to the close)?
 
-- **A assimetria já está no preço de abertura:** skew global abertura **+0.248** →
-  fechamento **+0.249** (within ~1.03 nos dois); corr(skew_open, skew_close) entre
-  21 ligas = **+0.998** [+0.99,+1.00]. Δskew médio por liga +0.0005 (sd 0.0045).
-- **O mercado refina a MARGEM, não a assimetria:** overround abertura 1.0609 →
-  fechamento 1.0597; Brier do favorito 0.2344 → 0.2330 (fechamento mais afiado).
-  Mas a lei estrutural está presente já na abertura: corr(skew, p_fav) = −0.866
-  (abre) / −0.874 (fecha). Drift do favorito +0.0001 (sem steam sistemático).
-- **Conclusão:** a assimetria não é construída pela negociação — está no primeiro
-  preço. O fechamento aperta margem e calibração e deixa a skewness intacta.
-  Extensão TEMPORAL da ortogonalidade da margem (W4/D2, que era entre books).
+- **The asymmetry is already in the opening price:** global skew opening **+0.248**
+  → closing **+0.249** (within ~1.03 in both); corr(skew_open, skew_close) across
+  21 leagues = **+0.998** [+0.99,+1.00]. Mean Δskew per league +0.0005 (sd 0.0045).
+- **The market refines the MARGIN, not the asymmetry:** overround opening 1.0609 →
+  closing 1.0597; favourite Brier 0.2344 → 0.2330 (the close is sharper). But the
+  structural law is present already at the open: corr(skew, p_fav) = −0.866
+  (open) / −0.874 (close). Favourite drift +0.0001 (no systematic steam).
+- **Conclusion:** the asymmetry is not built up by trading — it is in the first
+  price. The close tightens the margin and the calibration and leaves the skewness
+  intact. A TEMPORAL extension of the margin orthogonality (W4/D2, which was across
+  bookmakers).
 
-Artefatos: `skewlib/fdcanon.py`, `analysis/42_open_close.py`,
+Artefacts: `skewlib/fdcanon.py`, `analysis/42_open_close.py`,
 `outputs/open_close_by_league.csv`, `outputs/fig/f30_open_close.png`.
 
-## Fase H1 — VAR: choque institucional não move a skewness (placebo) (2026-06-23)
-O VAR é um choque institucional que NÃO altera a dispersão de força dos times.
-Diferenças-em-diferenças escalonado (mirror congelado): ligas adotam em 2018/2019/
-2020; divisões inferiores inglesas/escocesas (sem VAR de liga) são controle
-nunca-tratado. 321 liga-anos, 10 tratadas + 6 controles.
+## Phase H1 — VAR: an institutional shock does not move the skewness (placebo) (2026-06-23)
+VAR is an institutional shock that does NOT alter the force dispersion of the
+teams. Staggered difference-in-differences (frozen mirror): leagues adopt in
+2018/2019/2020; lower English/Scottish divisions (no league VAR) are the
+never-treated control. 321 league-years, 10 treated + 6 controls.
 
-- **Efeito NULO na skewness:** β=**−0.0066** [−0.035,+0.022], p=**0.65** (=−0.14 SD
-  da liga, IC inclui 0). Taxa de vitória do favorito β=+0.0024 (p=0.80) e p_fav do
-  mercado β=+0.0050 (p=0.45) — também nulos. Event-study sem salto na adoção.
-- **Contraste com a COVID (W3):** o único choque que moveu a skewness foi a COVID
-  (+0.42 SD, via queda de HFA) — um choque REAL de competitividade. O VAR, que não
-  toca a estrutura de força, deixa a skewness invariante.
-- **Conclusão:** placebo de competitividade — só choques de COMPETITIVIDADE movem a
-  skewness, não fatores institucionais. Confirma skewness = f(dispersão de força).
+- **NULL effect on the skewness:** β=**−0.0066** [−0.035,+0.022], p=**0.65** (=−0.14
+  SD of the league, CI includes 0). The favourite win rate β=+0.0024 (p=0.80) and
+  the market p_fav β=+0.0050 (p=0.45) — also null. Event-study with no jump at adoption.
+- **Contrast with COVID (W3):** the only shock that moved the skewness was COVID
+  (+0.42 SD, via the HFA drop) — a REAL competitiveness shock. VAR, which does not
+  touch the force structure, leaves the skewness invariant.
+- **Conclusion:** a competitiveness placebo — only COMPETITIVENESS shocks move the
+  skewness, not institutional factors. Confirms skewness = f(force dispersion).
 
-Artefatos: `skewlib/var.py`, `analysis/44_var.py`, `outputs/var_panel.csv`,
+Artefacts: `skewlib/var.py`, `analysis/44_var.py`, `outputs/var_panel.csv`,
 `outputs/fig/f31_var.png`.
 
-## Fase P6 — Pré-2005: o regime moderno já vigora desde ~2000 (2026-06-23) [canônico]
-O paper prevê que o baseline da liga se desloca nos choques de regime (Bosman 95,
-Champions 94/95, receita ~2003). Estendemos para trás com WILLIAM HILL — o único
-book contínuo 2000–2025 (book consistente; skewness é book-invariante, G1/D2).
-158.323 jogos, 21 ligas, 2000–2023.
+## Phase P6 — Pre-2005: the modern regime already holds since ~2000 (2026-06-23) [canonical]
+The paper predicts that the league baseline shifts at the regime shocks (Bosman 95,
+Champions 94/95, revenue ~2003). We extend backwards with WILLIAM HILL — the only
+bookmaker continuous over 2000–2025 (a consistent bookmaker; skewness is
+bookmaker-invariant, G1/D2). 158,323 matches, 21 leagues, 2000–2023.
 
-- **SEM quebra em 2005:** o recorte ≥2005 do estudo NÃO é fronteira de regime —
-  PELT acha quebras espalhadas (2005/2007/2010×2/2014/2016), nenhuma comum. A
-  ESTRUTURA por liga é a mesma desde 2000: corr(baseline pré-2005, moderno) entre
-  17 ligas = **+0.76**.
-- **Drift de NÍVEL fraco e marginal:** moderno +0.232 vs pré-2005 +0.214 (Δ +0.018);
-  FE de liga β=−0.019 [−0.037,−0.002] p=0.03, mas pareado p=0.10 e **sensível ao
-  endpoint** (com 2024 parcial incluído, p=0.25). Magnitude bem abaixo da variação
-  entre-ligas (sd 0.047) — coerente com invariância INTRA-regime + evolução lenta de
-  balanço, não atemporalidade.
-- **Limite honesto:** odds 1X2 só existem desde ~2000 — os choques dos anos 1990
-  (Bosman/Champions) ficam ANTES das odds e permanecem intestáveis. Estendemos a
-  janela de invariância em 5 anos; a predição completa do paper exige dado pré-odds.
+- **NO break in 2005:** the study's ≥2005 cut-off is NOT a regime boundary — PELT
+  finds breaks scattered (2005/2007/2010×2/2014/2016), none common. The per-league
+  STRUCTURE is the same since 2000: corr(pre-2005 baseline, modern) across 17
+  leagues = **+0.76**.
+- **LEVEL drift weak and marginal:** modern +0.232 vs pre-2005 +0.214 (Δ +0.018);
+  league FE β=−0.019 [−0.037,−0.002] p=0.03, but paired p=0.10 and **endpoint-sensitive**
+  (with partial 2024 included, p=0.25). The magnitude is well below the between-league
+  variation (sd 0.047) — consistent with INTRA-regime invariance + slow balance
+  evolution, not timelessness.
+- **Honest limit:** 1X2 odds only exist since ~2000 — the 1990s shocks
+  (Bosman/Champions) lie BEFORE the odds and remain untestable. We extend the
+  invariance window by 5 years; the paper's full prediction requires pre-odds data.
 
-Artefatos: `skewlib/fdcanon.py` (WH), `analysis/43_pre2005.py`,
+Artefacts: `skewlib/fdcanon.py` (WH), `analysis/43_pre2005.py`,
 `outputs/pre2005_by_league.csv`, `outputs/fig/f32_pre2005.png`.
 
 ---
 
-> **3ª rodada (dado externo) concluída** (2026-06-23): D1 (abertura→fechamento),
-> H1 (VAR), P6 (pré-2005). 38 fases no ledger.
+> **3rd round (external data) completed** (2026-06-23): D1 (opening→closing),
+> H1 (VAR), P6 (pre-2005). 38 phases in the ledger.
 
 ---
 
-# 4ª RODADA — síntese: SIMILARIDADE DE ASSIMETRIAS (objetivo-raiz)
+# 4th ROUND — synthesis: SIMILARITY OF ASYMMETRIES (root objective)
 
-> O objetivo original do projeto era **medir a similaridade de assimetrias**. Toda a
-> evidência acima vira um único APARELHO (`skewlib/skewmeter.py`) que mede a assinatura
-> de assimetria de uma entidade e a distância entre assimetrias de duas.
+> The project's original objective was to **measure the similarity of asymmetries**.
+> All the evidence above becomes a single APPARATUS (`skewlib/skewmeter.py`) that
+> measures the asymmetry signature of an entity and the distance between the
+> asymmetries of two.
 
-## Fase Q — skew-meter: a similaridade de assimetrias, operacionalizada (2026-06-23)
-Aparelho que mede, por liga/era/mercado/janela: assinatura (skew/forma + competitividade),
-distância BRUTA, distância RESIDUAL (descontada a competitividade pela lei fechada),
-piso amostral e veredito de equivalência. 38 ligas.
+## Phase Q — skew-meter: the similarity of asymmetries, operationalised (2026-06-23)
+An apparatus that measures, by league/era/market/window: the signature (skew/shape
++ competitiveness), the RAW distance, the RESIDUAL distance (competitiveness netted
+out by the closed-form law), the sampling floor and an equivalence verdict. 38 leagues.
 
-- **Similaridade de assimetrias = similaridade de competitividade.** Distância bruta
-  |Δskew| mediana entre ligas **0.051**; descontada a competitividade por **1 parâmetro**
-  (média p_fav), cai para residual **0.023** — 1 número explica **R²=0.82** da variância.
-- **Escada de suficiência (resultado novo, corrige a 1ª leitura):** 1 parâmetro
-  R²=**0.82** → 2 momentos (média+variância de p_fav) R²=**0.98** → distribuição INTEIRA
-  R²=**0.99** (resíduo = piso amostral). A **estatística suficiente mínima é a
-  distribuição de p_fav**; a média sozinha deixa um resíduo **estável** (split-half
-  temporal r=**0.98**), que é a **curvatura da lei** (capturada pelo 2º momento), não ruído.
-- **Aparelho de POUCOS parâmetros:** sem Shin (inverse-odds, ~0 custo) corr **0.997** ·
-  1 parâmetro **0.90** · odds-free (só W/D/L) **0.83**. Convergência em tempo real:
-  SE 0.026 em 200 jogos, **0.018 em 400** (< sd entre-ligas 0.051 → já ranqueia).
-- **Veredito por EQUIVALÊNCIA (TOST), não significância** (com n enorme tudo rejeita):
-  margem ½·sd=0.026. **E0 vs E3** (Premier vs 4ª divisão inglesa): skew bruto 0.167 vs
-  0.294 (muito diferente) → residual **0.009** → **EQUIVALENTES** (competitividade explica
-  93%). E0 vs SP1 equivalentes; N1 vs I2 e BRA vs ARG distintas (resíduo real).
-- **Conclusão:** "quão parecidas são as assimetrias de A e B?" reduz-se a "quão parecidas
-  são as competitividades de A e B?" — medível com 1 número, em tempo real, até sem odds.
-  A distribuição de p_fav é o que torna a redução EXATA.
+- **Similarity of asymmetries = similarity of competitiveness.** The raw distance
+  |Δskew| has a median across leagues of **0.051**; netting out competitiveness by
+  **1 parameter** (mean p_fav), it falls to a residual **0.023** — 1 number explains
+  **R²=0.82** of the variance.
+- **Sufficiency ladder (a new result, correcting the 1st reading):** 1 parameter
+  R²=**0.82** → 2 moments (mean+variance of p_fav) R²=**0.98** → the ENTIRE
+  distribution R²=**0.99** (residual = sampling floor). The **minimal sufficient
+  statistic is the distribution of p_fav**; the mean alone leaves a **stable**
+  residual (temporal split-half r=**0.98**), which is the **curvature of the law**
+  (captured by the 2nd moment), not noise.
+- **A FEW-parameter apparatus:** without Shin (inverse-odds, ~0 cost) corr **0.997** ·
+  1 parameter **0.90** · odds-free (W/D/L only) **0.83**. Real-time convergence:
+  SE 0.026 in 200 matches, **0.018 in 400** (< between-league sd 0.051 → already ranks).
+- **Verdict by EQUIVALENCE (TOST), not significance** (with huge n everything
+  rejects): margin ½·sd=0.026. **E0 vs E3** (Premier League vs the English 4th
+  division): raw skew 0.167 vs 0.294 (very different) → residual **0.009** →
+  **EQUIVALENT** (competitiveness explains 93%). E0 vs SP1 equivalent; N1 vs I2 and
+  BRA vs ARG distinct (a real residual).
+- **Conclusion:** "how similar are the asymmetries of A and B?" reduces to "how
+  similar are the competitivenesses of A and B?" — measurable with 1 number, in real
+  time, even without odds. The distribution of p_fav is what makes the reduction EXACT.
 
-- **Endurecimento (rigor):** SE por **block-bootstrap de temporadas** 0.0070 vs i.i.d.
-  0.0042 (×1.7, dependência intra-ano); distância de forma de **Mahalanobis** (skew+
-  exkurt) corr 0.74 com o escalar; lei **out-of-sample** (calibra anos pares, prevê
-  ímpares) R²=**0.80** ≈ in-sample 0.82 — a régua do resíduo não é overfit.
+- **Hardening (rigour):** SE by **season block-bootstrap** 0.0070 vs i.i.d.
+  0.0042 (×1.7, intra-year dependence); **Mahalanobis** shape distance (skew+
+  exkurt) corr 0.74 with the scalar; the law **out-of-sample** (calibrate even
+  years, predict odd) R²=**0.80** ≈ in-sample 0.82 — the residual ruler is not overfit.
 
-Artefatos: `skewlib/skewmeter.py` (measure, distance, residual, sufficiency_ladder,
+Artefacts: `skewlib/skewmeter.py` (measure, distance, residual, sufficiency_ladder,
 tost, skew_se_block, shape_distance, law_oos_r2), `analysis/45_skewmeter.py`,
-`outputs/fig/f33_skewmeter.png`. **Produto:** widget interativo `site/src/components/
-SkewMeter.astro` (gauge + lei/resíduo + similaridade) na seção §07 do site, com dados
-exportados por `export_site_data.py` (blocos `skewmeter`/`convergence`). Paper §4.8.
+`outputs/fig/f33_skewmeter.png`. **Product:** interactive widget `site/src/components/
+SkewMeter.astro` (gauge + law/residual + similarity) in section §07 of the site, with
+data exported by `export_site_data.py` (blocks `skewmeter`/`convergence`). Paper §4.8.
 
 ---
 
-## Fase R — Tipo de aposta: a lei espelhada em todo o book (bloco 46)
+## Phase R — Bet type: the law mirrored across the whole book (block 46)
 
-Cada jogo oferece três apostas de dois pontos: **favorito** (argmax p), **empate**
-(resultado D) e **azarão** (argmin p). Medindo a skewness ex-ante agrupada das três
-por liga (38 ligas, odds de mercado):
+Each match offers three two-point bets: **favourite** (argmax p), **draw**
+(outcome D) and **longshot** (argmin p). Measuring the pooled ex-ante skewness of
+the three per league (38 leagues, market odds):
 
-- **Todas positivamente assimétricas** (lotéricas): skew global **+0.236 / +1.294 /
-  +2.349** (favorito / empate / azarão). O FLB é fenômeno de aposta única, em todo lado.
-- **As três governadas pela competitividade**, em sentidos opostos: menos balanço
-  (p_fav ↑) **baixa** a skew do favorito (corr **−0.90**) e **eleva** a do empate e do
-  azarão (corr **+0.95 / +0.91**), que viram longshots maiores. Não é uma lei do
-  favorito — é a MESMA lei estrutural, espelhada no book inteiro.
-- **Diversificação** (bloco 37, agora exposto): skew do retorno médio de N apostas ≈
-  skew/√N. Uma carteira de favoritos vira gaussiana em **~6** apostas; a do azarão
-  sobrevive até **~509** — por isso o viés morde o apostador recreativo, não o sindicato.
+- **All positively skewed** (lottery-like): global skew **+0.236 / +1.294 /
+  +2.349** (favourite / draw / longshot). The FLB is a single-bet phenomenon,
+  everywhere.
+- **All three governed by competitiveness**, in opposite directions: less balance
+  (p_fav ↑) **lowers** the favourite's skew (corr **−0.90**) and **raises** that of
+  the draw and the longshot (corr **+0.95 / +0.91**), which become bigger longshots.
+  It is not a law of the favourite — it is the SAME structural law, mirrored across
+  the whole book.
+- **Diversification** (block 37, now exposed): the skew of the mean return of N
+  bets ≈ skew/√N. A favourites portfolio turns Gaussian in **~6** bets; the
+  longshot's survives up to **~509** — which is why the bias bites the recreational
+  bettor, not the syndicate.
 
-Artefatos: `skewlib/exante.py` (`fav_dog_draw`, `bettype_by`), `analysis/46_bettype.py`,
-`outputs/fig/f34_bettype.png`. **Produto:** painéis "Every side of the book" +
-"What survives diversification" no widget `SkewMeter.astro`; coluna de forma de
-Mahalanobis (`shape_cov_inv`). **Serviço:** API `study/api/` (`POST /measure`, modos
-com-odds/odds-free, monitor `/integrity`). Dados em `export_site_data.py` (blocos
+Artefacts: `skewlib/exante.py` (`fav_dog_draw`, `bettype_by`), `analysis/46_bettype.py`,
+`outputs/fig/f34_bettype.png`. **Product:** "Every side of the book" +
+"What survives diversification" panels in the `SkewMeter.astro` widget; Mahalanobis
+shape column (`shape_cov_inv`). **Service:** API `study/api/` (`POST /measure`, modes
+with-odds/odds-free, monitor `/integrity`). Data in `export_site_data.py` (blocks
 `bettype`/`diversification`).
 
 ---
 
-> **5ª rodada (produto)** (2026-06-23): bet-type — a lei skew=f(competitividade) vale
-> em todo o book (favorito/empate/azarão), com diversificação ~6 vs ~509. O aparelho
-> virou produto: API `/measure` (com-odds + odds-free + integridade) e widget V2
-> (radar de tipo de aposta + curva de diversificação + Mahalanobis). 40 fases no
-> ledger. Fronteiras restantes: outros esportes (decisão: futebol exclusivamente) e
-> odds pré-2000 (inexistentes). Lineage em `lineage.json`/`LINEAGE.md`.
+> **5th round (product)** (2026-06-23): bet-type — the law skew=f(competitiveness) holds
+> across the whole book (favourite/draw/longshot), with diversification ~6 vs ~509. The
+> apparatus became a product: API `/measure` (with-odds + odds-free + integrity) and a V2
+> widget (bet-type radar + diversification curve + Mahalanobis). 40 phases in the
+> ledger. Remaining frontiers: other sports (decision: football exclusively) and
+> pre-2000 odds (non-existent). Lineage in `lineage.json`/`LINEAGE.md`.
 
 ---
 
-## Fase S — Validade externa: tênis (bloco 48)
+## Phase S — External validity: tennis (block 48)
 
-A camada CANÔNICA (`skewlib/canonical.py` + `adapters/`) deixou o núcleo
-sport-agnóstico — só precisa de `(p, o, won)` por aposta. Plugando o **tênis**
-(tennis-data.co.uk, ATP+WTA 2005–2025, snapshot congelado em
-`data/PROVENANCE-tennis.json`), um esporte com mercado de **2 resultados** (sem
-empate) e **fonte de odds independente**, sobre **62.865 partidas** e ZERO ciência
-nova:
+The CANONICAL layer (`skewlib/canonical.py` + `adapters/`) made the core
+sport-agnostic — it only needs `(p, o, won)` per bet. Plugging in **tennis**
+(tennis-data.co.uk, ATP+WTA 2005–2025, frozen snapshot in
+`data/PROVENANCE-tennis.json`), a sport with a **2-outcome** market (no draw) and
+an **independent odds source**, over **62,865 matches** and with ZERO new science:
 
-- **Calibração:** p_fav médio **0.688** ≈ vitória real do favorito **0.692** — o
-  de-vig é confiável fora do futebol.
-- **A lei reaparece:** skew do favorito mais negativo onde o torneio é mais
-  desbalanceado — corr(skew_fav, p_fav) por tier = **−1.00 (ATP)** / **−0.98 (WTA)**
-  (futebol −0.90). Grand Slam (mais desbalanceado) tem o favorito mais negativo nos
-  dois tours.
-- **O azarão é lotérico:** skew **+2.314** ≈ futebol **+2.349**.
+- **Calibration:** mean p_fav **0.688** ≈ real favourite win **0.692** — the
+  de-vig is reliable beyond football.
+- **The law reappears:** the favourite's skew is more negative where the tournament
+  is more imbalanced — corr(skew_fav, p_fav) by tier = **−1.00 (ATP)** / **−0.98 (WTA)**
+  (football −0.90). Grand Slam (more imbalanced) has the most negative favourite in
+  both tours.
+- **The longshot is lottery-like:** skew **+2.314** ≈ football **+2.349**.
 
-A invariância estrutural não é artefato do 1X2 nem do futebol: é propriedade do
-ESPORTE como sistema competitivo. Validade externa para o §7 (limitação "um esporte").
+The structural invariance is not an artefact of 1X2 nor of football: it is a
+property of the SPORT as a competitive system. External validity for §7 (the "one
+sport" limitation).
 
-Artefatos: `skewlib/adapters/tennis.py`, `analysis/00b_fetch_tennis.py`,
+Artefacts: `skewlib/adapters/tennis.py`, `analysis/00b_fetch_tennis.py`,
 `analysis/48_tennis.py`, `outputs/fig/f35_crosssport.png`,
-`outputs/tennis_by_tier.csv`. Núcleo (`canonical`/`skewmeter`) inalterado.
+`outputs/tennis_by_tier.csv`. The core (`canonical`/`skewmeter`) unchanged.
 
 ---
 
-> **6ª rodada (validade externa)** (2026-06-23): tênis — a lei skew=f(competitividade)
-> e o azarão lotérico reaparecem num 2º esporte (ATP+WTA, mercado de 2 resultados,
-> odds independentes), via a camada canônica sem mudar o núcleo. 41 fases no ledger.
-> Adicionar um esporte = um adaptador (`docs/DATA-SCHEMA.md`). Lineage em
+> **6th round (external validity)** (2026-06-23): tennis — the law skew=f(competitiveness)
+> and the lottery-like longshot reappear in a 2nd sport (ATP+WTA, 2-outcome market,
+> independent odds), via the canonical layer without changing the core. 41 phases in the
+> ledger. Adding a sport = one adapter (`docs/DATA-SCHEMA.md`). Lineage in
 > `lineage.json`/`LINEAGE.md`.
 
-## Fase T — Validade externa: basquete (bloco 49)
+## Phase T — External validity: basketball (block 49)
 
-Um **3º esporte** sobre a mesma camada canônica, sem tocar no núcleo. Plugando a
-**NBA** (sportsbookreviewsonline.com, 16 temporadas 2007–08…2022–23, snapshot
-congelado em `data/PROVENANCE-basketball.json`), mercado **moneyline** (2 resultados,
-sem empate) e **fonte de odds independente** do futebol e do tênis, sobre **19.621
-jogos** e ZERO ciência nova:
+A **3rd sport** on the same canonical layer, without touching the core. Plugging in
+the **NBA** (sportsbookreviewsonline.com, 16 seasons 2007–08…2022–23, frozen
+snapshot in `data/PROVENANCE-basketball.json`), the **moneyline** market (2
+outcomes, no draw) and an **odds source independent** of football and tennis, over
+**19,621 matches** and with ZERO new science:
 
-- **Calibração:** p_fav médio **0.694** ≈ vitória real do favorito **0.685** — o
-  de-vig é confiável também no moneyline da NBA (a folga de ~0.9pp é o próprio viés
-  favorito-azarão, com o favorito levemente sobreprecificado).
-- **A lei reaparece:** skew do favorito mais negativo nas temporadas mais
-  desbalanceadas — corr(skew_fav, p_fav) por temporada = **−0.95** (16 temporadas;
-  futebol −0.90, tênis −1.00/−0.98). A NBA mais lopsided (2007–08, p_fav 0.71) tem o
-  favorito mais negativo; a mais equilibrada (2022–23, p_fav 0.66) o menos.
-- **O azarão é lotérico:** skew **+2.609** ≈ futebol **+2.349**, tênis **+2.314**.
+- **Calibration:** mean p_fav **0.694** ≈ real favourite win **0.685** — the
+  de-vig is reliable also in the NBA moneyline (the ~0.9pp gap is the
+  favourite-longshot bias itself, with the favourite slightly overpriced).
+- **The law reappears:** the favourite's skew is more negative in the more
+  imbalanced seasons — corr(skew_fav, p_fav) by season = **−0.95** (16 seasons;
+  football −0.90, tennis −1.00/−0.98). The most lopsided NBA (2007–08, p_fav 0.71)
+  has the most negative favourite; the most balanced (2022–23, p_fav 0.66) the least.
+- **The longshot is lottery-like:** skew **+2.609** ≈ football **+2.349**, tennis **+2.314**.
 
-Na curva cross-esporte (f36), o tênis e o basquete **se sobrepõem** na mesma região
-lopsided (~0.66–0.75), ambos sobre a curva descendente do favorito e ascendente do
-azarão que o futebol traça em competitividade menor. Três esportes, três mercados (1X2,
-match-odds, moneyline), três fontes de odds, uma lei estrutural.
+On the cross-sport curve (f36), tennis and basketball **overlap** in the same
+lopsided region (~0.66–0.75), both on the descending favourite curve and the
+ascending longshot curve that football traces at lower competitiveness. Three
+sports, three markets (1X2, match-odds, moneyline), three odds sources, one
+structural law.
 
-Artefatos: `skewlib/adapters/basketball.py`, `analysis/00c_fetch_basketball.py`,
+Artefacts: `skewlib/adapters/basketball.py`, `analysis/00c_fetch_basketball.py`,
 `analysis/49_basketball.py`, `outputs/fig/f36_crosssport.png`,
-`outputs/basketball_by_season.csv`. Núcleo (`canonical`/`skewmeter`) inalterado; sem
-dependências novas (o fetch usa `html.parser` da stdlib).
+`outputs/basketball_by_season.csv`. The core (`canonical`/`skewmeter`) unchanged; no
+new dependencies (the fetch uses the stdlib `html.parser`).
 
 ---
 
-> **7ª rodada (validade externa, 3º esporte)** (2026-06-23): basquete — a lei
-> skew=f(competitividade) e o azarão lotérico reaparecem num 3º esporte (NBA, mercado
-> moneyline, odds independentes), via a camada canônica sem mudar o núcleo. 42 fases no
-> ledger. A f36 põe futebol+tênis+basquete numa só curva. Lineage em
+> **7th round (external validity, 3rd sport)** (2026-06-23): basketball — the law
+> skew=f(competitiveness) and the lottery-like longshot reappear in a 3rd sport (NBA,
+> moneyline market, independent odds), via the canonical layer without changing the core.
+> 42 phases in the ledger. f36 puts football+tennis+basketball on a single curve. Lineage in
 > `lineage.json`/`LINEAGE.md`.
 
-## Fase U — Equivalência temporal: "sem deriva" como afirmação positiva (bloco 51)
+## Phase U — Temporal equivalence: "no drift" as a positive claim (block 51)
 
-W3 mostrou β_ano≈0 com **p=0.73** e IC cruzando zero. Mas p alto é só **não-rejeição**
-de uma tendência — não evidência de ausência (um teste sem potência também dá p alto).
-Aqui fechamos o buraco lógico do §4.3 com um **teste de equivalência (TOST)**:
+W3 showed β_year≈0 with **p=0.73** and a CI crossing zero. But a high p is only
+**non-rejection** of a trend — not evidence of absence (an underpowered test also
+gives a high p). Here we close the logical gap in §4.3 with an **equivalence test
+(TOST)**:
 
-- **Margem pré-registrada** Δ = ½ da SD between-liga (**0.026**), a MESMA do §4.8 —
-  lida como a maior deriva de 20 anos que trataríamos como desprezível.
-- **Resultado:** o IC de 90% do β cai inteiro dentro de [−Δ,+Δ] → rejeitamos qualquer
-  deriva maior que Δ, **p_tost = 0.006**. Robusto a bootstrap por liga (p=0.005) e ao
-  painel **balanceado** (cesta fixa de 15 ligas; β=−0.0003/ano, p=0.043).
-- **Sensibilidade:** equivalente a ½ e 1× a SD; inconclusivo só num Δ severo de ¼ SD
-  (deriva < 0.013 em 20 anos — abaixo disso o dado não afirma nem nega).
+- **Pre-registered margin** Δ = ½ the between-league SD (**0.026**), the SAME as in
+  §4.8 — read as the largest 20-year drift we would treat as negligible.
+- **Result:** the 90% CI of β falls entirely within [−Δ,+Δ] → we reject any drift
+  larger than Δ, **p_tost = 0.006**. Robust to per-league bootstrap (p=0.005) and to
+  the **balanced** panel (fixed basket of 15 leagues; β=−0.0003/year, p=0.043).
+- **Sensitivity:** equivalent at ½ and 1× the SD; inconclusive only at a severe Δ of
+  ¼ SD (drift < 0.013 over 20 years — below that the data neither affirms nor denies).
 
-Conclusão: a skewness não é apenas *não-mostrada* derivar — é **estatisticamente
-equivalente a não derivar**, dentro de uma fração de uma única diferença entre-ligas
-acumulada em todo o histórico. Converte a invariância temporal de ausência-de-evidência
-em evidência-de-ausência.
+Conclusion: the skewness is not merely *not shown* to drift — it is **statistically
+equivalent to not drifting**, within a fraction of a single between-league
+difference accumulated over the whole history. It converts the temporal invariance
+from absence-of-evidence into evidence-of-absence.
 
-**Checagem honesta (γ, C2):** o mesmo TOST aplicado ao parâmetro de preferência γ
-(série anual de 21 pontos, Δ=½ SD between-liga de γ ≈ 0.020) sai **INCONCLUSIVO**
-(β_γ=+0.0003/ano, deriva +0.006 em 20a, p_tost=0.19): a deriva pontual é pequena, mas a
-série anual não tem potência para certificar equivalência nessa margem. Registramos isso
-de propósito — o teste **não é viciado a passar**; só a skewness (n=638, painel
-liga×temporada) tem potência para o veredito. Por isso o paper afirma equivalência só
-para a skewness; os demais "sem deriva" (P4/FLB, C2/γ, L/HFA) seguem como não-rejeição.
+**Honest check (γ, C2):** the same TOST applied to the preference parameter γ
+(annual series of 21 points, Δ=½ the between-league SD of γ ≈ 0.020) comes out
+**INCONCLUSIVE** (β_γ=+0.0003/year, drift +0.006 over 20yr, p_tost=0.19): the point
+drift is small, but the annual series lacks the power to certify equivalence at that
+margin. We record this deliberately — the test **is not rigged to pass**; only the
+skewness (n=638, league×season panel) has the power for the verdict. That is why the
+paper claims equivalence only for the skewness; the other "no drift" results
+(P4/FLB, C2/γ, L/HFA) stand as non-rejection.
 
-Artefatos: `skewlib/stats.py:tost`, `skewlib/panel.py:trend_boot`,
+Artefacts: `skewlib/stats.py:tost`, `skewlib/panel.py:trend_boot`,
 `analysis/51_temporal_equivalence.py`, `outputs/fig/f37_temporal_equivalence.png`.
 
 ---
 
-> **8ª rodada (rigor inferencial)** (2026-06-23): equivalência temporal — o "sem deriva
-> secular" (W3) vira afirmação positiva por TOST (p_tost=0.006, margem ½ SD between-liga;
-> robusto a bootstrap e painel balanceado). 43 fases no ledger. f37 (forest) entra como
-> Figure 20; §4.3 e abstract atualizados.
+> **8th round (inferential rigour)** (2026-06-23): temporal equivalence — the "no secular
+> drift" (W3) becomes a positive claim by TOST (p_tost=0.006, margin ½ between-league SD;
+> robust to bootstrap and balanced panel). 43 phases in the ledger. f37 (forest) enters as
+> Figure 20; §4.3 and the abstract updated.

@@ -1,9 +1,9 @@
-"""37 — Frente K: diversificação / portfólio. A skewness é fenômeno de aposta ÚNICA.
-A skewness padronizada do retorno médio de N apostas (quase) independentes escala
-skew(X)/√N: uma banca diversificada de favoritos (ou de azarões) tende ao gaussiano,
-mesmo a aposta isolada sendo fortemente assimétrica. Logo a preferência por skewness
-(o FLB) importa para o apostador RECREATIVO (poucas apostas), não para o sindicato —
-o canal microeconômico que sustenta o viés ser EV-negativo.
+"""37 — Front K: diversification / portfolio. Skewness is a SINGLE-bet phenomenon.
+The standardised skewness of the mean return of N (nearly) independent bets scales as
+skew(X)/√N: a diversified bankroll of favourites (or of underdogs) tends to Gaussian,
+even though the isolated bet is strongly asymmetric. Hence the preference for skewness
+(the FLB) matters to the RECREATIONAL bettor (few bets), not to the syndicate — the
+microeconomic channel that sustains the bias being EV-negative.
 """
 import numpy as np
 import matplotlib
@@ -20,18 +20,18 @@ def main():
 
     base_f, rows_f = pf.skew_decay(df.ret_fav.values, SIZES)
     base_d, rows_d = pf.skew_decay(df.ret_dog.values, SIZES)
-    print(f"\nSkewness da APOSTA ÚNICA (realizada): favorito {base_f:+.3f} · "
-          f"azarão {base_d:+.3f} (azarão = lotérica)")
-    print(f"\nSkewness do RETORNO MÉDIO de N apostas (escala iid skew/√N):")
-    print(f"  {'N':>5} {'fav skew':>9} {'(prev)':>8} {'dog skew':>9} {'(prev)':>8}")
+    print(f"\nSkewness of the SINGLE bet (realised): favourite {base_f:+.3f} · "
+          f"underdog {base_d:+.3f} (underdog = lottery-like)")
+    print(f"\nSkewness of the MEAN RETURN of N bets (iid scaling skew/√N):")
+    print(f"  {'N':>5} {'fav skew':>9} {'(pred)':>8} {'dog skew':>9} {'(pred)':>8}")
     for rf, rd in zip(rows_f, rows_d):
         print(f"  {rf['N']:>5} {rf['skew']:>+9.3f} {rf['skew_pred']:>+8.3f} "
               f"{rd['skew']:>+9.3f} {rd['skew_pred']:>+8.3f}")
     ngf = pf.n_to_gaussian(base_f); ngd = pf.n_to_gaussian(base_d)
-    print(f"\n  apostas até skew<0.1 (~gaussiano): favorito ~{ngf} · azarão ~{ngd}")
-    print("  → a assimetria que o apostador 'ama' é da aposta ISOLADA; diversificar")
-    print("    a mata (1/√N). O FLB sobrevive porque o apostador recreativo concentra")
-    print("    poucas apostas lotéricas — o sindicato diversificado só vê o EV negativo.")
+    print(f"\n  bets until skew<0.1 (~Gaussian): favourite ~{ngf} · underdog ~{ngd}")
+    print("  → the asymmetry the bettor 'loves' belongs to the ISOLATED bet; diversifying")
+    print("    kills it (1/√N). The FLB survives because the recreational bettor concentrates")
+    print("    a few lottery-like bets — the diversified syndicate only sees the negative EV.")
 
     C.OUTDIR.mkdir(exist_ok=True)
     import pandas as pd

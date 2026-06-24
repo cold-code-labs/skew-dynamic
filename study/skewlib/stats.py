@@ -1,4 +1,4 @@
-"""Bateria de testes: estacionariedade, persistência, i.i.d., quebras."""
+"""Test battery: stationarity, persistence, i.i.d., breaks."""
 import numpy as np, warnings
 from statsmodels.tsa.stattools import adfuller, kpss, acf
 from statsmodels.stats.diagnostic import acorr_ljungbox
@@ -7,21 +7,21 @@ warnings.filterwarnings("ignore")
 
 
 def stationarity(ser):
-    """ADF (H0: raiz unitária) + KPSS (H0: estacionária). Confirmação dupla."""
+    """ADF (H0: unit root) + KPSS (H0: stationary). Double confirmation."""
     s = ser.dropna()
     return {"adf_p": adfuller(s)[1],
             "kpss_p": kpss(s, regression="c", nlags="auto")[1]}
 
 
 def persistence(ser, lags=20):
-    """Ljung-Box (H0: ruído branco) + ACF de lag 1."""
+    """Ljung-Box (H0: white noise) + lag-1 ACF."""
     s = ser.dropna()
     lb = float(acorr_ljungbox(s, lags=[lags], return_df=True)["lb_pvalue"].iloc[0])
     return {"ljungbox_p": lb, "acf1": float(acf(s, nlags=1)[1])}
 
 
 def variance_ratio(ser, ks=(2, 4, 8)):
-    """VR(k)≈1 indica i.i.d.; <1 reversão à média; >1 momentum."""
+    """VR(k)≈1 indicates i.i.d.; <1 mean reversion; >1 momentum."""
     x = np.asarray(ser.dropna()); v1 = x.var(); n = len(x)
     out = {}
     for k in ks:
@@ -31,7 +31,7 @@ def variance_ratio(ser, ks=(2, 4, 8)):
 
 
 def ar1(ser):
-    """Ajusta AR(1); retorna phi, p-valor e half-life da reversão."""
+    """Fits AR(1); returns phi, p-value and the reversion half-life."""
     m = ARIMA(np.asarray(ser.dropna()), order=(1, 0, 0)).fit()
     phi = float(m.arparams[0])
     hl = float(np.log(0.5) / np.log(abs(phi))) if 0 < abs(phi) < 1 else float("inf")
@@ -39,7 +39,7 @@ def ar1(ser):
 
 
 def bootstrap_corr(x, y, B=5000, seed=42):
-    """Pearson r + IC bootstrap (reamostra pares). Para n pequeno (ligas)."""
+    """Pearson r + bootstrap CI (resamples pairs). For small n (leagues)."""
     x = np.asarray(x, float); y = np.asarray(y, float)
     rng = np.random.default_rng(seed); n = len(x)
     r = float(np.corrcoef(x, y)[0, 1])
@@ -50,9 +50,9 @@ def bootstrap_corr(x, y, B=5000, seed=42):
 
 
 def bootstrap_stat(fn, n, B=2000, seed=42):
-    """SE bootstrap de uma estatística `fn(idx)` que recebe índices reamostrados
-    (com reposição) de 0..n-1. Para momentos de ordem alta (skew/kurtose), em que
-    a normalidade do estimador não vale."""
+    """Bootstrap SE of a statistic `fn(idx)` that takes resampled indices
+    (with replacement) from 0..n-1. For high-order moments (skew/kurtosis), where
+    the estimator's normality does not hold."""
     rng = np.random.default_rng(seed)
     vals = [fn(rng.integers(0, n, n)) for _ in range(B)]
     return {"se": float(np.std(vals)),
@@ -61,7 +61,7 @@ def bootstrap_stat(fn, n, B=2000, seed=42):
 
 
 def ols(y, x):
-    """Regressão simples y~x: slope, intercepto, R², r. (1 regressor)."""
+    """Simple regression y~x: slope, intercept, R², r. (1 regressor)."""
     x = np.asarray(x, float); y = np.asarray(y, float)
     b, a = np.polyfit(x, y, 1)
     yhat = a + b * x
@@ -71,19 +71,19 @@ def ols(y, x):
 
 
 def tost(beta, se, delta, dof=None):
-    """Teste de EQUIVALÊNCIA (TOST: two one-sided tests). H0 (não-equivalência):
-    |β| ≥ delta. Dois testes unilaterais — H0a: β ≤ −delta e H0b: β ≥ +delta — e
-    a equivalência é declarada só se AMBOS são rejeitados (p_tost = max dos dois <
-    α). Isso é evidência POSITIVA de que β está dentro de (−delta,+delta), ao
-    contrário da mera não-rejeição de β=0 (ausência de evidência). O IC de 90%
-    (= 1−2α p/ α=.05) dentro de [−delta,+delta] é o critério equivalente.
+    """EQUIVALENCE test (TOST: two one-sided tests). H0 (non-equivalence):
+    |β| ≥ delta. Two one-sided tests — H0a: β ≤ −delta and H0b: β ≥ +delta — and
+    equivalence is declared only if BOTH are rejected (p_tost = max of the two <
+    α). This is POSITIVE evidence that β lies within (−delta,+delta), unlike the
+    mere non-rejection of β=0 (absence of evidence). The 90% CI
+    (= 1−2α for α=.05) lying within [−delta,+delta] is the equivalent criterion.
 
-    `dof` usa a t de Student (amostras pequenas); default normal. Reusa o mesmo SE
-    do estimador (analítico cluster-robusto ou bootstrap)."""
+    `dof` uses the Student-t (small samples); default normal. Reuses the same SE
+    of the estimator (analytic cluster-robust or bootstrap)."""
     from scipy import stats as _st
     se = float(se)
-    t_lo = (beta + delta) / se                 # H0a: β ≤ −delta (cauda superior)
-    t_hi = (beta - delta) / se                 # H0b: β ≥ +delta (cauda inferior)
+    t_lo = (beta + delta) / se                 # H0a: β ≤ −delta (upper tail)
+    t_hi = (beta - delta) / se                 # H0b: β ≥ +delta (lower tail)
     if dof:
         p_lo, p_hi, q = _st.t.sf(t_lo, dof), _st.t.cdf(t_hi, dof), _st.t.ppf(0.95, dof)
     else:
@@ -96,7 +96,7 @@ def tost(beta, se, delta, dof=None):
 
 
 def breakpoints(ser, min_size=20, pen_mult=2.0):
-    """Quebras estruturais endógenas na média (PELT, modelo l2)."""
+    """Endogenous structural breaks in the mean (PELT, l2 model)."""
     import ruptures as rpt
     y = np.asarray(ser.dropna())
     algo = rpt.Pelt(model="l2", min_size=min_size).fit(y)

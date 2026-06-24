@@ -1,16 +1,17 @@
-"""Motor do serviço /measure — envolve o skewlib e a lei já calibrada.
+"""Engine for the /measure service — wraps skewlib and the already-calibrated law.
 
-Em vez de tocar o dataset bruto (43 MB) em runtime, o serviço carrega a LEI
-(skew=f(competitividade)) e a referência por liga do `findings.json` versionado —
-o mesmo artefato que alimenta o site. Assim o serviço é leve e deployável, e usa
-exatamente os números auditados (drift-clean). O cálculo da assinatura de uma
-entrada nova (skew/var/exkurt + SE bootstrap) reusa o skewlib sem duplicar lógica.
+Instead of touching the raw dataset (43 MB) at runtime, the service loads the LAW
+(skew=f(competitiveness)) and the per-league reference from the versioned
+`findings.json` — the same artefact that feeds the site. This keeps the service
+light and deployable, and uses exactly the audited numbers (drift-clean). The
+signature of a new input (skew/var/exkurt + bootstrap SE) reuses skewlib without
+duplicating logic.
 
-Dois modos, na escada de custo do estudo:
-  • com-odds   — recebe odds 1X2 (ou p_fav já de-vigado); de-viga por inverse-odds
-                 (gauge_cheap, corr≈1.0 com Shin) e mede a assinatura completa.
-  • odds-free  — recebe só a taxa de zebra (Elo, sem nenhuma odd); prevê a skew
-                 pela lei via mapa competitividade→p_fav (teto corr≈0.83).
+Two modes, along the study's cost ladder:
+  • with-odds  — takes 1X2 odds (or already de-vigged p_fav); de-vigs by inverse-odds
+                 (gauge_cheap, corr≈1.0 with Shin) and measures the full signature.
+  • odds-free  — takes only the upset rate (Elo, no odds at all); predicts the skew
+                 from the law via the competitiveness→p_fav map (ceiling corr≈0.83).
 """
 import sys, json, hashlib
 from pathlib import Path
@@ -25,13 +26,13 @@ FINDINGS = ROOT.parent / "site" / "src" / "data" / "findings.json"
 
 
 class Engine:
-    """Estado imutável carregado do findings.json. Recarregável (hot-reload)."""
+    """Immutable state loaded from findings.json. Reloadable (hot-reload)."""
 
     def __init__(self, path: Path = FINDINGS):
         self.path = Path(path)
         self.load()
 
-    # ── carga / integridade ────────────────────────────────────────────────
+    # ── load / integrity ───────────────────────────────────────────────────
     def load(self):
         raw = self.path.read_bytes()
         self.sha = hashlib.sha256(raw).hexdigest()[:12]
@@ -52,7 +53,7 @@ class Engine:
         self.leagues = d["leagues"]
         self.max_abs_residual = max(abs(L["residual"]) for L in self.leagues
                                     if L.get("residual") is not None)
-        # mapa odds-free: competitividade (upset Elo) → p_fav, OLS sobre as ligas
+        # odds-free map: competitiveness (Elo upset) → p_fav, OLS over the leagues
         u = np.array([L["upset"] for L in self.leagues if L.get("upset") is not None])
         pf = np.array([L["p_fav"] for L in self.leagues if L.get("upset") is not None])
         A = np.column_stack([np.ones_like(u), u])
@@ -61,7 +62,7 @@ class Engine:
     def predict(self, comp: float) -> float:
         return sm.predict_skew(float(comp), self.law)
 
-    # ── localização contra a nuvem de ligas ────────────────────────────────
+    # ── location against the cloud of leagues ──────────────────────────────
     def _nearest(self, key: str, val: float, n: int = 3):
         pool = [L for L in self.leagues if L.get(key) is not None]
         pool.sort(key=lambda L: abs(L[key] - val))
@@ -70,14 +71,14 @@ class Engine:
                 for L in pool[:n]]
 
     def _equivalence(self, residual: float, se_in: float):
-        """Veredito TOST contra a liga mais próxima no resíduo: a diferença de
-        assimetria condicionada cabe na margem ½·sd (= ruído)?"""
+        """TOST verdict against the nearest league in residual: does the
+        conditioned asymmetry gap fit within the ½·sd margin (= noise)?"""
         pool = [L for L in self.leagues if L.get("residual") is not None]
         pool.sort(key=lambda L: abs(L["residual"] - residual))
         nb = pool[0]
         d = abs(residual - nb["residual"])
         se = float(np.hypot(se_in, nb.get("se") or 0.0))
-        equivalent = bool(d + 1.645 * se < self.margin)   # IC 90% ⊂ [−margin, margin]
+        equivalent = bool(d + 1.645 * se < self.margin)   # 90% CI ⊂ [−margin, margin]
         return {"code": nb["code"], "name": nb["name"],
                 "residual_gap": round(d, 4), "se_combined": round(se, 4),
                 "margin": round(self.margin, 4), "same_asymmetry": equivalent}
@@ -101,9 +102,9 @@ class Engine:
                           f"{n} matches — signature is noise-dominated"})
         return flags
 
-    # ── modo com-odds ──────────────────────────────────────────────────────
+    # ── with-odds mode ─────────────────────────────────────────────────────
     def measure_odds(self, p, o, B=300, seed=42):
-        """Assinatura completa a partir de p_fav (e odds) por jogo."""
+        """Full signature from per-match p_fav (and odds)."""
         p = np.asarray(p, float); o = np.asarray(o, float)
         sig = sm.measure(p, o)
         comp = sig["comp"]
@@ -111,10 +112,10 @@ class Engine:
         se = sm.skew_se(p, o, B=B, seed=seed)
         return self._assemble("with-odds", sig, comp, residual, se, len(p))
 
-    # ── modo odds-free ─────────────────────────────────────────────────────
+    # ── odds-free mode ─────────────────────────────────────────────────────
     def measure_oddsfree(self, upset_rate: float):
-        """Previsão pela lei a partir SÓ da taxa de zebra (Elo). Sem assinatura
-        medida — o teto sem nenhuma odd (corr≈0.83)."""
+        """Prediction from the law using ONLY the upset rate (Elo). No measured
+        signature — the ceiling with no odds at all (corr≈0.83)."""
         a, b = self._upset_beta
         comp = float(a + b * float(upset_rate))
         skew_hat = self.predict(comp)
@@ -153,7 +154,7 @@ class Engine:
             "anomalies": self._anomalies(comp, se, residual, n),
         }
 
-    # ── monitor de integridade ─────────────────────────────────────────────
+    # ── integrity monitor ──────────────────────────────────────────────────
     def integrity(self):
         checks = []
 
@@ -186,8 +187,8 @@ def _shape_label(skew: float) -> str:
 
 
 def p_fav_from_odds_hda(odds_hda):
-    """De-vig barato (inverse-odds normalizado) → (p_fav, o_fav) por jogo.
-    corr≈1.0 com o de-vig de Shin (skewlib.skewmeter.gauge_cheap)."""
+    """Cheap de-vig (normalised inverse-odds) → (p_fav, o_fav) per match.
+    corr≈1.0 with Shin's de-vig (skewlib.skewmeter.gauge_cheap)."""
     r = 1.0 / np.asarray(odds_hda, float)
     P = r / r.sum(axis=1, keepdims=True)
     pf = P.max(axis=1)

@@ -1,10 +1,10 @@
-"""04 — Dinâmica (Bloco C): a série é i.i.d.? Variance-ratio, AR(1), quebras."""
+"""04 — Dynamics (Block C): is the series i.i.d.? Variance-ratio, AR(1), breaks."""
 from skewlib import io, returns, series, stats
 
 def main():
     df = returns.add_returns(io.load())
-    ser = series.rolling_skew(df, "ret_fav", overlap=False)  # janelas disjuntas
-    print(f"série não-overlap: n={len(ser)}, média={ser.mean():.3f}")
+    ser = series.rolling_skew(df, "ret_fav", overlap=False)  # disjoint windows
+    print(f"non-overlap series: n={len(ser)}, mean={ser.mean():.3f}")
 
     vr = stats.variance_ratio(ser)
     for k, v in vr.items():
@@ -12,10 +12,10 @@ def main():
 
     a = stats.ar1(ser)
     print(f"  AR(1) phi = {a['phi']:+.3f} (p={a['phi_p']:.3f}) half-life={a['half_life']:.2f}")
-    print(f"  → {'ruído branco confirmado' if a['phi_p'] > 0.05 else 'há estrutura AR'}")
+    print(f"  → {'white noise confirmed' if a['phi_p'] > 0.05 else 'AR structure present'}")
 
     bks = stats.breakpoints(ser)
-    print(f"  quebras estruturais: {len(bks)} {[str(b.date()) for b in bks]}")
+    print(f"  structural breaks: {len(bks)} {[str(b.date()) for b in bks]}")
 
 if __name__ == "__main__":
     main()

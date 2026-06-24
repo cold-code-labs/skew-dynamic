@@ -1,28 +1,28 @@
-"""Colapso de distribuição (data collapse, estilo física estatística).
+"""Distribution collapse (data collapse, statistical-physics style).
 
-A tese de "invariância de forma" (B): controlada a competitividade, a forma
-INTEIRA da distribuição implícita é a mesma entre ligas — não só o 3º momento.
-Dois testes complementares:
+The "shape invariance" thesis (B): controlling for competitiveness, the ENTIRE
+shape of the implied distribution is the same across leagues — not just the 3rd
+moment. Two complementary tests:
 
-  1. `pairwise_test` sobre retornos z-scored por liga — a forma é universal SEM
-     controlar competitividade? Esperado REJEITAR (a skew varia com a liga, que é
-     justamente o achado): a forma não é globalmente universal, é função da
-     competitividade.
-  2. `conditional_invariance` — o teste FORTE: condicional à faixa de p_fav
-     (competitividade), a distribuição do retorno é league-invariante? Se sim, a
-     identidade da liga não acrescenta nada além da competitividade → colapso.
+  1. `pairwise_test` over per-league z-scored returns — is the shape universal
+     WITHOUT controlling for competitiveness? Expected to REJECT (the skew varies
+     with the league, which is precisely the finding): the shape is not globally
+     universal, it is a function of competitiveness.
+  2. `conditional_invariance` — the STRONG test: conditional on the p_fav band
+     (competitiveness), is the return distribution league-invariant? If so, the
+     league identity adds nothing beyond competitiveness → collapse.
 
-Caveat: o retorno do favorito é discreto (dois pontos por jogo), então o KS opera
-sobre uma mistura discreta; `ks_2samp` lida com empates de forma aproximada. Os
-p-valores são indicativos; a métrica de interesse é a FRAÇÃO de pares que rejeita.
+Caveat: the favourite's return is discrete (two points per game), so the KS
+operates over a discrete mixture; `ks_2samp` handles ties approximately. The
+p-values are indicative; the metric of interest is the FRACTION of pairs that reject.
 """
 import numpy as np, pandas as pd, warnings
 from scipy.stats import ks_2samp, anderson_ksamp
 
 
 def zscore_returns(df, col="ret_fav", by="Division", min_n=2000):
-    """Retornos padronizados (z-score: remove locação e escala) por grupo.
-    Devolve dict grupo -> array. Padronizar isola a FORMA (skew/kurtose)."""
+    """Standardised returns (z-score: removes location and scale) per group.
+    Returns dict group -> array. Standardising isolates the SHAPE (skew/kurtosis)."""
     out = {}
     for k, g in df.groupby(by):
         x = g[col].dropna().values
@@ -33,10 +33,10 @@ def zscore_returns(df, col="ret_fav", by="Division", min_n=2000):
 
 
 def pairwise_test(samples, test="ks", alpha=0.05):
-    """KS (ou Anderson-Darling) 2-amostras par-a-par entre grupos já padronizados.
-    Com n grande o p-valor satura (rejeita tudo) → reportamos também a ESTATÍSTICA
-    KS mediana (distância máxima de CDF = tamanho de efeito), que é o que importa.
-    Devolve dict {pmatrix, reject_frac, median_p, median_stat}."""
+    """KS (or Anderson-Darling) 2-sample pairwise between already-standardised groups.
+    With large n the p-value saturates (rejects everything) → we also report the
+    median KS STATISTIC (maximum CDF distance = effect size), which is what matters.
+    Returns dict {pmatrix, reject_frac, median_p, median_stat}."""
     keys = list(samples)
     P = pd.DataFrame(np.eye(len(keys)), index=keys, columns=keys, dtype=float)
     pv, stat = [], []
@@ -59,13 +59,15 @@ def pairwise_test(samples, test="ks", alpha=0.05):
 
 def conditional_invariance(df, pcol="p_fav_dv", retcol="ret_fav", by="Division",
                            nbins=8, min_n=300, alpha=0.05):
-    """Teste FORTE de colapso: condicional à faixa de p_fav, a distribuição do
-    retorno é a mesma entre ligas? Em cada bin de quantil de p, compara cada liga
-    (com ≥min_n jogos no bin) contra o RESTO do bin (one-vs-rest KS). Se a forma
-    é função só da competitividade, a fração que rejeita dentro do bin é baixa.
+    """STRONG collapse test: conditional on the p_fav band, is the return
+    distribution the same across leagues? In each p-quantile bin, compares each
+    league (with ≥min_n games in the bin) against the REST of the bin (one-vs-rest
+    KS). If the shape is a function of competitiveness only, the fraction that
+    rejects within the bin is low.
 
-    Devolve (tabela por (bin,liga), resumo por bin). O resumo traz a fração de
-    ligas que rejeita o 'mesma forma que o resto' em cada faixa de competitividade.
+    Returns (table per (bin,league), summary per bin). The summary gives the
+    fraction of leagues that reject the 'same shape as the rest' in each
+    competitiveness band.
     """
     d = df[[pcol, retcol, by]].dropna().copy()
     d["pbin"] = pd.qcut(d[pcol], nbins, duplicates="drop")
@@ -94,6 +96,6 @@ def conditional_invariance(df, pcol="p_fav_dv", retcol="ret_fav", by="Division",
 
 
 def ecdf(x):
-    """ECDF (xs ordenado, F) para sobrepor curvas no plot do colapso."""
+    """ECDF (sorted xs, F) to overlay curves on the collapse plot."""
     xs = np.sort(np.asarray(x, float))
     return xs, np.arange(1, len(xs) + 1) / len(xs)

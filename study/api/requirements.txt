@@ -1,5 +1,5 @@
-# serviço /measure — além do que skewlib já usa (numpy)
+# /measure service — beyond what skewlib already uses (numpy)
 fastapi>=0.110
 uvicorn[standard]>=0.29
 pydantic>=2.6
-httpx>=0.27          # TestClient (testes)
+httpx>=0.27          # TestClient (tests)

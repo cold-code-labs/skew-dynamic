@@ -1,7 +1,7 @@
-"""15 — Derivação formal (P3): a lei skewness~competitividade é DERIVADA, não
-ajustada. Um ordered-probit com dispersão de força σ_L gera analiticamente a
-curva (mean p_fav, skewness); sobrepomos as 38 ligas empíricas. Se elas caem na
-curva teórica, o modelo de força do esporte gera exatamente a lei observada.
+"""15 — Formal derivation (P3): the skewness~competitiveness law is DERIVED, not
+fitted. An ordered-probit with strength dispersion σ_L analytically generates the
+(mean p_fav, skewness) curve; we overlay the 38 empirical leagues. If they fall on
+the theoretical curve, the sport's strength model generates exactly the observed law.
 """
 import numpy as np
 import matplotlib
@@ -16,28 +16,28 @@ def main():
     obs_pf = lg.p_fav_dv_mean.values
     obs_sk = lg.skew_exante.values
 
-    print("calibrando ordered-probit (h, c, σ) p/ taxas marginais pooled...", flush=True)
+    print("calibrating ordered-probit (h, c, σ) to pooled marginal rates...", flush=True)
     par = model.calibrate(home=(df.FTResult == "H").mean(),
                           draw=(df.FTResult == "D").mean(),
                           pfav=float(df.p_fav_dv.mean()))
-    print(f"  h={par['h']:.3f} (vantagem casa) c={par['c']:.3f} (cutoff empate) "
+    print(f"  h={par['h']:.3f} (home advantage) c={par['c']:.3f} (draw cutoff) "
           f"σ_ref={par['sigma_ref']:.3f}")
 
     sig = np.linspace(0.05, 1.3, 45)
     cpf, csk = model.curve(par["h"], par["c"], sig)
 
-    # prever skewness de cada liga: inverter σ pelo p_fav, depois skew pela curva
+    # predict each league's skewness: invert σ via p_fav, then skew via the curve
     order = np.argsort(cpf)
     pred_sk = np.interp(obs_pf, cpf[order], csk[order])
     r = np.corrcoef(pred_sk, obs_sk)[0, 1]
     rmse = float(np.sqrt(np.mean((pred_sk - obs_sk) ** 2)))
-    print(f"\n  modelo prevê skewness da liga a partir do p_fav (1ª→3ª ordem):")
-    print(f"  corr(previsto, observado) = {r:+.3f} | RMSE = {rmse:.3f} "
-          f"(vs sd entre ligas {obs_sk.std():.3f})")
-    print(f"  range curva teórica: skew {csk.min():+.2f}..{csk.max():+.2f} "
-          f"para p_fav {cpf.min():.2f}..{cpf.max():.2f}")
-    print("  → as ligas empíricas caem na curva derivada: a lei é uma consequência")
-    print("    do modelo de força + FLB, não um ajuste livre.")
+    print(f"\n  model predicts league skewness from p_fav (1st→3rd order):")
+    print(f"  corr(predicted, observed) = {r:+.3f} | RMSE = {rmse:.3f} "
+          f"(vs between-league sd {obs_sk.std():.3f})")
+    print(f"  theoretical curve range: skew {csk.min():+.2f}..{csk.max():+.2f} "
+          f"for p_fav {cpf.min():.2f}..{cpf.max():.2f}")
+    print("  → the empirical leagues fall on the derived curve: the law is a consequence")
+    print("    of the strength model + FLB, not a free fit.")
 
     FIG = C.OUTDIR / "fig"; FIG.mkdir(parents=True, exist_ok=True)
     fig, ax = plt.subplots(figsize=(6, 4))

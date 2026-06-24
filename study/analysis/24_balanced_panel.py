@@ -1,8 +1,8 @@
-"""24 — Robustez adversarial G2: painel BALANCEADO estrito. A invariância temporal
-(W3/P1) usou painel liga×temporada e teste por-liga. Aqui matamos 100% o confound
-de COMPOSIÇÃO na série GLOBAL: refazemos a série anual de skewness usando apenas as
-ligas presentes em TODAS as temporadas da janela. Se a tendência continua nula, o
-"sem drift" não é efeito de a cesta de ligas mudar ano a ano.
+"""24 — Adversarial robustness G2: strict BALANCED panel. The temporal invariance
+(W3/P1) used a league×season panel and a per-league test. Here we kill 100% the
+COMPOSITION confound in the GLOBAL series: we rebuild the yearly skewness series using
+only the leagues present in ALL seasons of the window. If the trend remains null, the
+"no drift" is not an effect of the basket of leagues changing from year to year.
 """
 import numpy as np
 import matplotlib
@@ -16,15 +16,15 @@ def main():
     P = pan.league_season_panel(df)
     bal = adv.balanced_leagues(P, min_frac=1.0)
     nseasons = P.season.nunique()
-    print(f"N={len(df):,} | {P.Division.nunique()} ligas no painel, "
-          f"{nseasons} temporadas")
-    print(f"\nLigas BALANCEADAS (presentes em todas as {nseasons} temporadas): "
+    print(f"N={len(df):,} | {P.Division.nunique()} leagues in the panel, "
+          f"{nseasons} seasons")
+    print(f"\nBALANCED leagues (present in all {nseasons} seasons): "
           f"{len(bal)} → {sorted(bal)}")
     if len(bal) < 3:
         bal = adv.balanced_leagues(P, min_frac=0.9)
-        print(f"  (afrouxando p/ ≥90% das temporadas: {len(bal)} ligas)")
+        print(f"  (relaxing to ≥90% of the seasons: {len(bal)} leagues)")
 
-    # série GLOBAL desbalanceada (todas as ligas) vs balanceada (núcleo fixo)
+    # unbalanced GLOBAL series (all leagues) vs balanced (fixed core)
     gall = adv.global_series_balanced(df, list(P.Division.unique()))
     gbal = adv.global_series_balanced(df, bal)
 
@@ -36,16 +36,16 @@ def main():
 
     st_a, ol_a = trend(gall)
     st_b, ol_b = trend(gbal)
-    print("\nTENDÊNCIA da série GLOBAL (skew ex-ante por ano):")
-    print(f"  {'série':22} {'β/ano':>10} {'r':>7} {'ADF p':>8} {'KPSS p':>8}")
-    print(f"  {'todas as ligas':22} {ol_a['slope']:+10.5f} {ol_a['r']:+7.2f} "
+    print("\nTREND of the GLOBAL series (ex-ante skew by year):")
+    print(f"  {'series':22} {'β/yr':>10} {'r':>7} {'ADF p':>8} {'KPSS p':>8}")
+    print(f"  {'all leagues':22} {ol_a['slope']:+10.5f} {ol_a['r']:+7.2f} "
           f"{st_a['adf_p']:8.3f} {st_a['kpss_p']:8.3f}")
-    print(f"  {'balanceada (fixa)':22} {ol_b['slope']:+10.5f} {ol_b['r']:+7.2f} "
+    print(f"  {'balanced (fixed)':22} {ol_b['slope']:+10.5f} {ol_b['r']:+7.2f} "
           f"{st_b['adf_p']:8.3f} {st_b['kpss_p']:8.3f}")
-    print(f"\n  Δ20a balanceada = {ol_b['slope']*20:+.3f} | nível médio "
+    print(f"\n  Δ20yr balanced = {ol_b['slope']*20:+.3f} | mean level "
           f"{gbal.skew_exante.mean():+.3f} (sd {gbal.skew_exante.std():.3f})")
-    print("  → com a cesta de ligas FIXA, a série global segue sem tendência: a")
-    print("    invariância não vem de mudança de composição (confound morto).")
+    print("  → with the basket of leagues FIXED, the global series remains trendless: the")
+    print("    invariance does not come from a composition change (confound dead).")
 
     C.OUTDIR.mkdir(exist_ok=True)
     gbal.to_csv(C.OUTDIR / "balanced_global_series.csv", index=False)

@@ -1,18 +1,18 @@
-"""49 — Frente T: VALIDADE EXTERNA (basquete). A lei skew=f(competitividade) e o
-formato lotérico do azarão valem num 3º esporte?
+"""49 — Front T: EXTERNAL VALIDITY (basketball). Do the law skew=f(competitiveness)
+and the underdog's lottery-like shape hold in a 3rd sport?
 
-Usa a camada canônica (skewlib/canonical + adapters/basketball) — zero ciência nova —
-sobre o snapshot congelado da NBA (sportsbookreviewsonline.com; hash em
-data/PROVENANCE-basketball.json). Mercado MONEYLINE (2 resultados, sem empate), fonte
-de odds independente do futebol e do tênis. Compara, na MESMA curva, o futebol (38
-ligas, de findings.json), o tênis (tiers ATP/WTA, de tennis_by_tier.csv se presente) e
-o basquete (temporadas da NBA).
+Uses the canonical layer (skewlib/canonical + adapters/basketball) — zero new science —
+on the frozen NBA snapshot (sportsbookreviewsonline.com; hash in
+data/PROVENANCE-basketball.json). MONEYLINE market (2 outcomes, no draw), an odds
+source independent of football and tennis. Compares, on the SAME curve, football (38
+leagues, from findings.json), tennis (ATP/WTA tiers, from tennis_by_tier.csv if present)
+and basketball (NBA seasons).
 
-Achado: a assinatura reaparece num 3º esporte. O favorito é mais negativo nas
-temporadas mais desbalanceadas (corr(skew_fav, p_fav) por temporada ≈ −0.95); o azarão
-é lotérico (~+2.6, como futebol/tênis); calibração sã (p_fav ≈ vitória real). A
-invariância estrutural é do ESPORTE como sistema competitivo — não do 1X2, do futebol
-nem do tênis.
+Finding: the signature reappears in a 3rd sport. The favourite is more negative in the
+more imbalanced seasons (corr(skew_fav, p_fav) by season ≈ −0.95); the underdog is
+lottery-like (~+2.6, like football/tennis); calibration is sound (p_fav ≈ actual win).
+The structural invariance belongs to the SPORT as a competitive system — not to 1X2,
+to football nor to tennis.
 """
 import hashlib, json
 import numpy as np
@@ -37,7 +37,7 @@ def _verify_hash():
         for c in iter(lambda: f.read(1 << 20), b""):
             h.update(c)
     got = h.hexdigest()
-    assert got == want, f"basketball.csv mudou: {got[:12]} != snapshot {want[:12]}"
+    assert got == want, f"basketball.csv changed: {got[:12]} != snapshot {want[:12]}"
     print(f"snapshot OK — sha256 {got[:12]} == PROVENANCE-basketball.json", flush=True)
 
 
@@ -45,24 +45,24 @@ def main():
     _verify_hash()
     raw = pd.read_csv(BBALL, low_memory=False)
 
-    # assinatura global + calibração (o de-vig é confiável em basquete?)
+    # global signature + calibration (is de-vig reliable in basketball?)
     can = basketball.to_canonical(raw)
     canonical.validate(can)
     n = can.event_id.nunique()
     fav = canonical.select(can, "fav"); dog = canonical.select(can, "dog")
     sf = canonical.signature(fav, "fav"); sd = canonical.signature(dog, "dog")
     calib_p, calib_w = float(fav.p.mean()), float(fav.won.mean())
-    print(f"\nBASQUETE — {n:,} jogos (NBA), mercado moneyline (2 resultados):")
-    print(f"  favorito skew = {sf['skew']:+.3f} | azarão skew = {sd['skew']:+.3f}")
-    print(f"  calibração: p_fav médio {calib_p:.3f} ≈ vitória real do favorito {calib_w:.3f}")
+    print(f"\nBASKETBALL — {n:,} games (NBA), moneyline market (2 outcomes):")
+    print(f"  favourite skew = {sf['skew']:+.3f} | underdog skew = {sd['skew']:+.3f}")
+    print(f"  calibration: mean p_fav {calib_p:.3f} ≈ actual favourite win {calib_w:.3f}")
 
-    # a lei por temporada (a competitividade da NBA varia ano a ano)
+    # the law by season (NBA competitiveness varies year to year)
     bk = canonical.bettype_by(can, by="competition", kinds=("fav", "dog"),
                               min_n=500).dropna().sort_values("p_fav_mean")
     law_nba = float(np.corrcoef(bk.skew_fav, bk.p_fav_mean)[0, 1])
-    print(f"  lei NBA: corr(skew_fav, p_fav) por temporada = {law_nba:+.2f} ({len(bk)} temporadas)")
+    print(f"  NBA law: corr(skew_fav, p_fav) by season = {law_nba:+.2f} ({len(bk)} seasons)")
 
-    # futebol (findings.json) + tênis (tennis_by_tier.csv, se a frente S já rodou)
+    # football (findings.json) + tennis (tennis_by_tier.csv, if front S already ran)
     fb = pd.DataFrame(json.loads(FINDINGS.read_text())["bettype"]["leagues"])
     tn = pd.read_csv(TENNIS_CSV) if TENNIS_CSV.exists() else None
 
@@ -87,7 +87,7 @@ def main():
     fig.tight_layout()
     fig.savefig(FIG / "f36_crosssport.png", dpi=C.FIG_DPI, bbox_inches="tight"); plt.close(fig)
     print(f"\n  -> {FIG / 'f36_crosssport.png'} | {C.OUTDIR / 'basketball_by_season.csv'}")
-    print("  → a lei é do ESPORTE: 3º esporte, mercado moneyline, odds independentes.")
+    print("  → the law belongs to the SPORT: 3rd sport, moneyline market, independent odds.")
 
     prov.write_stamp("49_basketball", metrics={
         "n_matches": int(n), "skew_fav": sf["skew"], "skew_dog": sd["skew"],

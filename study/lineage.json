@@ -1,6 +1,6 @@
 {
   "schema": "skew-dynamic/lineage@1",
-  "generated_at_head": "31b7ba93",
+  "generated_at_head": "dadd67dd",
   "head_dirty": true,
   "data": {
     "sha256": "6905ca5324df9528",
@@ -19,10 +19,10 @@
   "phases": [
     {
       "id": "P0",
-      "frente": "Foundation",
+      "front": "Foundation",
       "tag": "evidence/phase-0",
       "commit": "d58840c",
-      "title": "Congelamento + reprodução",
+      "title": "Freezing + reproduction",
       "blocks": [
         "00_fetch_data",
         "01_baseline"
@@ -37,10 +37,10 @@
     },
     {
       "id": "W1",
-      "frente": "Finding",
+      "front": "Finding",
       "tag": "evidence/W1",
       "commit": "699f14c",
-      "title": "Núcleo mecânico (skew ex-ante)",
+      "title": "Mechanical core (ex-ante skew)",
       "blocks": [
         "07_devig_exante",
         "03_decomposition"
@@ -58,10 +58,10 @@
     },
     {
       "id": "W2",
-      "frente": "Mechanism",
+      "front": "Mechanism",
       "tag": "evidence/W2",
       "commit": "730fda7",
-      "title": "Lei sem odds (Elo)",
+      "title": "Odds-free law (Elo)",
       "blocks": [
         "08_mechanism_elo"
       ],
@@ -76,10 +76,10 @@
     },
     {
       "id": "W3",
-      "frente": "Invariance",
+      "front": "Invariance",
       "tag": "evidence/W3",
       "commit": "c68eb69",
-      "title": "Invariância temporal (painel)",
+      "title": "Temporal invariance (panel)",
       "blocks": [
         "09_panel_temporal"
       ],
@@ -95,10 +95,10 @@
     },
     {
       "id": "W5",
-      "frente": "Robustness",
+      "front": "Robustness",
       "tag": "evidence/W5",
       "commit": "95d1a07",
-      "title": "Mercado binário O/U 2.5",
+      "title": "Binary O/U 2.5 market",
       "blocks": [
         "10_overunder"
       ],
@@ -111,10 +111,10 @@
     },
     {
       "id": "W4",
-      "frente": "Separation",
+      "front": "Separation",
       "tag": "evidence/W4",
       "commit": "16b8c2e",
-      "title": "Margem ortogonal + de-vig",
+      "title": "Orthogonal margin + de-vig",
       "blocks": [
         "11_margin_robustness"
       ],
@@ -127,10 +127,10 @@
     },
     {
       "id": "P1",
-      "frente": "Reframe",
+      "front": "Reframe",
       "tag": "evidence/P1",
       "commit": "f2bc443",
-      "title": "Invariância intra-regime",
+      "title": "Intra-regime invariance",
       "blocks": [
         "13_regimes"
       ],
@@ -143,10 +143,10 @@
     },
     {
       "id": "P2",
-      "frente": "Hardening",
+      "front": "Hardening",
       "tag": "evidence/P2",
       "commit": "7f00792",
-      "title": "Balanço da classificação (odds-free)",
+      "title": "Standings balance (odds-free)",
       "blocks": [
         "14_balance_indices"
       ],
@@ -158,10 +158,10 @@
     },
     {
       "id": "P3",
-      "frente": "Theory",
+      "front": "Theory",
       "tag": "evidence/P3",
       "commit": "624547a",
-      "title": "Lei derivada (ordered-probit)",
+      "title": "Derived law (ordered-probit)",
       "blocks": [
         "15_model"
       ],
@@ -176,10 +176,10 @@
     },
     {
       "id": "P4",
-      "frente": "Confound",
+      "front": "Confound",
       "tag": "evidence/P4",
       "commit": "2bcef94",
-      "title": "FLB estável (Angelini)",
+      "title": "Stable FLB (Angelini)",
       "blocks": [
         "16_flb_stability"
       ],
@@ -191,10 +191,10 @@
     },
     {
       "id": "B1",
-      "frente": "Shape",
+      "front": "Shape",
       "tag": "evidence/frente-B",
       "commit": "6946fc6",
-      "title": "Invariância de FORMA (multi-momento)",
+      "title": "SHAPE invariance (multi-moment)",
       "blocks": [
         "17_moments"
       ],
@@ -210,10 +210,10 @@
     },
     {
       "id": "B2",
-      "frente": "Collapse",
+      "front": "Collapse",
       "tag": "evidence/frente-B",
       "commit": "6946fc6",
-      "title": "Colapso de distribuição",
+      "title": "Distribution collapse",
       "blocks": [
         "18_collapse"
       ],
@@ -229,10 +229,10 @@
     },
     {
       "id": "C1",
-      "frente": "Pricing",
+      "front": "Pricing",
       "tag": "evidence/frente-C",
       "commit": "2b2d423",
-      "title": "Sem prêmio além do FLB mecânico",
+      "title": "No premium beyond the mechanical FLB",
       "blocks": [
         "19_premium"
       ],
@@ -249,10 +249,10 @@
     },
     {
       "id": "C2",
-      "frente": "Preference",
+      "front": "Preference",
       "tag": "evidence/frente-C",
       "commit": "2b2d423",
-      "title": "CPT invariante (γ)",
+      "title": "Invariant CPT (γ)",
       "blocks": [
         "20_cpt"
       ],
@@ -269,10 +269,10 @@
     },
     {
       "id": "E1",
-      "frente": "Theory",
+      "front": "Theory",
       "tag": "evidence/frente-E",
       "commit": "a70b790",
-      "title": "Forma fechada de S(σ_L)",
+      "title": "Closed form of S(σ_L)",
       "blocks": [
         "21_closed_form"
       ],
@@ -290,10 +290,10 @@
     },
     {
       "id": "E2",
-      "frente": "Robustness",
+      "front": "Robustness",
       "tag": "evidence/frente-E",
       "commit": "a70b790",
-      "title": "Robustez da distribuição de força",
+      "title": "Robustness of the strength distribution",
       "blocks": [
         "22_force_robustness"
       ],
@@ -308,10 +308,10 @@
     },
     {
       "id": "G1",
-      "frente": "Reliability",
+      "front": "Reliability",
       "tag": "evidence/frente-G",
       "commit": "a326910",
-      "title": "De-vig confiável + invariância de método",
+      "title": "Reliable de-vig + method invariance",
       "blocks": [
         "23_devig_reliability"
       ],
@@ -327,10 +327,10 @@
     },
     {
       "id": "G2",
-      "frente": "Robustness",
+      "front": "Robustness",
       "tag": "evidence/frente-G",
       "commit": "a326910",
-      "title": "Painel balanceado estrito (composição morta)",
+      "title": "Strict balanced panel (composition killed)",
       "blocks": [
         "24_balanced_panel"
       ],
@@ -346,10 +346,10 @@
     },
     {
       "id": "G3",
-      "frente": "Confidence",
+      "front": "Confidence",
       "tag": "evidence/frente-G",
       "commit": "a326910",
-      "title": "IC por block-bootstrap sobre temporadas",
+      "title": "CI by block-bootstrap over seasons",
       "blocks": [
         "25_block_bootstrap"
       ],
@@ -364,10 +364,10 @@
     },
     {
       "id": "D2",
-      "frente": "Microstructure",
+      "front": "Microstructure",
       "tag": "evidence/frente-D",
       "commit": "4ccbc01",
-      "title": "Sharp vs soft (margem ortogonal na melhor odd)",
+      "title": "Sharp vs soft (orthogonal margin at the best odd)",
       "blocks": [
         "26_sharp_soft"
       ],
@@ -383,10 +383,10 @@
     },
     {
       "id": "D3",
-      "frente": "Microstructure",
+      "front": "Microstructure",
       "tag": "evidence/frente-D",
       "commit": "4ccbc01",
-      "title": "z de Shin (dinheiro informado) como série",
+      "title": "Shin's z (informed money) as a series",
       "blocks": [
         "27_shin_z_series"
       ],
@@ -402,10 +402,10 @@
     },
     {
       "id": "D4",
-      "frente": "Third market",
+      "front": "Third market",
       "tag": "evidence/frente-D",
       "commit": "4ccbc01",
-      "title": "Handicap asiático: identidade num 3º mercado",
+      "title": "Asian handicap: identity in a 3rd market",
       "blocks": [
         "28_asian_handicap"
       ],
@@ -422,10 +422,10 @@
     },
     {
       "id": "F1",
-      "frente": "Within-season",
+      "front": "Within-season",
       "tag": "evidence/frente-F",
       "commit": "e5b04e1",
-      "title": "Sazonalidade intra-temporada (drift leve)",
+      "title": "Intra-season seasonality (mild drift)",
       "blocks": [
         "29_intraseason"
       ],
@@ -442,10 +442,10 @@
     },
     {
       "id": "F2",
-      "frente": "Tail cancellation",
+      "front": "Tail cancellation",
       "tag": "evidence/frente-F",
       "commit": "e5b04e1",
-      "title": "Contribuição ao M₃ por competitividade do jogo",
+      "title": "Contribution to M₃ by match competitiveness",
       "blocks": [
         "30_game_contribution"
       ],
@@ -460,10 +460,10 @@
     },
     {
       "id": "F3",
-      "frente": "Team structure",
+      "front": "Team structure",
       "tag": "evidence/frente-F",
       "commit": "e5b04e1",
-      "title": "Decomposição por time (dispersão de força)",
+      "title": "Per-team decomposition (strength dispersion)",
       "blocks": [
         "31_team_decomposition"
       ],
@@ -478,10 +478,10 @@
     },
     {
       "id": "H2",
-      "frente": "Open vs closed",
+      "front": "Open vs closed",
       "tag": "evidence/H2",
       "commit": "e0bc9fd",
-      "title": "Liga aberta vs fechada (MLS na lei)",
+      "title": "Open vs closed league (MLS on the law)",
       "blocks": [
         "32_open_vs_closed"
       ],
@@ -498,10 +498,10 @@
     },
     {
       "id": "C3",
-      "frente": "Staking",
+      "front": "Staking",
       "tag": "evidence/C3",
       "commit": "e0bc9fd",
-      "title": "Kelly/staking sob a estrutura de skewness",
+      "title": "Kelly/staking under the skewness structure",
       "blocks": [
         "33_kelly_staking"
       ],
@@ -517,10 +517,10 @@
     },
     {
       "id": "E3",
-      "frente": "Theory",
+      "front": "Theory",
       "tag": "evidence/E3",
       "commit": "e0bc9fd",
-      "title": "Calibração por liga (cutoff de empate endógeno)",
+      "title": "Per-league calibration (endogenous draw cutoff)",
       "blocks": [
         "34_per_league_calibration"
       ],
@@ -536,10 +536,10 @@
     },
     {
       "id": "I",
-      "frente": "Cross-model",
+      "front": "Cross-model",
       "tag": "evidence/frente-I",
       "commit": "7a45759",
-      "title": "Validação cruzada do mecanismo (Poisson de gols)",
+      "title": "Cross-validation of the mechanism (goals Poisson)",
       "blocks": [
         "35_poisson_crossmodel"
       ],
@@ -556,10 +556,10 @@
     },
     {
       "id": "J",
-      "frente": "Dynamic",
+      "front": "Dynamic",
       "tag": "evidence/frente-J",
       "commit": "74f9c2e",
-      "title": "Chegada de informação HT→FT (identidade dinâmica)",
+      "title": "Information arrival HT→FT (dynamic identity)",
       "blocks": [
         "36_inplay_resolution"
       ],
@@ -576,10 +576,10 @@
     },
     {
       "id": "K",
-      "frente": "Diversification",
+      "front": "Diversification",
       "tag": "evidence/frente-K",
       "commit": "b4b90eb",
-      "title": "Diversificação (skewness = fenômeno de aposta única)",
+      "title": "Diversification (skewness = single-bet phenomenon)",
       "blocks": [
         "37_diversification"
       ],
@@ -595,10 +595,10 @@
     },
     {
       "id": "L",
-      "frente": "Confound",
+      "front": "Confound",
       "tag": "evidence/frente-LMN",
       "commit": "f22f163",
-      "title": "Vantagem de casa secular vs invariância",
+      "title": "Secular home advantage vs invariance",
       "blocks": [
         "38_home_advantage"
       ],
@@ -614,10 +614,10 @@
     },
     {
       "id": "M",
-      "frente": "Tail risk",
+      "front": "Tail risk",
       "tag": "evidence/frente-LMN",
       "commit": "f22f163",
-      "title": "Risco de cauda realizado das estratégias",
+      "title": "Realised tail risk of the strategies",
       "blocks": [
         "39_tail_risk"
       ],
@@ -634,10 +634,10 @@
     },
     {
       "id": "N",
-      "frente": "Indices",
+      "front": "Indices",
       "tag": "evidence/frente-LMN",
       "commit": "f22f163",
-      "title": "Entropia + co-momento entre mercados",
+      "title": "Entropy + cross-market co-moment",
       "blocks": [
         "40_entropy_comoment"
       ],
@@ -652,10 +652,10 @@
     },
     {
       "id": "O",
-      "frente": "Model battery",
+      "front": "Model battery",
       "tag": "evidence/frente-O",
       "commit": "ece5117",
-      "title": "Bateria de modelos geradores (independência de modelo)",
+      "title": "Battery of generative models (model independence)",
       "blocks": [
         "41_model_battery"
       ],
@@ -675,10 +675,10 @@
     },
     {
       "id": "D1",
-      "frente": "Price discovery",
+      "front": "Price discovery",
       "tag": "evidence/frente-D1",
       "commit": "3b63b77",
-      "title": "Descoberta de preço: abertura→fechamento [canônico]",
+      "title": "Price discovery: opening→closing [canonical]",
       "blocks": [
         "42_open_close"
       ],
@@ -696,10 +696,10 @@
     },
     {
       "id": "H1",
-      "frente": "Natural experiment",
+      "front": "Natural experiment",
       "tag": "evidence/frente-H1",
       "commit": "3b63b77",
-      "title": "VAR escalonado: choque institucional não move a skewness (placebo)",
+      "title": "Staggered VAR: institutional shock does not move skewness (placebo)",
       "blocks": [
         "44_var"
       ],
@@ -716,10 +716,10 @@
     },
     {
       "id": "P6",
-      "frente": "Regime",
+      "front": "Regime",
       "tag": "evidence/frente-pre2005",
       "commit": "3b63b77",
-      "title": "Pré-2005: o regime moderno já vigora desde ~2000 [canônico]",
+      "title": "Pre-2005: the modern regime already holds since ~2000 [canonical]",
       "blocks": [
         "43_pre2005"
       ],
@@ -737,10 +737,10 @@
     },
     {
       "id": "Q",
-      "frente": "Similarity",
+      "front": "Similarity",
       "tag": "evidence/frente-Q",
       "commit": "c2a3849",
-      "title": "skew-meter: similaridade de assimetrias (escada de suficiência)",
+      "title": "skew-meter: similarity of skewnesses (sufficiency ladder)",
       "blocks": [
         "45_skewmeter"
       ],
@@ -759,10 +759,10 @@
     },
     {
       "id": "R",
-      "frente": "Bet-type",
+      "front": "Bet-type",
       "tag": "evidence/frente-R",
       "commit": "a67e465",
-      "title": "Tipo de aposta: a lei skew=f(competitividade) em todo o book",
+      "title": "Bet type: the law skew=f(competitiveness) across the book",
       "blocks": [
         "46_bettype"
       ],
@@ -782,10 +782,10 @@
     },
     {
       "id": "S",
-      "frente": "External validity",
+      "front": "External validity",
       "tag": "evidence/frente-S",
       "commit": "4cf9084",
-      "title": "Tênis: a lei é do esporte, não do futebol (camada canônica)",
+      "title": "Tennis: the law belongs to the sport, not to football (canonical layer)",
       "blocks": [
         "48_tennis"
       ],
@@ -805,10 +805,10 @@
     },
     {
       "id": "T",
-      "frente": "External validity",
+      "front": "External validity",
       "tag": "evidence/frente-T",
       "commit": "fa6ea6b",
-      "title": "Basquete: a lei vale num 3º esporte (NBA moneyline, camada canônica)",
+      "title": "Basketball: the law holds in a 3rd sport (NBA moneyline, canonical layer)",
       "blocks": [
         "49_basketball"
       ],
@@ -827,10 +827,10 @@
     },
     {
       "id": "U",
-      "frente": "Equivalence",
+      "front": "Equivalence",
       "tag": "evidence/frente-U",
       "commit": "0598390",
-      "title": "Equivalência temporal: 'sem deriva' como TOST (evidência de ausência)",
+      "title": "Temporal equivalence: 'no drift' as TOST (evidence of absence)",
       "blocks": [
         "51_temporal_equivalence"
       ],

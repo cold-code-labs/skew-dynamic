@@ -1,6 +1,7 @@
-"""19 — Prêmio de skewness (Frente C1): decompor o retorno esperado do favorito em
-margem (vig) + nível FLB mecânico + resíduo, e perguntar se sobra um "prêmio" por
-liga correlacionado com a SKEWNESS implícita, além do nível mecânico do FLB.
+"""19 — Skewness premium (Front C1): decompose the favourite's expected return into
+margin (vig) + mechanical FLB level + residual, and ask whether a per-league
+"premium" remains, correlated with the implied SKEWNESS, beyond the mechanical
+FLB level.
 """
 import numpy as np, pandas as pd
 import matplotlib
@@ -14,18 +15,18 @@ def main():
     print(f"N={len(df):,} | de-vig={C.DEVIG_METHOD}")
 
     g = premium.decompose_global(df)
-    print("\nGLOBAL — retorno do favorito = margem (vig) + FLB (calibração):")
-    print(f"  ret médio   = {g['ret_mean']:+.4f}")
-    print(f"  vig (margem)= {g['vig']:+.4f}   (perda à margem sob p de-vigada verdadeira)")
-    print(f"  FLB         = {g['flb']:+.4f}   (favorito ganha mais que o implícito)")
+    print("\nGLOBAL — favourite return = margin (vig) + FLB (calibration):")
+    print(f"  mean ret    = {g['ret_mean']:+.4f}")
+    print(f"  vig (margin)= {g['vig']:+.4f}   (loss to the margin under true de-vigged p)")
+    print(f"  FLB         = {g['flb']:+.4f}   (favourite wins more than implied)")
     print(f"  check (≈0)  = {g['residual_check']:+.2e}")
 
-    print("\nCurva mecânica do FLB (contribuição (1{win}−p_dv)·o por faixa de p_dv):")
+    print("\nMechanical FLB curve (contribution (1{win}−p_dv)·o by p_dv band):")
     cur = premium.flb_curve(df, nbins=10)
     print(cur.to_string(index=False,
           formatters={"p": "{:.3f}".format, "flb": "{:+.4f}".format}))
 
-    # por liga: vig + flb(sistemático+resíduo) + skewness implícita
+    # by league: vig + flb(systematic+residual) + implied skewness
     dec = premium.decompose_by_league(df, min_n=2000)
     sk = exante.pooled_by(df, "Division", min_n=2000)[["Division", "skew_exante"]]
     L = dec.merge(sk, on="Division").sort_values("residual")
@@ -33,14 +34,14 @@ def main():
     rr = stats.bootstrap_corr(L.residual.values, L.skew_exante.values)
     rf = stats.bootstrap_corr(L.flb.values, L.skew_exante.values)
     rv = stats.bootstrap_corr(L.vig.values, L.skew_exante.values)
-    print(f"\nPor liga ({len(L)}) — corr com a skewness implícita (boot IC95):")
+    print(f"\nBy league ({len(L)}) — corr with the implied skewness (boot CI95):")
     print(f"  vig       ~ skew : r={rv['r']:+.3f} [{rv['ci_lo']:+.2f},{rv['ci_hi']:+.2f}]  "
-          f"(margem ~ortogonal à assimetria)")
+          f"(margin ~orthogonal to the asymmetry)")
     print(f"  FLB total ~ skew : r={rf['r']:+.3f} [{rf['ci_lo']:+.2f},{rf['ci_hi']:+.2f}]  "
-          f"(o FLB acompanha a skewness — o prêmio bruto)")
-    print(f"  RESÍDUO   ~ skew : r={rr['r']:+.3f} [{rr['ci_lo']:+.2f},{rr['ci_hi']:+.2f}]  "
-          f"(prêmio ALÉM do nível mecânico)")
-    print("\n  extremos por resíduo:")
+          f"(the FLB tracks the skewness — the gross premium)")
+    print(f"  RESIDUAL  ~ skew : r={rr['r']:+.3f} [{rr['ci_lo']:+.2f},{rr['ci_hi']:+.2f}]  "
+          f"(premium BEYOND the mechanical level)")
+    print("\n  extremes by residual:")
     print(L[["Division", "p_fav_dv", "vig", "flb", "flb_syst", "residual",
              "skew_exante"]].head(4).to_string(index=False))
     print(L[["Division", "p_fav_dv", "vig", "flb", "flb_syst", "residual",
@@ -50,7 +51,7 @@ def main():
     L.to_csv(C.OUTDIR / "return_decomp.csv", index=False)
     print(f"\n  -> {C.OUTDIR / 'return_decomp.csv'}")
 
-    # figura: (a) curva FLB por p; (b) FLB total vs skew com resíduo destacado
+    # figure: (a) FLB curve by p; (b) total FLB vs skew with residual highlighted
     FIG = C.OUTDIR / "fig"; FIG.mkdir(parents=True, exist_ok=True)
     fig, axes = plt.subplots(1, 2, figsize=(10, 4))
     cur2 = premium.flb_curve(df, nbins=20)

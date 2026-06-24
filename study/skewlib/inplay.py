@@ -1,17 +1,17 @@
-"""Frente J — chegada de informação: intervalo → fim (HT→FT). Sem odds de abertura
-(D1 fora), usamos o RESULTADO do intervalo como choque de informação. Para o
-favorito PRÉ-JOGO, a prob de vitória se ATUALIZA com o placar do HT, e a skewness
-implícita do "resto do jogo" é de novo a identidade (1−2q)/√(q(1−q)) na prob
-condicional q. Mostra que o núcleo mecânico (W1) é DINÂMICO: vale a cada estado de
-informação, e a assimetria do favorito se RESOLVE conforme o placar anda.
+"""Front J — information arrival: half-time → full-time (HT→FT). Without opening odds
+(D1 out), we use the HALF-TIME result as an information shock. For the PRE-MATCH
+favourite, the win probability UPDATES with the HT score, and the implied skewness
+of the "rest of the match" is again the identity (1−2q)/√(q(1−q)) in the conditional
+probability q. Shows that the mechanical core (W1) is DYNAMIC: it holds at every state
+of information, and the favourite's asymmetry RESOLVES as the score moves.
 """
 import numpy as np, pandas as pd
 from . import exante
 
 
 def fav_state(df):
-    """Subconjunto com HT válido + estado do favorito PRÉ-JOGO no intervalo:
-    fav_is_home, margem do favorito no HT, e se o favorito venceu no FT."""
+    """Subset with valid HT + PRE-MATCH favourite state at half-time:
+    fav_is_home, favourite's HT margin, and whether the favourite won at FT."""
     d = df.dropna(subset=["HTHome", "HTAway", "HTResult"]).copy()
     P = d[["p_H", "p_D", "p_A"]].to_numpy(float)
     fav_home = P.argmax(1) == 0
@@ -23,15 +23,15 @@ def fav_state(df):
 
 
 def ht_bucket(margin):
-    """Estado do favorito no HT: atrás / empatado / à frente por 1 / por 2+."""
+    """Favourite state at HT: behind / level / ahead by 1 / by 2+."""
     m = np.asarray(margin)
     return np.select([m <= -1, m == 0, m == 1, m >= 2],
                      ["atrás", "empatado", "+1", "+2 ou mais"], default="?")
 
 
 def conditional_table(d, min_n=500):
-    """Por estado do favorito no HT: prob condicional de vitória q (realizada) e a
-    skewness implícita do 'resto do jogo' = identidade em q."""
+    """Per HT favourite state: conditional win probability q (realised) and the
+    implied skewness of the 'rest of the match' = identity in q."""
     d = d.copy()
     d["state"] = ht_bucket(d.ht_fav_margin.values)
     order = {"atrás": 0, "empatado": 1, "+1": 2, "+2 ou mais": 3}
@@ -48,8 +48,8 @@ def conditional_table(d, min_n=500):
 
 
 def martingale_check(d, p_edges=(0.0, 0.45, 0.50, 0.55, 1.0)):
-    """E[q condicional do HT | faixa de p0] deve voltar ≈ p0 (a info do HT é um
-    refinamento martingale da prob pré-jogo). Confirma calibração dinâmica."""
+    """E[HT conditional q | p0 bin] should come back ≈ p0 (the HT info is a
+    martingale refinement of the pre-match probability). Confirms dynamic calibration."""
     d = d.copy()
     d["pb"] = pd.cut(d.p0, list(p_edges))
     rows = []

@@ -1,9 +1,10 @@
-"""35 — Frente I: validação cruzada do mecanismo com modelo gerador independente.
-Um Poisson de GOLS (ataque/defesa+mando por liga-temporada) gera as probabilidades
-de resultado (via Skellam) e daí a skewness agrupada. Confrontamos com o empírico e
-com a curva do ordered-probit. Se a lei skewness=f(competitividade) emerge de um
-modelo de GOLS tão bem quanto do modelo de MARGEM, o mecanismo é independente do
-modelo — uma das validações mais fortes possíveis dentro do dataset.
+"""35 — Front I: cross-validation of the mechanism with an independent generative
+model. A GOALS Poisson (attack/defence+home edge by league-season) generates the
+result probabilities (via Skellam) and from them the pooled skewness. We confront it
+with the empirical and with the ordered-probit curve. If the law
+skewness=f(competitiveness) emerges from a GOALS model as well as from the MARGIN
+model, the mechanism is model-independent — one of the strongest validations possible
+within the dataset.
 """
 import numpy as np
 import matplotlib
@@ -15,25 +16,25 @@ from skewlib import io, returns, exante, goals, model, stats, provenance as prov
 def main():
     df = exante.add_exante(returns.add_returns(io.load()))
     df["season"] = np.where(df.date.dt.month >= 7, df.date.dt.year, df.date.dt.year - 1)
-    print(f"N={len(df):,} | ajustando Poisson de gols por liga-temporada...", flush=True)
+    print(f"N={len(df):,} | fitting goals Poisson by league-season...", flush=True)
     tab = goals.league_season_table(df, min_games=150, min_teams=8)
     L = goals.by_league(tab)
-    print(f"  {len(tab)} liga-temporadas ajustadas, {len(L)} ligas")
+    print(f"  {len(tab)} league-seasons fitted, {len(L)} leagues")
 
-    # a lei: o Poisson recupera a competitividade e a skewness?
+    # the law: does the Poisson recover the competitiveness and the skewness?
     rp = stats.bootstrap_corr(L.pfav_poisson.values, L.pfav_emp.values)
     rs = stats.bootstrap_corr(L.skew_poisson.values, L.skew_emp.values)
-    print(f"\nCROSS-MODEL (entre {len(L)} ligas):")
-    print(f"  corr(p_fav Poisson, p_fav empírico)   = {rp['r']:+.3f} "
+    print(f"\nCROSS-MODEL (across {len(L)} leagues):")
+    print(f"  corr(p_fav Poisson, empirical p_fav)  = {rp['r']:+.3f} "
           f"[{rp['ci_lo']:+.2f},{rp['ci_hi']:+.2f}]")
-    print(f"  corr(skew Poisson,  skew empírico)    = {rs['r']:+.3f} "
+    print(f"  corr(skew Poisson,  empirical skew)   = {rs['r']:+.3f} "
           f"[{rs['ci_lo']:+.2f},{rs['ci_hi']:+.2f}]")
-    print(f"  nível: skew Poisson médio {L.skew_poisson.mean():+.3f} vs "
-          f"empírico {L.skew_emp.mean():+.3f}")
-    print("  (o Poisson é um gerador mais grosso e subdispersa um pouco o p_fav,")
-    print("   daí o nível de skew menor; o que importa é a LEI — a ordenação bate.)")
+    print(f"  level: mean Poisson skew {L.skew_poisson.mean():+.3f} vs "
+          f"empirical {L.skew_emp.mean():+.3f}")
+    print("  (the Poisson is a coarser generator and slightly underdisperses p_fav,")
+    print("   hence the lower skew level; what matters is the LAW — the ordering matches.)")
 
-    # ambos caem na curva derivada do ordered-probit?
+    # do both fall on the ordered-probit derived curve?
     par = model.calibrate(home=(df.FTResult == "H").mean(),
                           draw=(df.FTResult == "D").mean(),
                           pfav=float(df.p_fav_dv.mean()))
@@ -44,9 +45,9 @@ def main():
     pred_poi = np.interp(L.pfav_poisson.values, cpf[o], csk[o])
     r_emp = float(np.corrcoef(pred_emp, L.skew_emp.values)[0, 1])
     r_poi = float(np.corrcoef(pred_poi, L.skew_poisson.values)[0, 1])
-    print(f"\n  na curva do ordered-probit: empírico r={r_emp:+.2f} | Poisson r={r_poi:+.2f}")
-    print("  → três modelos (margem latente, gols-Poisson, empírico) na MESMA curva:")
-    print("    a lei skewness=f(competitividade) é independente do modelo gerador.")
+    print(f"\n  on the ordered-probit curve: empirical r={r_emp:+.2f} | Poisson r={r_poi:+.2f}")
+    print("  → three models (latent margin, goals-Poisson, empirical) on the SAME curve:")
+    print("    the law skewness=f(competitiveness) is independent of the generative model.")
 
     C.OUTDIR.mkdir(exist_ok=True)
     L.to_csv(C.OUTDIR / "poisson_crossmodel_by_league.csv", index=False)

@@ -1,6 +1,6 @@
-% Cabeçalho LaTeX para o PDF de submissão (pandoc --pdf-engine=tectonic).
-% Numeração de linhas para revisão + mapeamento de sub/sobrescritos unicode que
-% a Times New Roman não traz como glifo (renderiza via \textsubscript/superscript).
+% LaTeX header for the submission PDF (pandoc --pdf-engine=tectonic).
+% Line numbering for review + mapping of unicode sub/superscripts that
+% Times New Roman does not provide as a glyph (rendered via \textsubscript/superscript).
 \usepackage{lineno}
 \linenumbers
 \usepackage{newunicodechar}
@@ -23,5 +23,5 @@
 \newunicodechar{⁵}{\textsuperscript{5}}
 \newunicodechar{⁶}{\textsuperscript{6}}
 \newunicodechar{⁻}{\textsuperscript{\textminus}}
-% espaçamento de parágrafo um pouco mais arejado p/ leitura em revisão
+% slightly airier paragraph spacing for easier reading during review
 \setlength{\parskip}{4pt}

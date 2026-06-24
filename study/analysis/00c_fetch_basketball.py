@@ -1,19 +1,19 @@
-"""Baixa resultados+odds da NBA (sportsbookreviewsonline.com) para data/basketball.csv.
+"""Downloads NBA results+odds (sportsbookreviewsonline.com) to data/basketball.csv.
 
-Uma página HTML por temporada; cada JOGO aparece em duas linhas (visitante V, casa H)
-com placares por período, placar final e a moneyline americana (ML). Mantém um
-subconjunto normalizado, UM JOGO por linha: season, date, visitor, home, pts_v, pts_h,
-ml_v, ml_h (moneyline americana inteira). O par é considerado um jogo válido só se
-ambos os placares e ambas as moneylines são numéricos, não houve empate e |ML| ≥ 100
-(uma moneyline de verdade nunca fica entre −100 e +100; valores menores são spreads que
-vazaram para a coluna). A de-vig, a conversão p/ odd decimal e a limpeza de overround
-ficam no adaptador (`skewlib/adapters/basketball.py`).
+One HTML page per season; each GAME appears on two rows (visitor V, home H) with
+per-period scores, final score and the American moneyline (ML). Keeps a normalised
+subset, ONE GAME per row: season, date, visitor, home, pts_v, pts_h, ml_v, ml_h
+(integer American moneyline). The pair is treated as a valid game only if both
+scores and both moneylines are numeric, there was no tie and |ML| ≥ 100 (a real
+moneyline never sits between −100 and +100; smaller values are spreads that leaked
+into the column). The de-vig, conversion to decimal odds and overround cleanup
+live in the adapter (`skewlib/adapters/basketball.py`).
 
-Sem dependências extras: a tabela é lida com `html.parser` da stdlib (o site não serve
-mais .xlsx). ToS do sportsbookreviewsonline restringe redistribuição — o
-data/basketball.csv NÃO é versionado (regenerável por este script).
+No extra dependencies: the table is read with the stdlib `html.parser` (the site no
+longer serves .xlsx). The sportsbookreviewsonline ToS restricts redistribution — the
+data/basketball.csv is NOT versioned (regenerable by this script).
 
-Uso:
+Usage:
     python analysis/00c_fetch_basketball.py                 # NBA, 2007–08 … 2022–23
     python analysis/00c_fetch_basketball.py --from 2010 --to 2022
 """
@@ -31,7 +31,7 @@ import pandas as pd
 BASE = "https://www.sportsbookreviewsonline.com/scoresoddsarchives"
 DEST = Path("data/basketball.csv")
 KEEP = ["season", "date", "visitor", "home", "pts_v", "pts_h", "ml_v", "ml_h"]
-# o certificado às vezes falha a validação; o conteúdo é público e conferido por hash
+# the certificate sometimes fails validation; the content is public and checked by hash
 _CTX = ssl.create_default_context()
 _CTX.check_hostname = False
 _CTX.verify_mode = ssl.CERT_NONE
@@ -39,7 +39,7 @@ _UA = {"User-Agent": "Mozilla/5.0"}
 
 
 class _Rows(HTMLParser):
-    """Extrai todas as linhas <tr> de células <td>/<th> (texto), sem libs externas."""
+    """Extracts all <tr> rows of <td>/<th> cells (text), without external libs."""
     def __init__(self):
         super().__init__()
         self.rows, self._cur, self._cell, self._buf = [], None, False, []
@@ -65,11 +65,11 @@ class _Rows(HTMLParser):
 
 
 def _biggest_table(html):
-    """A tabela de jogos é a de maior largura modal (Date, Rot, VH, …, ML, …)."""
+    """The games table is the one with the modal (most common) width (Date, Rot, VH, …, ML, …)."""
     p = _Rows()
     p.feed(html)
     if not p.rows:
-        raise ValueError("nenhuma tabela na página")
+        raise ValueError("no table on the page")
     width = Counter(len(r) for r in p.rows).most_common(1)[0][0]
     rows = [r for r in p.rows if len(r) == width]
     t = pd.DataFrame(rows)
@@ -78,7 +78,7 @@ def _biggest_table(html):
 
 
 def _mk_date(mmdd, y0, y1):
-    """Date 'MMDD' (3–4 dígitos) + temporada → data real (Out–Dez=y0, Jan–Jun=y1)."""
+    """Date 'MMDD' (3–4 digits) + season → real date (Oct–Dec=y0, Jan–Jun=y1)."""
     s = str(mmdd).strip()
     if not s.isdigit() or len(s) < 3:
         return pd.NaT
@@ -96,7 +96,7 @@ def _season(season, y0, y1):
     rows = []
     for i in range(0, len(t) - 1, 2):
         a, b = t.iloc[i], t.iloc[i + 1]
-        if a["VH"] != "V" or b["VH"] != "H":          # par desalinhado: pula
+        if a["VH"] != "V" or b["VH"] != "H":          # misaligned pair: skip
             continue
         fa = pd.to_numeric(a["Final"], errors="coerce")
         fb = pd.to_numeric(b["Final"], errors="coerce")
@@ -104,7 +104,7 @@ def _season(season, y0, y1):
         mb = pd.to_numeric(b["ML"], errors="coerce")
         if np.isnan([fa, fb, ma, mb]).any() or fa == fb:
             continue
-        if abs(ma) < 100 or abs(mb) < 100:            # moneyline real: |ML| ≥ 100
+        if abs(ma) < 100 or abs(mb) < 100:            # real moneyline: |ML| ≥ 100
             continue
         rows.append({"season": season, "date": _mk_date(a["Date"], y0, y1),
                      "visitor": a.get("Team", ""), "home": b.get("Team", ""),
@@ -115,7 +115,7 @@ def _season(season, y0, y1):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--from", dest="y0", type=int, default=2007)
-    ap.add_argument("--to", dest="y1", type=int, default=2022)   # ano inicial da temporada
+    ap.add_argument("--to", dest="y1", type=int, default=2022)   # starting year of the season
     a = ap.parse_args()
 
     frames = []
@@ -124,18 +124,18 @@ def main():
         try:
             df = _season(season, y, y + 1)
         except Exception as e:
-            print(f"  pulado {season}: {e}")
+            print(f"  skipped {season}: {e}")
             continue
         if len(df):
             frames.append(df)
-            print(f"  ok {season}: {len(df)} jogos")
+            print(f"  ok {season}: {len(df)} games")
 
     if not frames:
-        sys.exit("nada baixado (sem rede ou fonte indisponível).")
+        sys.exit("nothing downloaded (no network or source unavailable).")
     out = pd.concat(frames, ignore_index=True)[KEEP]
     DEST.parent.mkdir(parents=True, exist_ok=True)
     out.to_csv(DEST, index=False)
-    print(f"-> {DEST} ({len(out):,} jogos, {out.season.nunique()} temporadas)")
+    print(f"-> {DEST} ({len(out):,} games, {out.season.nunique()} seasons)")
 
 
 if __name__ == "__main__":

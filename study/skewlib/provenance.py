@@ -1,14 +1,14 @@
-"""Proveniência e versionamento: carimba CADA resultado com a versão exata do
-código (commit git) + o hash do dataset congelado + as versões das libs. É a
-cola entre evidência e versionamento — se um script mudar e um número se mover, o
-carimbo muda e o histórico (git) permite rastrear quando e por quê.
+"""Provenance and versioning: stamps EACH result with the exact code version
+(git commit) + the hash of the frozen dataset + the lib versions. It is the
+glue between evidence and versioning — if a script changes and a number moves, the
+stamp changes and the (git) history lets you trace when and why.
 
-Uso típico num bloco de análise:
+Typical use in an analysis block:
     from skewlib import provenance as prov
     prov.write_stamp("23_adversarial", metrics={"global_skew": 0.236})
-gera `outputs/_provenance/23_adversarial.json` (registro de execução, regenerável)
-com {git, data, env, metrics, generated_at}. O ledger versionado (lineage.json /
-docs/LINEAGE.md) é montado por `analysis/build_lineage.py` a partir desses números.
+generates `outputs/_provenance/23_adversarial.json` (execution record, regenerable)
+with {git, data, env, metrics, generated_at}. The versioned ledger (lineage.json /
+docs/LINEAGE.md) is assembled by `analysis/build_lineage.py` from these numbers.
 """
 import json, subprocess, sys, hashlib
 from datetime import datetime, timezone
@@ -27,20 +27,20 @@ def _git(*args, default=""):
 
 
 def git_info():
-    """Estado do repositório no momento da execução."""
+    """Repository state at the moment of execution."""
     commit = _git("rev-parse", "HEAD")
     dirty = bool(_git("status", "--porcelain"))
     return {
         "commit": commit,
         "short": commit[:8],
         "branch": _git("rev-parse", "--abbrev-ref", "HEAD"),
-        "dirty": dirty,                                # True = há mudanças não commitadas
+        "dirty": dirty,                                # True = there are uncommitted changes
         "describe": _git("describe", "--tags", "--always", "--dirty", default=commit[:8]),
     }
 
 
 def data_hash():
-    """Identidade do dataset congelado (de PROVENANCE.json; fallback = hash do CSV)."""
+    """Identity of the frozen dataset (from PROVENANCE.json; fallback = CSV hash)."""
     pf = C.DATA_PATH.parent / "PROVENANCE.json"
     if pf.exists():
         p = json.loads(pf.read_text())
@@ -66,7 +66,7 @@ def env_versions():
 
 
 def stamp(metrics=None):
-    """Carimbo completo: git + dados + libs + métricas-chave + timestamp."""
+    """Full stamp: git + data + libs + key metrics + timestamp."""
     return {
         "git": git_info(),
         "data": data_hash(),
@@ -77,7 +77,7 @@ def stamp(metrics=None):
 
 
 def write_stamp(name, metrics=None):
-    """Grava o carimbo de execução de um bloco em outputs/_provenance/<name>.json."""
+    """Writes a block's execution stamp to outputs/_provenance/<name>.json."""
     s = stamp(metrics)
     d = C.OUTDIR / "_provenance"
     d.mkdir(parents=True, exist_ok=True)

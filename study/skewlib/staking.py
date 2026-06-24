@@ -1,22 +1,22 @@
-"""Frente C3 — Kelly / staking ótimo sob a estrutura de skewness/CPT. O que a
-assimetria implica para o crescimento ótimo de banca?
+"""Front C3 — Kelly / optimal staking under the skewness/CPT structure. What does
+the asymmetry imply for optimal bankroll growth?
 
-Para uma aposta unitária no resultado de prob VERDADEIRA p a odd decimal o:
-  retorno X = (o−1) c/ prob p, −1 c/ prob (1−p);  EV = p·o − 1.
-A fração de Kelly maximiza E[log(1+f·X)]:
-  f* = (p·o − 1)/(o − 1)   (clipada em [0,1]; 0 se EV≤0).
-A taxa de crescimento ótima g* = p·log(1+f*(o−1)) + (1−p)·log(1−f*) e a
-APROXIMAÇÃO de momentos g ≈ μ − σ²/2 + skew·σ³/3 mostram o PAPEL da skewness:
-sob preços justos (o=1/p) todos têm EV 0 e f*=0; sob a margem real (o<1/p) o EV é
-negativo e Kelly manda NÃO apostar — a estrutura não oferece crescimento. O termo
-de skewness explica por que o apostador de azarão (skew +) tolera EV negativo:
-a assimetria positiva ADICIONA à utilidade log/crescimento.
+For a unit bet on the outcome with TRUE probability p at decimal odd o:
+  return X = (o−1) with prob p, −1 with prob (1−p);  EV = p·o − 1.
+The Kelly fraction maximises E[log(1+f·X)]:
+  f* = (p·o − 1)/(o − 1)   (clipped to [0,1]; 0 if EV≤0).
+The optimal growth rate g* = p·log(1+f*(o−1)) + (1−p)·log(1−f*) and the
+moment APPROXIMATION g ≈ μ − σ²/2 + skew·σ³/3 show the ROLE of skewness:
+under fair prices (o=1/p) everyone has EV 0 and f*=0; under the real margin (o<1/p) the EV is
+negative and Kelly says DO NOT bet — the structure offers no growth. The skewness
+term explains why the longshot bettor (skew +) tolerates negative EV:
+positive asymmetry ADDS to log utility/growth.
 """
 import numpy as np
 
 
 def kelly_fraction(p, o):
-    """f* de Kelly (clipada em [0,1]); 0 quando o EV ≤ 0."""
+    """Kelly f* (clipped to [0,1]); 0 when EV ≤ 0."""
     p = np.asarray(p, float); o = np.asarray(o, float)
     b = o - 1.0
     f = (p * o - 1.0) / b
@@ -24,7 +24,7 @@ def kelly_fraction(p, o):
 
 
 def growth_rate(p, o, f):
-    """Taxa de crescimento log esperada de apostar a fração f."""
+    """Expected log growth rate of betting the fraction f."""
     p = np.asarray(p, float); o = np.asarray(o, float); f = np.asarray(f, float)
     win = np.log1p(f * (o - 1.0))
     lose = np.log1p(-f)
@@ -32,8 +32,8 @@ def growth_rate(p, o, f):
 
 
 def moment_growth_terms(p, o, f):
-    """Decomposição de momentos de g(f) ≈ f·μ − f²σ²/2 + f³·m₃/3 (Taylor de
-    E[log(1+fX)]): isola a contribuição da SKEWNESS ao crescimento."""
+    """Moment decomposition of g(f) ≈ f·μ − f²σ²/2 + f³·m₃/3 (Taylor of
+    E[log(1+fX)]): isolates the SKEWNESS contribution to growth."""
     p = np.asarray(p, float); o = np.asarray(o, float); f = np.asarray(f, float)
     mu = p * o - 1.0
     s2 = p * (1 - p) * o ** 2

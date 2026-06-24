@@ -1,9 +1,9 @@
-"""33 — C3: Kelly / staking ótimo sob a estrutura de skewness. O que a assimetria
-implica para o crescimento de banca? (1) sob a margem real, Kelly manda NÃO apostar
-em quase tudo — a estrutura não dá crescimento (eficiência, ecoa C1); (2) a
-decomposição de momentos do log-crescimento isola o PAPEL da skewness e explica por
-que o apostador de azarão tolera EV negativo: a skew positiva ADICIONA à utilidade
-log, um "prêmio de skewness" que ele paga em EV.
+"""33 — C3: Kelly / optimal staking under the skewness structure. What does the
+asymmetry imply for bankroll growth? (1) under the real margin, Kelly dictates NOT
+betting on almost everything — the structure gives no growth (efficiency, echoes C1);
+(2) the moment decomposition of the log-growth isolates the ROLE of skewness and
+explains why the underdog bettor tolerates negative EV: the positive skew ADDS to the
+log utility, a "skewness premium" they pay in EV.
 """
 import numpy as np, pandas as pd
 import matplotlib
@@ -17,37 +17,37 @@ def main():
     p = df.p_fav_dv.values; o = df.o_fav.values
     print(f"N={len(df):,}")
 
-    # (1) Kelly sob a margem real: quase tudo f*=0
+    # (1) Kelly under the real margin: almost everything f*=0
     f_real = st.kelly_fraction(p, o)
     pos = float((f_real > 0).mean())
-    print(f"\n(1) KELLY sob a margem real (odds com vig):")
-    print(f"  fração de apostas com f*>0 (EV>0) = {pos:.1%}; f* médio = {f_real.mean():.4f}")
-    print(f"  → após a margem, não há crescimento a extrair (mercado eficiente, ~C1).")
+    print(f"\n(1) KELLY under the real margin (odds with vig):")
+    print(f"  fraction of bets with f*>0 (EV>0) = {pos:.1%}; mean f* = {f_real.mean():.4f}")
+    print(f"  → after the margin, there is no growth to extract (efficient market, ~C1).")
 
-    # (2) papel da skewness no crescimento — favorito (skew−) vs azarão (skew+)
-    #     a uma fração fixa pequena f0, decompõe g ≈ μ·f − σ²f²/2 + m₃f³/3
+    # (2) role of skewness in growth — favourite (skew−) vs underdog (skew+)
+    #     at a fixed small fraction f0, decomposes g ≈ μ·f − σ²f²/2 + m₃f³/3
     f0 = 0.05
-    pud = 1 - p; oud = 1.0 / np.clip(pud, 1e-6, None)        # azarão a odd justa do dog
-    # azarão real: a "outra ponta" — usa odd implícita do não-favorito
+    pud = 1 - p; oud = 1.0 / np.clip(pud, 1e-6, None)        # underdog at the dog's fair odd
+    # real underdog: the "other side" — uses the implied odd of the non-favourite
     P = df[["p_H", "p_D", "p_A"]].to_numpy(float)
     O = df[["OddHome", "OddDraw", "OddAway"]].to_numpy(float)
     j = P.argmax(1); i = np.arange(len(P))
-    # azarão = menor prob (maior odd)
+    # underdog = lowest prob (highest odd)
     k = P.argmin(1)
     p_dog, o_dog = P[i, k], O[i, k]
 
-    tf = st.moment_growth_terms(p, o, np.full_like(p, f0))     # favorito
-    td = st.moment_growth_terms(p_dog, o_dog, np.full_like(p_dog, f0))  # azarão
-    print(f"\n(2) DECOMPOSIÇÃO do log-crescimento a f={f0} (×1e3):")
-    print(f"  {'aposta':10} {'μ (mean)':>10} {'−σ²/2 (var)':>12} {'skew':>10} {'soma':>10}")
-    for lab, t in [("favorito", tf), ("azarão", td)]:
+    tf = st.moment_growth_terms(p, o, np.full_like(p, f0))     # favourite
+    td = st.moment_growth_terms(p_dog, o_dog, np.full_like(p_dog, f0))  # underdog
+    print(f"\n(2) DECOMPOSITION of the log-growth at f={f0} (×1e3):")
+    print(f"  {'bet':10} {'μ (mean)':>10} {'−σ²/2 (var)':>12} {'skew':>10} {'sum':>10}")
+    for lab, t in [("favourite", tf), ("underdog", td)]:
         m, v, s = t["mean"].mean()*1e3, t["var"].mean()*1e3, t["skew"].mean()*1e3
         print(f"  {lab:10} {m:>10.3f} {v:>12.3f} {s:>+10.3f} {m+v+s:>10.3f}")
-    print("  → no azarão o termo de SKEWNESS é positivo e grande: a assimetria")
-    print("    compensa parte do EV negativo no crescimento/utilidade — o canal")
-    print("    pelo qual o FLB (preferência por skew) sobrevive a ser EV-negativo.")
+    print("  → for the underdog the SKEWNESS term is positive and large: the asymmetry")
+    print("    compensates part of the negative EV in growth/utility — the channel")
+    print("    by which the FLB (skew preference) survives being EV-negative.")
 
-    # curva: termo de skewness ao longo de p_fav (a fração unitária)
+    # curve: skewness term along p_fav (the unit fraction)
     grid = np.linspace(0.05, 0.95, 60)
     skew_unit = np.array([st.moment_growth_terms(np.array([q]), np.array([1.0/q]),
                           np.array([f0]))["skew"][0] for q in grid]) * 1e3

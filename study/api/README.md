@@ -1,34 +1,34 @@
-# skew-meter — serviço `/measure`
+# skew-meter — `/measure` service
 
-Produtização do aparelho de **similaridade de assimetrias**: mede a assinatura de
-skewness de uma entrada nova (liga, janela, mercado) e a situa contra a lei
-`skew = f(competitividade)` — tudo sobre o `skewlib`, sem tocar o dataset bruto.
+Productisation of the **asymmetry-similarity** apparatus: it measures the skewness
+signature of a new input (league, window, market) and situates it against the law
+`skew = f(competitiveness)` — all on top of `skewlib`, without touching the raw dataset.
 
-O serviço carrega a **lei calibrada** e a **referência por liga** do
-`site/src/data/findings.json` (o mesmo artefato auditado, drift-clean, que alimenta
-o site). Runtime leve → deployável.
+The service loads the **calibrated law** and the **per-league reference** from
+`site/src/data/findings.json` (the same audited, drift-clean artefact that feeds
+the site). Lightweight runtime → deployable.
 
-## Rodar (local)
+## Run (local)
 
 ```bash
 cd study
 ./.venv/bin/pip install -r api/requirements.txt      # fastapi, uvicorn, pydantic
 ./.venv/bin/uvicorn api.main:app --reload --port 8000
-# OpenAPI interativo: http://localhost:8000/docs
+# Interactive OpenAPI: http://localhost:8000/docs
 ```
 
 ## Endpoints
 
-| Método | Rota | O quê |
+| Method | Route | What |
 |--------|------|-------|
-| GET  | `/health`    | vivo + sha do artefato + tamanho da lei |
-| GET  | `/integrity` | monitor: o `findings.json` é coerente? (contagem, completude, suporte da lei, margem, resíduos < espalhamento) |
-| POST | `/measure`   | assinatura de assimetria de uma entrada + vizinhos + veredito de equivalência + anomalias |
-| POST | `/reload`    | hot-reload do `findings.json` |
+| GET  | `/health`    | alive + artefact sha + law size |
+| GET  | `/integrity` | monitor: is `findings.json` coherent? (count, completeness, law support, margin, residuals < spread) |
+| POST | `/measure`   | asymmetry signature of an input + neighbours + equivalence verdict + anomalies |
+| POST | `/reload`    | hot-reload of `findings.json` |
 
-## `/measure` — modos (escada de custo)
+## `/measure` — modes (cost ladder)
 
-**com-odds** — odds 1X2 por jogo (de-vig barato por inverse-odds, corr≈1.0 com Shin):
+**with-odds** — 1X2 odds per match (cheap de-vig by inverse-odds, corr≈1.0 with Shin):
 
 ```bash
 curl -s localhost:8000/measure -H 'content-type: application/json' -d '{
@@ -37,26 +37,26 @@ curl -s localhost:8000/measure -H 'content-type: application/json' -d '{
 }'
 ```
 
-Alternativa: `{"p_fav":[...], "o_fav":[...]}` (probabilidades já de-vigadas; `o_fav`
-default = odds justas `1/p_fav`).
+Alternative: `{"p_fav":[...], "o_fav":[...]}` (already de-vigged probabilities; `o_fav`
+default = fair odds `1/p_fav`).
 
-**odds-free** — só a taxa de zebra do Elo (nenhuma odd); prevê a skew pela lei
-(teto corr≈0.83):
+**odds-free** — only the Elo upset rate (no odds at all); predicts the skew from the law
+(ceiling corr≈0.83):
 
 ```bash
 curl -s localhost:8000/measure -H 'content-type: application/json' \
   -d '{"mode":"odds-free","upset_rate":0.46}'
 ```
 
-### Resposta (com-odds), campos principais
+### Response (with-odds), main fields
 
-- `skew`, `var`, `exkurt`, `competitiveness` (média de p_fav), `skew_se` (piso bootstrap)
-- `predicted_skew` (a lei na competitividade), `residual` (assimetria idiossincrática)
-- `shape_label`, `nearest_raw` / `nearest_residual` (vizinhos)
-- `equivalence` — veredito TOST contra a liga mais próxima (`same_asymmetry`)
+- `skew`, `var`, `exkurt`, `competitiveness` (mean of p_fav), `skew_se` (bootstrap floor)
+- `predicted_skew` (the law at the competitiveness), `residual` (idiosyncratic asymmetry)
+- `shape_label`, `nearest_raw` / `nearest_residual` (neighbours)
+- `equivalence` — TOST verdict against the nearest league (`same_asymmetry`)
 - `anomalies` — `extrapolation` | `insufficient_sample` | `outlier_residual` | `low_n`
 
-## Testes
+## Tests
 
 ```bash
 cd study && ./.venv/bin/python -m pytest api/test_api.py -q

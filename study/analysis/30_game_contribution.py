@@ -1,8 +1,8 @@
-"""30 — Micro F2: que JOGOS carregam a skewness da liga? Decompõe o 3º momento
-agrupado por faixa de competitividade do jogo (p_fav). Torna explícito o
-"cancelamento de caudas": jogos de favorito FRACO (p≈0.5) contribuem skew positiva,
-de favorito FORTE (p alto) skew negativa — a competitividade no nível do JOGO
-determina a contribuição de skew do jogo.
+"""30 — Micro F2: which MATCHES carry the league's skewness? Decomposes the pooled
+3rd moment by match competitiveness band (p_fav). Makes the "tail cancellation"
+explicit: WEAK-favourite matches (p≈0.5) contribute positive skew, STRONG-favourite
+matches (high p) negative skew — the competitiveness at the MATCH level determines
+the match's skew contribution.
 """
 import numpy as np
 import matplotlib
@@ -14,18 +14,18 @@ from skewlib import io, returns, exante, intraleague as il, provenance as prov, 
 def main():
     df = exante.add_exante(returns.add_returns(io.load()))
     tab, tot = il.m3_contribution_by_bin(df)
-    print(f"N={len(df):,} | M₃ agrupado total = {tot:.1f}")
-    print("\nContribuição ao 3º momento por faixa de competitividade do jogo (p_fav):")
-    print(f"  {'faixa':16} {'n':>8} {'p_mid':>7} {'skew_jogo':>10} {'share M₃':>9}")
+    print(f"N={len(df):,} | total pooled M₃ = {tot:.1f}")
+    print("\nContribution to the 3rd moment by match competitiveness band (p_fav):")
+    print(f"  {'band':16} {'n':>8} {'p_mid':>7} {'skew_match':>10} {'share M₃':>9}")
     for r in tab.itertuples():
         print(f"  {r.bin:16} {r.n:>8,} {r.p_mid:>7.3f} {r.skew_match:>+10.3f} "
               f"{r.m3_share:>+9.1%}")
     pos = tab[tab.skew_match > 0].m3_share.sum()
     neg = tab[tab.skew_match < 0].m3_share.sum()
-    print(f"\n  jogos de favorito FRACO (p<0.5) somam {pos:+.0%} do M₃; "
-          f"favorito FORTE (p>0.5) {neg:+.0%}")
-    print("  → a skew da liga é a soma líquida: a competitividade do JOGO fixa o")
-    print("    sinal e a magnitude da contribuição de cada jogo (lei no nível micro).")
+    print(f"\n  WEAK-favourite matches (p<0.5) sum to {pos:+.0%} of M₃; "
+          f"STRONG-favourite (p>0.5) {neg:+.0%}")
+    print("  → the league skew is the net sum: the MATCH competitiveness fixes the")
+    print("    sign and the magnitude of each match's contribution (law at the micro level).")
 
     C.OUTDIR.mkdir(exist_ok=True)
     tab.to_csv(C.OUTDIR / "m3_contribution_by_bin.csv", index=False)

@@ -1,7 +1,7 @@
-"""38 — Frente L: vantagem de casa (HFA) secular vs invariância da skewness. A HFA
-caiu nas últimas décadas (e no choque COVID, W3). Se a skewness fica invariante
-apesar de a HFA se mover, fecha o confound do lado do MANDO: a assimetria depende da
-dispersão de p_fav (competitividade), não do nível da vantagem de casa.
+"""38 — Front L: secular home advantage (HFA) vs skewness invariance. HFA has
+fallen over recent decades (and at the COVID shock, W3). If skewness stays invariant
+even as HFA moves, it closes the confound on the HOME side: the asymmetry depends on
+the dispersion of p_fav (competitiveness), not on the level of home advantage.
 """
 import numpy as np
 import matplotlib
@@ -13,19 +13,19 @@ from skewlib import io, returns, exante, extras, stats, provenance as prov, conf
 def main():
     df = exante.add_exante(returns.add_returns(io.load()))
     T = extras.hfa_and_skew_by_year(df)
-    print(f"N={len(df):,} | {len(T)} anos")
+    print(f"N={len(df):,} | {len(T)} years")
 
     th = stats.ols(T.home_win.values, T.year.values - T.year.mean())
     ts = stats.ols(T["skew"].values, T.year.values - T.year.mean())
-    print(f"\nVANTAGEM DE CASA (taxa de vitória do mandante) no tempo:")
+    print(f"\nHOME ADVANTAGE (home win rate) over time:")
     print(f"  {T.home_win.iloc[0]:.3f} ({T.year.iloc[0]}) → {T.home_win.iloc[-1]:.3f} "
-          f"({T.year.iloc[-1]}) | β = {th['slope']:+.5f}/ano (Δ20a {th['slope']*20:+.3f})")
-    print(f"SKEWNESS no tempo: β = {ts['slope']:+.5f}/ano (Δ20a {ts['slope']*20:+.3f})")
+          f"({T.year.iloc[-1]}) | β = {th['slope']:+.5f}/yr (Δ20yr {th['slope']*20:+.3f})")
+    print(f"SKEWNESS over time: β = {ts['slope']:+.5f}/yr (Δ20yr {ts['slope']*20:+.3f})")
     rc = stats.bootstrap_corr(T.home_win.values, T["skew"].values)
-    print(f"\ncorr(HFA, skewness) ano a ano = {rc['r']:+.3f} "
+    print(f"\ncorr(HFA, skewness) year by year = {rc['r']:+.3f} "
           f"[{rc['ci_lo']:+.2f},{rc['ci_hi']:+.2f}]")
-    print("  → a HFA cai de forma marcada, mas a skewness não acompanha: a assimetria")
-    print("    depende da DISPERSÃO de p_fav, não do nível do mando (confound fechado).")
+    print("  → HFA falls markedly, but skewness does not follow: the asymmetry")
+    print("    depends on the DISPERSION of p_fav, not on the level of home advantage (confound closed).")
 
     C.OUTDIR.mkdir(exist_ok=True)
     T.to_csv(C.OUTDIR / "hfa_by_year.csv", index=False)

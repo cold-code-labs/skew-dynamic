@@ -1,19 +1,19 @@
-"""Frente F — dentro da liga / micro:
+"""Front F — within-league / micro:
 
-  F1  sazonalidade intra-temporada: a skewness se move do início ao fim da
-      temporada (conforme a classificação cristaliza)? Controlada por liga.
-  F2  contribuição por competitividade do JOGO: que jogos carregam a skewness da
-      liga? Decompõe o M₃ agrupado por faixa de p_fav (o cancelamento de caudas).
-  F3  decomposição por time: clubes dominantes (Elo alto) "puxam" a assinatura da
-      liga para jogos desequilibrados (skew negativa)?
+  F1  intra-season seasonality: does the skewness move from the start to the end of
+      the season (as the standings crystallise)? Controlled by league.
+  F2  contribution by MATCH competitiveness: which matches carry the league's
+      skewness? Decomposes the pooled M₃ by p_fav bin (the tail cancellation).
+  F3  per-team decomposition: do dominant clubs (high Elo) "pull" the league's
+      signature towards unbalanced matches (negative skew)?
 """
 import numpy as np, pandas as pd
 from . import exante
 
 
 def add_season_phase(df, nseg=3):
-    """Temporada real (Ago→Jul) + fase intra-temporada (terço por data dentro da
-    liga×temporada). Evita partir uma temporada europeia em 2 anos-calendário."""
+    """Real season (Aug→Jul) + intra-season phase (tertile by date within the
+    league×season). Avoids splitting a European season across 2 calendar years."""
     d = df.copy()
     d["season"] = np.where(d.date.dt.month >= 7, d.date.dt.year, d.date.dt.year - 1)
     d["frac"] = d.groupby(["Division", "season"]).date.rank(pct=True)
@@ -21,9 +21,9 @@ def add_season_phase(df, nseg=3):
     return d
 
 
-# ── F1 — sazonalidade intra-temporada ────────────────────────────────────────
+# ── F1 — intra-season seasonality ────────────────────────────────────────────
 def skew_by_phase(d, min_n=2000):
-    """Skewness ex-ante por fase intra-temporada (0=início … nseg−1=fim), global."""
+    """Ex-ante skewness by intra-season phase (0=start … nseg−1=end), global."""
     rows = []
     for ph, g in d.groupby("phase"):
         if len(g) < min_n:
@@ -35,7 +35,7 @@ def skew_by_phase(d, min_n=2000):
 
 
 def phase_shift_by_league(d, min_n=400):
-    """Δskew (fim − início) por liga: a temporada cristaliza a assimetria?"""
+    """Δskew (end − start) per league: does the season crystallise the asymmetry?"""
     rows = []
     for lg, g in d.groupby("Division"):
         ph = {p: exante.pooled_skew(x.p_fav_dv.values, x.o_fav.values)["skew"]
@@ -47,11 +47,11 @@ def phase_shift_by_league(d, min_n=400):
     return pd.DataFrame(rows)
 
 
-# ── F2 — contribuição por competitividade do jogo ────────────────────────────
+# ── F2 — contribution by match competitiveness ───────────────────────────────
 def m3_contribution_by_bin(df, edges=(0.0, 0.42, 0.46, 0.50, 0.55, 0.65, 1.0)):
-    """Decompõe o M₃ agrupado por faixa de p_fav: quais jogos carregam a skewness.
-    Sob odds quase justas M₃≈E[m₃(p)]; reportamos a contribuição (soma de m₃) e a
-    skew por faixa — o cancelamento de caudas (favoritos fracos + / fortes −)."""
+    """Decomposes the pooled M₃ by p_fav bin: which matches carry the skewness.
+    Under near-fair odds M₃≈E[m₃(p)]; we report the contribution (sum of m₃) and the
+    skew per bin — the tail cancellation (weak favourites + / strong −)."""
     p = df.p_fav_dv.values; o = df.o_fav.values
     _, _, m3 = exante.per_match_moments(p, o)
     tot = m3.sum()
@@ -65,10 +65,10 @@ def m3_contribution_by_bin(df, edges=(0.0, 0.42, 0.46, 0.50, 0.55, 0.65, 1.0)):
     return pd.DataFrame(rows), float(tot)
 
 
-# ── F3 — decomposição por time ───────────────────────────────────────────────
+# ── F3 — per-team decomposition ───────────────────────────────────────────────
 def team_long(df):
-    """Formato longo: 1 linha por (jogo, time) com Elo do time, prob de vitória
-    de-vigada e se foi o favorito do jogo."""
+    """Long format: 1 row per (match, team) with the team's Elo, de-vigged win
+    probability and whether it was the match favourite."""
     P = df[["p_H", "p_D", "p_A"]].to_numpy(float)
     fav_is_home = (P.argmax(1) == 0)
     home = pd.DataFrame({"team": df.HomeTeam.values, "elo": df.HomeElo.values,
@@ -81,8 +81,8 @@ def team_long(df):
 
 
 def team_dominance(df, min_games=200):
-    """Por time: Elo médio (dominância) e skewness ex-ante dos jogos que disputa.
-    Clubes dominantes ⇒ jogos desequilibrados ⇒ contribuição de skew negativa."""
+    """Per team: mean Elo (dominance) and ex-ante skewness of the matches it plays.
+    Dominant clubs ⇒ unbalanced matches ⇒ negative skew contribution."""
     tl = team_long(df)
     rows = []
     for tm, g in tl.groupby("team"):

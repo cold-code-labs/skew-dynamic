@@ -1,21 +1,21 @@
-"""50 — baixa o football-data.co.uk CANÔNICO (um CSV por liga-temporada) para
-`data/canonical/`. Fonte das frentes de DADO EXTERNO: D1 (abertura→fechamento,
-precisa das colunas *C* de fechamento, ~2019/20+) e pré-2005 (histórico 1X2
-multi-book, 2000/01+). O mirror congelado (data/matches.csv) não traz nem
-abertura/fechamento separados nem profundidade pré-2005.
+"""50 — downloads the CANONICAL football-data.co.uk (one CSV per league-season) into
+`data/canonical/`. Source for the EXTERNAL DATA fronts: D1 (opening→closing, needs the
+closing *C* columns, ~2019/20+) and pre-2005 (historical multi-book 1X2, 2000/01+).
+The frozen mirror (data/matches.csv) carries neither separate opening/closing odds nor
+pre-2005 depth.
 
-Idempotente: pula arquivos já presentes. Servidor sensível a rajadas — usa urllib
-com User-Agent e pausa entre requisições (curl em loop rápido é bloqueado).
+Idempotent: skips files already present. The server is burst-sensitive — uses urllib
+with a User-Agent and a pause between requests (a fast curl loop gets blocked).
 """
 import sys, time, urllib.request
 from pathlib import Path
 from skewlib import config as C
 
 DST = C.DATA_PATH.parent / "canonical"
-# ligas principais cobertas pelo caminho mmz4281 (top + 2ª divisões europeias)
+# main leagues covered by the mmz4281 path (top + 2nd European divisions)
 DIVS = ["E0", "E1", "E2", "E3", "SC0", "SC1", "SC2", "SC3", "D1", "D2", "I1", "I2",
         "SP1", "SP2", "F1", "F2", "N1", "B1", "P1", "T1", "G1"]
-# temporadas football-data: SSSS = 2 dígitos do ano de início + 2 do fim
+# football-data seasons: SSSS = 2 digits of the start year + 2 of the end year
 SEASONS = [f"{y%100:02d}{(y+1)%100:02d}" for y in range(2000, 2025)]   # 0001 … 2425
 UA = "Mozilla/5.0 (research; skew-dynamic; coldcodelabs.com)"
 
@@ -40,8 +40,8 @@ def fetch(seasons=SEASONS, divs=DIVS, pause=0.25):
             except Exception:
                 miss += 1
             time.sleep(pause)
-    print(f"canonical: novos {ok} | sem dado {miss} | já tinha {skip} | "
-          f"total {len(list(DST.glob('*.csv')))} arquivos em {DST}")
+    print(f"canonical: new {ok} | no data {miss} | already had {skip} | "
+          f"total {len(list(DST.glob('*.csv')))} files in {DST}")
 
 
 if __name__ == "__main__":

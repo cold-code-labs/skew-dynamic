@@ -1,12 +1,13 @@
-"""Frente G — robustez adversarial (pré-submissão). Três ataques ao achado:
+"""Front G — adversarial robustness (pre-submission). Three attacks on the finding:
 
-  G1  o de-vig é confiável e estável? Reliability diagram + decomposição de Brier
-      (Murphy) do favorito por liga/ano; e a skewness é invariante ao MÉTODO de
-      de-vig e à casa (Odd média vs Max melhor preço, + consenso multi-casa).
-  G2  painel BALANCEADO estrito: refaz a série GLOBAL usando só ligas presentes
-      em TODOS os anos — mata 100% o confound de composição (P1 fez por-liga).
-  G3  block-bootstrap sobre TEMPORADAS (reamostra anos inteiros, respeitando
-      dependência intra-ano) → IC honesto de todos os números-título.
+  G1  is the de-vig reliable and stable? Reliability diagram + Brier decomposition
+      (Murphy) of the favourite per league/year; and skewness is invariant to the
+      de-vig METHOD and to the bookmaker (average Odd vs Max best price, +
+      multi-book consensus).
+  G2  strict BALANCED panel: rebuilds the GLOBAL series using only leagues present
+      in ALL years — kills 100% of the composition confound (P1 did it per-league).
+  G3  block-bootstrap over SEASONS (resamples whole years, respecting the
+      intra-year dependence) → honest CI for all the headline numbers.
 """
 import numpy as np, pandas as pd
 from . import exante, devig
@@ -14,16 +15,16 @@ from . import exante, devig
 OUTCOMES = np.array(["H", "D", "A"])
 
 
-# ── G1 — confiabilidade do de-vig ────────────────────────────────────────────
+# ── G1 — de-vig reliability ──────────────────────────────────────────────────
 def fav_won(df):
-    """1.0 se o favorito (argmax p de-vigado) venceu o jogo, 0.0 caso contrário."""
+    """1.0 if the favourite (argmax de-vigged p) won the game, 0.0 otherwise."""
     P = df[["p_H", "p_D", "p_A"]].to_numpy(float)
     j = P.argmax(1)
     return (OUTCOMES[j] == df["FTResult"].to_numpy()).astype(float)
 
 
 def reliability(p, y, nbins=12, min_bin=40):
-    """Diagrama de confiabilidade: prob média prevista vs frequência observada."""
+    """Reliability diagram: mean predicted prob vs observed frequency."""
     p = np.asarray(p, float); y = np.asarray(y, float)
     edges = np.linspace(p.min(), p.max(), nbins + 1)
     idx = np.clip(np.digitize(p, edges) - 1, 0, nbins - 1)
@@ -38,8 +39,8 @@ def reliability(p, y, nbins=12, min_bin=40):
 
 
 def brier_decomp(p, y, nbins=12):
-    """Decomposição de Murphy do Brier score: BS = REL − RES + UNC.
-    REL = erro de calibração (↓ melhor); RES = resolução; UNC = incerteza base."""
+    """Murphy decomposition of the Brier score: BS = REL − RES + UNC.
+    REL = calibration error (↓ better); RES = resolution; UNC = base uncertainty."""
     p = np.asarray(p, float); y = np.asarray(y, float)
     N = len(y); obar = y.mean()
     edges = np.linspace(p.min(), p.max(), nbins + 1)
@@ -58,8 +59,8 @@ def brier_decomp(p, y, nbins=12):
 
 
 def reliability_by(df, col, min_n=3000, nbins=10):
-    """REL (erro de calibração) do favorito por grupo (liga ou ano). Estável e
-    pequeno ⇒ o de-vig de Shin é confiável de forma homogênea."""
+    """REL (calibration error) of the favourite per group (league or year). Stable
+    and small ⇒ the Shin de-vig is reliable in a homogeneous way."""
     rows = []
     for key, g in df.groupby(col):
         if len(g) < min_n:
@@ -71,14 +72,14 @@ def reliability_by(df, col, min_n=3000, nbins=10):
 
 
 def skew_by_devig(df):
-    """Skewness agrupada do favorito sob vários de-vigs e casas (consenso
-    multi-casa = média das probs de-vigadas de Odd e Max). Invariância ⇒ o achado
-    não depende do método nem da casa."""
+    """Pooled skewness of the favourite under various de-vigs and bookmakers
+    (multi-book consensus = average of the de-vigged probs of Odd and Max).
+    Invariance ⇒ the finding depends on neither the method nor the bookmaker."""
     odd = ("OddHome", "OddDraw", "OddAway")
     mx = ("MaxHome", "MaxDraw", "MaxAway")
     out = {}
-    # Max* (melhor preço) tem faltantes/inválidos — restringe à amostra limpa e
-    # COMUM p/ comparar maçãs com maçãs (mesmas linhas em todos os métodos).
+    # Max* (best price) has missing/invalid values — restrict to the clean and
+    # COMMON sample to compare like with like (same rows in all methods).
     has_max = all(c in df for c in mx)
     base = df
     if has_max:
@@ -91,27 +92,27 @@ def skew_by_devig(df):
             continue
         _, _, d = exante.market_skew(base, cols, method=meth)
         out[name] = d["skew"]
-    # consenso multi-casa: média das probabilidades de-vigadas (Shin) das 2 casas
+    # multi-book consensus: average of the de-vigged probabilities (Shin) of the 2 books
     if has_max and len(base):
         po = devig.devig_frame(base, method="shin", cols=odd)[["p_H", "p_D", "p_A"]].to_numpy()
         pm = devig.devig_frame(base, method="shin", cols=mx)[["p_H", "p_D", "p_A"]].to_numpy()
         pc = 0.5 * (po + pm); pc = pc / pc.sum(1, keepdims=True)
         j = pc.argmax(1); i = np.arange(len(pc))
-        oc = 1.0 / pc[i, j]                       # odd justa do consenso
+        oc = 1.0 / pc[i, j]                       # fair odd of the consensus
         out["consenso"] = exante.pooled_skew(pc[i, j], oc)["skew"]
     return out
 
 
-# ── G2 — painel balanceado estrito ───────────────────────────────────────────
+# ── G2 — strict balanced panel ───────────────────────────────────────────────
 def balanced_leagues(panel, min_frac=1.0):
-    """Ligas presentes em ≥ min_frac das temporadas do painel (1.0 = todas)."""
+    """Leagues present in ≥ min_frac of the panel's seasons (1.0 = all)."""
     nseasons = panel.season.nunique()
     cnt = panel.groupby("Division").season.nunique()
     return list(cnt[cnt >= np.ceil(min_frac * nseasons)].index)
 
 
 def global_series_balanced(df, leagues):
-    """Série GLOBAL de skewness ex-ante por ano, restrita às ligas balanceadas."""
+    """GLOBAL ex-ante skewness series per year, restricted to the balanced leagues."""
     d = df[df.Division.isin(leagues)].copy()
     d["season"] = d.date.dt.year
     rows = []
@@ -122,10 +123,10 @@ def global_series_balanced(df, leagues):
     return pd.DataFrame(rows).sort_values("season").reset_index(drop=True)
 
 
-# ── G3 — block-bootstrap sobre temporadas ────────────────────────────────────
+# ── G3 — block-bootstrap over seasons ─────────────────────────────────────────
 def season_block_bootstrap(df, stat_fn, B=400, seed=42):
-    """IC de `stat_fn(boot_df)` reamostrando TEMPORADAS inteiras com reposição
-    (preserva a dependência intra-ano que a reamostragem de jogos quebraria)."""
+    """CI of `stat_fn(boot_df)` resampling whole SEASONS with replacement
+    (preserves the intra-year dependence that resampling games would break)."""
     d = df.copy()
     d["season"] = d.date.dt.year
     seasons = sorted(d.season.unique())
@@ -135,7 +136,7 @@ def season_block_bootstrap(df, stat_fn, B=400, seed=42):
     for _ in range(B):
         pick = rng.choice(seasons, len(seasons), replace=True)
         vals.append(stat_fn(pd.concat([groups[s] for s in pick], ignore_index=True)))
-    vals = np.array([v for v in vals if v == v])      # descarta NaN
+    vals = np.array([v for v in vals if v == v])      # discard NaN
     return {"mean": float(vals.mean()), "ci_lo": float(np.percentile(vals, 2.5)),
             "ci_hi": float(np.percentile(vals, 97.5)), "se": float(vals.std())}
 
@@ -145,7 +146,7 @@ def stat_global_skew(d):
 
 
 def stat_league_corr(d, min_n=1500):
-    """corr(skew_liga, p_fav_liga) entre ligas — a lei estrutural transversal."""
+    """corr(skew_league, p_fav_league) across leagues — the cross-sectional structural law."""
     rows = []
     for lg, g in d.groupby("Division"):
         if len(g) < min_n:

@@ -1,14 +1,14 @@
-"""42 — Frente D1: descoberta de preço (abertura → fechamento). [DADO CANÔNICO]
-O mirror congelado só tem o preço de fechamento; aqui usamos o football-data.co.uk
-canônico, que traz odds de ABERTURA (Avg*) e FECHAMENTO (Avg*C) do mesmo jogo
-(2019/20–2023/24, 21 ligas). Pergunta central da tese: a assimetria estrutural
-JÁ NASCE no preço de abertura, ou o mercado a "descobre" ao longo da negociação?
+"""42 — Front D1: price discovery (opening → closing). [CANONICAL DATA]
+The frozen mirror only has the closing price; here we use the canonical
+football-data.co.uk, which carries OPENING (Avg*) and CLOSING (Avg*C) odds of the
+same match (2019/20–2023/24, 21 leagues). Central question of the thesis: is the
+structural asymmetry ALREADY BORN in the opening price, or does the market "discover"
+it over the course of trading?
 
-Se a skewness é herdada da estrutura competitiva (não produzida pelo apreçamento),
-ela deve estar presente já na abertura e quase não se mover até o fechamento —
-mesmo que o fechamento seja mais afiado (margem menor, melhor calibração). Estende
-a ortogonalidade da margem (W4/D2, entre books) para o eixo TEMPORAL da formação
-de preço.
+If skewness is inherited from the competitive structure (not produced by pricing),
+it should already be present at the open and barely move through to the close —
+even if the close is sharper (smaller margin, better calibration). It extends the
+margin orthogonality (W4/D2, across books) to the TEMPORAL axis of price formation.
 """
 import numpy as np, pandas as pd
 import matplotlib
@@ -24,42 +24,42 @@ def _overround(g, cols):
 
 def main():
     df = fc.load()
-    # jogos com abertura E fechamento 1X2 válidos
+    # matches with valid opening AND closing 1X2
     d = df.copy()
     for c in (*fc.OPEN_AVG, *fc.CLOSE_AVG):
         d[c] = pd.to_numeric(d[c], errors="coerce")
     d = d.dropna(subset=[*fc.OPEN_AVG, *fc.CLOSE_AVG])
     for c in (*fc.OPEN_AVG, *fc.CLOSE_AVG):
         d = d[d[c] > C.MIN_ODD]
-    print(f"N={len(d):,} | {d.Division.nunique()} ligas | {d.season.min()}–{d.season.max()} "
-          f"(odds de abertura E fechamento)", flush=True)
+    print(f"N={len(d):,} | {d.Division.nunique()} leagues | {d.season.min()}–{d.season.max()} "
+          f"(opening AND closing odds)", flush=True)
 
-    # ── de-vig abertura e fechamento; favorito definido na ABERTURA ──
+    # ── de-vig opening and closing; favourite defined at the OPEN ──
     do = devig.devig_frame(d, cols=fc.OPEN_AVG)
     dc = devig.devig_frame(d, cols=fc.CLOSE_AVG)
     Po = do[["p_H", "p_D", "p_A"]].to_numpy(float)
     Pc = dc[["p_H", "p_D", "p_A"]].to_numpy(float)
     Oo = d[list(fc.OPEN_AVG)].to_numpy(float)
     Oc = d[list(fc.CLOSE_AVG)].to_numpy(float)
-    i = np.arange(len(d)); j = Po.argmax(1)            # favorito na abertura
-    p0 = Po[i, j]; p1 = Pc[i, j]                        # mesma perna: prob abre→fecha
+    i = np.arange(len(d)); j = Po.argmax(1)            # favourite at the open
+    p0 = Po[i, j]; p1 = Pc[i, j]                        # same leg: prob open→close
     o0 = Oo[i, j]; o1 = Oc[i, j]
     res = d.FTResult.map({"H": 0, "D": 1, "A": 2}).to_numpy()
     fav_won = (res == j).astype(float)
 
-    # margem e calibração: o fechamento é mais afiado?
+    # margin and calibration: is the close sharper?
     over_o = (1.0 / Oo).sum(1).mean(); over_c = (1.0 / Oc).sum(1).mean()
     brier_o = float(np.mean((fav_won - p0) ** 2)); brier_c = float(np.mean((fav_won - p1) ** 2))
     drift = p1 - p0
-    print(f"\nMARGEM e CALIBRAÇÃO (favorito da abertura, {len(d):,} jogos):")
-    print(f"  overround   abertura {over_o:.4f} → fechamento {over_c:.4f} "
-          f"(margem cai {100*(over_o-over_c):.2f} p.p.)")
-    print(f"  Brier(fav)  abertura {brier_o:.4f} → fechamento {brier_c:.4f} "
-          f"({'fechamento mais afiado' if brier_c < brier_o else 'sem ganho'})")
-    print(f"  prob do favorito: abre {p0.mean():.4f} → fecha {p1.mean():.4f} "
-          f"(drift médio {drift.mean():+.4f}; o favorito {'firma' if drift.mean()>0 else 'afrouxa'})")
+    print(f"\nMARGIN and CALIBRATION (opening favourite, {len(d):,} matches):")
+    print(f"  overround   open {over_o:.4f} → close {over_c:.4f} "
+          f"(margin falls {100*(over_o-over_c):.2f} p.p.)")
+    print(f"  Brier(fav)  open {brier_o:.4f} → close {brier_c:.4f} "
+          f"({'close sharper' if brier_c < brier_o else 'no gain'})")
+    print(f"  favourite prob: opens {p0.mean():.4f} → closes {p1.mean():.4f} "
+          f"(mean drift {drift.mean():+.4f}; the favourite {'firms' if drift.mean()>0 else 'eases'})")
 
-    # ── skewness por liga: abertura vs fechamento ──
+    # ── skewness by league: opening vs closing ──
     rows = []
     for lg, g in d.groupby("Division"):
         po, oo, so = exante.market_skew(g, fc.OPEN_AVG)
@@ -72,20 +72,20 @@ def main():
                      "over_close": _overround(g, fc.CLOSE_AVG)})
     L = pd.DataFrame(rows)
     go = exante.market_skew(d, fc.OPEN_AVG)[2]; gc = exante.market_skew(d, fc.CLOSE_AVG)[2]
-    print(f"\nSKEWNESS abertura vs fechamento:")
-    print(f"  global: abertura {go['skew']:+.3f} (within {go['within_frac']:.3f}) → "
-          f"fechamento {gc['skew']:+.3f} (within {gc['within_frac']:.3f})")
+    print(f"\nSKEWNESS opening vs closing:")
+    print(f"  global: open {go['skew']:+.3f} (within {go['within_frac']:.3f}) → "
+          f"close {gc['skew']:+.3f} (within {gc['within_frac']:.3f})")
     rcc = stats.bootstrap_corr(L.skew_open.values, L.skew_close.values)
-    print(f"  corr(skew_open, skew_close) entre {len(L)} ligas = {rcc['r']:+.3f} "
+    print(f"  corr(skew_open, skew_close) across {len(L)} leagues = {rcc['r']:+.3f} "
           f"[{rcc['ci_lo']:+.2f},{rcc['ci_hi']:+.2f}]")
     lo = stats.bootstrap_corr(L.skew_open.values, L.pfav_open.values)
     lc = stats.bootstrap_corr(L.skew_close.values, L.pfav_close.values)
-    print(f"  lei estrutural corr(skew, p_fav): abertura {lo['r']:+.3f} | fechamento {lc['r']:+.3f}")
-    print(f"  Δskew médio (fecha−abre) por liga = {(L.skew_close-L.skew_open).mean():+.4f} "
+    print(f"  structural law corr(skew, p_fav): open {lo['r']:+.3f} | close {lc['r']:+.3f}")
+    print(f"  mean Δskew (close−open) by league = {(L.skew_close-L.skew_open).mean():+.4f} "
           f"(sd {(L.skew_close-L.skew_open).std():.4f})")
-    print("\n  → a assimetria já está NO PREÇO DE ABERTURA; o fechamento a afina a")
-    print("    margem/calibração mas quase não move a skewness (corr ~1). A assimetria")
-    print("    é herdada da estrutura, não produzida pela negociação — eixo temporal de W4/D2.")
+    print("\n  → the asymmetry is already IN THE OPENING PRICE; the close refines the")
+    print("    margin/calibration but barely moves the skewness (corr ~1). The asymmetry")
+    print("    is inherited from structure, not produced by trading — the temporal axis of W4/D2.")
 
     C.OUTDIR.mkdir(exist_ok=True)
     L.to_csv(C.OUTDIR / "open_close_by_league.csv", index=False)

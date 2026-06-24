@@ -1,8 +1,9 @@
-"""36 — Frente J: chegada de informação (HT→FT). O placar do intervalo atualiza a
-prob de vitória do favorito pré-jogo; a skewness do "resto do jogo" é de novo a
-identidade (1−2q)/√(q(1−q)) na prob condicional q. Mostra que (i) o núcleo mecânico
-é DINÂMICO (vale a cada estado de info) e (ii) a assimetria se RESOLVE com o placar:
-favorito à frente ⇒ q alto ⇒ skew negativa; atrás ⇒ q baixo ⇒ skew positiva.
+"""36 — Front J: information arrival (HT→FT). The half-time scoreline updates the
+pre-match favourite's win probability; the skewness of the "rest of the match" is
+again the identity (1−2q)/√(q(1−q)) in the conditional probability q. Shows that
+(i) the mechanical core is DYNAMIC (it holds at every information state) and (ii) the
+asymmetry RESOLVES with the scoreline: favourite ahead ⇒ high q ⇒ negative skew;
+behind ⇒ low q ⇒ positive skew.
 """
 import numpy as np
 import matplotlib
@@ -14,27 +15,27 @@ from skewlib import io, returns, exante, inplay, provenance as prov, config as C
 def main():
     df = exante.add_exante(returns.add_returns(io.load()))
     d = inplay.fav_state(df)
-    print(f"N(HT válido)={len(d):,} de {len(df):,} | favorito pré-jogo, estado no intervalo")
+    print(f"N(valid HT)={len(d):,} of {len(df):,} | pre-match favourite, half-time state")
 
     sk0 = exante.pooled_skew(d.p_fav_dv.values, d.o_fav.values)["skew"]
-    print(f"\nPRÉ-JOGO: p_fav {d.p0.mean():.3f} | skew agrupada {sk0:+.3f}")
+    print(f"\nPRE-MATCH: p_fav {d.p0.mean():.3f} | pooled skew {sk0:+.3f}")
 
     tab = inplay.conditional_table(d)
-    print("\nESTADO DO FAVORITO NO INTERVALO → prob condicional e skewness do resto do jogo:")
-    print(f"  {'estado':12} {'share':>7} {'q (vit.)':>9} {'skew resto':>11} {'n':>8}")
+    print("\nFAVOURITE STATE AT HALF-TIME → conditional probability and skewness of the rest of the match:")
+    print(f"  {'state':12} {'share':>7} {'q (win)':>9} {'skew rest':>11} {'n':>8}")
     for r in tab.itertuples():
         print(f"  {r.state:12} {r.share:>7.1%} {r.q_cond:>9.3f} {r.skew_cond:>+11.3f} {r.n:>8,}")
-    print("  → a assimetria RESOLVE: à frente a aposta vira skew NEGATIVA (favorito")
-    print("    quase ganhou), atrás vira POSITIVA (vira lotérica) — a identidade")
-    print("    mecânica vale DINAMICAMENTE, não só no apito inicial.")
+    print("  → the asymmetry RESOLVES: ahead, the bet turns NEGATIVELY skewed (the")
+    print("    favourite has nearly won), behind it turns POSITIVE (it becomes lottery-like)")
+    print("    — the mechanical identity holds DYNAMICALLY, not only at kick-off.")
 
     mc = inplay.martingale_check(d)
-    print("\nCALIBRAÇÃO DINÂMICA (E[q do HT | faixa de p0] ≈ p0 — refinamento martingale):")
+    print("\nDYNAMIC CALIBRATION (E[HT q | p0 band] ≈ p0 — martingale refinement):")
     for r in mc.itertuples():
-        print(f"  {r.p_bin:14} p0 {r.p0_mean:.3f} → q médio FT {r.q_mean:.3f} (n={r.n:,})")
+        print(f"  {r.p_bin:14} p0 {r.p0_mean:.3f} → mean FT q {r.q_mean:.3f} (n={r.n:,})")
     err = float(np.mean(np.abs(mc.p0_mean - mc.q_mean)))
-    print(f"  erro médio |p0 − q| = {err:.4f} (≈0 ⇒ a prob pré-jogo é bem calibrada e")
-    print("    o HT a refina sem viés: skewness implícita coerente em todo estado de info.)")
+    print(f"  mean error |p0 − q| = {err:.4f} (≈0 ⇒ the pre-match probability is well calibrated")
+    print("    and HT refines it without bias: implied skewness is coherent at every information state.)")
 
     C.OUTDIR.mkdir(exist_ok=True)
     tab.to_csv(C.OUTDIR / "inplay_conditional.csv", index=False)

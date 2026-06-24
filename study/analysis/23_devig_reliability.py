@@ -1,9 +1,10 @@
-"""23 — Robustez adversarial G1: o de-vig é confiável e a skewness independe dele?
-Confiabilidade do favorito de-vigado (Shin) via reliability diagram + decomposição
-de Brier (Murphy: BS = REL − RES + UNC) por liga e por ano — se o erro de
-calibração REL é pequeno e estável, o de-vig não fabrica nem distorce a assimetria.
-E a skewness agrupada sob vários de-vigs (Shin/mult/power) e casas (Odd média vs
-Max melhor preço, + consenso multi-casa) — invariância ⇒ achado não é artefato do método.
+"""23 — Adversarial robustness G1: is the de-vig reliable and is the skewness
+independent of it? Reliability of the de-vigged favourite (Shin) via reliability
+diagram + Brier decomposition (Murphy: BS = REL − RES + UNC) by league and by year —
+if the calibration error REL is small and stable, the de-vig neither fabricates nor
+distorts the asymmetry. And the pooled skewness under several de-vigs (Shin/mult/power)
+and books (mean Odd vs Max best price, + multi-book consensus) — invariance ⇒ finding
+is not an artefact of the method.
 """
 import numpy as np, pandas as pd
 import matplotlib
@@ -19,33 +20,33 @@ def main():
     print(f"N={len(df):,} | de-vig={C.DEVIG_METHOD}")
 
     g = adv.brier_decomp(df.p_fav_dv.values, y)
-    print(f"\nGLOBAL — favorito: acerto observado {g['obar']:.3f} vs prob média "
+    print(f"\nGLOBAL — favourite: observed hit rate {g['obar']:.3f} vs mean prob "
           f"{df.p_fav_dv.mean():.3f}")
     print(f"  Brier {g['brier']:.4f} = REL {g['rel']:.4f} − RES {g['res']:.4f} "
           f"+ UNC {g['unc']:.4f}")
-    print(f"  erro de calibração REL = {g['rel']:.4f} (≈0 ⇒ Shin bem calibrado)")
+    print(f"  calibration error REL = {g['rel']:.4f} (≈0 ⇒ Shin well calibrated)")
 
     rl = adv.reliability_by(df, "Division", min_n=3000)
     ry = adv.reliability_by(df, "season", min_n=3000)
-    print(f"\nESTABILIDADE do REL (erro de calibração):")
-    print(f"  entre {len(rl)} ligas:    média {rl.rel.mean():.4f} · sd {rl.rel.std():.4f} "
+    print(f"\nSTABILITY of REL (calibration error):")
+    print(f"  across {len(rl)} leagues:  mean {rl.rel.mean():.4f} · sd {rl.rel.std():.4f} "
           f"· max {rl.rel.max():.4f}")
-    print(f"  entre {len(ry)} temporadas: média {ry.rel.mean():.4f} · sd {ry.rel.std():.4f} "
+    print(f"  across {len(ry)} seasons:  mean {ry.rel.mean():.4f} · sd {ry.rel.std():.4f} "
           f"· max {ry.rel.max():.4f}")
-    print("  → o resíduo do de-vig é pequeno e homogêneo (não há liga/ano mal calibrado).")
+    print("  → the de-vig residual is small and homogeneous (no poorly calibrated league/year).")
 
     sk = adv.skew_by_devig(df)
-    print(f"\nSKEWNESS sob de-vig/casa (invariância ao método):")
+    print(f"\nSKEWNESS under de-vig/book (invariance to the method):")
     for k, v in sk.items():
         print(f"  {k:12} {v:+.4f}")
     vals = np.array(list(sk.values()))
-    print(f"  amplitude {vals.max()-vals.min():.4f} (todos positivos; o sinal e a "
-          f"ordem de grandeza não dependem do de-vig)")
+    print(f"  range {vals.max()-vals.min():.4f} (all positive; the sign and the "
+          f"order of magnitude do not depend on the de-vig)")
 
     C.OUTDIR.mkdir(exist_ok=True)
     rl.to_csv(C.OUTDIR / "reliability_by_league.csv", index=False)
 
-    # figura: reliability diagram global + REL por liga
+    # figure: global reliability diagram + REL by league
     FIG = C.OUTDIR / "fig"; FIG.mkdir(parents=True, exist_ok=True)
     rel = adv.reliability(df.p_fav_dv.values, y, nbins=12)
     fig, axes = plt.subplots(1, 2, figsize=(10, 4))

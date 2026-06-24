@@ -1,6 +1,6 @@
-"""Exporta um JSON compacto com todos os resultados para o site (site/src/data/
-findings.json). Roda localmente (precisa do dataset); o JSON gerado é versionado
-para o build do site não depender do dado bruto.
+"""Exports a compact JSON with all results for the site (site/src/data/
+findings.json). Runs locally (needs the dataset); the generated JSON is versioned
+so the site build does not depend on the raw data.
 """
 import json, numpy as np, pandas as pd
 from pathlib import Path
@@ -9,7 +9,7 @@ from skewlib import (io, returns, exante, elo, panel, balance, model, decompose,
                      collapse, premium, cpt, stats, skewmeter as sm, portfolio as port,
                      config as C)
 
-# nomes amigáveis das ligas p/ o widget (fallback = o código football-data)
+# friendly league names for the widget (fallback = the football-data code)
 LEAGUE_NAMES = {
     "E0": "England Premier League", "E1": "England Championship",
     "E2": "England League One", "E3": "England League Two",
@@ -43,7 +43,7 @@ def main():
     prov = json.loads((C.DATA_PATH.parent / "PROVENANCE.json").read_text())
     df = exante.add_exante(returns.add_returns(io.load()))
 
-    # F1 — FLB curve (ex-ante vs ex-post por faixa de p_fav)
+    # F1 — FLB curve (ex-ante vs ex-post by p_fav band)
     edges = [0, .4, .45, .5, .55, .6, .7, 1.0]
     d = df.copy(); d["b"] = pd.cut(d.p_fav_dv, edges)
     flb = []
@@ -53,7 +53,7 @@ def main():
                     "ex_ante": exante.pooled_skew(g.p_fav_dv.values, g.o_fav.values)["skew"],
                     "ex_post": float(skew(g.ret_fav.values)), "n": int(len(g))})
 
-    # F3 — decomposição global
+    # F3 — global decomposition
     gd = exante.pooled_skew(df.p_fav_dv.values, df.o_fav.values)
     decomp = {"within": gd["within_frac"], "cov": gd["cov_frac"], "between": gd["between_frac"],
               "skew": gd["skew"]}
@@ -63,7 +63,7 @@ def main():
     eloc = elo.league_competitiveness(elo.with_elo(df))[["Division", "upset_rate", "elo_pfav"]]
     cb = balance.by_league(balance.cb_indices(balance.standings(df)))[["Division", "noll_scully", "hhi_star"]]
     L = lg.merge(eloc, on="Division").merge(cb, on="Division").sort_values("skew_exante")
-    # skew-meter: lei + se/residual por liga (p/ o widget SkewMeter)
+    # skew-meter: law + se/residual by league (for the SkewMeter widget)
     law = sm.fit_law(df)
     se_by, res_by = {}, {}
     for code, g in df.groupby("Division"):
@@ -78,25 +78,25 @@ def main():
                 "se": se_by.get(r.Division), "residual": res_by.get(r.Division)}
                for r in L.itertuples()]
 
-    # F5 — curva teórica (ordered-probit)
+    # F5 — theoretical curve (ordered-probit)
     par = model.calibrate(home=(df.FTResult == "H").mean(), draw=(df.FTResult == "D").mean(),
                           pfav=float(df.p_fav_dv.mean()))
     sig = np.linspace(0.08, 1.25, 40)
     cpf, csk = model.curve(par["h"], par["c"], sig)
     curve = [{"p_fav": float(a), "skew": float(b)} for a, b in zip(cpf, csk)]
 
-    # F4 — painel liga×temporada
+    # F4 — league×season panel
     pan = panel.league_season_panel(df)
     panel_rows = [{"div": r.Division, "season": int(r.season), "skew": r.skew_exante}
                   for r in pan.itertuples()]
     trend = panel.trend_test(pan); vdec = panel.variance_decomp(pan)
 
-    # FLB no tempo
+    # FLB over time
     fy = decompose.flb_by_year(df)
     flb_year = [{"year": int(r.year), "ret_dog": r.ret_dog, "spread": r.flb_spread,
                  "skew": r.skew_expost} for r in fy.itertuples()]
 
-    # B1 — invariância de FORMA (multi-momento): global + previsto×observado
+    # B1 — SHAPE invariance (multi-moment): global + predicted×observed
     Gm = exante.pooled_moments(df.p_fav_dv.values, df.o_fav.values, max_order=6)
     rows = []
     for code, g in df.groupby("Division"):
@@ -120,7 +120,7 @@ def main():
                      "skew": r.skew, "exkurt": r.exkurt} for r in lgm.itertuples()],
     }
 
-    # B2 — colapso de distribuição (forma = f(competitividade))
+    # B2 — distribution collapse (shape = f(competitiveness))
     z = collapse.zscore_returns(df, "ret_fav", "Division", min_n=2000)
     A = collapse.pairwise_test(z, "ks")
     ctab, csumm = collapse.conditional_invariance(
@@ -133,7 +133,7 @@ def main():
                     "ks_stat": float(r.ks_stat_med)} for r in csumm.itertuples()],
     }
 
-    # C1 — prêmio de skewness (decomposição do retorno)
+    # C1 — skewness premium (return decomposition)
     pg = premium.decompose_global(df)
     dec = premium.decompose_by_league(df, min_n=2000)
     sk = exante.pooled_by(df, "Division", min_n=2000)[["Division", "skew_exante"]]
@@ -146,7 +146,7 @@ def main():
                       for r in premium.flb_curve(df, nbins=20).itertuples()],
     }
 
-    # C2 — CPT invariante (ponderação de probabilidade)
+    # C2 — invariant CPT (probability weighting)
     cal = cpt.calibration(df, nbins=25)
     g0 = cpt.fit_gamma(cal)
     gl = cpt.gamma_by(df, "Division", min_n=4000, nbins=15)
@@ -162,7 +162,7 @@ def main():
                       for r in gy.itertuples()],
     }
 
-    # E1 — forma fechada de S(σ_L) (quadratura do integral gaussiano)
+    # E1 — closed form of S(σ_L) (quadrature of the Gaussian integral)
     from scipy.stats import norm as _norm
     cf = model.smallsigma_coeffs(par["h"], par["c"])
     p0_an = float(_norm.cdf(par["h"] - par["c"]))
@@ -185,7 +185,7 @@ def main():
                   for s, a, b in zip(sig_e, pf_ex, sk_ex)],
     }
 
-    # E2 — robustez da distribuição de força
+    # E2 — robustness of the strength distribution
     from scipy.stats import kurtosis as _kurt
     fams = [("normal", {}, "normal"), ("t", {"nu": 3.0}, "t3"),
             ("t", {"nu": 5.0}, "t5"), ("skewnormal", {"alpha": 4.0}, "skewnormal"),
@@ -209,7 +209,7 @@ def main():
     force_rob["max_dS_overall"] = float(max(f["max_dS"] for f in force_rob["families"]))
     force_rob["sd_between_leagues"] = float(lg.skew_exante.std())
 
-    # skew-meter — similaridade de assimetrias (Fase Q) p/ o widget SkewMeter
+    # skew-meter — similarity of skewnesses (Phase Q) for the SkewMeter widget
     import itertools
     skv = np.array([d["skew"] for d in leagues])
     rsv = np.array([d["residual"] for d in leagues if d["residual"] is not None])
@@ -226,9 +226,9 @@ def main():
             errs.append(float(np.std(est)))
         conv_se.append(float(np.mean(errs)))
     sdb = float(skv.std())
-    # métrica de FORMA de Mahalanobis (skew+exkurt): cov amostral de uma liga de
-    # referência (E0), invertida — o MESMO objeto auditado no bloco 45 (corr 0.74
-    # com |Δskew|). Exportada p/ o widget computar a distância de forma client-side.
+    # Mahalanobis SHAPE metric (skew+exkurt): sampling cov of a reference league
+    # (E0), inverted — the SAME object audited in block 45 (corr 0.74 with |Δskew|).
+    # Exported so the widget can compute the shape distance client-side.
     cov_inv = np.linalg.inv(sm.sampling_shape_cov(df[df.Division == "E0"]))
     skewmeter = {
         "median_raw": float(np.median([abs(a - b) for a, b in itertools.combinations(skv, 2)])),
@@ -243,7 +243,7 @@ def main():
     }
     convergence = {"k": Ks, "se": conv_se, "sd_between": sdb}
 
-    # bet-type (bloco 46) — skew ex-ante dos três objetos por liga + global + corr
+    # bet-type (block 46) — ex-ante skew of the three objects by league + global + corr
     btdf = exante.bettype_by(df, min_n=2000).sort_values("p_fav_mean")
     selg = exante.fav_dog_draw(df)
     bettype = {
@@ -254,7 +254,7 @@ def main():
                      "draw": r.skew_draw, "dog": r.skew_dog} for r in btdf.itertuples()],
     }
 
-    # diversification (bloco 37) — skew do retorno médio de N apostas (≈ skew/√N)
+    # diversification (block 37) — skew of the mean return of N bets (≈ skew/√N)
     SIZES = [1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 509, 800]
     base_f, rows_f = port.skew_decay(df.ret_fav.values, SIZES)
     base_d, rows_d = port.skew_decay(df.ret_dog.values, SIZES)
@@ -290,8 +290,8 @@ def main():
     }
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(round_rec(data), ensure_ascii=False, indent=0))
-    print(f"-> {OUT}  ({OUT.stat().st_size/1024:.1f} KB) | {len(leagues)} ligas, "
-          f"{len(panel_rows)} pontos de painel")
+    print(f"-> {OUT}  ({OUT.stat().st_size/1024:.1f} KB) | {len(leagues)} leagues, "
+          f"{len(panel_rows)} panel points")
 
 
 if __name__ == "__main__":

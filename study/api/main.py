@@ -1,15 +1,15 @@
-"""skew-meter como serviço — FastAPI fino sobre o motor (api/engine.py).
+"""skew-meter as a service — thin FastAPI over the engine (api/engine.py).
 
-Rodar (do diretório study/):
+Run (from the study/ directory):
     uvicorn api.main:app --reload --port 8000
 
 Endpoints:
-    GET  /health      — vivo + sha do artefato + tamanho da lei
-    GET  /integrity    — monitor: a referência (findings.json) é coerente?
-    POST /measure      — assinatura de assimetria de uma entrada nova
-                         (modo com-odds | odds-free) + vizinhos + veredito
-    POST /reload       — recarrega o findings.json (hot-reload do artefato)
-    GET  /docs         — OpenAPI interativo (Swagger)
+    GET  /health      — alive + artefact sha + law size
+    GET  /integrity    — monitor: is the reference (findings.json) coherent?
+    POST /measure      — asymmetry signature of a new input
+                         (with-odds | odds-free mode) + neighbours + verdict
+    POST /reload       — reloads findings.json (artefact hot-reload)
+    GET  /docs         — interactive OpenAPI (Swagger)
 """
 import numpy as np
 from fastapi import FastAPI, HTTPException
@@ -21,8 +21,8 @@ from .schemas import MeasureRequest
 app = FastAPI(
     title="skew-meter",
     version="0.1.0",
-    summary="Similaridade de assimetrias como serviço — mede a assinatura de "
-            "skewness de uma liga/janela/mercado e a situa contra a lei.",
+    summary="Asymmetry similarity as a service — measures the skewness "
+            "signature of a league/window/market and situates it against the law.",
 )
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"],
                    allow_headers=["*"])

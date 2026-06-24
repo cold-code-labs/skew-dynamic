@@ -1,9 +1,9 @@
 name: ci
 
-# Verificação contínua leve: o motor importa e o serviço /measure passa nos testes
-# contra o findings.json versionado. A pipeline completa de análise não roda aqui
-# (depende do dataset bruto restrito), mas o drift dos NÚMEROS é auditado localmente
-# por `build_lineage.py --check` no run.sh.
+# Lightweight continuous verification: the engine imports and the /measure service
+# passes its tests against the versioned findings.json. The full analysis pipeline
+# does not run here (it depends on the restricted raw dataset), but the drift of the
+# NUMBERS is audited locally by `build_lineage.py --check` in run.sh.
 
 on:
   push:

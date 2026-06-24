@@ -1,17 +1,18 @@
-"""Adaptador BASQUETE → tabela canônica (mercado moneyline, 2 resultados, sem empate).
+"""BASKETBALL adapter → canonical table (moneyline market, 2 outcomes, no draw).
 
-Fonte: sportsbookreviewsonline.com — uma página por temporada (NBA), cada JOGO em
-DUAS linhas (visitante V, casa H) com placar final + a moneyline americana (ML). As
-odds são rotuladas pelo lado (visitante/casa); cada jogo tem dois objetos de aposta —
-o visitante (odd V) e a casa (odd H) — e o FAVORITO é o de menor odd (= maior p), que
-vence na maioria das vezes mas às vezes leva a zebra. Basquete não tem empate (vai à
-prorrogação). É o setup padrão do favourite-longshot, idêntico ao do tênis, e cai
-exatamente no contrato canônico.
+Source: sportsbookreviewsonline.com — one page per season (NBA), each GAME on
+TWO rows (away V, home H) with the final score + the American moneyline (ML). The
+odds are labelled by side (away/home); each game has two betting objects — the
+away side (odd V) and the home side (odd H) — and the FAVOURITE is the one with the
+lower odd (= higher p), which wins most of the time but occasionally suffers an
+upset. Basketball has no draw (goes to overtime). It is the standard
+favourite-longshot setup, identical to tennis, and maps exactly onto the canonical
+contract.
 
-Baixe o dado com `python analysis/00c_fetch_basketball.py` (precisa de rede; sem
-dependências extras — usa `html.parser` da stdlib). Depois:
+Fetch the data with `python analysis/00c_fetch_basketball.py` (needs network; no
+extra dependencies — uses `html.parser` from the stdlib). Then:
     from skewlib.adapters import basketball
-    can = basketball.to_canonical()             # lê data/basketball.csv
+    can = basketball.to_canonical()             # reads data/basketball.csv
 """
 import numpy as np
 import pandas as pd
@@ -22,15 +23,15 @@ SPORT = "basketball"
 MARKET = "moneyline"
 OUTCOMES = ["away", "home"]
 ROLES = {"away": "away", "home": "home"}
-DRAW_ROLE = None                                   # basquete não tem empate
+DRAW_ROLE = None                                   # basketball has no draw
 
 DATA = Path("data/basketball.csv")
-MAX_OVERROUND = 1.25                                # banda sã da soma de p implícitas
-COMP_COL = "season"                                # análogo de "liga" (temporada NBA)
+MAX_OVERROUND = 1.25                                # sane band for the sum of implied p
+COMP_COL = "season"                                # analogue of "league" (NBA season)
 
 
 def _ml_to_dec(ml):
-    """Moneyline americana → odd decimal. +150 → 2.50; -200 → 1.50."""
+    """American moneyline → decimal odd. +150 → 2.50; -200 → 1.50."""
     ml = pd.to_numeric(ml, errors="coerce").to_numpy(float)
     with np.errstate(invalid="ignore", divide="ignore"):
         return np.where(ml > 0, 1.0 + ml / 100.0, 1.0 + 100.0 / np.abs(ml))
@@ -40,16 +41,16 @@ def _load(path=None):
     path = Path(path or DATA)
     if not path.exists():
         raise FileNotFoundError(
-            f"{path} ausente — rode `python analysis/00c_fetch_basketball.py` "
-            f"(precisa de rede).")
+            f"{path} missing — run `python analysis/00c_fetch_basketball.py` "
+            f"(needs network).")
     df = pd.read_csv(path, low_memory=False)
     df["date"] = pd.to_datetime(df.get("date"), errors="coerce")
     return df
 
 
 def to_canonical(df=None, comp_col=COMP_COL):
-    """Mapeia o dado de basquete para a tabela canônica. `comp_col` = coluna de
-    agrupamento (default: season — a competitividade da liga varia ano a ano)."""
+    """Maps the basketball data to the canonical table. `comp_col` = grouping
+    column (default: season — league competitiveness varies year to year)."""
     if df is None:
         df = _load()
     df = df.copy()

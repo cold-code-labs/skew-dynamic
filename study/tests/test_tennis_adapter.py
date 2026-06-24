@@ -1,7 +1,7 @@
-"""Testes do adaptador de tênis — sintéticos, SEM dataset (rodam em CI).
+"""Tests for the tennis adapter — synthetic, NO dataset (run in CI).
 
-Validam o mapeamento winner/loser → canônico e a semântica do favourite-longshot
-(favorito = menor odd; venceu quando o vencedor era o favorito).
+Validate the winner/loser → canonical mapping and the favourite-longshot semantics
+(favourite = lowest odd; won when the winner was the favourite).
     cd study && python -m pytest tests/test_tennis_adapter.py -q
 """
 import sys
@@ -15,16 +15,16 @@ from skewlib.adapters import tennis      # noqa: E402
 
 
 def _raw():
-    """Dado bruto tennis-data-like. Partida 0: favorito venceu (W odd baixa).
-    Partida 1: ZEBRA — o vencedor era o azarão (W odd alta)."""
+    """Raw tennis-data-like data. Match 0: favourite won (low W odd).
+    Match 1: UPSET — the winner was the longshot (high W odd)."""
     return pd.DataFrame({
         "Date": ["2020-01-06", "2020-01-07"],
         "Series": ["ATP250", "Grand Slam"],
         "Surface": ["Hard", "Clay"],
         "Winner": ["Player A", "Player D"],
         "Loser": ["Player B", "Player C"],
-        "B365W": [1.30, 4.50],     # odd do vencedor
-        "B365L": [3.50, 1.22],     # odd do perdedor
+        "B365W": [1.30, 4.50],     # winner's odd
+        "B365L": [3.50, 1.22],     # loser's odd
     })
 
 
@@ -33,20 +33,20 @@ def test_to_canonical_schema_and_invariants():
     assert canonical.validate(can)
     assert set(can.outcome) == {"winner", "loser"}
     assert can.market.iloc[0] == "match_odds" and can.sport.iloc[0] == "tennis"
-    # 2 eventos × 2 resultados
+    # 2 events × 2 outcomes
     assert len(can) == 4 and can.event_id.nunique() == 2
 
 
 def test_favourite_longshot_semantics():
     can = tennis.to_canonical(_raw())
-    fav = canonical.select(can, "fav")        # menor odd por evento
-    # evento 0: favorito = vencedor (odd 1.30) → bet do favorito GANHOU (won=1)
+    fav = canonical.select(can, "fav")        # lowest odd per event
+    # event 0: favourite = winner (odd 1.30) → favourite bet WON (won=1)
     e0 = fav[fav.event_id == 0].iloc[0]
     assert e0.o == 1.30 and e0.won == 1
-    # evento 1: favorito = perdedor (odd 1.22) → favorito PERDEU (zebra, won=0)
+    # event 1: favourite = loser (odd 1.22) → favourite LOST (upset, won=0)
     e1 = fav[fav.event_id == 1].iloc[0]
     assert e1.o == 1.22 and e1.won == 0
-    # sem objeto de empate
+    # no draw object
     assert tennis.DRAW_ROLE is None
     assert canonical.signature(canonical.select(can, "draw", draw_role="draw")) is None
 

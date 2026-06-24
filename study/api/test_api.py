@@ -1,4 +1,4 @@
-"""Testes do serviço /measure — não dependem do dataset bruto (só findings.json).
+"""Tests for the /measure service — independent of the raw dataset (only findings.json).
 
     cd study && ./.venv/bin/python -m pytest api/test_api.py -q
 """
@@ -22,8 +22,8 @@ def test_integrity_green():
 
 
 def test_measure_with_pfav_structure():
-    # entrada sintética (não segue a forma condicional real → residual livre);
-    # aqui checamos só a ESTRUTURA da resposta e os invariantes do motor.
+    # synthetic input (does not follow the real conditional shape → free residual);
+    # here we check only the STRUCTURE of the response and the engine invariants.
     rng = np.random.default_rng(0)
     p = np.clip(rng.normal(0.52, 0.08, 4000), 0.05, 0.95)
     j = c.post("/measure", json={"mode": "with-odds", "p_fav": p.tolist(),
@@ -39,7 +39,7 @@ def test_measure_odds_hda():
     j = c.post("/measure", json={"mode": "with-odds",
                "odds_hda": [[1.5, 4.0, 7.0], [2.1, 3.3, 3.6]]}).json()
     assert "skew" in j
-    # 2 jogos → ruído domina: deve sinalizar amostra insuficiente
+    # 2 matches → noise dominates: should flag insufficient sample
     assert any(a["flag"] == "low_n" for a in j["anomalies"])
 
 
@@ -54,6 +54,6 @@ def test_measure_oddsfree():
 def test_validation_errors():
     assert c.post("/measure", json={"mode": "odds-free"}).status_code == 422
     assert c.post("/measure", json={"mode": "with-odds"}).status_code == 422
-    # p_fav fora de (0,1)
+    # p_fav outside (0,1)
     assert c.post("/measure", json={"mode": "with-odds",
                   "p_fav": [1.4, 0.5]}).status_code == 422

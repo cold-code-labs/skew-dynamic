@@ -1,18 +1,19 @@
-"""46 — tipo de aposta: a assimetria dos TRÊS objetos (favorito/empate/azarão).
+"""46 — bet type: the skewness of the THREE objects (favourite/draw/underdog).
 
-O estudo mediu a skewness da aposta no FAVORITO e mostrou que ela é governada pela
-competitividade (a lei). E os outros lados do mesmo jogo? Para cada partida há três
-objetos de dois pontos: favorito (argmax p), empate (resultado D) e azarão (argmin p).
-Este bloco mede a skewness ex-ante AGRUPADA dos três por liga e pergunta:
+The study measured the skewness of the bet on the FAVOURITE and showed it is governed
+by competitiveness (the law). What about the other sides of the same match? Each match
+has three two-point objects: favourite (argmax p), draw (outcome D) and underdog
+(argmin p). This block measures the POOLED ex-ante skewness of the three by league and
+asks:
 
-  • Todos são positivamente assimétricos? (o FLB é um fenômeno de aposta única)
-  • A LEI skew=f(competitividade) vale para os três, ou só para o favorito?
+  • Are all three positively skewed? (the FLB is a single-bet phenomenon)
+  • Does the LAW skew=f(competitiveness) hold for all three, or only for the favourite?
 
-Achado: os três são fortemente lotéricos (skew>0) e os TRÊS são governados pela
-competitividade — em sentidos opostos. Menos balanço (p_fav alto) baixa a skew do
-FAVORITO (corr −0.90) e ELEVA a do empate e do azarão (corr +0.95 / +0.91), que
-viram longshots maiores. Não é uma lei do favorito: é a MESMA lei estrutural em
-todo lado do book, espelhada pela competitividade.
+Finding: all three are strongly lottery-like (skew>0) and ALL THREE are governed by
+competitiveness — in opposite directions. Less balance (high p_fav) lowers the skew of
+the FAVOURITE (corr −0.90) and RAISES that of the draw and the underdog (corr +0.95 /
++0.91), which become bigger longshots. It is not a favourite's law: it is the SAME
+structural law on every side of the book, mirrored by competitiveness.
 """
 import numpy as np
 import matplotlib
@@ -25,24 +26,24 @@ def main():
     df = exante.add_exante(returns.add_returns(io.load()))
     print(f"N={len(df):,}", flush=True)
 
-    # global: skew ex-ante de cada objeto de aposta (pooled, odds de mercado)
+    # global: ex-ante skew of each bet object (pooled, market odds)
     sel = exante.fav_dog_draw(df)
     glob = {k: exante.pooled_skew(p, o)["skew"] for k, (p, o) in sel.items()}
-    print("\nSkewness ex-ante GLOBAL por objeto de aposta (pooled, odds de mercado):")
+    print("\nGLOBAL ex-ante skewness by bet object (pooled, market odds):")
     for k in ("fav", "draw", "dog"):
         print(f"   {k:>4}: {glob[k]:+.3f}")
 
-    # por liga + correlação de cada tipo com a competitividade (média de p_fav)
+    # by league + correlation of each type with competitiveness (mean p_fav)
     bt = exante.bettype_by(df, min_n=2000).sort_values("p_fav_mean")
     comp = bt.p_fav_mean.values
     corr = {k: float(np.corrcoef(bt[f"skew_{k}"].values, comp)[0, 1])
             for k in ("fav", "draw", "dog")}
-    print(f"\nPor liga ({len(bt)} ligas) — corr(skew, competitividade=média p_fav):")
+    print(f"\nBy league ({len(bt)} leagues) — corr(skew, competitiveness=mean p_fav):")
     for k in ("fav", "draw", "dog"):
         sd = float(bt[f"skew_{k}"].std())
-        print(f"   {k:>4}: corr={corr[k]:+.2f}  | sd entre-ligas={sd:.3f}")
-    print("   → a competitividade governa os TRÊS: baixa a skew do favorito e eleva a do")
-    print("     empate/azarão (longshots maiores) — a mesma lei, espelhada, em todo o book.")
+        print(f"   {k:>4}: corr={corr[k]:+.2f}  | between-league sd={sd:.3f}")
+    print("   → competitiveness governs all THREE: it lowers the favourite's skew and raises")
+    print("     that of the draw/underdog (bigger longshots) — the same law, mirrored, across the book.")
 
     C.OUTDIR.mkdir(exist_ok=True)
     FIG = C.OUTDIR / "fig"; FIG.mkdir(parents=True, exist_ok=True)

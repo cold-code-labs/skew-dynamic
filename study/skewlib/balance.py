@@ -1,25 +1,25 @@
-"""Índices de balanço competitivo (CB) a partir da CLASSIFICAÇÃO — resultados,
-sem odds. Fonte 100% independente do mercado → ataque mais forte à circularidade
-que o próprio Elo.
+"""Competitive balance (CB) indices from the STANDINGS — results, without odds.
+A source 100% independent of the market → a stronger attack on circularity than
+the Elo itself.
 
-Usamos as medidas canônicas e ROBUSTAS A TAMANHO de liga recomendadas pela
-literatura, evitando o Gini (Utt & Fort 2002: inválido para jogo de soma-zero):
-  - Noll-Scully  = SD(win%) / SD idealizada (0.5/√G)   [dispersão de força]
-  - HHI*         = HHI de vitórias normalizado p/ N times (Owen et al. 2007)
-  - Theil (GE1)  = entropia generalizada dos pontos (Borooah & Mangan 2012)
-Todas crescem com o DESEQUILÍBRIO (menos competitividade).
+We use the canonical, league-SIZE-ROBUST measures recommended by the literature,
+avoiding the Gini (Utt & Fort 2002: invalid for a zero-sum game):
+  - Noll-Scully  = SD(win%) / idealised SD (0.5/√G)   [dispersion of strength]
+  - HHI*         = HHI of wins normalised for N teams (Owen et al. 2007)
+  - Theil (GE1)  = generalised entropy of the points (Borooah & Mangan 2012)
+All increase with the IMBALANCE (less competitiveness).
 """
 import numpy as np, pandas as pd
 
 
 def season_of(dates):
-    """Temporada de futebol (Ago–Mai): mês ≥ 7 → ano corrente, senão ano−1."""
+    """Football season (Aug–May): month ≥ 7 → current year, otherwise year−1."""
     d = pd.to_datetime(dates)
     return np.where(d.dt.month >= 7, d.dt.year, d.dt.year - 1)
 
 
 def standings(df):
-    """Por (Division, season, team): jogos, vitórias-equivalentes (W+0.5D), pontos."""
+    """Per (Division, season, team): games, win-equivalents (W+0.5D), points."""
     d = df.copy()
     d["season"] = season_of(d.date)
     parts = []
@@ -38,7 +38,7 @@ def standings(df):
 
 
 def cb_indices(stand, min_teams=6, min_games=10):
-    """Índices de CB por (Division, season)."""
+    """CB indices per (Division, season)."""
     rows = []
     for (lg, se), t in stand.groupby(["Division", "season"]):
         t = t[t.games >= min_games]
@@ -48,7 +48,7 @@ def cb_indices(stand, min_teams=6, min_games=10):
         gbar = t.games.mean()
         ns = t.winpct.std(ddof=0) / (0.5 / np.sqrt(gbar))      # Noll-Scully
         s = t.wins / t.wins.sum()
-        hhi_star = ((s ** 2).sum() - 1 / N) / (1 - 1 / N)       # HHI normalizado
+        hhi_star = ((s ** 2).sum() - 1 / N) / (1 - 1 / N)       # normalised HHI
         x = t.points.values; mu = x.mean()
         theil = float(np.mean((x / mu) * np.log(np.clip(x / mu, 1e-12, None))))
         rows.append({"Division": lg, "season": int(se), "n_teams": N,
@@ -57,7 +57,7 @@ def cb_indices(stand, min_teams=6, min_games=10):
 
 
 def by_league(cb):
-    """Média dos índices por liga (sobre temporadas)."""
+    """Mean of the indices per league (over seasons)."""
     return cb.groupby("Division").agg(
         seasons=("season", "size"),
         noll_scully=("noll_scully", "mean"),

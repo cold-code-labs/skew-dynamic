@@ -1,17 +1,17 @@
-"""Frente K — diversificação / portfólio. A skewness é um fenômeno de aposta ÚNICA?
-Para N apostas (quase) independentes, o retorno MÉDIO tem skewness padronizada
-skew(X)/√N (soma de iid) — uma banca diversificada tende ao gaussiano, enquanto a
-aposta isolada é fortemente assimétrica. Implicação: a preferência por skewness (o
-FLB) morde o apostador RECREATIVO (poucas apostas concentradas), não o sindicato
-diversificado — o canal que sustenta o viés.
+"""Front K — diversification / portfolio. Is skewness a SINGLE-bet phenomenon?
+For N (nearly) independent bets, the MEAN return has standardised skewness
+skew(X)/√N (sum of iid) — a diversified bankroll tends to Gaussian, while the
+isolated bet is strongly asymmetric. Implication: the preference for skewness (the
+FLB) bites the RECREATIONAL bettor (few concentrated bets), not the diversified
+syndicate — the channel that sustains the bias.
 """
 import numpy as np
 from scipy.stats import skew, kurtosis
 
 
 def skew_decay(returns, sizes, B=4000, seed=42):
-    """Skewness do retorno médio de N apostas, por bootstrap de carteiras de
-    tamanho N, vs a previsão iid skew(X)/√N."""
+    """Skewness of the mean return of N bets, by bootstrap of portfolios of
+    size N, vs the iid prediction skew(X)/√N."""
     r = np.asarray(returns, float)
     r = r[np.isfinite(r)]
     base = float(skew(r))
@@ -26,5 +26,5 @@ def skew_decay(returns, sizes, B=4000, seed=42):
 
 
 def n_to_gaussian(base_skew, thresh=0.1):
-    """Quantas apostas para a skewness cair abaixo de `thresh` (≈ gaussiano)."""
+    """How many bets for the skewness to fall below `thresh` (≈ Gaussian)."""
     return int(np.ceil((abs(base_skew) / thresh) ** 2))

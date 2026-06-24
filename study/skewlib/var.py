@@ -1,18 +1,18 @@
-"""Frente VAR — experimento natural escalonado. O VAR é um choque INSTITUCIONAL
-sem ser de COMPETITIVIDADE: reduz erro de arbitragem, mas não muda a dispersão de
-força dos times. A tese (skewness = f(dispersão de força)) prevê que ele NÃO move
-a skewness estrutural — placebo que contrasta com a COVID (W3), choque REAL de
-competitividade (HFA caiu) que moveu a skewness +0.42 SD.
+"""Front VAR — staggered natural experiment. VAR is an INSTITUTIONAL shock
+without being a COMPETITIVENESS one: it reduces arbitrage error, but does not change the
+teams' force dispersion. The thesis (skewness = f(force dispersion)) predicts that it does NOT move
+the structural skewness — a placebo contrasting with COVID (W3), a REAL
+competitiveness shock (HFA fell) that moved the skewness +0.42 SD.
 
-Desenho diferenças-em-diferenças ESCALONADO: as ligas adotaram o VAR em anos
-distintos (2017/18, 2018/19, 2019/20); divisões inferiores inglesas/escocesas (sem
-VAR em jogo de liga no recorte) servem de controle nunca-tratado. O coeficiente do
-indicador de VAR, sob FE de liga + FE de ano, é o efeito médio.
+STAGGERED difference-in-differences design: the leagues adopted VAR in different
+years (2017/18, 2018/19, 2019/20); the lower English/Scottish divisions (without
+VAR in league play in the sample) serve as the never-treated control. The coefficient of
+the VAR indicator, under league FE + year FE, is the average effect.
 
-Datas: primeiro ano-calendário INTEIRO sob VAR (adoção na virada de temporada de
-agosto; o ano de início parcial fica como pré, conservador). Fontes públicas
-(IFAB/ligas): Serie A e Bundesliga 2017/18; La Liga, Ligue 1, Eredivisie, Süper Lig
-2018/19; Premier League, Bélgica, Portugal, Grécia 2019/20.
+Dates: first FULL calendar year under VAR (adoption at the August season turnover;
+the partial start year is kept as pre, conservatively). Public sources
+(IFAB/leagues): Serie A and Bundesliga 2017/18; La Liga, Ligue 1, Eredivisie, Süper Lig
+2018/19; Premier League, Belgium, Portugal, Greece 2019/20.
 """
 import numpy as np, pandas as pd
 from . import exante
@@ -22,13 +22,13 @@ VAR_FROM_YEAR = {
     "SP1": 2019, "F1": 2019, "N1": 2019, "T1": 2019,     # 2018/19
     "E0": 2020, "B1": 2020, "P1": 2020, "G1": 2020,      # 2019/20
 }
-CONTROLS = ["E1", "E2", "E3", "SC1", "SC2", "SC3"]       # nunca-tratados no recorte
+CONTROLS = ["E1", "E2", "E3", "SC1", "SC2", "SC3"]       # never-treated in the sample
 
 
 def build_panel(df, min_n=150):
-    """Painel (liga,ano) com skew ex-ante, p_fav médio, taxa de vitória do favorito
-    e flag de VAR. Requer add_exante + add_returns (ret_fav). Restringe às ligas
-    tratadas (data conhecida) + controles nunca-tratados."""
+    """(league,year) panel with ex-ante skew, mean p_fav, favourite win rate
+    and VAR flag. Requires add_exante + add_returns (ret_fav). Restricts to the
+    treated leagues (known date) + never-treated controls."""
     d = df.copy(); d["year"] = d.date.dt.year
     d["fav_won"] = (d.ret_fav > 0).astype(float)
     d = d[d.Division.isin(set(VAR_FROM_YEAR) | set(CONTROLS))]
@@ -46,8 +46,8 @@ def build_panel(df, min_n=150):
 
 
 def did(panel, outcome):
-    """DiD escalonado: outcome ~ VAR + FE de liga + FE de ano (SE cluster por liga).
-    O coeficiente de `var` é o efeito médio do VAR sobre o outcome."""
+    """Staggered DiD: outcome ~ VAR + league FE + year FE (league-clustered SE).
+    The coefficient of `var` is the average effect of VAR on the outcome."""
     import statsmodels.formula.api as smf
     m = smf.ols(f"{outcome} ~ var + C(Division) + C(year)", data=panel).fit(
         cov_type="cluster", cov_kwds={"groups": panel.Division})
@@ -58,8 +58,8 @@ def did(panel, outcome):
 
 
 def event_study(panel, span=4):
-    """Skewness média por anos-desde-adoção (tempo relativo) nas ligas tratadas —
-    para inspecionar ausência de salto/tendência em torno da adoção do VAR."""
+    """Mean skewness by years-since-adoption (relative time) in the treated leagues —
+    to inspect for the absence of a jump/trend around VAR adoption."""
     t = panel[panel.treated == 1].copy()
     t["rel"] = t.year - t.Division.map(VAR_FROM_YEAR)
     t = t[t.rel.between(-span, span)]

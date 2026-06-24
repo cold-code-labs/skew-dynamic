@@ -1,15 +1,15 @@
-"""18 — Colapso de distribuição (Frente B): a forma é universal, ou função da
-competitividade? Dois testes complementares sobre o retorno do favorito:
+"""18 — Distribution collapse (Front B): is the shape universal, or a function of
+competitiveness? Two complementary tests on the favourite's return:
 
-  A) SEM controlar competitividade — retornos z-scored por liga, KS par-a-par.
-     A forma difere entre ligas (a skew varia com a liga) ⇒ NÃO é universal.
-  B) CONTROLANDO competitividade — dentro de cada faixa de p_fav, a distribuição
-     do retorno é a mesma entre ligas? (one-vs-rest KS por faixa). Se o tamanho
-     de efeito desaba vs (A), a identidade da liga não acrescenta nada além da
-     competitividade ⇒ colapso ("fato estilizado": forma = f(competitividade)).
+  A) WITHOUT controlling competitiveness — returns z-scored by league, pairwise KS.
+     The shape differs across leagues (skew varies with the league) ⇒ NOT universal.
+  B) CONTROLLING competitiveness — within each p_fav band, is the return
+     distribution the same across leagues? (one-vs-rest KS per band). If the effect
+     size collapses vs (A), the league identity adds nothing beyond
+     competitiveness ⇒ collapse ("stylised fact": shape = f(competitiveness)).
 
-Com n enorme o p-valor do KS satura; o que vale é a ESTATÍSTICA KS (distância
-máxima de CDF = tamanho de efeito).
+With huge n the KS p-value saturates; what matters is the KS STATISTIC (maximum
+CDF distance = effect size).
 """
 import numpy as np, pandas as pd
 import matplotlib
@@ -22,29 +22,29 @@ def main():
     df = exante.add_exante(returns.add_returns(io.load()))
     print(f"N={len(df):,} | de-vig={C.DEVIG_METHOD}")
 
-    # --- A: forma SEM controlar competitividade (z-score por liga) ---
+    # --- A: shape WITHOUT controlling competitiveness (z-score by league) ---
     z = collapse.zscore_returns(df, col="ret_fav", by="Division", min_n=2000)
     A = collapse.pairwise_test(z, test="ks")
-    print(f"\nA) retornos z-scored por liga ({len(z)} ligas) — KS par-a-par:")
-    print(f"   estatística KS mediana (efeito) = {A['median_stat']:.4f}")
-    print(f"   fração de pares que rejeita      = {A['reject_frac']:.1%} "
-          f"(p-valor mediano {A['median_p']:.1e})")
-    print("   → a forma padronizada DIFERE entre ligas: não é universal (a skew varia).")
+    print(f"\nA) returns z-scored by league ({len(z)} leagues) — pairwise KS:")
+    print(f"   median KS statistic (effect)    = {A['median_stat']:.4f}")
+    print(f"   fraction of pairs that reject    = {A['reject_frac']:.1%} "
+          f"(median p-value {A['median_p']:.1e})")
+    print("   → the standardised shape DIFFERS across leagues: not universal (skew varies).")
 
-    # --- B: condicional à competitividade (faixa de p_fav) ---
+    # --- B: conditional on competitiveness (p_fav band) ---
     tab, summ = collapse.conditional_invariance(
         df, pcol="p_fav_dv", retcol="ret_fav", by="Division", nbins=8, min_n=300)
     D_cond = float(tab.ks_stat.median())
-    print(f"\nB) condicional à faixa de p_fav ({len(tab)} testes liga×faixa) — "
+    print(f"\nB) conditional on the p_fav band ({len(tab)} league×band tests) — "
           f"one-vs-rest KS:")
     print(summ.to_string(index=False,
           formatters={"p_mid": "{:.3f}".format, "reject_frac": "{:.1%}".format,
                       "ks_stat_med": "{:.4f}".format}))
-    print(f"\n   estatística KS mediana CONDICIONAL = {D_cond:.4f}")
-    print(f"   vs incondicional (A)               = {A['median_stat']:.4f}  "
-          f"→ queda de {(1 - D_cond / A['median_stat']):.0%}")
-    print("   → controlada a competitividade, a distribuição colapsa entre ligas:")
-    print("     a FORMA é função da competitividade, a liga não acrescenta nada.")
+    print(f"\n   median CONDITIONAL KS statistic   = {D_cond:.4f}")
+    print(f"   vs unconditional (A)               = {A['median_stat']:.4f}  "
+          f"→ drop of {(1 - D_cond / A['median_stat']):.0%}")
+    print("   → controlling for competitiveness, the distribution collapses across leagues:")
+    print("     the SHAPE is a function of competitiveness, the league adds nothing.")
 
     C.OUTDIR.mkdir(exist_ok=True)
     out = summ.copy()
@@ -54,10 +54,10 @@ def main():
     out.to_csv(C.OUTDIR / "collapse_ks.csv", index=False)
     print(f"\n  -> {C.OUTDIR / 'collapse_ks.csv'}")
 
-    # --- figura: esquerda sem colapso (z-score full), direita com colapso (faixa) ---
+    # --- figure: left without collapse (full z-score), right with collapse (band) ---
     moms = pd.read_csv(C.OUTDIR / "moments_by_league.csv") if \
         (C.OUTDIR / "moments_by_league.csv").exists() else None
-    # 3 ligas representativas: menor, mediana e maior p_fav (entre as grandes)
+    # 3 representative leagues: lowest, median and highest p_fav (among the big ones)
     big = (df.groupby("Division").size()
              .loc[lambda s: s >= 3000].index)
     pf = (df[df.Division.isin(big)].groupby("Division").p_fav_dv.mean()
@@ -75,7 +75,7 @@ def main():
     axes[0].set_xlabel("standardised return"); axes[0].set_ylabel("ECDF")
     axes[0].set_xlim(-2, 3); axes[0].legend(frameon=False, fontsize=8)
 
-    # faixa central de p_fav: restringe as MESMAS ligas e plota retorno cru
+    # central p_fav band: restricts to the SAME leagues and plots raw return
     lo, hi = df.p_fav_dv.quantile([0.45, 0.55])
     band = df[(df.p_fav_dv >= lo) & (df.p_fav_dv <= hi)]
     for c, lg in cols.items():

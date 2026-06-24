@@ -1,8 +1,8 @@
-"""27 — Microestrutura D3: o z de Shin (fração de dinheiro INFORMADO) como série.
-z é subproduto do de-vig de Shin: a proporção do book atribuída a insiders. Aqui
-olhamos z por liga e por ano — é estável no tempo? correlaciona com competitividade
-ou overround? É um descritor de microestrutura (quanto de informação privada o
-mercado precifica) por trás da mesma assimetria.
+"""27 — Microstructure D3: the Shin z (fraction of INFORMED money) as a series.
+z is a by-product of the Shin de-vig: the proportion of the book attributed to
+insiders. Here we look at z by league and by year — is it stable over time? Does it
+correlate with competitiveness or overround? It is a microstructure descriptor (how
+much private information the market prices in) behind the same asymmetry.
 """
 import numpy as np
 import matplotlib
@@ -14,24 +14,24 @@ from skewlib import io, returns, exante, microstructure as ms, stats, provenance
 def main():
     df = exante.add_exante(returns.add_returns(io.load()))
     d = ms.shin_z_frame(df)
-    print(f"N={len(d):,} | z global médio = {d.shin_z.mean():.4f} "
-          f"(fração de dinheiro informado no 1X2)")
+    print(f"N={len(d):,} | mean global z = {d.shin_z.mean():.4f} "
+          f"(fraction of informed money in the 1X2)")
 
     zl = ms.z_by(d, "Division", min_n=2000).sort_values("z")
     zy = ms.z_by(d, "season", min_n=2000).sort_values("season")
-    print(f"\nENTRE LIGAS ({len(zl)}): z médio {zl.z.mean():.4f} · sd {zl.z.std():.4f} · "
+    print(f"\nACROSS LEAGUES ({len(zl)}): mean z {zl.z.mean():.4f} · sd {zl.z.std():.4f} · "
           f"range [{zl.z.min():.3f},{zl.z.max():.3f}]")
     ro = stats.bootstrap_corr(zl.z.values, zl.overround.values)
     rp = stats.bootstrap_corr(zl.z.values, zl.p_fav.values)
     print(f"  corr(z, overround) = {ro['r']:+.3f} [{ro['ci_lo']:+.2f},{ro['ci_hi']:+.2f}]"
-          f" | corr(z, competitividade p_fav) = {rp['r']:+.3f} "
+          f" | corr(z, competitiveness p_fav) = {rp['r']:+.3f} "
           f"[{rp['ci_lo']:+.2f},{rp['ci_hi']:+.2f}]")
     ty = stats.ols(zy.z.values, zy.season.values - zy.season.mean())
-    print(f"\nNO TEMPO ({len(zy)} temporadas): z médio {zy.z.mean():.4f} · sd {zy.z.std():.4f}")
-    print(f"  tendência β = {ty['slope']:+.5f}/ano (r={ty['r']:+.2f}, Δ20a "
-          f"{ty['slope']*20:+.3f}) — {'estável' if abs(ty['slope'])<0.002 else 'com deriva'}")
-    print("  → z é baixo e estável: o conteúdo informacional do book é uma constante")
-    print("    estrutural, coerente com a invariância da assimetria.")
+    print(f"\nOVER TIME ({len(zy)} seasons): mean z {zy.z.mean():.4f} · sd {zy.z.std():.4f}")
+    print(f"  trend β = {ty['slope']:+.5f}/yr (r={ty['r']:+.2f}, Δ20yr "
+          f"{ty['slope']*20:+.3f}) — {'stable' if abs(ty['slope'])<0.002 else 'drifting'}")
+    print("  → z is low and stable: the informational content of the book is a structural")
+    print("    constant, consistent with the invariance of the asymmetry.")
 
     C.OUTDIR.mkdir(exist_ok=True)
     zl.to_csv(C.OUTDIR / "shin_z_by_league.csv", index=False)

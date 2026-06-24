@@ -1,9 +1,9 @@
-"""12 — Figuras do paper (F1–F4). Salva PNGs em outputs/fig/.
+"""12 — Paper figures (F1–F4). Saves PNGs to outputs/fig/.
 
-F1 FLB: skew (ex-ante & ex-post) vs p_fav + curva da identidade (1-2p)/√(p(1-p))
-F2 Lei: skewness por liga vs competitividade odds-free (taxa de zebra Elo)
-F3 Decomposição de M₃ (within/cov/between)
-F4 Painel liga×temporada: ausência de tendência
+F1 FLB: skew (ex-ante & ex-post) vs p_fav + identity curve (1-2p)/√(p(1-p))
+F2 Law: skewness by league vs odds-free competitiveness (Elo upset rate)
+F3 Decomposition of M₃ (within/cov/between)
+F4 League×season panel: absence of trend
 """
 import numpy as np, pandas as pd
 import matplotlib
@@ -90,7 +90,7 @@ def main():
     fig1_flb(df); print("F1 ok")
     fig3_decomp(df); print("F3 ok")
     fig4_panel(panel.league_season_panel(df)); print("F4 ok")
-    print("rodando Elo p/ F2...", flush=True)
+    print("running Elo for F2...", flush=True)
     d = elo.with_elo(df)
     league = exante.pooled_by(df, "Division", min_n=2000).merge(
         elo.league_competitiveness(d).drop(columns="n"), on="Division")

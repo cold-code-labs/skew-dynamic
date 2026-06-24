@@ -1,7 +1,7 @@
-"""29 — Micro F1: sazonalidade intra-temporada. Conforme a classificação cristaliza
-(do início ao fim da temporada), a skewness implícita se move? Usamos a temporada
-REAL (Ago→Jul) e dividimos cada liga×temporada em terços por data. Se a skew do
-fim ≈ a do início, a invariância vale também DENTRO da temporada (não só entre anos).
+"""29 — Micro F1: intra-season seasonality. As the standings crystallise (from the
+start to the end of the season), does the implied skewness move? We use the REAL
+season (Aug→Jul) and split each league×season into thirds by date. If the end skew
+≈ the start skew, the invariance also holds WITHIN the season (not just across years).
 """
 import numpy as np
 import matplotlib
@@ -13,28 +13,28 @@ from skewlib import io, returns, exante, intraleague as il, stats, provenance as
 def main():
     df = exante.add_exante(returns.add_returns(io.load()))
     d = il.add_season_phase(df, nseg=3)
-    print(f"N={len(df):,} | temporada real (Ago→Jul), 3 fases (início/meio/fim)")
+    print(f"N={len(df):,} | real season (Aug→Jul), 3 phases (start/mid/end)")
 
     gp = il.skew_by_phase(d)
-    print("\nGLOBAL por fase intra-temporada:")
+    print("\nGLOBAL by intra-season phase:")
     for r in gp.itertuples():
-        print(f"  fase {r.phase} ({'início meio fim'.split()[r.phase]:6}): "
+        print(f"  phase {r.phase} ({'start mid end'.split()[r.phase]:6}): "
               f"skew {r.skew:+.4f} | p_fav {r.p_fav:.4f} | n={r.n:,}")
     span = gp["skew"].max() - gp["skew"].min()
-    print(f"  amplitude início↔fim = {span:.4f} (≈0 ⇒ sem cristalização da assimetria)")
+    print(f"  range start↔end = {span:.4f} (≈0 ⇒ no crystallisation of the asymmetry)")
 
     sh = il.phase_shift_by_league(d)
-    print(f"\nPOR LIGA ({len(sh)}): Δskew(fim−início)")
-    print(f"  média {sh["shift"].mean():+.4f} · sd {sh["shift"].std():.4f} · "
+    print(f"\nBY LEAGUE ({len(sh)}): Δskew(end−start)")
+    print(f"  mean {sh["shift"].mean():+.4f} · sd {sh["shift"].std():.4f} · "
           f"range [{sh["shift"].min():+.3f},{sh["shift"].max():+.3f}]")
     t = stats.bootstrap_stat(lambda i: sh["shift"].values[i].mean(), len(sh), B=2000)
-    print(f"  IC95 da média do shift = [{t['ci_lo']:+.4f}, {t['ci_hi']:+.4f}] "
-          f"({'inclui 0 ⇒ sem deriva intra-temporada' if t['ci_lo']<0<t['ci_hi'] else 'desloca'})")
-    print("  → há uma cristalização LEVE (favoritos um pouco mais fortes no fim, "
-          f"p_fav {gp['p_fav'].iloc[0]:.3f}→{gp['p_fav'].iloc[-1]:.3f}), mas o shift")
-    print(f"    (~{abs(sh['shift'].mean()):.3f}) é ~3–4× menor que o sd entre ligas (0.05):")
-    print("    a invariância vale também DENTRO da temporada, a menos de um drift pequeno")
-    print("    e PREVISTO pela própria lei (mais p_fav ⇒ menos skew).")
+    print(f"  CI95 of the mean shift = [{t['ci_lo']:+.4f}, {t['ci_hi']:+.4f}] "
+          f"({'includes 0 ⇒ no intra-season drift' if t['ci_lo']<0<t['ci_hi'] else 'shifts'})")
+    print("  → there is a MILD crystallisation (favourites slightly stronger at the end, "
+          f"p_fav {gp['p_fav'].iloc[0]:.3f}→{gp['p_fav'].iloc[-1]:.3f}), but the shift")
+    print(f"    (~{abs(sh['shift'].mean()):.3f}) is ~3–4× smaller than the sd across leagues (0.05):")
+    print("    the invariance also holds WITHIN the season, up to a small drift")
+    print("    that is PREDICTED by the law itself (more p_fav ⇒ less skew).")
 
     C.OUTDIR.mkdir(exist_ok=True)
     sh.to_csv(C.OUTDIR / "intraseason_shift_by_league.csv", index=False)

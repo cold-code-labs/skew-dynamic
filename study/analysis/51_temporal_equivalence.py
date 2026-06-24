@@ -1,16 +1,16 @@
-"""51 — Equivalência temporal (frente U): "sem deriva secular" como TESTE DE
-EQUIVALÊNCIA (TOST), não mera não-rejeição de H0.
+"""51 — Temporal equivalence (front U): "no secular drift" as an EQUIVALENCE TEST
+(TOST), not a mere failure to reject H0.
 
-W3 estabeleceu β_ano≈0 com p alto e IC cruzando zero. Isso é AUSÊNCIA DE EVIDÊNCIA,
-não evidência de ausência: um p alto também sai de um teste sem potência. Aqui
-pré-registramos uma margem de equivalência Δ — a MESMA do §4.8 (meia SD between-liga,
-0.026), lida como a deriva acumulada tolerável na janela de ~20 anos — e, por dois
-testes unilaterais (TOST), mostramos que a tendência está, com 95% de confiança,
-DENTRO de (−Δ,+Δ). É uma afirmação POSITIVA de estabilidade.
+W3 established β_year≈0 with a high p and a CI crossing zero. That is ABSENCE OF
+EVIDENCE, not evidence of absence: a high p can also come from an underpowered test.
+Here we pre-register an equivalence margin Δ — the SAME as §4.8 (half a between-league
+SD, 0.026), read as the tolerable accumulated drift over the ~20-year window — and, via
+two one-sided tests (TOST), we show that the trend lies, with 95% confidence, WITHIN
+(−Δ,+Δ). It is a POSITIVE assertion of stability.
 
-Robustez: (i) SE cluster-robusto por liga (analítico) e bootstrap por liga; (ii)
-painel completo e painel BALANCEADO (cesta de ligas fixa, mata o confound de
-composição); (iii) curva de sensibilidade da margem (¼, ½, 1× a SD between-liga).
+Robustness: (i) cluster-robust SE by league (analytical) and bootstrap by league; (ii)
+full panel and BALANCED panel (fixed league basket, kills the composition confound);
+(iii) margin sensitivity curve (¼, ½, 1× the between-league SD).
 """
 import numpy as np
 import matplotlib
@@ -20,7 +20,7 @@ from skewlib import io, returns, exante, panel as pan, adversarial as adv, stats
 
 
 def _trend_se(x, y):
-    """Slope OLS + SE analítico (x já centrado em 0) para uma série anual curta."""
+    """OLS slope + analytical SE (x already centred at 0) for a short annual series."""
     x = np.asarray(x, float); y = np.asarray(y, float); n = len(x)
     sxx = float((x * x).sum())
     b = float((x * y).sum() / sxx)
@@ -32,18 +32,18 @@ def _trend_se(x, y):
 def main():
     df = exante.add_exante(returns.add_returns(io.load()))
     P = pan.league_season_panel(df)
-    span = int(P.season.max() - P.season.min())           # janela em anos (~20)
+    span = int(P.season.max() - P.season.min())           # window in years (~20)
     vd = pan.variance_decomp(P)
-    sd_b = vd["sd_between"]                                # SD entre ligas (o invariante)
+    sd_b = vd["sd_between"]                                # between-league SD (the invariant)
 
-    # margem de equivalência: meia SD between-liga ACUMULADA na janela (§4.8 usa 0.026)
-    delta20 = 0.5 * sd_b                                   # na escala da deriva de 20 anos
-    delta_yr = delta20 / span                              # na escala de β/ano
-    print(f"painel: {len(P)} obs · {P.Division.nunique()} ligas · {P.season.min()}–{P.season.max()} ({span} anos)")
-    print(f"SD between-liga = {sd_b:.4f} → margem de equivalência Δ = ½·SD = {delta20:.4f} "
-          f"(deriva/20a) = {delta_yr:.5f}/ano\n")
+    # equivalence margin: half a between-league SD ACCUMULATED over the window (§4.8 uses 0.026)
+    delta20 = 0.5 * sd_b                                   # on the 20-year drift scale
+    delta_yr = delta20 / span                              # on the β/year scale
+    print(f"panel: {len(P)} obs · {P.Division.nunique()} leagues · {P.season.min()}–{P.season.max()} ({span} years)")
+    print(f"between-league SD = {sd_b:.4f} → equivalence margin Δ = ½·SD = {delta20:.4f} "
+          f"(drift/20yr) = {delta_yr:.5f}/yr\n")
 
-    # painel balanceado (cesta fixa) — robustez ao confound de composição
+    # balanced panel (fixed basket) — robustness to the composition confound
     bal = adv.balanced_leagues(P, min_frac=1.0)
     if len(bal) < 3:
         bal = adv.balanced_leagues(P, min_frac=0.9)
@@ -52,34 +52,34 @@ def main():
     def assess(panel, label, boot_B=2000):
         t = pan.trend_test(panel)
         bt = pan.trend_boot(panel, B=boot_B)
-        an = stats.tost(t["beta_year"], t["se"], delta_yr)        # analítico (SE cluster)
-        bo = stats.tost(t["beta_year"], bt["se"], delta_yr)       # bootstrap (SE por liga)
-        print(f"[{label}]  β={t['beta_year']:+.5f}/ano  drift20={t['beta_year']*span:+.4f}")
-        print(f"  H0 clássica  : p(β=0)={t['p']:.2f}  IC95%[{t['ci_lo']:+.5f},{t['ci_hi']:+.5f}]  "
-              f"→ {'não rejeita' if t['p']>.05 else 'rejeita'} (ausência de evidência)")
-        print(f"  TOST analít. : SE={t['se']:.5f}  p_tost={an['p_tost']:.4f}  "
-              f"IC90%[{an['ci90_lo']:+.5f},{an['ci90_hi']:+.5f}]  → {'EQUIVALENTE' if an['equivalent'] else 'inconclusivo'}")
+        an = stats.tost(t["beta_year"], t["se"], delta_yr)        # analytical (cluster SE)
+        bo = stats.tost(t["beta_year"], bt["se"], delta_yr)       # bootstrap (SE by league)
+        print(f"[{label}]  β={t['beta_year']:+.5f}/yr  drift20={t['beta_year']*span:+.4f}")
+        print(f"  classic H0   : p(β=0)={t['p']:.2f}  CI95%[{t['ci_lo']:+.5f},{t['ci_hi']:+.5f}]  "
+              f"→ {'fails to reject' if t['p']>.05 else 'rejects'} (absence of evidence)")
+        print(f"  TOST analyt. : SE={t['se']:.5f}  p_tost={an['p_tost']:.4f}  "
+              f"CI90%[{an['ci90_lo']:+.5f},{an['ci90_hi']:+.5f}]  → {'EQUIVALENT' if an['equivalent'] else 'inconclusive'}")
         print(f"  TOST boot    : SE={bt['se']:.5f}  p_tost={bo['p_tost']:.4f}  "
-              f"IC90 boot[{bt['ci90_lo']:+.5f},{bt['ci90_hi']:+.5f}]  → {'EQUIVALENTE' if bo['equivalent'] else 'inconclusivo'}\n")
+              f"CI90 boot[{bt['ci90_lo']:+.5f},{bt['ci90_hi']:+.5f}]  → {'EQUIVALENT' if bo['equivalent'] else 'inconclusive'}\n")
         return t, bt, an, bo
 
-    print("=== Equivalência da tendência secular (β dentro de ±Δ) ===")
-    tf, btf, anf, bof = assess(P, "painel completo")
-    tb, btb, anb, bob = assess(Pbal, f"painel balanceado ({len(bal)} ligas)")
+    print("=== Equivalence of the secular trend (β within ±Δ) ===")
+    tf, btf, anf, bof = assess(P, "full panel")
+    tb, btb, anb, bob = assess(Pbal, f"balanced panel ({len(bal)} leagues)")
 
-    # sensibilidade da margem: ¼, ½, 1× a SD between-liga
-    print("=== Sensibilidade da margem (painel completo, SE cluster) ===")
+    # margin sensitivity: ¼, ½, 1× the between-league SD
+    print("=== Margin sensitivity (full panel, cluster SE) ===")
     sens = []
     for frac in (0.25, 0.5, 1.0):
         d = frac * sd_b / span
         r = stats.tost(tf["beta_year"], tf["se"], d)
         sens.append({"frac": frac, "delta20": frac * sd_b, "p_tost": r["p_tost"], "equivalent": r["equivalent"]})
-        print(f"  Δ = {frac:>4}·SD = {frac*sd_b:.4f}/20a → p_tost={r['p_tost']:.4f}  "
-              f"{'EQUIVALENTE' if r['equivalent'] else 'inconclusivo'}")
+        print(f"  Δ = {frac:>4}·SD = {frac*sd_b:.4f}/20yr → p_tost={r['p_tost']:.4f}  "
+              f"{'EQUIVALENT' if r['equivalent'] else 'inconclusive'}")
 
-    # mesmo teste no parâmetro de PREFERÊNCIA γ (C2): o objeto comportamental também
-    # é equivalente-a-plano? Δ_γ = ½ SD between-liga de γ (análogo ao da skewness).
-    print("\n=== Equivalência da preferência γ (CPT) no tempo ===")
+    # same test on the PREFERENCE parameter γ (C2): is the behavioural object also
+    # equivalent-to-flat? Δ_γ = ½ between-league SD of γ (analogous to the skewness one).
+    print("\n=== Equivalence of the γ preference (CPT) over time ===")
     df = df.assign(season=df.date.dt.year)
     g_season = cpt.gamma_by(df, "season").sort_values("season")
     g_league = cpt.gamma_by(df, "Division")
@@ -87,19 +87,19 @@ def main():
     delta_g_yr = 0.5 * sd_g / span
     bg, seg, ng = _trend_se(g_season.season - g_season.season.mean(), g_season.gamma)
     tg = stats.tost(bg, seg, delta_g_yr, dof=ng - 2)
-    print(f"  γ médio {g_season.gamma.mean():.3f} · SD between-liga {sd_g:.3f} → Δ={0.5*sd_g:.3f}/20a")
-    print(f"  β_γ={bg:+.5f}/ano (drift20={bg*span:+.4f})  SE={seg:.5f}  p(β=0)~alto")
-    print(f"  TOST: p_tost={tg['p_tost']:.4f}  IC90[{tg['ci90_lo']:+.5f},{tg['ci90_hi']:+.5f}]  "
-          f"→ {'EQUIVALENTE' if tg['equivalent'] else 'INCONCLUSIVO'}")
-    print("  → a skewness (n=638) é equivalente-a-plano; γ fica INCONCLUSIVO nessa margem")
-    print("    (série anual de 21 pontos, baixa potência): a deriva pontual é pequena")
-    print(f"    ({bg*span:+.4f} em 20a) mas o IC90 não cabe em ±Δ. O teste NÃO é viciado a passar —")
-    print("    é uma checagem honesta, e só a skewness tem potência para o veredito de equivalência.")
+    print(f"  mean γ {g_season.gamma.mean():.3f} · between-league SD {sd_g:.3f} → Δ={0.5*sd_g:.3f}/20yr")
+    print(f"  β_γ={bg:+.5f}/yr (drift20={bg*span:+.4f})  SE={seg:.5f}  p(β=0)~high")
+    print(f"  TOST: p_tost={tg['p_tost']:.4f}  CI90[{tg['ci90_lo']:+.5f},{tg['ci90_hi']:+.5f}]  "
+          f"→ {'EQUIVALENT' if tg['equivalent'] else 'INCONCLUSIVE'}")
+    print("  → skewness (n=638) is equivalent-to-flat; γ stays INCONCLUSIVE at this margin")
+    print("    (annual series of 21 points, low power): the point drift is small")
+    print(f"    ({bg*span:+.4f} over 20yr) but the CI90 does not fit within ±Δ. The test is NOT rigged to pass —")
+    print("    it is an honest check, and only skewness has the power for an equivalence verdict.")
 
-    # figura forest: drift de 20 anos ± IC, contra a banda de equivalência ±Δ20
+    # forest figure: 20-year drift ± CI, against the equivalence band ±Δ20
     C.OUTDIR.mkdir(exist_ok=True)
     FIG = C.OUTDIR / "fig"; FIG.mkdir(parents=True, exist_ok=True)
-    # IC de 90% = intervalo relevante p/ o TOST a α=0.05 (equivalência ⇔ IC90 ⊂ ±Δ)
+    # 90% CI = the relevant interval for TOST at α=0.05 (equivalence ⇔ CI90 ⊂ ±Δ)
     rows = [
         ("full panel · cluster-robust", tf["beta_year"]*span, (anf["ci90_lo"]*span, anf["ci90_hi"]*span)),
         ("full panel · league bootstrap", tf["beta_year"]*span, (btf["ci90_lo"]*span, btf["ci90_hi"]*span)),
@@ -122,8 +122,8 @@ def main():
     fig.tight_layout()
     fig.savefig(FIG / "f37_temporal_equivalence.png", dpi=C.FIG_DPI, bbox_inches="tight"); plt.close(fig)
     print(f"\n  -> {FIG / 'f37_temporal_equivalence.png'}")
-    print("  → a invariância temporal vira afirmação positiva: rejeitamos qualquer deriva")
-    print(f"    maior que ½ SD between-liga ({delta20:.3f}) em 20 anos, p_tost={anf['p_tost']:.4f}.")
+    print("  → temporal invariance becomes a positive assertion: we reject any drift")
+    print(f"    larger than ½ between-league SD ({delta20:.3f}) over 20 years, p_tost={anf['p_tost']:.4f}.")
 
     prov.write_stamp("51_temporal_equivalence", metrics={
         "beta_year": tf["beta_year"], "drift20": tf["beta_year"]*span,

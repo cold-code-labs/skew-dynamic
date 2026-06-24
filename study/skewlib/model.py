@@ -1,26 +1,26 @@
-"""Derivação formal: skewness = f(dispersão de força) via ordered-probit.
+"""Formal derivation: skewness = f(force dispersion) via ordered-probit.
 
-Template de Goddard-Asimakopoulos (2004) / Koning (2000): a força de cada time
-r ~ N(0, σ_L²); num jogo a diferença d = r_i − r_j ~ N(0, 2σ_L²). A margem
-latente y* = d + h + ε (ε~N(0,1), h = vantagem de casa) gera (A,D,H) por cutoffs
+Goddard-Asimakopoulos (2004) / Koning (2000) template: each team's force
+r ~ N(0, σ_L²); in a match the difference d = r_i − r_j ~ N(0, 2σ_L²). The latent
+margin y* = d + h + ε (ε~N(0,1), h = home advantage) generates (A,D,H) by cutoffs
 ±c:
     P(A)=Φ(−c−μ),  P(H)=1−Φ(c−μ),  P(D)=Φ(c−μ)−Φ(−c−μ),   μ = d + h.
-O favorito tem prob p = max(P_H,P_D,P_A). Sob odds JUSTAS (o=1/p) o favorito tem
-média zero, então a skewness AGRUPADA da liga é
-    S(σ_L) = E[m₃(p)] / E[σ²(p)]^{3/2},  com σ²=(1−p)/p, m₃=(1−p)(1−2p)/p²,
-onde a esperança é sobre p = p_fav(d), d ~ N(0, 2σ_L²). σ_L é a competitividade:
-pequeno = parelho.
+The favourite has probability p = max(P_H,P_D,P_A). Under FAIR odds (o=1/p) the
+favourite has zero mean, so the league's POOLED skewness is
+    S(σ_L) = E[m₃(p)] / E[σ²(p)]^{3/2},  with σ²=(1−p)/p, m₃=(1−p)(1−2p)/p²,
+where the expectation is over p = p_fav(d), d ~ N(0, 2σ_L²). σ_L is the competitiveness:
+small = balanced.
 
-Frente E (endurecimento da derivação) acrescenta duas peças:
-  E1 — forma fechada: a esperança E[·] é um integral gaussiano 1-D em d, então
-       `league_*_exact` o avalia por QUADRATURA (determinístico, sem ruído de MC),
-       e `smallsigma_skew` dá a expansão analítica near-balance
-       S(σ_L) = S₀ + S₂·σ_L² + O(σ_L⁴), com S₀ = (1−2p₀)/√(p₀(1−p₀)) a identidade
-       no favorito balanceado p₀ = p_fav(0). (A curva NÃO é monótona: é côncava,
-       com pico perto do equilíbrio e cruzando 0 quando o favorito fica forte.)
-  E2 — robustez de força: `force_diff` troca N(0,σ²) por t-Student / skew-normal /
-       uniforme. Como d = rᵢ − rⱼ é SIMÉTRICO p/ qualquer força iid, a assimetria
-       da força não enviesa a lei; só a cauda (kurtose de d) pode mover — testável.
+Front E (hardening the derivation) adds two pieces:
+  E1 — closed form: the expectation E[·] is a 1-D Gaussian integral in d, so
+       `league_*_exact` evaluates it by QUADRATURE (deterministic, no MC noise),
+       and `smallsigma_skew` gives the analytic near-balance expansion
+       S(σ_L) = S₀ + S₂·σ_L² + O(σ_L⁴), with S₀ = (1−2p₀)/√(p₀(1−p₀)) the identity
+       at the balanced favourite p₀ = p_fav(0). (The curve is NOT monotone: it is concave,
+       peaking near balance and crossing 0 when the favourite becomes strong.)
+  E2 — force robustness: `force_diff` swaps N(0,σ²) for Student-t / skew-normal /
+       uniform. Since d = rᵢ − rⱼ is SYMMETRIC for any iid force, the force's asymmetry
+       does not bias the law; only the tail (kurtosis of d) can move it — testable.
 """
 import numpy as np
 from scipy.stats import norm
@@ -35,14 +35,14 @@ def outcome_probs(d, h, c):
 
 
 def force_diff(sigma_L, n, seed, family="normal", nu=5.0, alpha=4.0):
-    """Diferença de força d = rᵢ − rⱼ de um jogo, p/ várias famílias de força
-    (Frente E2). Cada time tem força r de variância σ_L²; d tem variância 2σ_L².
-    `normal` reproduz exatamente `np.random.default_rng(seed).normal(0,√2·σ,n)`
-    (1 sorteio) — path congelado, bit-idêntico ao baseline. As demais sorteiam
-    duas pernas (rᵢ, rⱼ) e diferenciam, então d é simétrico por construção:
-      t        — força t-Student (cauda pesada), escalada p/ variância σ_L²;
-      skewnormal[_neg] — força com assimetria ±α (skew-normal), variância σ_L²;
-      uniform  — força uniforme, variância σ_L².
+    """Force difference d = rᵢ − rⱼ of a match, for several force families
+    (Front E2). Each team has force r of variance σ_L²; d has variance 2σ_L².
+    `normal` reproduces exactly `np.random.default_rng(seed).normal(0,√2·σ,n)`
+    (1 draw) — frozen path, bit-identical to the baseline. The others draw
+    two legs (rᵢ, rⱼ) and difference them, so d is symmetric by construction:
+      t        — Student-t force (heavy tail), scaled to variance σ_L²;
+      skewnormal[_neg] — force with asymmetry ±α (skew-normal), variance σ_L²;
+      uniform  — uniform force, variance σ_L².
     """
     rng = np.random.default_rng(seed)
     s = float(sigma_L)
@@ -56,14 +56,14 @@ def force_diff(sigma_L, n, seed, family="normal", nu=5.0, alpha=4.0):
         a = alpha if family == "skewnormal" else -alpha
         delta = a / np.sqrt(1.0 + a * a)
         omega = s / np.sqrt(1.0 - 2.0 * delta * delta / np.pi)   # Var=σ_L²
-        xi = -omega * delta * np.sqrt(2.0 / np.pi)               # média 0
+        xi = -omega * delta * np.sqrt(2.0 / np.pi)               # mean 0
         r1 = skewnorm.rvs(a, loc=xi, scale=omega, size=n, random_state=rng)
         r2 = skewnorm.rvs(a, loc=xi, scale=omega, size=n, random_state=rng)
         return r1 - r2
     if family == "uniform":
         hw = np.sqrt(3.0) * s                          # Var(U[-hw,hw])=hw²/3=σ_L²
         return rng.uniform(-hw, hw, n) - rng.uniform(-hw, hw, n)
-    raise ValueError(f"família de força desconhecida: {family}")
+    raise ValueError(f"unknown force family: {family}")
 
 
 def _d(sigma_L, n, seed, family="normal", **fkw):
@@ -83,7 +83,7 @@ def marginals(sigma_L, h, c, n=200000, seed=1, family="normal", **fkw):
 
 
 def league_skew(sigma_L, h, c, n=200000, seed=1, family="normal", **fkw):
-    """Skewness agrupada da liga sob odds justas — fechada em p (MC sobre d)."""
+    """Pooled league skewness under fair odds — closed in p (MC over d)."""
     p = _pfav(_d(sigma_L, n, seed, family=family, **fkw), h, c)
     s2 = (1 - p) / p
     m3 = (1 - p) * (1 - 2 * p) / p ** 2
@@ -91,19 +91,19 @@ def league_skew(sigma_L, h, c, n=200000, seed=1, family="normal", **fkw):
 
 
 def _fair_central_moments(p, max_order=6):
-    """Momentos centrais por jogo sob odds JUSTAS (o=1/p ⇒ média zero):
+    """Per-match central moments under FAIR odds (o=1/p ⇒ zero mean):
         m_k = (1-p)/p^(k-1) · [ (1-p)^(k-1) + (-1)^k · p^(k-1) ].
-    Recupera s²=(1-p)/p e m₃=(1-p)(1-2p)/p² usados em `league_skew`."""
+    Recovers s²=(1-p)/p and m₃=(1-p)(1-2p)/p² used in `league_skew`."""
     p = np.asarray(p, float)
     return {k: (1 - p) / p ** (k - 1) * ((1 - p) ** (k - 1) + (-1) ** k * p ** (k - 1))
             for k in range(2, max_order + 1)}
 
 
-# ── Frente E1 — forma fechada: o integral gaussiano, sem Monte Carlo ──────────
-# E[g(p_fav(d))] = ∫ g(p_fav(d)) φ(d; 0, 2σ_L²) dd é um integral 1-D. p_fav(d) é
-# contínua mas tem QUINAS onde o favorito troca (max de pH,pD,pA); avaliamos o
-# integral por quadratura adaptativa, partindo nos pontos de troca → exato
-# (determinístico) até a tolerância, recuperando `league_*` sem ruído de MC.
+# ── Front E1 — closed form: the Gaussian integral, no Monte Carlo ─────────────
+# E[g(p_fav(d))] = ∫ g(p_fav(d)) φ(d; 0, 2σ_L²) dd is a 1-D integral. p_fav(d) is
+# continuous but has KINKS where the favourite switches (max of pH,pD,pA); we evaluate
+# the integral by adaptive quadrature, partitioning at the switch points → exact
+# (deterministic) up to tolerance, recovering `league_*` without MC noise.
 
 def _pfav_scalar(d, h, c):
     mu = d + h
@@ -113,13 +113,13 @@ def _pfav_scalar(d, h, c):
 
 
 def _fair_mk(p, k):
-    """k-ésimo momento central por jogo sob odds justas (escalar)."""
+    """k-th per-match central moment under fair odds (scalar)."""
     return (1 - p) / p ** (k - 1) * ((1 - p) ** (k - 1) + (-1) ** k * p ** (k - 1))
 
 
 def fav_switch_points(h, c, span=14.0, ngrid=2801):
-    """Valores de d onde o favorito (argmax de pH,pD,pA) troca de identidade —
-    as quinas de p_fav(d). Usados como nós de partição na quadratura."""
+    """Values of d where the favourite (argmax of pH,pD,pA) switches identity —
+    the kinks of p_fav(d). Used as partition nodes in the quadrature."""
     from scipy.optimize import brentq
     g = np.linspace(-span, span, ngrid)
     arg = np.vstack(outcome_probs(g, h, c)).argmax(0)
@@ -135,7 +135,7 @@ def fav_switch_points(h, c, span=14.0, ngrid=2801):
 
 
 def mean_pfav_exact(sigma_L, h, c):
-    """E[p_fav] exato (integral gaussiano), sem MC — competitividade observável."""
+    """Exact E[p_fav] (Gaussian integral), no MC — observable competitiveness."""
     tau = np.sqrt(2.0) * float(sigma_L)
     if tau < 1e-9:
         return _pfav_scalar(0.0, h, c)
@@ -146,11 +146,11 @@ def mean_pfav_exact(sigma_L, h, c):
 
 
 def league_moments_exact(sigma_L, h, c, max_order=6):
-    """Momentos PADRONIZADOS da liga por QUADRATURA do integral gaussiano em d —
-    versão exata (sem ruído de MC) de `league_moments`. Forma fechada de S(σ_L)
-    no sentido do integral avaliado à precisão da máquina."""
+    """STANDARDISED league moments by QUADRATURE of the Gaussian integral in d —
+    exact version (no MC noise) of `league_moments`. Closed form of S(σ_L)
+    in the sense of the integral evaluated to machine precision."""
     tau = np.sqrt(2.0) * float(sigma_L)
-    if tau < 1e-9:                                   # liga degenerada: p₀ único
+    if tau < 1e-9:                                   # degenerate league: single p₀
         p0 = _pfav_scalar(0.0, h, c)
         M = {k: _fair_mk(p0, k) for k in range(2, max_order + 1)}
     else:
@@ -171,22 +171,22 @@ def league_moments_exact(sigma_L, h, c, max_order=6):
 
 
 def league_skew_exact(sigma_L, h, c):
-    """Skewness exata da liga (quadratura). Substitui o MC de `league_skew`."""
+    """Exact league skewness (quadrature). Replaces the MC of `league_skew`."""
     return float(league_moments_exact(sigma_L, h, c, max_order=3)["skew"])
 
 
 def smallsigma_coeffs(h, c):
-    """Coeficientes da expansão analítica near-balance de S(σ_L):
+    """Coefficients of the analytic near-balance expansion of S(σ_L):
         S(σ_L) = S₀ + S₂·σ_L² + O(σ_L⁴).
-    Em torno de σ_L→0, d→0 e p_fav é o ramo liso do favorito de equilíbrio, com
-    p₀=p_fav(0), p₁=p_fav'(0), p₂=p_fav''(0). Pela expansão de Taylor + simetria
-    de d (termo ímpar zera), para qualquer g(p):  E[g] = g(p₀) + σ_L²·[g''(p₀)p₁²
-    + g'(p₀)p₂] + O(σ_L⁴) (pois Var(d)=2σ_L²). Aplicando a σ²(p)=(1−p)/p e
+    Around σ_L→0, d→0 and p_fav is the smooth branch of the balanced favourite, with
+    p₀=p_fav(0), p₁=p_fav'(0), p₂=p_fav''(0). By the Taylor expansion + symmetry
+    of d (odd term vanishes), for any g(p):  E[g] = g(p₀) + σ_L²·[g''(p₀)p₁²
+    + g'(p₀)p₂] + O(σ_L⁴) (since Var(d)=2σ_L²). Applying to σ²(p)=(1−p)/p and
     m₃(p)=(1−p)(1−2p)/p²:
-        S₀ = m₃(p₀)/σ²(p₀)^{3/2} = (1−2p₀)/√(p₀(1−p₀))      (identidade por jogo)
+        S₀ = m₃(p₀)/σ²(p₀)^{3/2} = (1−2p₀)/√(p₀(1−p₀))      (per-match identity)
         S₂ = B₂/A₀^{3/2} − (3/2)·B₀·A₂/A₀^{5/2}.
-    No ramo do mandante (favorito = casa), p₀=Φ(h−c), p₁=φ(h−c), p₂=−(h−c)φ(h−c)
-    em forma fechada; usamos diferenças centrais p/ valer em qualquer ramo."""
+    On the home branch (favourite = home), p₀=Φ(h−c), p₁=φ(h−c), p₂=−(h−c)φ(h−c)
+    in closed form; we use central differences so it holds on any branch."""
     eps = 1e-3
     f = lambda d: _pfav_scalar(d, h, c)
     p0 = f(0.0)
@@ -205,17 +205,17 @@ def smallsigma_coeffs(h, c):
 
 
 def smallsigma_skew(sigma_L, h, c):
-    """Expansão analítica S₀ + S₂·σ_L² (forma fechada near-balance)."""
+    """Analytic expansion S₀ + S₂·σ_L² (near-balance closed form)."""
     cf = smallsigma_coeffs(h, c)
     s = np.asarray(sigma_L, float)
     return cf["S0"] + cf["S2"] * s ** 2
 
 
 def league_moments(sigma_L, h, c, n=200000, seed=1, max_order=6, family="normal", **fkw):
-    """Momentos PADRONIZADOS da liga sob odds justas — var/skew/kurtose/etc.
-    fechados na distribuição de p_fav. Como todas as apostas têm média zero, não
-    há termo entre-jogos: M_k = E[m_k(p)]. Generaliza `league_skew` (ordem 3) e
-    permite prever a FORMA inteira (não só o 3º momento) a partir de σ_L."""
+    """STANDARDISED league moments under fair odds — var/skew/kurtosis/etc.
+    closed in the distribution of p_fav. Since every bet has zero mean, there is
+    no between-match term: M_k = E[m_k(p)]. Generalises `league_skew` (order 3) and
+    allows predicting the whole SHAPE (not just the 3rd moment) from σ_L."""
     p = _pfav(_d(sigma_L, n, seed, family=family, **fkw), h, c)
     m = _fair_central_moments(p, max_order)
     M2 = float(m[2].mean())
@@ -228,7 +228,7 @@ def league_moments(sigma_L, h, c, n=200000, seed=1, max_order=6, family="normal"
 
 
 def calibrate(home=0.444, draw=0.264, pfav=0.499, n=200000):
-    """Resolve (h, c, σ_ref) para casar as taxas marginais médias observadas."""
+    """Solves (h, c, σ_ref) to match the observed mean marginal rates."""
     def eqs(x):
         h, c, s = x
         m = marginals(abs(s), h, abs(c), n=n, seed=7)
@@ -238,10 +238,10 @@ def calibrate(home=0.444, draw=0.264, pfav=0.499, n=200000):
 
 
 def calibrate_by_league(df, n=120000, min_n=3000):
-    """Calibra (h, c, σ_L) POR liga a partir das taxas marginais da própria liga
-    (Frente E3): vantagem de casa, cutoff de empate e dispersão de força endógenos.
-    Requer add_exante (p_fav_dv). Devolve DataFrame por liga + skew prevista pelo
-    modelo da própria liga vs observada."""
+    """Calibrates (h, c, σ_L) PER league from the league's own marginal rates
+    (Front E3): home advantage, draw cutoff and force dispersion all endogenous.
+    Requires add_exante (p_fav_dv). Returns a per-league DataFrame + skew predicted by
+    the league's own model vs observed."""
     import pandas as pd
     rows = []
     for lg, g in df.groupby("Division"):
@@ -262,7 +262,7 @@ def calibrate_by_league(df, n=120000, min_n=3000):
 
 
 def curve(h, c, sigmas, n=200000, seed=3):
-    """Traça (mean p_fav, skewness) ao longo de uma grade de σ_L."""
+    """Traces (mean p_fav, skewness) over a grid of σ_L."""
     pf, sk = [], []
     for s in sigmas:
         pf.append(marginals(s, h, c, n=n, seed=seed)["p_fav"])
@@ -271,18 +271,18 @@ def curve(h, c, sigmas, n=200000, seed=3):
 
 
 def curve_exact(h, c, sigmas):
-    """(mean p_fav, skewness) EXATOS por quadratura ao longo da grade de σ_L —
-    a curva teórica sem ruído de MC (Frente E1). Substitui `curve` p/ a figura."""
+    """EXACT (mean p_fav, skewness) by quadrature over the σ_L grid —
+    the theoretical curve without MC noise (Front E1). Replaces `curve` for the figure."""
     pf = np.array([mean_pfav_exact(s, h, c) for s in sigmas])
     sk = np.array([league_skew_exact(s, h, c) for s in sigmas])
     return pf, sk
 
 
 def curve_family(h, c, sigmas, family="normal", n=200000, seed=3, **fkw):
-    """(mean p_fav, skewness) por família de força (Frente E2) — MC, pois t/
-    skew-normal/uniforme não têm o integral fechado do caso gaussiano. Permite
-    reparametrizar a lei pela competitividade OBSERVÁVEL (p_fav) e ver se a curva
-    skew×p_fav sobrevive à troca da distribuição de força."""
+    """(mean p_fav, skewness) per force family (Front E2) — MC, since t/
+    skew-normal/uniform lack the closed integral of the Gaussian case. Allows
+    reparametrising the law by the OBSERVABLE competitiveness (p_fav) and checking
+    whether the skew×p_fav curve survives swapping the force distribution."""
     pf, sk = [], []
     for s in sigmas:
         pf.append(marginals(s, h, c, n=n, seed=seed, family=family, **fkw)["p_fav"])
@@ -291,8 +291,8 @@ def curve_family(h, c, sigmas, family="normal", n=200000, seed=3, **fkw):
 
 
 def curve_moments(h, c, sigmas, n=200000, seed=3, max_order=6):
-    """Traça (mean p_fav, {var, skew, exkurt, ...}) ao longo da grade de σ_L —
-    a curva teórica de CADA momento, p/ prever a forma de cada liga pelo p_fav."""
+    """Traces (mean p_fav, {var, skew, exkurt, ...}) over the σ_L grid —
+    the theoretical curve of EACH moment, to predict each league's shape from p_fav."""
     keys = ["var", "skew", "exkurt", "std5", "std6"][: max_order - 1]
     pf = []; mom = {k: [] for k in keys}
     for s in sigmas:

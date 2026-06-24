@@ -1,12 +1,12 @@
-"""Camada CANÔNICA, sport-agnóstica — mede e compara assimetrias de qualquer
-mercado de apostas (2, 3, … resultados), de qualquer esporte.
+"""CANONICAL, sport-agnostic layer — measures and compares the asymmetries of any
+betting market (2, 3, … outcomes), of any sport.
 
-O núcleo do estudo (identidade de Bernoulli, decomposição, skew-meter) só precisa,
-por aposta, de (p de-vigado, o de mercado, won). Esta camada consome uma tabela
-CANÔNICA em forma longa (uma linha por evento×resultado; ver docs/DATA-SCHEMA.md) e
-expõe seleção de objeto de aposta + assinatura, reusando `exante` sem duplicar a
-matemática. O específico-de-esporte (de-vig por mercado, taxonomia de resultados,
-competitividade odds-free) vive nos adaptadores (`skewlib/adapters/`).
+The study's core (Bernoulli identity, decomposition, skew-meter) only needs, per
+bet, (de-vigged p, market o, won). This layer consumes a CANONICAL table in long
+form (one row per event×outcome; see docs/DATA-SCHEMA.md) and exposes betting
+object selection + signature, reusing `exante` without duplicating the maths. The
+sport-specific part (per-market de-vig, outcome taxonomy, odds-free
+competitiveness) lives in the adapters (`skewlib/adapters/`).
 """
 import numpy as np
 import pandas as pd
@@ -18,25 +18,25 @@ SCHEMA = ["event_id", "sport", "market", "competition", "date",
 
 
 def validate(df):
-    """Checa o contrato canônico: colunas + invariantes por evento (Σp≈1, exatamente
-    um vencedor, odds≥1, p∈(0,1)). Levanta AssertionError com a 1ª violação."""
+    """Checks the canonical contract: columns + per-event invariants (Σp≈1, exactly
+    one winner, odds≥1, p∈(0,1)). Raises AssertionError on the 1st violation."""
     miss = [c for c in SCHEMA if c not in df.columns]
-    assert not miss, f"colunas canônicas ausentes: {miss}"
-    assert (df.odds >= 1.0).all(), "há odds < 1"
+    assert not miss, f"missing canonical columns: {miss}"
+    assert (df.odds >= 1.0).all(), "there are odds < 1"
     g = df.groupby("event_id")
     psum = g.p.sum()
     bad = psum[(psum - 1.0).abs() > 1e-6]
-    assert bad.empty, f"Σp ≠ 1 em {len(bad)} eventos (ex.: {bad.index[:3].tolist()})"
+    assert bad.empty, f"Σp ≠ 1 in {len(bad)} events (e.g.: {bad.index[:3].tolist()})"
     wins = g.won.sum()
-    assert (wins == 1).all(), "todo evento precisa de exatamente um resultado vencedor"
-    assert df.p.between(0, 1).all(), "há p fora de (0,1)"
+    assert (wins == 1).all(), "every event needs exactly one winning outcome"
+    assert df.p.between(0, 1).all(), "there are p outside (0,1)"
     return True
 
 
 def devig(df, method=None):
-    """Preenche/sobrescreve `p` de-vigando as odds por evento (vetorizado por
-    mercado de largura fixa). Para o adaptador de futebol, a de-vig é delegada ao
-    `devig.devig_frame` (números congelados); aqui é a via genérica p/ outros."""
+    """Fills/overwrites `p` by de-vigging the odds per event (vectorised by
+    fixed-width market). For the football adapter, the de-vig is delegated to
+    `devig.devig_frame` (frozen numbers); here is the generic path for the others."""
     wide = df.pivot(index="event_id", columns="outcome", values="odds")
     P = _devig.devig_odds(wide.to_numpy(float), method)
     pwide = pd.DataFrame(P, index=wide.index, columns=wide.columns)
@@ -46,11 +46,11 @@ def devig(df, method=None):
     return out
 
 
-# ── seleção do objeto de aposta ──────────────────────────────────────────────
+# ── betting object selection ─────────────────────────────────────────────────
 def select(df, kind, draw_role="draw"):
-    """Devolve uma linha por evento (competition, date, p, o, won) para o objeto:
-    'fav' = argmax p, 'dog' = argmin p, 'draw' = papel == draw_role (vazio se o
-    esporte não tem empate)."""
+    """Returns one row per event (competition, date, p, o, won) for the object:
+    'fav' = argmax p, 'dog' = argmin p, 'draw' = role == draw_role (empty if the
+    sport has no draw)."""
     if kind == "draw":
         sel = df[df.role == draw_role].copy()
     elif kind in ("fav", "dog"):
@@ -58,14 +58,14 @@ def select(df, kind, draw_role="draw"):
                else df.groupby("event_id").p.idxmin())
         sel = df.loc[idx].copy()
     else:
-        raise ValueError(f"kind desconhecido: {kind}")
+        raise ValueError(f"unknown kind: {kind}")
     return sel.rename(columns={"odds": "o"})[
         ["event_id", "competition", "date", "p", "o", "won"]].reset_index(drop=True)
 
 
 def signature(sel, label=None):
-    """Assinatura de assimetria (skew/var/exkurt + competitividade) de uma seleção
-    já feita, via a mistura ex-ante. Reusa exante.pooled_moments (mesmos números)."""
+    """Asymmetry signature (skew/var/exkurt + competitiveness) of an already-made
+    selection, via the ex-ante mixture. Reuses exante.pooled_moments (same numbers)."""
     p = sel.p.to_numpy(float); o = sel.o.to_numpy(float)
     if len(p) == 0:
         return None
@@ -76,8 +76,8 @@ def signature(sel, label=None):
 
 def bettype_by(df, by="competition", kinds=("fav", "draw", "dog"),
                draw_role="draw", min_n=2000):
-    """Skewness ex-ante de cada objeto de aposta, por grupo (liga/torneio) — a
-    generalização sport-agnóstica de `exante.bettype_by`. Uma linha por grupo."""
+    """Ex-ante skewness of each betting object, per group (league/tournament) — the
+    sport-agnostic generalisation of `exante.bettype_by`. One row per group."""
     rows = []
     for key, g in df.groupby(by, observed=True):
         n_events = g.event_id.nunique()

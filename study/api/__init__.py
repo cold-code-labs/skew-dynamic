@@ -1,2 +1,2 @@
-"""skew-meter como serviço — API fina sobre o skewlib (objetivo-raiz: produtizar
-o aparelho de similaridade de assimetrias). Ver api/main.py e api/engine.py."""
+"""skew-meter as a service — thin API over skewlib (root goal: productise the
+asymmetry-similarity apparatus). See api/main.py and api/engine.py."""

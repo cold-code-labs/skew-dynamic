@@ -1,9 +1,9 @@
-"""17 — Multi-momento (Frente B): de "invariância de skew" para "invariância de
-FORMA". Estende a decomposição de momentos da mistura para var/skew/kurtose/5ª-6ª
-ordem e confronta CADA momento com a curva derivada do ordered-probit (como o P3
-fez só p/ a skew). Se o modelo de força prevê var, skew E kurtose das 38 ligas a
-partir do p_fav, a forma inteira da distribuição implícita é função única da
-competitividade — não só o 3º momento.
+"""17 — Multi-moment (Front B): from "skew invariance" to "SHAPE invariance".
+Extends the moment decomposition of the mixture to var/skew/kurtosis/5th-6th
+order and confronts EACH moment with the ordered-probit derived curve (as P3
+did only for skew). If the strength model predicts var, skew AND kurtosis of the
+38 leagues from p_fav, the entire shape of the implied distribution is a single
+function of competitiveness — not just the 3rd moment.
 """
 import numpy as np, pandas as pd
 import matplotlib
@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 from skewlib import io, returns, exante, model, stats, config as C
 
 MAXO = 6
-MOMENTS = ["var", "skew", "exkurt"]   # ordens 2,3,4 — previstas pelo modelo
+MOMENTS = ["var", "skew", "exkurt"]   # orders 2,3,4 — predicted by the model
 
 
 def main():
@@ -22,7 +22,7 @@ def main():
 
     G = exante.pooled_moments(p, o, max_order=MAXO)
     print(f"N={n:,} | de-vig={C.DEVIG_METHOD}")
-    print("\nGLOBAL — momentos padronizados da mistura implícita + fração MECÂNICA:")
+    print("\nGLOBAL — standardised moments of the implied mixture + MECHANICAL fraction:")
     print(f"  var      = {G['var']:.4f}")
     se = stats.bootstrap_stat(
         lambda i: exante.pooled_moments(p[i], o[i], 3)["skew"], n, B=400)
@@ -33,12 +33,12 @@ def main():
     print(f"  exkurt   = {G['exkurt']:+.4f}  (boot SE {sek['se']:.4f}, "
           f"IC95 [{sek['ci_lo']:+.3f},{sek['ci_hi']:+.3f}])")
     print(f"  std5     = {G['std5']:+.4f} | std6 = {G['std6']:+.4f}")
-    print("  fração within (mecânica / intra-jogo) por ordem — ≈1 ⇒ a forma INTEIRA")
-    print("  é a imagem algébrica da distribuição de p, não do pooling entre jogos:")
+    print("  within fraction (mechanical / intra-match) by order — ≈1 ⇒ the ENTIRE shape")
+    print("  is the algebraic image of the distribution of p, not of pooling across matches:")
     for k in range(2, MAXO + 1):
         print(f"    m{k}: within_frac = {G[f'within_frac_m{k}']:+.4f}")
 
-    # --- por liga: momentos observados ---
+    # --- by league: observed moments ---
     rows = []
     for lg, g in df.groupby("Division"):
         if len(g) < 2000:
@@ -50,8 +50,8 @@ def main():
                      **{f"wf_m{k}": pm[f"within_frac_m{k}"] for k in range(2, MAXO + 1)}})
     lg = pd.DataFrame(rows).sort_values("p_fav_dv").reset_index(drop=True)
 
-    # --- previsto pelo ordered-probit (1ª ordem -> cada momento) ---
-    print("\nCalibrando ordered-probit p/ taxas marginais pooled...", flush=True)
+    # --- predicted by the ordered-probit (1st order -> each moment) ---
+    print("\nCalibrating ordered-probit for pooled marginal rates...", flush=True)
     par = model.calibrate(home=(df.FTResult == "H").mean(),
                           draw=(df.FTResult == "D").mean(),
                           pfav=float(df.p_fav_dv.mean()))
@@ -59,8 +59,8 @@ def main():
     sig = np.linspace(0.05, 1.3, 45)
     cpf, cmom = model.curve_moments(par["h"], par["c"], sig, max_order=4)
     order = np.argsort(cpf)
-    print("\n  modelo prevê cada momento da liga a partir SÓ do mean p_fav:")
-    print(f"  {'momento':8s} {'corr(prev,obs)':>15s} {'RMSE':>8s} {'sd entre ligas':>15s}")
+    print("\n  model predicts each league moment from ONLY the mean p_fav:")
+    print(f"  {'moment':8s} {'corr(pred,obs)':>15s} {'RMSE':>8s} {'sd across leagues':>15s}")
     pred = {}
     for m in MOMENTS:
         pm = np.interp(lg.p_fav_dv.values, cpf[order], cmom[m][order])
@@ -74,7 +74,7 @@ def main():
     lg.to_csv(C.OUTDIR / "moments_by_league.csv", index=False)
     print(f"\n  -> {C.OUTDIR / 'moments_by_league.csv'}")
 
-    # --- figura: previsto×observado p/ skew e kurtose ---
+    # --- figure: predicted×observed for skew and kurtosis ---
     FIG = C.OUTDIR / "fig"; FIG.mkdir(parents=True, exist_ok=True)
     fig, axes = plt.subplots(1, 2, figsize=(10, 4))
     for ax, m, lab in [(axes[0], "skew", "skewness (m₃)"),

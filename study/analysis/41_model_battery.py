@@ -1,16 +1,16 @@
-"""41 — Frente O: BATERIA de modelos geradores (independência de modelo, ampliada).
-A Frente I mostrou que UM Poisson de gols cai na mesma curva que o ordered-probit
-de margem. Aqui submetemos a lei skewness=f(competitividade) a uma bateria de
-geradores GENUINAMENTE distintos — Poisson (gols), Dixon-Coles (gols+dependência),
-Bradley-Terry-Davidson (forças logísticas, SEM gols) e Elo de resultados (odds-free,
-mapa ordinal) — e mostramos que TODOS reproduzem a lei e caem na curva S(σ_L).
-Se cinco famílias independentes + o mercado caem na mesma curva, a lei não é
-artefato de nenhuma forma funcional: é geometria da mistura de apostas de dois
-pontos sobre a distribuição de competitividade da liga.
+"""41 — Front O: BATTERY of generative models (model independence, extended).
+Front I showed that ONE goals Poisson falls on the same curve as the margin
+ordered-probit. Here we subject the law skewness=f(competitiveness) to a battery of
+GENUINELY distinct generators — Poisson (goals), Dixon-Coles (goals+dependence),
+Bradley-Terry-Davidson (logistic strengths, NO goals) and Elo of results (odds-free,
+ordinal map) — and show that ALL reproduce the law and fall on the curve S(σ_L).
+If five independent families + the market fall on the same curve, the law is not an
+artefact of any functional form: it is the geometry of the mixture of two-point bets
+over the league's competitiveness distribution.
 
-Nota de robustez: Poisson bivariado (covariância de gols) e Negative-Binomial
-(super-dispersão) NÃO entram — gols de futebol são Poisson independente quase puro
-(cov mediana ≈ −0.07, super-dispersão ≈ 0), então ambos colapsam ao Poisson.
+Robustness note: bivariate Poisson (goal covariance) and Negative-Binomial
+(over-dispersion) are NOT included — football goals are almost pure independent
+Poisson (median cov ≈ −0.07, over-dispersion ≈ 0), so both collapse to Poisson.
 """
 import numpy as np
 import matplotlib
@@ -33,16 +33,16 @@ def _corr(a, b):
 def main():
     df = exante.add_exante(returns.add_returns(io.load()))
     df["season"] = np.where(df.date.dt.month >= 7, df.date.dt.year, df.date.dt.year - 1)
-    print(f"N={len(df):,} | ajustando a bateria por liga-temporada "
+    print(f"N={len(df):,} | fitting the battery by league-season "
           f"(Poisson, Dixon-Coles, Bradley-Terry-Davidson)...", flush=True)
     tab = cm.battery_table(df, min_games=150, min_teams=8)
     L = cm.by_league(tab)
-    print(f"  {len(tab)} liga-temporadas ajustadas, {L.Division.nunique()} ligas")
-    print("  ajustando Elo de resultados (odds-free, passo cronológico)...", flush=True)
+    print(f"  {len(tab)} league-seasons fitted, {L.Division.nunique()} leagues")
+    print("  fitting Elo of results (odds-free, chronological step)...", flush=True)
     L = L.merge(cm.elo_by_league(df)[["Division", "skew_elo", "pfav_elo"]],
                 on="Division", how="left")
 
-    # curva derivada do ordered-probit (mesma calibração da Frente I)
+    # curve derived from the ordered-probit (same calibration as Front I)
     par = model.calibrate(home=(df.FTResult == "H").mean(),
                           draw=(df.FTResult == "D").mean(),
                           pfav=float(df.p_fav_dv.mean()))
@@ -50,10 +50,10 @@ def main():
     cpf, csk = model.curve(par["h"], par["c"], sig)
     o = np.argsort(cpf)
 
-    print(f"\nBATERIA DE MODELOS (entre {L.Division.nunique()} ligas) — "
-          f"todos vs empírico e vs a curva S(σ_L):")
-    print(f"  {'modelo':<26} {'corr(skew,emp)':>16} {'corr(pfav,emp)':>16} "
-          f"{'r na curva':>11} {'nível skew':>11}")
+    print(f"\nMODEL BATTERY (across {L.Division.nunique()} leagues) — "
+          f"all vs empirical and vs the curve S(σ_L):")
+    print(f"  {'model':<26} {'corr(skew,emp)':>16} {'corr(pfav,emp)':>16} "
+          f"{'r on curve':>11} {'skew level':>11}")
     rows = []
     skemp = L.skew_emp.to_numpy()
     for key, lab, _c, _m in GENS:
@@ -65,21 +65,21 @@ def main():
         rows.append((key, lab, rs, rp, r_curve, float(np.nanmean(sk))))
         print(f"  {lab:<26} {rs['r']:+.3f} [{rs['ci_lo']:+.2f},{rs['ci_hi']:+.2f}] "
               f"  {rp['r']:+.3f}        {r_curve:+.2f}      {np.nanmean(sk):+.3f}")
-    # referências
+    # references
     pe = L.pfav_emp.to_numpy()
     pred_e = np.interp(pe, cpf[o], csk[o])
     r_emp_curve = float(np.corrcoef(pred_e, skemp)[0, 1])
-    print(f"  {'mercado (empírico)':<26} {'  —':>16} {'  —':>16} "
+    print(f"  {'market (empirical)':<26} {'  —':>16} {'  —':>16} "
           f"{r_emp_curve:+.2f}      {skemp.mean():+.3f}")
-    print("\n  → cinco famílias independentes (margem-probit, Poisson, Dixon-Coles,")
-    print("    Bradley-Terry-Davidson, Elo de resultados) + o mercado caem na MESMA")
-    print("    curva: a lei skewness=f(competitividade) é independente do modelo gerador.")
+    print("\n  → five independent families (margin-probit, Poisson, Dixon-Coles,")
+    print("    Bradley-Terry-Davidson, Elo of results) + the market fall on the SAME")
+    print("    curve: the law skewness=f(competitiveness) is independent of the generative model.")
 
     C.OUTDIR.mkdir(exist_ok=True)
     L.to_csv(C.OUTDIR / "model_battery_by_league.csv", index=False)
     FIG = C.OUTDIR / "fig"; FIG.mkdir(parents=True, exist_ok=True)
     fig, axes = plt.subplots(1, 2, figsize=(11, 4.4))
-    # painel 1: todos os modelos sobre a curva
+    # panel 1: all models on the curve
     axes[0].plot(cpf[o], csk[o], color="0.4", lw=2, zorder=1,
                  label="ordered-probit S(σ_L)")
     axes[0].scatter(L.pfav_emp, L.skew_emp, s=26, color="#1f77b4",
@@ -92,7 +92,7 @@ def main():
     axes[0].set_ylabel("skewness ex-ante")
     axes[0].set_title("Five families, one curve")
     axes[0].legend(frameon=False, fontsize=7.5, loc="upper right")
-    # painel 2: skew_modelo vs skew_empírico (todos), com a reta identidade
+    # panel 2: skew_model vs skew_empirical (all), with the identity line
     lo = min(L.skew_emp.min(), -0.05); hi = max(L.skew_emp.max(), 0.4)
     axes[1].plot([lo, hi], [lo, hi], "--", color="0.7", lw=1, zorder=0)
     for key, lab, col, mk in GENS:

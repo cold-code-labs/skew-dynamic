@@ -1,18 +1,18 @@
-"""Frentes L/M/N — utilidades terminais sobre o MESMO dataset:
+"""Fronts L/M/N — terminal utilities over the SAME dataset:
 
-  L  vantagem de casa (HFA) secular vs invariância da skewness.
-  M  risco de cauda realizado (VaR/CVaR/max drawdown) das estratégias.
-  N  entropia (índice de competitividade) + co-momento entre mercados (1X2×O/U).
+  L  secular home advantage (HFA) vs skewness invariance.
+  M  realised tail risk (VaR/CVaR/max drawdown) of the strategies.
+  N  entropy (competitiveness index) + co-moment across markets (1X2×O/U).
 """
 import numpy as np, pandas as pd
 from scipy.stats import skew, kurtosis
 from . import exante
 
 
-# ── L — vantagem de casa secular ─────────────────────────────────────────────
+# ── L — secular home advantage ───────────────────────────────────────────────
 def hfa_and_skew_by_year(df):
-    """Por ano: taxa de vitória do mandante (HFA), fração de favoritos que são
-    mandantes, e a skewness ex-ante agrupada. Requer add_exante."""
+    """Per year: home win rate (HFA), fraction of favourites that are home teams,
+    and the pooled ex-ante skewness. Requires add_exante."""
     d = df.copy(); d["year"] = d.date.dt.year
     P = d[["p_H", "p_D", "p_A"]].to_numpy(float)
     d["fav_home"] = (P.argmax(1) == 0).astype(float)
@@ -27,9 +27,9 @@ def hfa_and_skew_by_year(df):
     return pd.DataFrame(rows).sort_values("year").reset_index(drop=True)
 
 
-# ── M — risco de cauda realizado ─────────────────────────────────────────────
+# ── M — realised tail risk ───────────────────────────────────────────────────
 def tail_metrics(returns, alpha=0.05):
-    """Momentos + VaR/CVaR (cauda esquerda) de uma série de retornos por aposta."""
+    """Moments + VaR/CVaR (left tail) of a per-bet return series."""
     r = np.asarray(returns, float); r = r[np.isfinite(r)]
     var = float(np.quantile(r, alpha))
     cvar = float(r[r <= var].mean())
@@ -38,7 +38,7 @@ def tail_metrics(returns, alpha=0.05):
 
 
 def max_drawdown(returns_in_order):
-    """Max drawdown do P&L acumulado (aposta unitária sequencial, ordem dada)."""
+    """Max drawdown of the cumulative P&L (sequential unit bet, given order)."""
     pnl = np.cumsum(np.asarray(returns_in_order, float))
     peak = np.maximum.accumulate(pnl)
     dd = pnl - peak
@@ -47,16 +47,16 @@ def max_drawdown(returns_in_order):
             "n": len(pnl)}
 
 
-# ── N — entropia + co-momento entre mercados ─────────────────────────────────
+# ── N — entropy + cross-market co-moment ──────────────────────────────────────
 def shannon_entropy(P):
-    """Entropia de Shannon (nats) da distribuição 1X2 de cada jogo (linhas de P)."""
+    """Shannon entropy (nats) of each game's 1X2 distribution (rows of P)."""
     P = np.clip(np.asarray(P, float), 1e-12, 1)
     return -(P * np.log(P)).sum(1)
 
 
 def entropy_by_league(df, min_n=2000):
-    """Entropia média da liga (competitividade: alta = jogos mais incertos) +
-    skewness ex-ante da liga."""
+    """Mean league entropy (competitiveness: high = more uncertain games) +
+    ex-ante skewness of the league."""
     P = df[["p_H", "p_D", "p_A"]].to_numpy(float)
     d = df.copy(); d["entropy"] = shannon_entropy(P)
     rows = []

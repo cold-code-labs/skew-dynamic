@@ -10,5 +10,5 @@ __pycache__/
 .venv/
 .DS_Store
 
-# PDF de submissão (artefato de build; regenerar com docs/paper/build_pdf.sh)
+# submission PDF (build artifact; regenerate with docs/paper/build_pdf.sh)
 outputs/paper/

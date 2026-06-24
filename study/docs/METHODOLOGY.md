@@ -1,134 +1,134 @@
-# Estabilidade Estrutural da Skewness em Mercados de Apostas de Futebol
+# Structural Stability of Skewness in Football Betting Markets
 
-**Status:** metodologia consolidada · pipeline reproduzido em amostra 2005–2025
-**Autor:** Vitor Alves
-**Dataset:** congelado (`data/PROVENANCE.json`, sha256 `6905ca53…`), 205.435
-jogos, 38 ligas, 2005-01→2025-06. Alvo: *Royal Society Open Science* (regularidade
-empírica + mecanismo + artefato reprodutível).
+**Status:** consolidated methodology · pipeline reproduced on a 2005–2025 sample
+**Author:** Vitor Alves
+**Dataset:** frozen (`data/PROVENANCE.json`, sha256 `6905ca53…`), 205,435
+matches, 38 leagues, 2005-01→2025-06. Target: *Royal Society Open Science* (empirical
+regularity + mechanism + reproducible artefact).
 
 ---
 
-## 1. Pergunta de pesquisa
+## 1. Research question
 
-A assimetria (skewness) da distribuição de retornos implícitos do mercado de
-apostas de futebol é um **processo temporal** ou um **invariante estrutural**?
-Três frentes:
+Is the skewness of the distribution of implied returns in football betting
+markets a **temporal process** or a **structural invariant**? Three fronts:
 
-1. *Cross-sectional* — de onde vem a skewness? (mecanismo)
-2. *Temporal* — ela tem dinâmica (deriva, persistência, quebras) ou é constante?
-3. *Estrutural* — o que determina o nível de cada liga?
+1. *Cross-sectional* — where does the skewness come from? (mechanism)
+2. *Temporal* — does it have dynamics (drift, persistence, breaks) or is it constant?
+3. *Structural* — what determines the level of each league?
 
-**Tese:** a skewness é, em 1ª ordem, a **imagem algébrica** da distribuição de
-probabilidades implícitas; o nível de cada liga é determinado pela
-competitividade esportiva (lenta), o que a torna um invariante temporal. A
-margem das casas é ortogonal à assimetria.
+**Thesis:** skewness is, to first order, the **algebraic image** of the
+distribution of implied probabilities; the level of each league is determined by
+(slow) sporting competitiveness, which makes it a temporal invariant. The
+bookmakers' margin is orthogonal to the asymmetry.
 
-## 2. Lacuna na literatura
+## 2. Gap in the literature
 
-Golec & Tamarkin (1998) tratam a preferência por skewness como fenômeno
-*cross-sectional* (entre apostas, num corte); o favorite-longshot bias (FLB) é
-o mecanismo (Snowberg & Wolfers 2010). Faltam (i) a **decomposição mecânica**
-que quantifica quanto da skewness de mercado é a identidade de Bernoulli da
-distribuição de p; (ii) a **lei estrutural** skewness=f(competitividade) medida
-com um regressor *independente das odds*; (iii) a **invariância temporal** de
-20 anos como afirmação de eficiência/microestrutura. Esta é a contribuição.
+Golec & Tamarkin (1998) treat the preference for skewness as a
+*cross-sectional* phenomenon (across bets, within a cross-section); the
+favourite-longshot bias (FLB) is the mechanism (Snowberg & Wolfers 2010).
+Missing are (i) the **mechanical decomposition** quantifying how much of the
+market skewness is the Bernoulli identity of the distribution of p; (ii) the
+**structural law** skewness=f(competitiveness) measured with a regressor
+*independent of the odds*; (iii) the **temporal invariance** over 20 years as a
+statement about efficiency/microstructure. This is the contribution.
 
-## 3. Dados
+## 3. Data
 
-- **Fonte:** football-data.co.uk normalizado (espelho xgabora; main + ligas
-  extra/sul-americanas), congelado por hash. Recorte ≥2005 (cobertura de odds
-  ~100%).
-- **N:** 205.435 jogos 1X2; 148.261 com mercado over/under 2.5.
-- **Colunas:** `OddH/D/A` (média de fechamento) e `MaxH/D/A` (melhor preço →
-  teste de margem); `FTResult`, `FTHome/FTAway` (gols → O/U e Elo);
+- **Source:** normalised football-data.co.uk (xgabora mirror; main + extra/South
+  American leagues), frozen by hash. Cut-off ≥2005 (odds coverage ~100%).
+- **N:** 205,435 1X2 matches; 148,261 with an over/under 2.5 market.
+- **Columns:** `OddH/D/A` (closing average) and `MaxH/D/A` (best price →
+  margin test); `FTResult`, `FTHome/FTAway` (goals → O/U and Elo);
   `HomeTeam/AwayTeam` (Elo); `Division`, `MatchDate`.
 
-## 4. Objeto primário — skewness ex-ante (de-vigada)
+## 4. Primary object — ex-ante (de-vigged) skewness
 
-Aposta unitária no favorito a odd decimal *o* com prob. verdadeira *p*:
-retorno `(o−1)` com prob *p*, `−1` com prob `1−p` — uma **Bernoulli reescalada**
-de momentos centrais fechados (`μ=po−1`, `σ²=p(1−p)o²`, `m₃=p(1−p)(1−2p)o³`).
-A skewness por jogo **depende só de p**: `(1−2p)/√(p(1−p))`, cruzando zero em
-p=0,5. A skewness agregada (liga/janela) é a da **mistura**, decomposta por
-**lei dos cumulantes totais**:
+A unit bet on the favourite at decimal odds *o* with true probability *p*:
+return `(o−1)` with prob. *p*, `−1` with prob. `1−p` — a **rescaled Bernoulli**
+with closed-form central moments (`μ=po−1`, `σ²=p(1−p)o²`, `m₃=p(1−p)(1−2p)o³`).
+The per-match skewness **depends only on p**: `(1−2p)/√(p(1−p))`, crossing zero
+at p=0.5. The aggregate skewness (league/window) is that of the **mixture**,
+decomposed by the **law of total cumulants**:
 
 ```
-M₃ = E[m₃ᵢ]                     (mecânico: assimetria intra-jogo / FLB)
-   + 3·E[σ²ᵢ(μᵢ−μ)]             (covariância variância×média)
-   + E[(μᵢ−μ)³]                 (dispersão entre jogos)
+M₃ = E[m₃ᵢ]                     (mechanical: within-match asymmetry / FLB)
+   + 3·E[σ²ᵢ(μᵢ−μ)]             (variance×mean covariance)
+   + E[(μᵢ−μ)³]                 (between-match dispersion)
 ```
 
-- **De-vig:** Shin (1993) primário (subproduto *z* = fração de dinheiro
-  informado); multiplicativo e power como robustez.
-- **Ex-post realizada** (skewness dos retornos efetivos) = robustez; deve
-  convergir à ex-ante sob calibração.
+- **De-vig:** Shin (1993) primary (by-product *z* = fraction of informed
+  money); multiplicative and power as robustness.
+- **Realised ex-post** (skewness of the actual returns) = robustness; should
+  converge to the ex-ante under calibration.
 
-**Extensão multi-momento (forma).** A Bernoulli reescalada tem momentos centrais
-fechados de **toda ordem**, `m_k = oᵏ·p(1−p)·[(1−p)^{k−1} + (−1)ᵏ·p^{k−1}]`, e o
-k-ésimo momento da mistura sai da **lei dos momentos totais**,
-`M_k = E_i[Σ_j C(k,j)·m_{j,i}·dᵢ^{k−j}]`, `dᵢ=μᵢ−μ` (a decomposição de M₃ acima é o
-caso k=3). Mede-se assim var/skew/**kurtose**/5ª–6ª ordem da distribuição implícita
-e a **fração `within`** (mecânica) por ordem. Sob odds justas as médias são zero
-(d≡0), logo `M_k=E[m_k]` e o ordered-probit prevê **cada** momento da liga a partir
-da competitividade (não só o 3º) — *invariância de forma*. O **colapso de
-distribuição** (KS condicional à faixa de p_fav; o tamanho de efeito é a estatística
-KS, pois o p-valor satura com n grande) testa se, fixada a competitividade, a
-distribuição é a mesma entre ligas.
+**Multi-moment extension (shape).** The rescaled Bernoulli has closed-form
+central moments of **every order**, `m_k = oᵏ·p(1−p)·[(1−p)^{k−1} + (−1)ᵏ·p^{k−1}]`,
+and the k-th moment of the mixture follows from the **law of total moments**,
+`M_k = E_i[Σ_j C(k,j)·m_{j,i}·dᵢ^{k−j}]`, `dᵢ=μᵢ−μ` (the decomposition of M₃ above
+is the k=3 case). This measures var/skew/**kurtosis**/5th–6th order of the implied
+distribution and the **`within` fraction** (mechanical) per order. Under fair odds the
+means are zero (d≡0), so `M_k=E[m_k]` and the ordered-probit predicts **each** league
+moment from competitiveness (not only the 3rd) — *shape invariance*. The **distribution
+collapse** (KS conditional on the p_fav band; the effect size is the KS statistic, since
+the p-value saturates with large n) tests whether, holding competitiveness fixed, the
+distribution is the same across leagues.
 
-## 5. Competitividade odds-free (quebra de circularidade)
+## 5. Odds-free competitiveness (breaking the circularity)
 
-Medir competitividade por p_fav (das odds) é circular. Constrói-se um **Elo só
-de resultados**: passo cronológico multi-liga (W/D/L + saldo de gols, vantagem
-de casa), e um mapa rating-diff→(P_H,P_D,P_A) por **MNLogit calibrado nos
-resultados**. Medidas por liga: entropia média da previsão, prob. do favorito
-Elo, dispersão de força, taxa de zebra. Nenhuma toca odds.
+Measuring competitiveness via p_fav (from the odds) is circular. We build a
+**results-only Elo**: chronological multi-league step (W/D/L + goal difference,
+home advantage), and a rating-diff→(P_H,P_D,P_A) map via an **MNLogit calibrated on
+the results**. Per-league measures: mean forecast entropy, Elo favourite
+probability, force dispersion, upset rate. None touches odds.
 
-## 6. Painel temporal
+## 6. Temporal panel
 
-Unidade = (liga, temporada) — dissolve o confound de composição por construção.
-Testes: tendência secular (FE de liga + ano, SE cluster); decomposição
-between/within com **benchmark de ruído amostral** (bootstrap dos jogos);
-tendências/quebras por liga; **vinheta COVID** (estádios vazios 2020 como
-experimento natural de choque na vantagem de casa).
+Unit = (league, season) — dissolves the composition confound by construction.
+Tests: secular trend (league FE + year, cluster SE); between/within
+decomposition with a **sampling-noise benchmark** (bootstrap of matches);
+per-league trends/breaks; **COVID vignette** (empty stadiums in 2020 as a
+natural experiment of a shock to home advantage).
 
-## 7. Testes
+## 7. Tests
 
-| Dimensão | Teste |
+| Dimension | Test |
 |---|---|
-| Calibração de-vig | over-rate vs p_over; ex-ante vs ex-post |
-| Decomposição | lei dos cumulantes totais (within/cov/between) |
-| Mecanismo odds-free | corr/OLS skew~Elo + bootstrap CI (n=38) |
-| Estacionariedade/i.i.d. | ADF+KPSS, Ljung-Box, Variance-Ratio, AR(1) |
-| Invariância temporal | painel FE+ano (SE cluster), ICC, quebras |
-| Margem | overround e skew: odds média vs máxima |
-| Forma fechada (E1) | quadratura do integral gaussiano vs MC; expansão near-balance |
-| Robustez de força (E2) | curva skew×p_fav sob t-Student/skew-normal/uniforme |
-| Robustez | de-vig (mult/power/shin), janela, overlap, O/U binário |
+| De-vig calibration | over-rate vs p_over; ex-ante vs ex-post |
+| Decomposition | law of total cumulants (within/cov/between) |
+| Odds-free mechanism | corr/OLS skew~Elo + bootstrap CI (n=38) |
+| Stationarity/i.i.d. | ADF+KPSS, Ljung-Box, Variance-Ratio, AR(1) |
+| Temporal invariance | panel FE+year (cluster SE), ICC, breaks |
+| Margin | overround and skew: average vs maximum odds |
+| Closed form (E1) | quadrature of the Gaussian integral vs MC; near-balance expansion |
+| Force robustness (E2) | skew×p_fav curve under t-Student/skew-normal/uniform |
+| Robustness | de-vig (mult/power/shin), window, overlap, binary O/U |
 
-## 8. Resultados (amostra congelada)
+## 8. Results (frozen sample)
 
-| Achado | Valor | Leitura |
+| Finding | Value | Reading |
 |---|---|---|
-| Skew global ex-ante / ex-post | **+0,236 / +0,230** | objeto implícito reproduz o realizado |
-| Decomposição M₃ | **+102,6% intra-jogo**, ~0% entre-jogos | skewness = imagem algébrica do FLB |
-| corr(elo_pfav, p_fav_odds) | **+0,909** | odds *leem* a competitividade esportiva |
-| skew ~ competitividade odds-free | **+0,83** (upset) / **−0,75** (elo_pfav) | lei não-circular sobrevive |
-| Tendência secular (painel) | β=**+0,00015/ano** (p=0,73) | sem deriva em 20 anos |
-| ICC (between/total) | **0,70** | invariante de liga domina o tempo |
-| Margem: overround vs skew | 1,067→1,009 vs +0,236→+0,254 | margem ortogonal à assimetria |
-| O/U 2.5 binário | ex-ante −0,210 (within 99,6%) | identidade vale fora do 1X2 |
-| Forma fechada S(σ_L) (E1) | quadratura ≈ MC (max\|Δ\|=**0,0015**); S₀=(1−2p₀)/√(p₀(1−p₀)) | lei é integral fechado, não simulação |
-| Robustez de força (E2) | max\|ΔS\|=**0,03** (t/skew-normal/uniforme) < sd-liga 0,05 | lei = geometria da mistura, não gaussianidade |
+| Global ex-ante / ex-post skew | **+0.236 / +0.230** | implied object reproduces the realised |
+| M₃ decomposition | **+102.6% within-match**, ~0% between-match | skewness = algebraic image of the FLB |
+| corr(elo_pfav, p_fav_odds) | **+0.909** | odds *read off* sporting competitiveness |
+| skew ~ odds-free competitiveness | **+0.83** (upset) / **−0.75** (elo_pfav) | non-circular law survives |
+| Secular trend (panel) | β=**+0.00015/year** (p=0.73) | no drift over 20 years |
+| ICC (between/total) | **0.70** | league invariant dominates over time |
+| Margin: overround vs skew | 1.067→1.009 vs +0.236→+0.254 | margin orthogonal to asymmetry |
+| Binary O/U 2.5 | ex-ante −0.210 (within 99.6%) | identity holds beyond 1X2 |
+| Closed form S(σ_L) (E1) | quadrature ≈ MC (max\|Δ\|=**0.0015**); S₀=(1−2p₀)/√(p₀(1−p₀)) | law is a closed integral, not a simulation |
+| Force robustness (E2) | max\|ΔS\|=**0.03** (t/skew-normal/uniform) < league-sd 0.05 | law = geometry of the mixture, not Gaussianity |
 
-### Síntese
-A skewness do mercado de apostas é um **invariante estrutural**: ~100% a
-assimetria intra-jogo da distribuição de probabilidades (mecânico), com nível
-de liga determinado pela competitividade esportiva — relação que **sobrevive a
-uma medida de competitividade independente das odds** — e **sem deriva temporal
-em 20 anos**. A margem das casas afeta o nível de retorno, não a assimetria. A
-assimetria de risco é **herdada do esporte**, não produzida pelo apreçamento.
+### Synthesis
+The skewness of the betting market is a **structural invariant**: ~100% the
+within-match asymmetry of the distribution of probabilities (mechanical), with a
+league level determined by sporting competitiveness — a relationship that
+**survives a competitiveness measure independent of the odds** — and **with no
+temporal drift over 20 years**. The bookmakers' margin affects the level of
+return, not the asymmetry. The risk asymmetry is **inherited from the sport**,
+not produced by the pricing.
 
-## 9. Referências centrais
+## 9. Core references
 - Golec & Tamarkin (1998). *Bettors Love Skewness, Not Risk, at the Horse Track.* JPE.
 - Snowberg & Wolfers (2010). *Explaining the Favorite-Longshot Bias.* JPE.
 - Shin (1993). *Measuring the Incidence of Insider Trading in a Market for
@@ -136,6 +136,6 @@ assimetria de risco é **herdada do esporte**, não produzida pelo apreçamento.
 - Štrumbelj (2014). *On determining probability forecasts from betting odds.* IJF.
 - Andrikogiannopoulou & Papakonstantinou. *Estimating Risk Preferences from Betting Choices.*
 - Constantinou & Fenton (2012). *Solving the problem of inadequate scoring
-  rules for assessing probabilistic football forecasts.* (Elo/probabilidades)
+  rules for assessing probabilistic football forecasts.* (Elo/probabilities)
 - Kraus & Litzenberger (1976); Harvey & Siddique (2000); Barberis & Huang (2008)
-  — skewness em finanças (contraste).
+  — skewness in finance (contrast).

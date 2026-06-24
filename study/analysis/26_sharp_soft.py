@@ -1,7 +1,8 @@
-"""26 — Microestrutura D2: sharp vs soft. A skewness diverge entre a odd MÉDIA do
-mercado (Odd*, mais soft) e a MELHOR odd (Max*, ~sharp/arb)? Por liga. A melhor odd
-quase zera o overround; se a skewness mal se move e a LEI transversal se preserva,
-a assimetria é da estrutura do esporte, não do tipo de casa (aprofunda W4).
+"""26 — Microstructure D2: sharp vs soft. Does the skewness diverge between the
+market's MEAN odd (Odd*, softer) and the BEST odd (Max*, ~sharp/arb)? By league. The
+best odd nearly zeros the overround; if the skewness barely moves and the
+cross-sectional LAW is preserved, the asymmetry is from the structure of the sport,
+not the type of book (deepens W4).
 """
 import numpy as np
 import matplotlib
@@ -13,20 +14,20 @@ from skewlib import io, returns, exante, microstructure as ms, stats, provenance
 def main():
     df = exante.add_exante(returns.add_returns(io.load()))
     L = ms.skew_by_book_league(df, min_n=2000)
-    print(f"N={len(df):,} | {len(L)} ligas com Max* válido")
+    print(f"N={len(df):,} | {len(L)} leagues with valid Max*")
 
-    print(f"\nOverround médio: soft (Odd) {L.over_soft.mean():.3f} → "
-          f"sharp (Max) {L.over_sharp.mean():.3f} (margem quase zerada na melhor odd)")
-    print(f"Skew do favorito: soft {L.skew_soft.mean():+.3f} | sharp {L.skew_sharp.mean():+.3f}"
-          f" | Δ(sharp−soft) médio {L.d_skew.mean():+.3f} (sd {L.d_skew.std():.3f})")
+    print(f"\nMean overround: soft (Odd) {L.over_soft.mean():.3f} → "
+          f"sharp (Max) {L.over_sharp.mean():.3f} (margin nearly zeroed at the best odd)")
+    print(f"Favourite skew: soft {L.skew_soft.mean():+.3f} | sharp {L.skew_sharp.mean():+.3f}"
+          f" | mean Δ(sharp−soft) {L.d_skew.mean():+.3f} (sd {L.d_skew.std():.3f})")
     r = stats.bootstrap_corr(L.skew_soft.values, L.skew_sharp.values)
-    print(f"corr(skew_soft, skew_sharp) entre ligas = {r['r']:+.3f} "
-          f"[{r['ci_lo']:+.2f},{r['ci_hi']:+.2f}] — a ordenação das ligas é a mesma")
+    print(f"corr(skew_soft, skew_sharp) across leagues = {r['r']:+.3f} "
+          f"[{r['ci_lo']:+.2f},{r['ci_hi']:+.2f}] — the ordering of leagues is the same")
     rl = stats.bootstrap_corr(L.skew_sharp.values, L.p_fav.values)
-    print(f"lei sharp: corr(skew_sharp, p_fav) = {rl['r']:+.3f} "
-          f"[{rl['ci_lo']:+.2f},{rl['ci_hi']:+.2f}] (a lei estrutural sobrevive na melhor odd)")
-    print("  → tirar a margem (best price) desloca pouco e uniformemente a skew;")
-    print("    a casa compete em margem, não em assimetria, e a LEI é invariante ao livro.")
+    print(f"sharp law: corr(skew_sharp, p_fav) = {rl['r']:+.3f} "
+          f"[{rl['ci_lo']:+.2f},{rl['ci_hi']:+.2f}] (the structural law survives at the best odd)")
+    print("  → removing the margin (best price) shifts the skew little and uniformly;")
+    print("    the book competes on margin, not on asymmetry, and the LAW is invariant to the book.")
 
     C.OUTDIR.mkdir(exist_ok=True)
     L.to_csv(C.OUTDIR / "sharp_soft_by_league.csv", index=False)

@@ -1,32 +1,32 @@
-"""skew-meter — instrumento de SIMILARIDADE DE ASSIMETRIAS.
+"""skew-meter — instrument for ASYMMETRY SIMILARITY.
 
-Objetivo-raiz do estudo: medir quão parecidas são as assimetrias (skewness/forma)
-de duas entidades — ligas, eras, mercados (1X2/O/U/AH), modelos, janelas no tempo.
-Reúne a maquinaria do estudo num único aparelho de POUCOS parâmetros:
+Root objective of the study: measure how alike the asymmetries (skewness/shape)
+of two entities are — leagues, eras, markets (1X2/O/U/AH), models, time windows.
+Gathers the study's machinery into a single FEW-parameter apparatus:
 
-  measure(p, o)            assinatura de assimetria (skew/var/exkurt + competitividade).
-  gauge_cheap / _1param /  variantes de custo decrescente: sem Shin (inverse-odds),
-  _oddsfree                1 parâmetro (média de p_fav → forma fechada), e só
-                           resultados (upset rate).
-  predict_skew(comp)       a lei skew=f(competitividade) avaliada (forma fechada).
-  residual(sig)            assimetria IDIOSSINCRÁTICA: skew − o que a competitividade
-                           explica. ≈0 ⇒ a competitividade é estatística suficiente.
-  skew_se(p, o)            piso amostral (SE bootstrap) — calibra "parecido".
-  similar(A, B)            veredito: a assimetria residual cabe no ruído? (z-score).
-  matrix(sigs)             distâncias par-a-par: BRUTA vs RESIDUAL.
+  measure(p, o)            asymmetry signature (skew/var/exkurt + competitiveness).
+  gauge_cheap / _1param /  decreasing-cost variants: without Shin (inverse-odds),
+  _oddsfree                1 parameter (mean p_fav → closed form), and outcomes
+                           only (upset rate).
+  predict_skew(comp)       the law skew=f(competitiveness) evaluated (closed form).
+  residual(sig)            IDIOSYNCRATIC asymmetry: skew − what competitiveness
+                           explains. ≈0 ⇒ competitiveness is a sufficient statistic.
+  skew_se(p, o)            sampling floor (bootstrap SE) — calibrates "alike".
+  similar(A, B)            verdict: does the residual asymmetry fit within noise? (z-score).
+  matrix(sigs)             pairwise distances: RAW vs RESIDUAL.
 
-Achado-âncora (Frente B2, agora operacionalizado): a distância BRUTA entre ligas é
-grande, mas a RESIDUAL (condicionando na competitividade) colapsa ao piso amostral —
-as assimetrias são as MESMAS quando a competitividade é igualada. O aparelho mede
-isso par a par, com distância calibrada e nulo.
+Anchor finding (Front B2, now operationalised): the RAW distance between leagues is
+large, but the RESIDUAL one (conditioning on competitiveness) collapses to the sampling
+floor — the asymmetries are the SAME once competitiveness is equalised. The apparatus
+measures this pairwise, with a calibrated distance and null.
 """
 import numpy as np
 from . import exante, model
 
 
-# ── medição: assinatura de assimetria (com variantes de poucos parâmetros) ───
+# ── measurement: asymmetry signature (with few-parameter variants) ───────────
 def measure(p, o, label=None, n=None):
-    """Assinatura de assimetria de uma entidade a partir de (p_fav, o_fav)."""
+    """Asymmetry signature of an entity from (p_fav, o_fav)."""
     m = exante.pooled_moments(np.asarray(p, float), np.asarray(o, float), max_order=4)
     return {"label": label, "n": int(n if n is not None else len(p)),
             "skew": m["skew"], "var": m["var"], "exkurt": m["exkurt"],
@@ -34,8 +34,8 @@ def measure(p, o, label=None, n=None):
 
 
 def gauge_cheap(odds_HDA):
-    """Assinatura SEM Shin: prob do favorito por inverse-odds normalizada (1 conta,
-    ~0 custo). odds_HDA: array (n,3) das odds 1X2. corr≈1.0 com a verdade (Shin)."""
+    """Signature WITHOUT Shin: favourite probability by normalised inverse-odds (1 op,
+    ~0 cost). odds_HDA: (n,3) array of 1X2 odds. corr≈1.0 with the truth (Shin)."""
     r = 1.0 / np.asarray(odds_HDA, float)
     P = r / r.sum(1, keepdims=True)
     pf = P.max(1)
@@ -43,16 +43,16 @@ def gauge_cheap(odds_HDA):
 
 
 def gauge_oddsfree(upset_rate):
-    """Proxy odds-free (só W/D/L): a competitividade pela taxa de zebra do Elo de
-    resultados. Devolve o número de competitividade; vira skew via predict_skew∘mapa
-    (corr≈0.83 — o limite de não usar nenhuma odd)."""
+    """Odds-free proxy (W/D/L only): the competitiveness from the upset rate of the
+    results Elo. Returns the competitiveness number; becomes skew via predict_skew∘map
+    (corr≈0.83 — the limit of using no odds at all)."""
     return float(upset_rate)
 
 
-# ── a lei skew=f(competitividade) como base de cálculo (1 parâmetro) ──────────
+# ── the law skew=f(competitiveness) as a basis of computation (1 parameter) ───
 def fit_law(df):
-    """Calibra a curva fechada S(competitividade) uma vez (ordered-probit) e devolve
-    um avaliador comp→skew. `df` precisa de FTResult e p_fav_dv."""
+    """Calibrates the closed curve S(competitiveness) once (ordered-probit) and returns
+    a comp→skew evaluator. `df` needs FTResult and p_fav_dv."""
     par = model.calibrate(home=(df.FTResult == "H").mean(),
                           draw=(df.FTResult == "D").mean(),
                           pfav=float(df.p_fav_dv.mean()))
@@ -64,19 +64,19 @@ def fit_law(df):
 
 
 def predict_skew(comp, law):
-    """Skew prevista pela competitividade (1 parâmetro), via forma fechada."""
+    """Skew predicted by competitiveness (1 parameter), via closed form."""
     return float(np.interp(comp, law["cpf"], law["csk"]))
 
 
 def residual(sig, law):
-    """Assimetria idiossincrática: observada − explicada pela competitividade."""
+    """Idiosyncratic asymmetry: observed − explained by competitiveness."""
     return sig["skew"] - predict_skew(sig["comp"], law)
 
 
-# ── nulo amostral: piso de ruído (calibra 'parecido') ────────────────────────
+# ── sampling null: noise floor (calibrates 'alike') ──────────────────────────
 def skew_se(p, o, B=300, seed=42):
-    """SE bootstrap da skew agrupada — o piso abaixo do qual duas assimetrias são
-    indistinguíveis. Reamostra jogos com reposição."""
+    """Bootstrap SE of the pooled skew — the floor below which two asymmetries are
+    indistinguishable. Resamples matches with replacement."""
     p = np.asarray(p, float); o = np.asarray(o, float); n = len(p)
     rng = np.random.default_rng(seed)
     vals = [exante.pooled_skew(p[i], o[i])["skew"]
@@ -84,10 +84,10 @@ def skew_se(p, o, B=300, seed=42):
     return float(np.std(vals))
 
 
-# ── similaridade de assimetrias ──────────────────────────────────────────────
+# ── asymmetry similarity ──────────────────────────────────────────────────────
 def distance(A, B, kind="skew"):
-    """Distância BRUTA entre assinaturas. kind='skew' (escalar) ou 'shape'
-    (forma padronizada: skew + exkurt, scale-free)."""
+    """RAW distance between signatures. kind='skew' (scalar) or 'shape'
+    (standardised shape: skew + exkurt, scale-free)."""
     if kind == "skew":
         return abs(A["skew"] - B["skew"])
     da = np.array([A["skew"], A["exkurt"]]); db = np.array([B["skew"], B["exkurt"]])
@@ -95,14 +95,14 @@ def distance(A, B, kind="skew"):
 
 
 def residual_distance(A, B, law):
-    """Distância entre as assimetrias DEPOIS de descontar a competitividade — quão
-    diferentes A e B são além do que a competitividade já explica."""
+    """Distance between asymmetries AFTER discounting competitiveness — how
+    different A and B are beyond what competitiveness already explains."""
     return abs(residual(A, law) - residual(B, law))
 
 
 def similar(A, B, law, seA=None, seB=None, z_thr=2.0):
-    """Veredito de similaridade de assimetrias. Compara a distância RESIDUAL ao piso
-    amostral combinado: z<z_thr ⇒ 'mesma assimetria' (a diferença é ruído)."""
+    """Asymmetry similarity verdict. Compares the RESIDUAL distance to the combined
+    sampling floor: z<z_thr ⇒ 'same asymmetry' (the difference is noise)."""
     rd = residual_distance(A, B, law)
     se = np.hypot(seA or 0.0, seB or 0.0)
     z = rd / se if se > 0 else np.inf
@@ -111,10 +111,10 @@ def similar(A, B, law, seA=None, seB=None, z_thr=2.0):
 
 
 def sufficiency_ladder(df, law, min_n=2000):
-    """Escada de suficiência: quanta da assimetria entre ligas cada conjunto de
-    parâmetros da competitividade explica. 1 momento (média p_fav, forma fechada) →
-    2 momentos (média+variância, OLS) → distribuição INTEIRA (skew sob odds justas,
-    = imagem mecânica da distribuição de p). Devolve R² de cada degrau."""
+    """Sufficiency ladder: how much of the between-league asymmetry each set of
+    competitiveness parameters explains. 1 moment (mean p_fav, closed form) →
+    2 moments (mean+variance, OLS) → the WHOLE distribution (skew under fair odds,
+    = mechanical image of the p distribution). Returns the R² of each rung."""
     import numpy as np
     rows = []
     for lg, g in df.groupby("Division"):
@@ -139,8 +139,8 @@ def sufficiency_ladder(df, law, min_n=2000):
 
 
 def split_half_residual(df, law, min_n=4000):
-    """Estabilidade do resíduo idiossincrático: corr entre o resíduo medido em
-    temporadas PARES vs ÍMPARES. Alto ⇒ o resíduo é traço real da liga, não ruído."""
+    """Stability of the idiosyncratic residual: corr between the residual measured in
+    EVEN vs ODD seasons. High ⇒ the residual is a real league trait, not noise."""
     import numpy as np, pandas as pd
     d = df.copy(); d["yr"] = d.date.dt.year
     rows = []
@@ -156,9 +156,9 @@ def split_half_residual(df, law, min_n=4000):
 
 
 def skew_se_block(g, B=150, seed=42):
-    """SE da skew por BLOCK-bootstrap de TEMPORADAS (reamostra anos inteiros) —
-    respeita a dependência intra-temporada que `skew_se` (jogos i.i.d.) ignora.
-    Piso amostral mais honesto. `g`: frame da liga com date/p_fav_dv/o_fav."""
+    """Skew SE by BLOCK-bootstrap of SEASONS (resamples whole years) —
+    respects the intra-season dependence that `skew_se` (i.i.d. matches) ignores.
+    A more honest sampling floor. `g`: league frame with date/p_fav_dv/o_fav."""
     import numpy as np, pandas as pd
     g = g.copy(); g["yr"] = g.date.dt.year
     seasons = [sg for _, sg in g.groupby("yr")]
@@ -173,8 +173,8 @@ def skew_se_block(g, B=150, seed=42):
 
 
 def sampling_shape_cov(g, B=200, seed=1):
-    """Covariância amostral de (skew, exkurt) de uma liga por bootstrap de jogos —
-    a métrica para a distância de forma de Mahalanobis (ciente de escala e correlação)."""
+    """Sampling covariance of (skew, exkurt) of a league by bootstrap of matches —
+    the metric for the Mahalanobis shape distance (scale- and correlation-aware)."""
     import numpy as np
     p = g.p_fav_dv.values; o = g.o_fav.values; n = len(p)
     rng = np.random.default_rng(seed)
@@ -187,17 +187,17 @@ def sampling_shape_cov(g, B=200, seed=1):
 
 
 def shape_distance(A, B, cov_inv):
-    """Distância de forma de MAHALANOBIS em (skew, exkurt) — métrica scale/correlation
-    -aware, supera o |Δskew| escalar e o Euclidiano cru de `distance(kind='shape')`."""
+    """MAHALANOBIS shape distance in (skew, exkurt) — scale/correlation-aware
+    metric, superior to the scalar |Δskew| and the raw Euclidean of `distance(kind='shape')`."""
     import numpy as np
     d = np.array([A["skew"] - B["skew"], A["exkurt"] - B["exkurt"]])
     return float(np.sqrt(d @ cov_inv @ d))
 
 
 def law_oos_r2(df, min_n=2000):
-    """Calibração OUT-OF-SAMPLE: ajusta a lei nas taxas de temporadas PARES e prevê
-    a skew das ligas em temporadas ÍMPARES (a lei nunca vê o alvo de teste). R² alto
-    ⇒ a lei não é overfit; a régua do resíduo é honesta."""
+    """OUT-OF-SAMPLE calibration: fits the law on the rates of EVEN seasons and predicts
+    the leagues' skew in ODD seasons (the law never sees the test target). High R²
+    ⇒ the law is not overfit; the residual ruler is honest."""
     import numpy as np
     d = df.copy(); d["yr"] = d.date.dt.year
     ev, od = d[d.yr % 2 == 0], d[d.yr % 2 == 1]
@@ -212,9 +212,9 @@ def law_oos_r2(df, min_n=2000):
 
 
 def tost(A, B, law, seA, seB, margin):
-    """Teste de equivalência (TOST) — o veredito certo com n enorme (significância
-    sempre rejeita). 'Mesma assimetria' se o IC de 90% da diferença residual cabe
-    em [−margin, +margin]. margin = meio desvio entre-ligas, pré-registrado."""
+    """Equivalence test (TOST) — the right verdict with huge n (significance
+    always rejects). 'Same asymmetry' if the 90% CI of the residual difference fits
+    within [−margin, +margin]. margin = half a between-league deviation, pre-registered."""
     import numpy as np
     d = residual(A, law) - residual(B, law)
     se = float(np.hypot(seA, seB))
@@ -223,9 +223,9 @@ def tost(A, B, law, seA, seB, margin):
 
 
 def matrix(sigs, law, ses=None):
-    """Matrizes de distância par-a-par (BRUTA e RESIDUAL) entre N entidades.
-    Devolve dict com as matrizes e resumos. O colapso da BRUTA→RESIDUAL é a
-    similaridade de assimetrias do estudo, operacionalizada."""
+    """Pairwise distance matrices (RAW and RESIDUAL) between N entities.
+    Returns a dict with the matrices and summaries. The RAW→RESIDUAL collapse is the
+    study's asymmetry similarity, operationalised."""
     n = len(sigs)
     raw = np.zeros((n, n)); res = np.zeros((n, n))
     for i in range(n):

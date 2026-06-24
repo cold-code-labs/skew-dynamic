@@ -1,12 +1,12 @@
-"""Frente D — microestrutura / formação de preço (no dataset congelado):
+"""Front D — microstructure / price formation (in the frozen dataset):
 
-  D2  sharp vs soft: a skewness diverge entre a odd MÉDIA (Odd*, mais soft) e a
-      MELHOR odd (Max*, ~sharp/arb)? Por liga.
-  D3  Shin z (fração de dinheiro informado) como SÉRIE: z por liga/ano/mercado,
-      sua estabilidade e relação com competitividade/overround.
-  D4  mercado de HANDICAP ASIÁTICO (Handi*): um 3º mercado (além de 1X2 e O/U)
-      p/ testar a identidade (1−2p)/√(p(1−p)). Como o AH balanceia o jogo para
-      ~50/50, prevê-se p_fav≈0.5 ⇒ skew≈0 — mesma identidade, outro regime de p.
+  D2  sharp vs soft: does the skewness diverge between the MEAN odd (Odd*, softer)
+      and the BEST odd (Max*, ~sharp/arb)? Per league.
+  D3  Shin z (fraction of informed money) as a SERIES: z per league/year/market,
+      its stability and relation to competitiveness/overround.
+  D4  ASIAN HANDICAP market (Handi*): a 3rd market (beyond 1X2 and O/U)
+      to test the identity (1−2p)/√(p(1−p)). Since the AH balances the match to
+      ~50/50, p_fav≈0.5 is predicted ⇒ skew≈0 — same identity, another p regime.
 """
 import numpy as np, pandas as pd
 from . import devig, exante
@@ -18,7 +18,7 @@ AH = ("HandiHome", "HandiAway")
 
 # ── D2 — sharp vs soft ───────────────────────────────────────────────────────
 def skew_by_book_league(df, min_n=2000):
-    """Skewness e overround do favorito por liga, sob Odd* (soft) e Max* (sharp)."""
+    """Favourite skewness and overround per league, under Odd* (soft) and Max* (sharp)."""
     ok = df[list(MAX)].notna().all(1) & (df[list(MAX)] > 1.01).all(1)
     d = df[ok]
     rows = []
@@ -37,16 +37,16 @@ def skew_by_book_league(df, min_n=2000):
     return out
 
 
-# ── D3 — Shin z como série ───────────────────────────────────────────────────
+# ── D3 — Shin z as a series ───────────────────────────────────────────────────
 def shin_z_frame(df):
-    """Adiciona shin_z (1X2) por jogo + overround + season."""
+    """Adds shin_z (1X2) per match + overround + season."""
     d = devig.devig_frame(df, method="shin", cols=ODD)
     d["season"] = d.date.dt.year
     return d
 
 
 def z_by(d, col, min_n=2000):
-    """Média de z (dinheiro informado) + overround + competitividade por grupo."""
+    """Mean z (informed money) + overround + competitiveness per group."""
     rows = []
     for key, g in d.groupby(col):
         if len(g) < min_n:
@@ -57,12 +57,12 @@ def z_by(d, col, min_n=2000):
     return pd.DataFrame(rows)
 
 
-# ── D4 — handicap asiático (3º mercado) ──────────────────────────────────────
+# ── D4 — Asian handicap (3rd market) ──────────────────────────────────────────
 def prep_ah(df, method="shin"):
-    """De-viga o mercado AH de 2 vias (HandiHome/HandiAway) e monta a aposta no
-    favorito (menor odd). Filtra a linha sentinela -99.9 e odds inválidas.
-    Devolve p_fav_ah, o_fav_ah, skew por jogo e o realizado quando inequívoco
-    (linhas inteiras/meias; pula linhas de quarto, que dão meia-vitória)."""
+    """De-vigs the 2-way AH market (HandiHome/HandiAway) and builds the bet on the
+    favourite (lowest odd). Filters the -99.9 sentinel line and invalid odds.
+    Returns p_fav_ah, o_fav_ah, per-match skew and the realised outcome when
+    unambiguous (whole/half lines; skips quarter lines, which give a half-win)."""
     d = df.copy()
     d = d[(d.HandiSize > -50) & d[list(AH)].notna().all(1)
           & (d[list(AH)] > 1.01).all(1)].reset_index(drop=True)
@@ -84,10 +84,10 @@ def prep_ah(df, method="shin"):
     d["p_fav_ah"] = np.where(fav_home, d.p_home_ah, d.p_away_ah)
     d["skew_ah_match"] = exante.per_match_skew(d.p_fav_ah.values)
 
-    # realizado: margem de gols ajustada pela linha (sinal: handicap do MANDANTE)
+    # realised: goal margin adjusted by the line (sign: HOME handicap)
     gd = pd.to_numeric(d.FTHome, errors="coerce") - pd.to_numeric(d.FTAway, errors="coerce")
-    adj = gd + d.HandiSize                     # >0 casa cobre, <0 fora cobre, 0 push
-    quarter = (np.abs(d.HandiSize * 2) % 1) > 0.1      # linha de quarto → pula
+    adj = gd + d.HandiSize                     # >0 home covers, <0 away covers, 0 push
+    quarter = (np.abs(d.HandiSize * 2) % 1) > 0.1      # quarter line → skip
     home_cover = adj > 0
     settle = (~quarter) & (adj != 0)
     win_fav = np.where(fav_home, home_cover, ~home_cover)
@@ -97,7 +97,7 @@ def prep_ah(df, method="shin"):
 
 
 def ah_league(d, min_n=2000):
-    """Skewness ex-ante agrupada do favorito AH por liga."""
+    """Pooled ex-ante AH favourite skewness per league."""
     rows = []
     for lg, g in d.groupby("Division"):
         if len(g) < min_n:

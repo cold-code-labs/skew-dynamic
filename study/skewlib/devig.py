@@ -1,15 +1,15 @@
-"""De-vigging: converte odds 1X2 em probabilidades implícitas (sem overround).
+"""De-vigging: converts 1X2 odds into implied probabilities (without overround).
 
-Métodos (todos devolvem probabilidades que somam 1):
-  multiplicative  p_i = (1/o_i) / Σ(1/o_j)              — proporcional, baseline
-  shin            modelo de Shin (1993); z = fração de
-                  dinheiro informado — método primário do estudo
-  power           p_i = (1/o_i)^k, k tal que Σ p = 1     — robustez
+Methods (all return probabilities that sum to 1):
+  multiplicative  p_i = (1/o_i) / Σ(1/o_j)              — proportional, baseline
+  shin            Shin (1993) model; z = fraction of
+                  informed money — the study's primary method
+  power           p_i = (1/o_i)^k, k such that Σ p = 1   — robustness
 
-A odd implícita crua é r_i = 1/o_i; o booksum M = Σ r_i é o overround (>1 com
-vig). O favorito é sempre argmax(p) = argmin(o), invariante ao método (todos
-são monotônicos em r). Para o Shin, `shin_z` ≈ proporção de dinheiro informado
-e é um subproduto útil para a decomposição da margem.
+The raw implied odd is r_i = 1/o_i; the booksum M = Σ r_i is the overround (>1 with
+vig). The favourite is always argmax(p) = argmin(o), invariant to the method (all
+are monotonic in r). For Shin, `shin_z` ≈ proportion of informed money and is a
+useful by-product for the margin decomposition.
 """
 import numpy as np
 from scipy.optimize import brentq
@@ -26,9 +26,9 @@ def multiplicative(odds):
 
 
 def power(odds):
-    """p_i = r_i^k com k>1 tal que Σ p = 1 (raiz única quando há overround)."""
+    """p_i = r_i^k with k>1 such that Σ p = 1 (unique root when there is overround)."""
     r = _inv(odds)
-    if r.sum() <= 1.0:                       # sem vig (ex.: odds máximas)
+    if r.sum() <= 1.0:                       # no vig (e.g.: maximum odds)
         return r / r.sum()
     k = brentq(lambda k: (r ** k).sum() - 1.0, 1.0, 50.0)
     return r ** k
@@ -39,7 +39,7 @@ def _shin_p(r, bsum, z):
 
 
 def shin(odds):
-    """Devolve (probabilidades, z). z = proporção estimada de dinheiro informado."""
+    """Returns (probabilities, z). z = estimated proportion of informed money."""
     r = _inv(odds); bsum = r.sum()
     if bsum <= 1.0:
         return r / bsum, 0.0
@@ -53,9 +53,9 @@ METHODS = {"multiplicative": multiplicative,
 
 
 def _shin_z_vec(r, bsum, iters=80):
-    """Resolve o z do Shin para todas as linhas em paralelo (bisseção vetorizada).
+    """Solves Shin's z for all rows in parallel (vectorised bisection).
 
-    g(z)=Σ p(z) − 1 é decrescente em z; g(0⁺)=√bsum−1>0 quando há vig.
+    g(z)=Σ p(z) − 1 is decreasing in z; g(0⁺)=√bsum−1>0 when there is vig.
     """
     lo = np.full(len(r), 1e-9)
     hi = np.full(len(r), 0.5)
@@ -71,10 +71,10 @@ def _shin_z_vec(r, bsum, iters=80):
 
 
 def devig_odds(O, method=None):
-    """De-vig genérico para uma MATRIZ de odds (n_eventos, k_resultados) com k
-    arbitrário — a versão sport-agnóstica de `devig_frame`. Mesma matemática
-    (Shin vetorizado / multiplicative / power); devolve P (n_eventos, k) somando 1
-    por linha. Usado pela camada canônica (mercados de 2, 3, … resultados)."""
+    """Generic de-vig for a MATRIX of odds (n_events, k_outcomes) with arbitrary
+    k — the sport-agnostic version of `devig_frame`. Same maths
+    (vectorised Shin / multiplicative / power); returns P (n_events, k) summing to 1
+    per row. Used by the canonical layer (markets of 2, 3, … outcomes)."""
     method = method or C.DEVIG_METHOD
     O = np.asarray(O, float)
     r = 1.0 / O
@@ -91,11 +91,11 @@ def devig_odds(O, method=None):
         return r / bsum[:, None]
     if method == "power":
         return np.array([power(row) for row in O])
-    raise ValueError(f"método de-vig desconhecido: {method}")
+    raise ValueError(f"unknown de-vig method: {method}")
 
 
 def devig_frame(df, method=None, cols=("OddHome", "OddDraw", "OddAway")):
-    """Adiciona p_H, p_D, p_A de-vigadas + `overround` (e `shin_z` no Shin)."""
+    """Adds de-vigged p_H, p_D, p_A + `overround` (and `shin_z` for Shin)."""
     method = method or C.DEVIG_METHOD
     O = df[list(cols)].to_numpy(float)
     r = 1.0 / O
@@ -105,7 +105,7 @@ def devig_frame(df, method=None, cols=("OddHome", "OddDraw", "OddAway")):
 
     if method == "shin":
         z = np.zeros(len(r))
-        vig = bsum > 1.0                                   # só resolve onde há vig
+        vig = bsum > 1.0                                   # only solve where there is vig
         if vig.any():
             z[vig] = _shin_z_vec(r[vig], bsum[vig])
         zc = z[:, None]
@@ -117,7 +117,7 @@ def devig_frame(df, method=None, cols=("OddHome", "OddDraw", "OddAway")):
     elif method == "power":
         P = np.array([power(row) for row in O])
     else:
-        raise ValueError(f"método de-vig desconhecido: {method}")
+        raise ValueError(f"unknown de-vig method: {method}")
 
     out["p_H"], out["p_D"], out["p_A"] = P[:, 0], P[:, 1], P[:, 2]
     return out

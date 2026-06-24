@@ -1,6 +1,6 @@
-# Dependências da pipeline de análise — PINADAS na versão exata que produziu os
-# números do paper (dataset congelado sha 6905ca53; Python 3.14, ver .python-version).
-# Reprodução bit-a-bit: use estas versões. requirements.lock tem o fecho transitivo.
+# Analysis-pipeline dependencies — PINNED to the exact version that produced the
+# paper's numbers (frozen dataset sha 6905ca53; Python 3.14, see .python-version).
+# Bit-for-bit reproduction: use these versions. requirements.lock has the transitive closure.
 pandas==3.0.3
 numpy==2.5.0
 scipy==1.18.0

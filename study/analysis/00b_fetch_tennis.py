@@ -1,14 +1,14 @@
-"""Baixa resultados+odds de tênis (tennis-data.co.uk) para data/tennis.csv.
+"""Downloads tennis results+odds (tennis-data.co.uk) to data/tennis.csv.
 
-Um arquivo .xlsx por ano e por tour (ATP/WTA). Mantém um subconjunto normalizado:
-tour, Date, Series/Tier, Surface, Round, Winner, Loser, e as odds vencedor/perdedor
-(B365W/L, PSW/L, AvgW/L, MaxW/L) quando presentes.
+One .xlsx file per year and per tour (ATP/WTA). Keeps a normalised subset:
+tour, Date, Series/Tier, Surface, Round, Winner, Loser, and the winner/loser odds
+(B365W/L, PSW/L, AvgW/L, MaxW/L) when present.
 
-ToS: tennis-data.co.uk é gratuito para pesquisa mas restringe redistribuição — o
-data/tennis.csv NÃO é versionado (regenerável por este script). Precisa de rede e
-de `openpyxl` (pip install openpyxl).
+ToS: tennis-data.co.uk is free for research but restricts redistribution — the
+data/tennis.csv is NOT versioned (regenerable by this script). Needs network and
+`openpyxl` (pip install openpyxl).
 
-Uso:
+Usage:
     python analysis/00b_fetch_tennis.py                 # ATP+WTA, 2010–2025
     python analysis/00b_fetch_tennis.py --tour atp --from 2005 --to 2025
 """
@@ -17,8 +17,8 @@ import sys
 import pandas as pd
 from pathlib import Path
 
-# NB: o HTTPS do tennis-data.co.uk está quebrado (TLSV1_ALERT_INTERNAL_ERROR);
-# o site serve os arquivos em HTTP puro.
+# NB: tennis-data.co.uk HTTPS is broken (TLSV1_ALERT_INTERNAL_ERROR);
+# the site serves the files over plain HTTP.
 BASE = "http://www.tennis-data.co.uk"
 KEEP = ["tour", "Date", "Series", "Tier", "Surface", "Court", "Round", "Best of",
         "Winner", "Loser", "WRank", "LRank",
@@ -42,7 +42,7 @@ def main():
     try:
         import openpyxl  # noqa: F401
     except ImportError:
-        sys.exit("ERRO: instale openpyxl (`pip install openpyxl`) para ler os .xlsx.")
+        sys.exit("ERROR: install openpyxl (`pip install openpyxl`) to read the .xlsx files.")
 
     tours = ["atp", "wta"] if a.tour == "both" else [a.tour]
     frames = []
@@ -52,18 +52,18 @@ def main():
             try:
                 df = pd.read_excel(url)
             except Exception as e:
-                print(f"  pulado {tour} {year}: {e}")
+                print(f"  skipped {tour} {year}: {e}")
                 continue
             df["tour"] = tour.upper()
             frames.append(df[[c for c in KEEP if c in df.columns]])
-            print(f"  ok {tour} {year}: {len(df)} partidas")
+            print(f"  ok {tour} {year}: {len(df)} matches")
 
     if not frames:
-        sys.exit("nada baixado (sem rede ou fonte indisponível).")
+        sys.exit("nothing downloaded (no network or source unavailable).")
     out = pd.concat(frames, ignore_index=True)
     DEST.parent.mkdir(parents=True, exist_ok=True)
     out.to_csv(DEST, index=False)
-    print(f"-> {DEST} ({len(out):,} partidas, {out.tour.nunique()} tours)")
+    print(f"-> {DEST} ({len(out):,} matches, {out.tour.nunique()} tours)")
 
 
 if __name__ == "__main__":

@@ -1,8 +1,8 @@
-"""31 — Micro F3: clubes dominantes "puxam" a assinatura da liga? Decomposição por
-time: para cada clube, sua dominância (Elo médio) e a skewness ex-ante média dos
-jogos que disputa. Clubes dominantes geram jogos desequilibrados (favoritos fortes
-⇒ skew negativa); a assinatura de skew da liga reflete sua dispersão de força no
-nível dos times — a versão micro da lei skewness=f(competitividade).
+"""31 — Micro F3: do dominant clubs "pull" the league's signature? Decomposition by
+team: for each club, its dominance (mean Elo) and the mean ex-ante skewness of the
+matches it plays. Dominant clubs generate unbalanced matches (strong favourites
+⇒ negative skew); the league's skew signature reflects its strength dispersion at the
+team level — the micro version of the law skewness=f(competitiveness).
 """
 import numpy as np
 import matplotlib
@@ -14,32 +14,32 @@ from skewlib import io, returns, exante, intraleague as il, stats, provenance as
 def main():
     df = exante.add_exante(returns.add_returns(io.load()))
     T = il.team_dominance(df, min_games=200).dropna(subset=["elo"])
-    print(f"N={len(df):,} | {len(T)} times com Elo e ≥200 jogos")
+    print(f"N={len(df):,} | {len(T)} teams with Elo and ≥200 matches")
 
     r = stats.bootstrap_corr(T.elo.values, T.skew_games.values)
-    print(f"\ncorr(Elo do time, skew média dos seus jogos) = {r['r']:+.3f} "
+    print(f"\ncorr(team Elo, mean skew of its matches) = {r['r']:+.3f} "
           f"[{r['ci_lo']:+.2f},{r['ci_hi']:+.2f}]")
-    print("  (Elo alto ⇒ jogos mais desequilibrados ⇒ skew dos jogos mais baixa)")
+    print("  (high Elo ⇒ more unbalanced matches ⇒ lower match skew)")
     top = T.nlargest(5, "elo")[["team", "elo", "fav_rate", "skew_games"]]
     bot = T.nsmallest(5, "elo")[["team", "elo", "fav_rate", "skew_games"]]
-    print("\n  clubes mais DOMINANTES (Elo):")
+    print("\n  most DOMINANT clubs (Elo):")
     for x in top.itertuples():
-        print(f"    {x.team:18} Elo {x.elo:.0f} · favorito {x.fav_rate:.0%} · "
-              f"skew jogos {x.skew_games:+.3f}")
-    print("  clubes mais FRACOS:")
+        print(f"    {x.team:18} Elo {x.elo:.0f} · favourite {x.fav_rate:.0%} · "
+              f"match skew {x.skew_games:+.3f}")
+    print("  WEAKEST clubs:")
     for x in bot.itertuples():
-        print(f"    {x.team:18} Elo {x.elo:.0f} · favorito {x.fav_rate:.0%} · "
-              f"skew jogos {x.skew_games:+.3f}")
+        print(f"    {x.team:18} Elo {x.elo:.0f} · favourite {x.fav_rate:.0%} · "
+              f"match skew {x.skew_games:+.3f}")
 
-    # dispersão de Elo da liga prevê a skew da liga?
+    # does the league's Elo dispersion predict the league's skew?
     lg = T.groupby("Division").agg(elo_sd=("elo", "std")).reset_index()
     lsk = exante.pooled_by(df, "Division", min_n=2000)[["Division", "skew_exante"]]
     M = lg.merge(lsk, on="Division")
     rl = stats.bootstrap_corr(M.elo_sd.values, M.skew_exante.values)
-    print(f"\ncorr(dispersão de Elo da liga, skew da liga) = {rl['r']:+.3f} "
+    print(f"\ncorr(league Elo dispersion, league skew) = {rl['r']:+.3f} "
           f"[{rl['ci_lo']:+.2f},{rl['ci_hi']:+.2f}]")
-    print("  → a assinatura de skew da liga é função da sua dispersão de força no")
-    print("    nível dos TIMES (a lei skewness=f(competitividade), vista por dentro).")
+    print("  → the league's skew signature is a function of its strength dispersion at the")
+    print("    TEAM level (the law skewness=f(competitiveness), seen from within).")
 
     C.OUTDIR.mkdir(exist_ok=True)
     T.sort_values("elo").to_csv(C.OUTDIR / "team_dominance.csv", index=False)

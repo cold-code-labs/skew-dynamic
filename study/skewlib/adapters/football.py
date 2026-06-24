@@ -1,11 +1,12 @@
-"""Adaptador FUTEBOL → tabela canônica. Dois mercados:
+"""FOOTBALL adapter → canonical table. Two markets:
 
-  football:1x2   — 3 resultados (casa/empate/fora). A de-vig é DELEGADA a
-                   `devig.devig_frame` (método primário Shin), então o `p` é
-                   bit-idêntico ao pipeline congelado: a via canônica reproduz
-                   `exante.bettype_by` exatamente (asserção em analysis/47 + testes).
-  football:ou25  — 2 resultados (over/under 2.5 gols). Prova que o núcleo lida com
-                   n ≠ 3; a de-vig usa a via genérica `canonical.devig`.
+  football:1x2   — 3 outcomes (home/draw/away). The de-vig is DELEGATED to
+                   `devig.devig_frame` (primary method Shin), so `p` is
+                   bit-identical to the frozen pipeline: the canonical path
+                   reproduces `exante.bettype_by` exactly (assertion in
+                   analysis/47 + tests).
+  football:ou25  — 2 outcomes (over/under 2.5 goals). Proves that the core handles
+                   n ≠ 3; the de-vig uses the generic `canonical.devig` path.
 """
 import numpy as np
 import pandas as pd
@@ -19,7 +20,7 @@ DRAW_ROLE = "draw"
 
 
 def to_canonical(df=None, method=None):
-    """Mapeia o dataset 1X2 para a tabela canônica (de-vig congelada via devig_frame)."""
+    """Maps the 1X2 dataset to the canonical table (frozen de-vig via devig_frame)."""
     if df is None:
         df = io.load()
     dv = devig.devig_frame(df, method=method)
@@ -44,7 +45,7 @@ def to_canonical(df=None, method=None):
 
 
 def competitiveness(df=None):
-    """Competitividade ODDS-FREE por liga (taxa de zebra do Elo de resultados)."""
+    """ODDS-FREE competitiveness per league (upset rate of the results Elo)."""
     if df is None:
         df = io.load()
     c = elo.league_competitiveness(elo.with_elo(df))
@@ -52,12 +53,12 @@ def competitiveness(df=None):
 
 
 class _OU:
-    """Mercado over/under 2.5 (binário) como adaptador independente."""
+    """Over/under 2.5 (binary) market as an independent adapter."""
     SPORT = "football"
     MARKET = "ou25"
     OUTCOMES = ["over", "under"]
     ROLES = {"over": "over", "under": "under"}
-    DRAW_ROLE = None                       # sem empate neste mercado
+    DRAW_ROLE = None                       # no draw in this market
 
     def to_canonical(self, df=None, method=None):
         if df is None:
@@ -78,7 +79,7 @@ class _OU:
             part["outcome"] = oc
             part["role"] = self.ROLES[oc]
             part["odds"] = d[oddcol].to_numpy(float)
-            part["p"] = np.nan                       # preenchida pela de-vig genérica
+            part["p"] = np.nan                       # filled in by the generic de-vig
             part["won"] = won
             parts.append(part)
         out = pd.concat(parts, ignore_index=True)

@@ -1,11 +1,12 @@
-"""Carga do football-data.co.uk CANÔNICO (um CSV por liga-temporada), que traz o
-que o mirror congelado NÃO tem: odds de ABERTURA (Avg*/Max*/PS*) e FECHAMENTO
-(Avg*C/Max*C/PS*C), e histórico multi-book pré-2005 (WH/Ladbrokes/…). Fonte das
-frentes D1 (descoberta de preço abertura→fechamento) e pré-2005 (quebra de regime).
+"""Loading of the CANONICAL football-data.co.uk (one CSV per league-season), which
+brings what the frozen mirror does NOT have: OPENING odds (Avg*/Max*/PS*) and
+CLOSING odds (Avg*C/Max*C/PS*C), and pre-2005 multi-book history
+(WH/Ladbrokes/…). Source for fronts D1 (opening→closing price discovery) and
+pre-2005 (regime break).
 
-Arquivos em `data/canonical/<SSSS>_<DIV>.csv` (SSSS = temporada football-data, ex.
-2324; DIV = E0, SP1, …). Baixados por `analysis/50_fetch_canonical.py`. Não são
-versionados (data/ é gitignored); congelados por `canonical_hash()`.
+Files in `data/canonical/<SSSS>_<DIV>.csv` (SSSS = football-data season, e.g.
+2324; DIV = E0, SP1, …). Fetched by `analysis/50_fetch_canonical.py`. They are not
+versioned (data/ is gitignored); frozen by `canonical_hash()`.
 """
 import hashlib
 import numpy as np, pandas as pd
@@ -14,27 +15,27 @@ from . import config as C
 
 CANON = C.DATA_PATH.parent / "canonical"
 
-# tripletos 1X2 (favorito = argmax prob = argmin odd, invariante ao de-vig)
-OPEN_AVG = ("AvgH", "AvgD", "AvgA")        # média do mercado na ABERTURA
-CLOSE_AVG = ("AvgCH", "AvgCD", "AvgCA")    # média do mercado no FECHAMENTO
+# 1X2 triplets (favourite = argmax prob = argmin odd, invariant to the de-vig)
+OPEN_AVG = ("AvgH", "AvgD", "AvgA")        # market average at the OPENING
+CLOSE_AVG = ("AvgCH", "AvgCD", "AvgCA")    # market average at the CLOSING
 OPEN_MAX = ("MaxH", "MaxD", "MaxA")
 CLOSE_MAX = ("MaxCH", "MaxCD", "MaxCA")
-WH = ("WHH", "WHD", "WHA")                 # William Hill (book contínuo 2000→2025)
+WH = ("WHH", "WHD", "WHA")                 # William Hill (continuous book 2000→2025)
 
 
 def _read_one(path):
-    # CSVs antigos do football-data têm linhas raggadas (vírgulas sobrando) e
-    # colunas-fantasma sem nome — pulamos linhas ruins e colunas Unnamed.
+    # old football-data CSVs have ragged rows (extra commas) and unnamed
+    # phantom columns — we skip bad lines and Unnamed columns.
     df = pd.read_csv(path, encoding="latin1", low_memory=False, on_bad_lines="skip")
     df = df.loc[:, ~df.columns.str.startswith("Unnamed")]
     return df[df["Div"].notna()] if "Div" in df.columns else df.iloc[0:0]
 
 
 def load(seasons=None, divs=None, dirpath=CANON):
-    """Empilha os CSVs canônicos, normaliza nomes/datas e marca a temporada.
-    `seasons`/`divs` filtram (códigos football-data: '2324', 'E0'). Devolve um
-    DataFrame com Division, date, season, HomeTeam, AwayTeam, FTResult, FTHome,
-    FTAway, HTHome, HTAway e todas as colunas de odds presentes na fonte."""
+    """Stacks the canonical CSVs, normalises names/dates and marks the season.
+    `seasons`/`divs` filter (football-data codes: '2324', 'E0'). Returns a
+    DataFrame with Division, date, season, HomeTeam, AwayTeam, FTResult, FTHome,
+    FTAway, HTHome, HTAway and all the odds columns present in the source."""
     frames = []
     for f in sorted(Path(dirpath).glob("*.csv")):
         try:
@@ -49,21 +50,21 @@ def load(seasons=None, divs=None, dirpath=CANON):
         if len(g):
             frames.append(g)
     if not frames:
-        raise FileNotFoundError(f"sem CSVs canônicos em {dirpath} (rode 50_fetch_canonical.py)")
+        raise FileNotFoundError(f"no canonical CSVs in {dirpath} (run 50_fetch_canonical.py)")
     df = pd.concat(frames, ignore_index=True)
     df = df.rename(columns={"Div": "Division", "FTHG": "FTHome", "FTAG": "FTAway",
                             "FTR": "FTResult", "HTHG": "HTHome", "HTAG": "HTAway"})
     df["date"] = pd.to_datetime(df["Date"], dayfirst=True, errors="coerce")
     df = df.dropna(subset=["date", "FTResult", "Division"])
     df = df[df.FTResult.isin(["H", "D", "A"])]
-    # temporada: agosto→junho (jul como corte, igual ao resto do estudo)
+    # season: august→june (jul as the cutoff, same as the rest of the study)
     df["season"] = np.where(df.date.dt.month >= 7, df.date.dt.year, df.date.dt.year - 1)
     return df.sort_values("date").reset_index(drop=True)
 
 
 def with_odds(df, cols):
-    """Filtra linhas com o tripleto `cols` válido (numérico > MIN_ODD) e devolve um
-    frame com OddHome/OddDraw/OddAway apontando para ele — pronto p/ devig/exante."""
+    """Filters rows with a valid `cols` triplet (numeric > MIN_ODD) and returns a
+    frame with OddHome/OddDraw/OddAway pointing to it — ready for devig/exante."""
     g = df.copy()
     for c in cols:
         g[c] = pd.to_numeric(g[c], errors="coerce")
@@ -73,8 +74,8 @@ def with_odds(df, cols):
 
 
 def canonical_hash(dirpath=CANON):
-    """Hash determinístico do conjunto canônico (lista de arquivos + bytes), p/
-    congelar a proveniência das frentes que usam dado externo."""
+    """Deterministic hash of the canonical set (file list + bytes), to
+    freeze the provenance of the fronts that use external data."""
     h = hashlib.sha256()
     files = sorted(Path(dirpath).glob("*.csv"))
     for f in files:
