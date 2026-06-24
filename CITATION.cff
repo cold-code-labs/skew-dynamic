@@ -6,7 +6,7 @@ authors:
   - given-names: Vitor
     family-names: Alves
     affiliation: "Cold Code Labs"
-    orcid: "https://orcid.org/0000-0000-0000-0000"  # TODO: register at orcid.org and replace
+    # orcid: "https://orcid.org/XXXX-XXXX-XXXX-XXXX"  # TODO: register at orcid.org, uncomment & fill before release
 repository-code: "https://github.com/cold-code-labs/skew-dynamic"
 url: "https://skew-dynamic.coldcodelabs.com"
 # doi: "10.5281/zenodo.XXXXXXX"  # minted by Zenodo on the first GitHub release
