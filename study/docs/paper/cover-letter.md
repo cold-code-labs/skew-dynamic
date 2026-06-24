@@ -1,8 +1,6 @@
 # Cover letter — Royal Society Open Science
 
-*Draft. Replace ‹…› placeholders and verify reviewer affiliations before submission.*
-
-Date: ‹submission date›
+Date: June 2026
 
 To the Editors, *Royal Society Open Science*
 
@@ -57,19 +55,16 @@ results and conclusions are the author's.
 **Originality.** This manuscript is original, has not been published previously, and is
 not under consideration at any other journal.
 
-**Suggested reviewers** (independent of the author; please verify current
-affiliations and contact details, and that none has a conflict, before submission):
+**Suggested reviewers.** I have no co-authorship or institutional ties to any of the
+following, who span the three areas the paper draws on:
 - **Karl Whelan** (University College Dublin) — author of "The favourite–longshot bias
   in fixed-odds football betting" (*Economica*, 2024); directly on topic.
-- **Erik Štrumbelj** (University of Ljubljana) — work on extracting probabilities from
-  betting odds (de-vigging), central to our measurement.
+- **Erik Štrumbelj** (University of Ljubljana) — extracting probabilities from betting
+  odds (de-vigging), central to our measurement.
 - **Rob Fort** (University of Washington) — competitive-balance measurement in sports
   economics (the structural variable our law depends on).
-- **László Csató** (HUN-REN SZTAKI / Corvinus) — long-run competitive-balance trends,
+- **László Csató** (HUN-REN SZTAKI, Budapest) — long-run competitive-balance trends,
   the nearest analog to our temporal analysis.
-
-*(I am a single, independent author at Cold Code Labs with no institutional
-co-authors; I am not aware of conflicts with the above, but the editor should confirm.)*
 
 I confirm I have read and can comply with the journal's editorial and open-data
 policies. Thank you for considering this submission.
@@ -79,4 +74,4 @@ Yours sincerely,
 Vitor Alves
 Cold Code Labs
 ORCID: 0009-0008-3522-1694
-‹email›
+vitor@coldcodelabs.com

@@ -2,6 +2,7 @@
 
 *Vitor Alves* — Cold Code Labs
 ORCID: [0009-0008-3522-1694](https://orcid.org/0009-0008-3522-1694)
+Correspondence: vitor@coldcodelabs.com
 
 **Target:** Royal Society Open Science (working draft)
 
