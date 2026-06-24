@@ -1,7 +1,7 @@
 # Structural Invariance of Return Skewness in Football Betting Markets
 
 *Vitor Alves* — Cold Code Labs
-ORCID: ‹0000-0000-0000-0000 — register at orcid.org and replace before submission›
+ORCID: [0009-0008-3522-1694](https://orcid.org/0009-0008-3522-1694)
 
 **Target:** Royal Society Open Science (working draft)
 
