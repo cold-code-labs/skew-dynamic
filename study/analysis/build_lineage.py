@@ -185,6 +185,12 @@ PHASES = [
      "metrics": {"skew_fav": 0.236, "skew_draw": 1.294, "skew_dog": 2.349,
      "corr_fav_comp": -0.90, "corr_draw_comp": 0.95, "corr_dog_comp": 0.91,
      "n_leagues": 38}},
+    # ── 6ª rodada (validade externa: 2º esporte sobre a camada canônica) ──
+    {"id": "S", "frente": "External validity", "tag": "evidence/frente-S", "commit": "4cf9084",
+     "title": "Tênis: a lei é do esporte, não do futebol (camada canônica)",
+     "blocks": ["48_tennis"], "figures": ["f35"],
+     "metrics": {"skew_fav": -0.571, "skew_dog": 2.314, "calib_pfav": 0.688,
+     "calib_winrate": 0.692, "law_atp": -1.00, "law_wta": -0.98, "n_matches": 62865}},
 ]
 
 
