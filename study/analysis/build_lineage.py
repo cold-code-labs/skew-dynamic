@@ -197,6 +197,13 @@ PHASES = [
      "blocks": ["49_basketball"], "figures": ["f36"],
      "metrics": {"skew_fav": -0.570, "skew_dog": 2.609, "calib_pfav": 0.694,
      "calib_winrate": 0.685, "law_nba": -0.95, "n_matches": 19621}},
+    # ── 8ª rodada (rigor inferencial: o null temporal como equivalência) ──
+    {"id": "U", "frente": "Equivalence", "tag": "evidence/frente-U", "commit": "0598390",
+     "title": "Equivalência temporal: 'sem deriva' como TOST (evidência de ausência)",
+     "blocks": ["51_temporal_equivalence"], "figures": ["f37"],
+     "metrics": {"beta_year": 0.00015, "drift20": 0.003, "sd_between": 0.0516,
+     "delta20": 0.026, "p_tost": 0.006, "p_tost_boot": 0.005,
+     "p_tost_balanced": 0.043, "n_obs": 638}},
 ]
 
 

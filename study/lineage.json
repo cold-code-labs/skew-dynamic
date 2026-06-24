@@ -1,6 +1,6 @@
 {
   "schema": "skew-dynamic/lineage@1",
-  "generated_at_head": "fa6ea6b0",
+  "generated_at_head": "05983905",
   "head_dirty": true,
   "data": {
     "sha256": "6905ca5324df9528",
@@ -822,6 +822,30 @@
         "calib_winrate": 0.685,
         "law_nba": -0.95,
         "n_matches": 19621
+      },
+      "commit_date": "2026-06-23"
+    },
+    {
+      "id": "U",
+      "frente": "Equivalence",
+      "tag": "evidence/frente-U",
+      "commit": "0598390",
+      "title": "Equivalência temporal: 'sem deriva' como TOST (evidência de ausência)",
+      "blocks": [
+        "51_temporal_equivalence"
+      ],
+      "figures": [
+        "f37"
+      ],
+      "metrics": {
+        "beta_year": 0.00015,
+        "drift20": 0.003,
+        "sd_between": 0.0516,
+        "delta20": 0.026,
+        "p_tost": 0.006,
+        "p_tost_boot": 0.005,
+        "p_tost_balanced": 0.043,
+        "n_obs": 638
       },
       "commit_date": "2026-06-23"
     }

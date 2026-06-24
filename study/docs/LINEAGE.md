@@ -6,7 +6,7 @@
 > 38 ligas). Volte a qualquer estado com
 > `git checkout <tag>`; audite mudança de resultado com `--check`.
 
-**HEAD na geração:** `fa6ea6b0`  ⚠️ working tree DIRTY
+**HEAD na geração:** `05983905`  ⚠️ working tree DIRTY
 
 | Fase | Frente | Achado | Blocos | Figuras | Números-título | Commit | Tag |
 |------|--------|--------|--------|---------|----------------|--------|-----|
@@ -52,6 +52,7 @@
 | **R** | Bet-type | Tipo de aposta: a lei skew=f(competitividade) em todo o book | 46_bettype | f34 | skew_fav=0.236 · skew_draw=1.294 · skew_dog=2.349 · corr_fav_comp=-0.9 · corr_draw_comp=0.95 · corr_dog_comp=0.91 · n_leagues=38 | `a67e465` (2026-06-23) | `evidence/frente-R` |
 | **S** | External validity | Tênis: a lei é do esporte, não do futebol (camada canônica) | 48_tennis | f35 | skew_fav=-0.571 · skew_dog=2.314 · calib_pfav=0.688 · calib_winrate=0.692 · law_atp=-1.0 · law_wta=-0.98 · n_matches=62865 | `4cf9084` (2026-06-23) | `evidence/frente-S` |
 | **T** | External validity | Basquete: a lei vale num 3º esporte (NBA moneyline, camada canônica) | 49_basketball | f36 | skew_fav=-0.57 · skew_dog=2.609 · calib_pfav=0.694 · calib_winrate=0.685 · law_nba=-0.95 · n_matches=19621 | `fa6ea6b` (2026-06-23) | `evidence/frente-T` |
+| **U** | Equivalence | Equivalência temporal: 'sem deriva' como TOST (evidência de ausência) | 51_temporal_equivalence | f37 | beta_year=0.00015 · drift20=0.003 · sd_between=0.0516 · delta20=0.026 · p_tost=0.006 · p_tost_boot=0.005 · p_tost_balanced=0.043 · n_obs=638 | `0598390` (2026-06-23) | `evidence/frente-U` |
 
 ## Tags de versionamento (`evidence/*`)
 Uma tag anotada por marco de evidência aponta o commit que estabeleceu
