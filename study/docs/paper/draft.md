@@ -163,6 +163,18 @@ The de-vigged ex-ante object is our primary measurement; the **ex-post realised*
 skewness (the skewness of actual returns) is a robustness check that should
 coincide with it under well-calibrated odds.
 
+### 3.4 A sport-agnostic canonical layer
+
+The measurement needs, per bet, only a de-vigged probability *p*, a decimal odd *o*
+and a realised outcome. We therefore factor the analysis behind a canonical data layer
+(`skewlib/canonical.py`; the contract is documented in `docs/DATA-SCHEMA.md`): a
+per-sport *adapter* maps a raw source to a tidy long form — declaring the outcome
+taxonomy (the number of outcomes, and whether a draw exists) and de-vigging the odds —
+after which the same selection, decomposition and skew-meter code runs unchanged,
+whatever the sport or market width. The football 1X2 path reproduces the legacy numbers
+bit-for-bit; the same layer drives the external-validity analysis of §4.9 (tennis,
+basketball) without touching the core.
+
 ## 4. Results
 
 ### 4.1 The mechanical core (Figure 1, Figure 3)
@@ -228,7 +240,7 @@ drift of ≈ +0.003 against a between-league standard deviation of 0.052.
 
 A high *p*-value, however, is only a failure to reject a trend, not evidence of its
 absence. We therefore test temporal invariance as an **equivalence** hypothesis
-(two one-sided tests; Figure 20). Pre-registering the same margin used for the
+(two one-sided tests, TOST [Schuirmann 1987; Lakens 2017]; Figure 20). Pre-registering the same margin used for the
 similarity analysis below (§4.8) — half a between-league standard deviation,
 Δ = 0.026, read as the largest twenty-year drift we would treat as negligible — the
 slope's 90% confidence interval falls strictly inside [−Δ, +Δ], rejecting the
@@ -420,6 +432,31 @@ therefore, to first order, the similarity of competitiveness: measurable with on
 parameter, made exact by the full probability distribution, and verdicted by an
 equivalence test rather than a null-rejection.
 
+### 4.9 External validity: one law across three sports (Figure 19)
+
+Our evidence so far is from football and, mostly, the three-outcome 1X2 contract. To
+separate the structural claim from anything idiosyncratic to that sport or that market,
+we port the analysis — through the canonical layer of §3.4, with no change to the core —
+to two further sports whose odds come from independent providers. **Tennis**
+(tennis-data.co.uk, ATP and WTA, 62,865 matches) is a two-outcome match-odds market with
+no draw; **basketball** (sportsbookreviewsonline.com, NBA, sixteen seasons, 19,621
+games) is a two-outcome moneyline market, also with no draw.
+
+In both, the de-vig stays calibrated out of sample (mean favourite probability 0.688 vs
+realised 0.692 in tennis; 0.694 vs 0.685 in basketball, the residual gap being the
+favourite–longshot bias itself), so the implied distribution is trustworthy out of
+domain. And in both the structural law reappears at full strength: the favourite bet is
+most negative where the competition is most lopsided — corr(skewness, competitiveness) =
+−1.00 (ATP) and −0.98 (WTA) across tournament tiers, and −0.95 across NBA seasons,
+against −0.90 in football — while the underdog is lottery-like at +2.31 (tennis) and
++2.61 (basketball), all but identical to football's +2.35. Placed on a single
+competitiveness axis (Figure 19), the three sports trace one curve: football at the
+balanced end, tennis and basketball overlapping in the more lopsided regime, the
+favourite falling and the underdog rising with imbalance throughout. The asymmetry is
+not an artefact of the 1X2 contract, of the football-data source, or of association
+football — it is a property of the sport as a competitive system, exactly as the
+mechanism of §5 predicts.
+
 ## 5. Mechanism
 
 The results cohere under one principle. The skewness of a fixed-odds bet is the
@@ -605,29 +642,13 @@ still (Bosman 1995, the Champions League expansion of 1994/95), and 1X2 odds do 
 exist before ≈ 2000, so the prediction that the *baseline itself* shifts across those
 1990s shocks remains beyond the reach of betting data.
 
-**External validity.** A natural objection is that our evidence is from a single
-sport, and might reflect something idiosyncratic to football or to the three-outcome
-1X2 contract rather than to competition itself. We address this directly. The analysis
-machinery requires, per bet, only a de-vigged probability, a decimal odd and an
-outcome; we therefore factor it behind a sport-agnostic canonical layer
-(`skewlib/canonical.py`; data contract in `docs/DATA-SCHEMA.md`) and port it,
-unchanged, to two further sports whose odds come from independent
-providers. **Tennis** (tennis-data.co.uk, ATP and WTA, 62,865 matches) is a
-two-outcome match-odds market with no draw; **basketball** (sportsbookreviewsonline.com,
-NBA, sixteen seasons, 19,621 games) is a two-outcome moneyline market, also with no
-draw. In both, the de-vig remains calibrated out of sample (mean favourite probability
-0.688 vs realised 0.692 in tennis; 0.694 vs 0.685 in basketball, the residual being the
-favourite–longshot bias itself), so the implied distribution is trustworthy. And in
-both, the structural law reappears at full strength: the favourite bet is most negative
-where the competition is most lopsided — corr(skewness, competitiveness) = −1.00 (ATP)
-and −0.98 (WTA) across tournament tiers, and −0.95 across NBA seasons, against −0.90 in
-football — while the underdog is lottery-like at +2.31 (tennis) and +2.61 (basketball),
-all but identical to football's +2.35. Placed on a single competitiveness axis
-(Figure 19), the three sports trace one curve: football at the balanced end, tennis
-and basketball overlapping in the more lopsided regime, the favourite falling and the
-underdog rising with imbalance throughout. The asymmetry is not an artefact of the 1X2
-contract, of the football-data source, or of association football — it is a property of
-the sport as a competitive system, exactly as the mechanism predicts.
+The structural reading also makes a portable prediction, which §4.9 confirms: ported
+unchanged to tennis and basketball — different sports, two-outcome markets with no draw,
+independent odds sources — the same law reappears (the favourite's skewness falling with
+competitiveness, the underdog lottery-like near +2.3 to +2.6, the de-vig still
+calibrated out of domain). The asymmetry is therefore a property of the sport as a
+competitive system, not an artefact of the 1X2 contract or of football — which is what a
+mechanism rooted in the win-probability distribution, rather than in pricing, predicts.
 
 ## 8. Conclusion
 
@@ -793,6 +814,9 @@ copy-edit: convert to numbered Vancouver style and add DOIs.*
   (JRSS-D) 49(3):419–431.
 - Kraus, A. & Litzenberger, R. (1976). *Skewness Preference and the Valuation of
   Risk Assets.* Journal of Finance.
+- Lakens, D. (2017). *Equivalence Tests: A Practical Primer for t Tests,
+  Correlations, and Meta-Analyses.* Social Psychological and Personality Science
+  8(4):355–362.
 - Lee, Y. H. & Fort, R. (2012). *Competitive balance: time series lessons from the
   English Premier League.* Scottish J. Political Economy 59(3):266–282.
 - Nash, J. (2018). *A formal approach to modelling the characteristics of sports
@@ -800,6 +824,9 @@ copy-edit: convert to numbered Vancouver style and add DOIs.*
 - Owen, P. D., Ryan, M. & Weatherston, C. (2007). *Measuring competitive balance
   in professional team sports using the Herfindahl–Hirschman index.* Review of
   Industrial Organization 31:289–302.
+- Schuirmann, D. J. (1987). *A comparison of the two one-sided tests procedure and
+  the power approach for assessing the equivalence of average bioavailability.*
+  Journal of Pharmacokinetics and Biopharmaceutics 15(6):657–680.
 - Shin, H. S. (1993). *Measuring the Incidence of Insider Trading in a Market for
   State-Contingent Claims.* Economic Journal 103(420):1141–1153.
 - Snowberg, E. & Wolfers, J. (2010). *Explaining the Favorite–Longshot Bias: Is it

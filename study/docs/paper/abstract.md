@@ -20,10 +20,16 @@ high *p*-value into positive evidence of stability. A COVID natural experiment (
 collapse) moves skewness in the predicted direction, corroborating the causal
 mechanism. Bookmaker margin is orthogonal to asymmetry (best-price collapses the
 overround 1.067→1.009 while skewness barely moves), and the identity reappears
-in the binary over/under-2.5 market. We conclude that the market's risk
+in the binary over/under-2.5 market. Finally, ported unchanged through a
+sport-agnostic data layer, the same law holds **out of sample in two further
+sports** — tennis and basketball, two-outcome markets with independent odds sources
+(corr(skew, competitiveness) −0.95 to −1.00; underdog skew +2.3 to +2.6) —
+identifying it as a property of competition rather than of football or the 1X2
+contract. We conclude that the market's risk
 asymmetry is **inherited from the competitive structure of the sport**, not
 produced by pricing — a structural invariant stable across two decades of market
 growth.
 
 **Keywords:** skewness, favourite-longshot bias, betting markets, market
-efficiency, implied probabilities, structural invariance.
+efficiency, implied probabilities, structural invariance, equivalence testing,
+cross-sport validation.
