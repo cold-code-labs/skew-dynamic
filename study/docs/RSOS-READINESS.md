@@ -19,24 +19,27 @@ for authors", Royal Society data-sharing & open-data policy, author guidelines.
 | 9 | Continuous verification | `.github/workflows/ci.yml` runs engine import smoke + `/measure` API tests on push/PR |
 | 10 | Reference completeness | Fixed the one entry missing a year; flagged author-date → Vancouver as a final copy-edit |
 
-## 🔒 Manual steps (need the author; cannot be automated)
+## ✅ Resolved (manual steps, now done)
 
-| Requirement | Action |
+| Requirement | What was done |
 |---|---|
-| **ORCID** | Register at orcid.org; replace `0000-0000-0000-0000` in `CITATION.cff`, `.zenodo.json`, and the draft author line |
-| **Zenodo DOI** | Enable the Zenodo–GitHub integration for the repo, cut a release; replace `10.5281/zenodo.XXXXXXX` in the draft's Data Accessibility and `CITATION.cff` with the minted DOI |
-| **Cover letter** | One-pager noting scope fit and the restricted-raw-data justification (derived data deposited; raw fetched + hash-verified) |
+| **ORCID** | Registered: `0009-0008-3522-1694`, set in `CITATION.cff`, `.zenodo.json`, and the draft author line |
+| **Zenodo DOI** | Release cut and archived; concept DOI `10.5281/zenodo.20822121` (resolves to latest, currently v1.0.2) in the draft's Data Accessibility and `CITATION.cff`; verified to resolve |
+| **Cover letter** | `docs/paper/cover-letter.md` — scope fit, restricted-raw-data justification, equivalence + external-validity highlights, four real suggested reviewers |
+| **Figures ≥300 DPI** | Centralized to `skewlib/config.py:FIG_DPI=300`; all `savefig` calls reference it; pranchas regenerated at 1800×1200 @ 300 DPI; drift audit clean |
+| **Reference completeness** | Last unverified entry (Andrikogiannopoulou & Papakonstantinou) resolved to the published version: *Rev. Financial Studies* 33(8):3674–3718 (2020) |
 
-## 🟡 Recommended before submission (not blockers)
+## ✅ Substantive items (raised in review, now in the manuscript)
 
-- **Figures**: currently PNG at 150 DPI. RSOS accepts PNG but prefers high-res/vector — emit PDF/EPS or bump to ≥300 DPI (one change in the matplotlib `savefig` calls).
-- **Vancouver references + DOIs**: full numbered-style conversion is a final-stage copy-edit (initial submission is format-free).
+- **Temporal-null equivalence** — §4.3 / Figure 20: TOST against a pre-registered
+  margin (½ between-league SD); every interval inside the band → *evidence of absence*.
+- **External validity** — §4.9 / Figure 19: the same law reappears in tennis and
+  basketball (independent odds sources) via the sport-agnostic canonical layer.
 
-## 🔬 Substantive item (separate from infra; raised in review)
+## 🟡 Remaining (revision-stage / portal; not initial-submission blockers)
 
-- **Temporal-null equivalence**: the "no trend" claim is currently *absence of
-  evidence*. Apply the existing TOST/equivalence machinery to the temporal null to
-  state *evidence of absence* within a pre-set margin. New analysis + a number for §4.3.
-- **External validity**: single sport / single source. The planned multi-sport
-  modularization (canonical data schema) is the highest-leverage de-risking and
-  doubles as the project's next expansion.
+- **Vancouver references + DOIs**: numbered-style conversion is a final-stage copy-edit
+  (RSOS initial submission is format-free).
+- **Portal mechanics (ScholarOne)**: subject category, separate high-res figure files,
+  lay summary (`docs/paper/lay-summary.md`) and cover letter uploaded separately;
+  confirm correspondence email.

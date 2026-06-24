@@ -52,7 +52,7 @@ relative to their empirical win frequencies [Snowberg & Wolfers 2010]. A leading
 explanation is a **preference for skewness**: bettors accept a lower expected
 return in exchange for the small-probability, large-payoff (positively skewed)
 profile of a longshot [Golec & Tamarkin 1998; Garrett, Hartley & Coughlin 2006;
-Andrikogiannopoulou & Papakonstantinou]. This literature is overwhelmingly
+Andrikogiannopoulou & Papakonstantinou 2020]. This literature is overwhelmingly
 **cross-sectional**: it characterises how skewness varies *across* bets within a
 single cross-section.
 
@@ -790,9 +790,9 @@ audit.
 *Listed author–date (valid for RSOS format-free initial submission). Final-stage
 copy-edit: convert to numbered Vancouver style and add DOIs.*
 
-- Andrikogiannopoulou, A. & Papakonstantinou, F. (2013). *Heterogeneity in Risk
-  Preferences: Evidence from a Real-World Betting Market.* Swiss Finance Institute
-  Research Paper 13-53. ‹verify intended work/year before final submission›
+- Andrikogiannopoulou, A. & Papakonstantinou, F. (2020). *History-Dependent Risk
+  Preferences: Evidence from Individual Choices and Implications for the Disposition
+  Effect.* Review of Financial Studies 33(8):3674–3718.
 - Angelini, G. & De Angelis, L. (2019). *Efficiency of online football betting
   markets.* International Journal of Forecasting 35(2):712–721.
 - Barberis, N. & Huang, M. (2008). *Stocks as Lotteries.* American Economic Review.
