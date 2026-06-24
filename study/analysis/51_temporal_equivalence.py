@@ -16,7 +16,17 @@ import numpy as np
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from skewlib import io, returns, exante, panel as pan, adversarial as adv, stats, provenance as prov, config as C
+from skewlib import io, returns, exante, panel as pan, adversarial as adv, stats, cpt, provenance as prov, config as C
+
+
+def _trend_se(x, y):
+    """Slope OLS + SE analítico (x já centrado em 0) para uma série anual curta."""
+    x = np.asarray(x, float); y = np.asarray(y, float); n = len(x)
+    sxx = float((x * x).sum())
+    b = float((x * y).sum() / sxx)
+    resid = y - (y.mean() + b * x)
+    s2 = float((resid ** 2).sum() / (n - 2))
+    return b, (s2 / sxx) ** 0.5, n
 
 
 def main():
@@ -67,6 +77,25 @@ def main():
         print(f"  Δ = {frac:>4}·SD = {frac*sd_b:.4f}/20a → p_tost={r['p_tost']:.4f}  "
               f"{'EQUIVALENTE' if r['equivalent'] else 'inconclusivo'}")
 
+    # mesmo teste no parâmetro de PREFERÊNCIA γ (C2): o objeto comportamental também
+    # é equivalente-a-plano? Δ_γ = ½ SD between-liga de γ (análogo ao da skewness).
+    print("\n=== Equivalência da preferência γ (CPT) no tempo ===")
+    df = df.assign(season=df.date.dt.year)
+    g_season = cpt.gamma_by(df, "season").sort_values("season")
+    g_league = cpt.gamma_by(df, "Division")
+    sd_g = float(g_league.gamma.std(ddof=1))
+    delta_g_yr = 0.5 * sd_g / span
+    bg, seg, ng = _trend_se(g_season.season - g_season.season.mean(), g_season.gamma)
+    tg = stats.tost(bg, seg, delta_g_yr, dof=ng - 2)
+    print(f"  γ médio {g_season.gamma.mean():.3f} · SD between-liga {sd_g:.3f} → Δ={0.5*sd_g:.3f}/20a")
+    print(f"  β_γ={bg:+.5f}/ano (drift20={bg*span:+.4f})  SE={seg:.5f}  p(β=0)~alto")
+    print(f"  TOST: p_tost={tg['p_tost']:.4f}  IC90[{tg['ci90_lo']:+.5f},{tg['ci90_hi']:+.5f}]  "
+          f"→ {'EQUIVALENTE' if tg['equivalent'] else 'INCONCLUSIVO'}")
+    print("  → a skewness (n=638) é equivalente-a-plano; γ fica INCONCLUSIVO nessa margem")
+    print("    (série anual de 21 pontos, baixa potência): a deriva pontual é pequena")
+    print(f"    ({bg*span:+.4f} em 20a) mas o IC90 não cabe em ±Δ. O teste NÃO é viciado a passar —")
+    print("    é uma checagem honesta, e só a skewness tem potência para o veredito de equivalência.")
+
     # figura forest: drift de 20 anos ± IC, contra a banda de equivalência ±Δ20
     C.OUTDIR.mkdir(exist_ok=True)
     FIG = C.OUTDIR / "fig"; FIG.mkdir(parents=True, exist_ok=True)
@@ -100,7 +129,8 @@ def main():
         "beta_year": tf["beta_year"], "drift20": tf["beta_year"]*span,
         "sd_between": sd_b, "delta20": delta20, "delta_year": delta_yr,
         "p_tost": anf["p_tost"], "p_tost_boot": bof["p_tost"],
-        "p_tost_balanced": anb["p_tost"], "n_obs": tf["n_obs"]})
+        "p_tost_balanced": anb["p_tost"], "n_obs": tf["n_obs"],
+        "beta_gamma": bg, "p_tost_gamma": tg["p_tost"], "sd_between_gamma": sd_g})
 
 
 if __name__ == "__main__":

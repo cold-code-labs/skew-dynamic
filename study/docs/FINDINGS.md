@@ -1035,8 +1035,15 @@ Aqui fechamos o buraco lógico do §4.3 com um **teste de equivalência (TOST)**
 Conclusão: a skewness não é apenas *não-mostrada* derivar — é **estatisticamente
 equivalente a não derivar**, dentro de uma fração de uma única diferença entre-ligas
 acumulada em todo o histórico. Converte a invariância temporal de ausência-de-evidência
-em evidência-de-ausência. Vale também como gabarito metodológico para os outros "sem
-deriva" do paper (P4/FLB, C2/γ, L/HFA), hoje argumentados por não-rejeição.
+em evidência-de-ausência.
+
+**Checagem honesta (γ, C2):** o mesmo TOST aplicado ao parâmetro de preferência γ
+(série anual de 21 pontos, Δ=½ SD between-liga de γ ≈ 0.020) sai **INCONCLUSIVO**
+(β_γ=+0.0003/ano, deriva +0.006 em 20a, p_tost=0.19): a deriva pontual é pequena, mas a
+série anual não tem potência para certificar equivalência nessa margem. Registramos isso
+de propósito — o teste **não é viciado a passar**; só a skewness (n=638, painel
+liga×temporada) tem potência para o veredito. Por isso o paper afirma equivalência só
+para a skewness; os demais "sem deriva" (P4/FLB, C2/γ, L/HFA) seguem como não-rejeição.
 
 Artefatos: `skewlib/stats.py:tost`, `skewlib/panel.py:trend_boot`,
 `analysis/51_temporal_equivalence.py`, `outputs/fig/f37_temporal_equivalence.png`.

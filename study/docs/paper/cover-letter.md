@@ -57,13 +57,19 @@ results and conclusions are the author's.
 **Originality.** This manuscript is original, has not been published previously, and is
 not under consideration at any other journal.
 
-**Suggested reviewers** (please verify current affiliations/contacts):
-- ‹Researcher in the favourite–longshot bias / betting-market efficiency, e.g. work
-  in the tradition of Snowberg & Wolfers or Whelan›
-- ‹Researcher in competitive balance / sports statistics, e.g. in the tradition of
-  Lee & Fort or Basini et al.›
-- ‹Researcher in skewness preference / prospect theory in markets, e.g. in the
-  tradition of Barberis & Huang or Boyer, Mitton & Vorkink›
+**Suggested reviewers** (independent of the author; please verify current
+affiliations and contact details, and that none has a conflict, before submission):
+- **Karl Whelan** (University College Dublin) — author of "The favourite–longshot bias
+  in fixed-odds football betting" (*Economica*, 2024); directly on topic.
+- **Erik Štrumbelj** (University of Ljubljana) — work on extracting probabilities from
+  betting odds (de-vigging), central to our measurement.
+- **Rob Fort** (University of Washington) — competitive-balance measurement in sports
+  economics (the structural variable our law depends on).
+- **László Csató** (HUN-REN SZTAKI / Corvinus) — long-run competitive-balance trends,
+  the nearest analog to our temporal analysis.
+
+*(I am a single, independent author at Cold Code Labs with no institutional
+co-authors; I am not aware of conflicts with the above, but the editor should confirm.)*
 
 I confirm I have read and can comply with the journal's editorial and open-data
 policies. Thank you for considering this submission.
