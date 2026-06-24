@@ -53,12 +53,12 @@ def main():
     FIG = C.OUTDIR / "fig"; FIG.mkdir(parents=True, exist_ok=True)
     fig, ax = plt.subplots(figsize=(7, 4))
     ax.plot(gall.season, gall.skew_exante, "o-", color="0.6", lw=1.2, ms=4,
-            label=f"todas as ligas (β={ol_a['slope']:+.4f})")
+            label=f"all leagues (β={ol_a['slope']:+.4f})")
     ax.plot(gbal.season, gbal.skew_exante, "s-", color="#1f77b4", lw=2, ms=5,
-            label=f"balanceada, {len(bal)} ligas fixas (β={ol_b['slope']:+.4f})")
+            label=f"balanced, {len(bal)} fixed leagues (β={ol_b['slope']:+.4f})")
     ax.axhline(gbal.skew_exante.mean(), color="#1f77b4", lw=.8, ls="--", alpha=.6)
-    ax.set_xlabel("temporada"); ax.set_ylabel("skewness ex-ante global")
-    ax.set_title("F13 — G2: série global em painel balanceado estrito (sem drift)")
+    ax.set_xlabel("season"); ax.set_ylabel("global ex-ante skewness")
+    ax.set_title("F13 — G2: global series on strict balanced panel (no drift)")
     ax.legend(frameon=False, fontsize=8); fig.tight_layout()
     fig.savefig(FIG / "f13_balanced_panel.png", dpi=C.FIG_DPI, bbox_inches="tight"); plt.close(fig)
     print(f"\n  -> {FIG / 'f13_balanced_panel.png'} | {C.OUTDIR / 'balanced_global_series.csv'}")

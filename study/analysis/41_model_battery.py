@@ -19,10 +19,10 @@ import matplotlib.pyplot as plt
 from skewlib import (io, returns, exante, crossmodel as cm, model, stats,
                      provenance as prov, config as C)
 
-GENS = [("poisson", "Poisson (gols)", "#d62728", "^"),
+GENS = [("poisson", "Poisson (goals)", "#d62728", "^"),
         ("dixoncoles", "Dixon-Coles", "#2ca02c", "s"),
         ("btd", "Bradley-Terry-Davidson", "#9467bd", "D"),
-        ("elo", "Elo de resultados (odds-free)", "#ff7f0e", "x")]
+        ("elo", "Elo of results (odds-free)", "#ff7f0e", "x")]
 
 
 def _corr(a, b):
@@ -83,14 +83,14 @@ def main():
     axes[0].plot(cpf[o], csk[o], color="0.4", lw=2, zorder=1,
                  label="ordered-probit S(σ_L)")
     axes[0].scatter(L.pfav_emp, L.skew_emp, s=26, color="#1f77b4",
-                    label="mercado (empírico)", zorder=3)
+                    label="market (empirical)", zorder=3)
     for key, lab, col, mk in GENS:
         axes[0].scatter(L[f"pfav_{key}"], L[f"skew_{key}"], s=22, color=col,
                         marker=mk, alpha=0.8, label=lab, zorder=2)
     axes[0].axhline(0, color="0.85", lw=0.8, zorder=0)
-    axes[0].set_xlabel("mean $p_{fav}$ (competitividade)")
+    axes[0].set_xlabel("mean $p_{fav}$ (competitiveness)")
     axes[0].set_ylabel("skewness ex-ante")
-    axes[0].set_title("Cinco famílias, uma curva")
+    axes[0].set_title("Five families, one curve")
     axes[0].legend(frameon=False, fontsize=7.5, loc="upper right")
     # painel 2: skew_modelo vs skew_empírico (todos), com a reta identidade
     lo = min(L.skew_emp.min(), -0.05); hi = max(L.skew_emp.max(), 0.4)
@@ -99,12 +99,12 @@ def main():
         rs = next(r for r in rows if r[0] == key)[2]
         axes[1].scatter(L.skew_emp, L[f"skew_{key}"], s=22, color=col, marker=mk,
                         alpha=0.8, label=f"{lab} (r={rs['r']:+.2f})")
-    axes[1].set_xlabel("skewness empírica (mercado)")
-    axes[1].set_ylabel("skewness do modelo")
-    axes[1].set_title("Cada gerador reproduz a ordenação das ligas")
+    axes[1].set_xlabel("empirical skewness (market)")
+    axes[1].set_ylabel("model skewness")
+    axes[1].set_title("Each generator reproduces the league ordering")
     axes[1].legend(frameon=False, fontsize=7.5, loc="upper left")
-    fig.suptitle("F29 — O: bateria de modelos geradores reproduz a lei "
-                 "(independência de modelo)", y=1.02)
+    fig.suptitle("F29 — O: battery of generative models reproduces the law "
+                 "(model independence)", y=1.02)
     fig.tight_layout()
     fig.savefig(FIG / "f29_model_battery.png", dpi=C.FIG_DPI, bbox_inches="tight")
     plt.close(fig)

@@ -52,13 +52,13 @@ def main():
     FIG = C.OUTDIR / "fig"; FIG.mkdir(parents=True, exist_ok=True)
     fig, axes = plt.subplots(1, 2, figsize=(11, 4.4))
     # event-study: sem salto na adoção
-    axes[0].axvline(0, color="#d62728", ls="--", lw=1, label="adoção do VAR")
+    axes[0].axvline(0, color="#d62728", ls="--", lw=1, label="VAR adoption")
     axes[0].errorbar(es.years_since_var, es["mean"],
                      yerr=es["std"] / np.sqrt(es["count"]), marker="o",
                      color="#1f77b4", capsize=3)
-    axes[0].set_xlabel("anos desde a adoção do VAR")
-    axes[0].set_ylabel("skewness ex-ante média")
-    axes[0].set_title("Sem salto na adoção (ligas tratadas)")
+    axes[0].set_xlabel("years since VAR adoption")
+    axes[0].set_ylabel("mean ex-ante skewness")
+    axes[0].set_title("No jump at adoption (treated leagues)")
     axes[0].legend(frameon=False, fontsize=8)
     # DiD: efeito do VAR vs choque de competitividade (COVID)
     labels = ["VAR\n(skewness)", "COVID\n(W3, HFA)"]
@@ -67,10 +67,10 @@ def main():
     axes[1].bar(labels, vals, width=0.5, color=["#aec7e8", "#d62728"],
                 yerr=errs, capsize=5)
     axes[1].axhline(0, color="0.6", lw=0.8)
-    axes[1].set_ylabel("efeito na skewness (SD da liga)")
-    axes[1].set_title("Institucional (nulo) vs competitividade (move)")
-    fig.suptitle("F31 — VAR: choque institucional não move a skewness "
-                 "(placebo de competitividade)", y=1.02)
+    axes[1].set_ylabel("effect on skewness (league SD)")
+    axes[1].set_title("Institutional (null) vs competitiveness (moves)")
+    fig.suptitle("F31 — VAR: institutional shock does not move the skewness "
+                 "(competitiveness placebo)", y=1.02)
     fig.tight_layout()
     fig.savefig(FIG / "f31_var.png", dpi=C.FIG_DPI, bbox_inches="tight"); plt.close(fig)
     print(f"\n  -> {FIG / 'f31_var.png'} | {C.OUTDIR / 'var_panel.csv'}")

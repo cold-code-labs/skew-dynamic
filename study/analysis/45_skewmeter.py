@@ -136,24 +136,24 @@ def main():
     fig, axes = plt.subplots(1, 3, figsize=(13.5, 4.4),
                              gridspec_kw={"width_ratios": [1, 1, 0.9]})
     vmax = M["raw"].max()
-    for ax, Mx, ttl in [(axes[0], M["raw"], "BRUTA  |Δskew|"),
-                        (axes[1], M["residual"], "RESIDUAL (1 parâmetro)")]:
+    for ax, Mx, ttl in [(axes[0], M["raw"], "RAW  |Δskew|"),
+                        (axes[1], M["residual"], "RESIDUAL (1 parameter)")]:
         im = ax.imshow(Mx, cmap="magma_r", vmin=0, vmax=vmax)
         ax.set_title(ttl, fontsize=11); ax.set_xticks([]); ax.set_yticks([])
         fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
-    axes[0].set_xlabel(f"ligas por competitividade\nmediana {M['median_raw']:.3f}")
-    axes[1].set_xlabel(f"mediana {M['median_residual']:.3f} ({1-M['collapse']:.0%} explicado)")
+    axes[0].set_xlabel(f"leagues by competitiveness\nmedian {M['median_raw']:.3f}")
+    axes[1].set_xlabel(f"median {M['median_residual']:.3f} ({1-M['collapse']:.0%} explained)")
     # painel 3: escada de suficiência
     bars = [lad["r2_1param"], lad["r2_2moment"], lad["r2_full"]]
-    axes[2].bar(["1 param\n(média)", "2 momentos\n(+variância)", "distrib.\ninteira"],
+    axes[2].bar(["1 param\n(mean)", "2 moments\n(+variance)", "full\ndistrib."],
                 bars, color=["#aec7e8", "#5b9bd5", "#1f3a5f"])
     for i, v in enumerate(bars):
         axes[2].text(i, v + 0.01, f"{v:.2f}", ha="center", fontsize=9)
-    axes[2].set_ylim(0, 1.08); axes[2].set_ylabel("R² da assimetria entre ligas")
-    axes[2].set_title("Escada de suficiência", fontsize=11)
-    fig.suptitle("F33 — skew-meter: similaridade de assimetrias = similaridade de "
-                 "competitividade\n(1 parâmetro explica 80%; os 2 primeiros momentos 98%; "
-                 "a distribuição inteira é suficiente)", y=1.07)
+    axes[2].set_ylim(0, 1.08); axes[2].set_ylabel("R² of skewness across leagues")
+    axes[2].set_title("Sufficiency ladder", fontsize=11)
+    fig.suptitle("F33 — skew-meter: similarity of skewnesses = similarity of "
+                 "competitiveness\n(1 parameter explains 80%; the first 2 moments 98%; "
+                 "the full distribution is sufficient)", y=1.07)
     fig.tight_layout()
     fig.savefig(FIG / "f33_skewmeter.png", dpi=C.FIG_DPI, bbox_inches="tight"); plt.close(fig)
     print(f"\n  -> {FIG / 'f33_skewmeter.png'}")

@@ -95,14 +95,14 @@ def main():
     mx = max(L.skew_open.max(), L.skew_close.max()) + 0.02
     axes[0].plot([mn, mx], [mn, mx], "--", color="0.7", lw=1)
     axes[0].scatter(L.skew_open, L.skew_close, s=28, color="#1f77b4")
-    axes[0].set_xlabel("skewness na ABERTURA"); axes[0].set_ylabel("skewness no FECHAMENTO")
-    axes[0].set_title(f"Mesma assimetria abre→fecha (r={rcc['r']:+.2f})")
+    axes[0].set_xlabel("skewness at OPEN"); axes[0].set_ylabel("skewness at CLOSE")
+    axes[0].set_title(f"Same skewness open→close (r={rcc['r']:+.2f})")
     axes[1].bar([0, 1], [over_o - 1, over_c - 1], width=0.5, color=["#aec7e8", "#1f77b4"])
-    axes[1].set_xticks([0, 1]); axes[1].set_xticklabels(["abertura", "fechamento"])
-    axes[1].set_ylabel("margem (overround − 1)")
-    axes[1].set_title(f"Margem cai, skewness não\nglobal skew {go['skew']:+.3f}→{gc['skew']:+.3f}")
-    fig.suptitle("F30 — D1: a assimetria já nasce no preço de abertura "
-                 "(descoberta de preço)", y=1.02)
+    axes[1].set_xticks([0, 1]); axes[1].set_xticklabels(["open", "close"])
+    axes[1].set_ylabel("margin (overround − 1)")
+    axes[1].set_title(f"Margin falls, skewness does not\nglobal skew {go['skew']:+.3f}→{gc['skew']:+.3f}")
+    fig.suptitle("F30 — D1: the skewness is already born in the opening price "
+                 "(price discovery)", y=1.02)
     fig.tight_layout()
     fig.savefig(FIG / "f30_open_close.png", dpi=C.FIG_DPI, bbox_inches="tight"); plt.close(fig)
     print(f"\n  -> {FIG / 'f30_open_close.png'} | {C.OUTDIR / 'open_close_by_league.csv'}")

@@ -34,11 +34,11 @@ def main():
     fig, ax = plt.subplots(figsize=(6, 5))
     lim = [min(L.skew_soft.min(), L.skew_sharp.min()) - .02,
            max(L.skew_soft.max(), L.skew_sharp.max()) + .02]
-    ax.plot(lim, lim, "--", color="0.7", lw=1, label="sem diferença")
+    ax.plot(lim, lim, "--", color="0.7", lw=1, label="no difference")
     ax.scatter(L.skew_soft, L.skew_sharp, s=22, color="#1f77b4", zorder=3)
     ax.set_xlim(lim); ax.set_ylim(lim)
-    ax.set_xlabel("skew (soft — odd média)"); ax.set_ylabel("skew (sharp — melhor odd)")
-    ax.set_title(f"F14 — D2: skew sharp vs soft por liga (r={r['r']:+.2f})")
+    ax.set_xlabel("skew (soft — mean odd)"); ax.set_ylabel("skew (sharp — best odd)")
+    ax.set_title(f"F14 — D2: sharp vs soft skew by league (r={r['r']:+.2f})")
     ax.legend(frameon=False, fontsize=8); fig.tight_layout()
     fig.savefig(FIG / "f14_sharp_soft.png", dpi=C.FIG_DPI, bbox_inches="tight"); plt.close(fig)
     print(f"\n  -> {FIG / 'f14_sharp_soft.png'} | {C.OUTDIR / 'sharp_soft_by_league.csv'}")

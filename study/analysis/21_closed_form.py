@@ -88,24 +88,24 @@ def main():
     axes[0].scatter(sig, sk_mc, s=14, color="#1f77b4", alpha=.7, zorder=3,
                     label="Monte Carlo (n=4·10⁵)")
     axes[0].plot(sig[o], sk_ex[o], color="#d62728", lw=2,
-                 label="quadratura exata (forma fechada)")
+                 label="exact quadrature (closed form)")
     m = sig <= 0.45
     axes[0].plot(sig[m], sk_sm[m], "--", color="0.4", lw=1.5,
-                 label="expansão analítica S₀+S₂σ² (near-balance)")
+                 label="analytic expansion S₀+S₂σ² (near-balance)")
     axes[0].axhline(0, color="0.8", lw=.8)
-    axes[0].set_xlabel("dispersão de força $\\sigma_L$ (competitividade)")
-    axes[0].set_ylabel("skewness agrupada $S(\\sigma_L)$")
-    axes[0].set_title(f"Forma fechada vs MC (max|Δ|={err.max():.3f})")
+    axes[0].set_xlabel("strength dispersion $\\sigma_L$ (competitiveness)")
+    axes[0].set_ylabel("pooled skewness $S(\\sigma_L)$")
+    axes[0].set_title(f"Closed form vs MC (max|Δ|={err.max():.3f})")
     axes[0].legend(frameon=False, fontsize=8)
     axes[1].plot(pf_ex[order], sk_ex[order], color="#d62728", lw=2,
-                 label="curva exata (forma fechada)")
+                 label="exact curve (closed form)")
     axes[1].scatter(obs_pf, obs_sk, s=20, color="#1f77b4", zorder=3,
-                    label="ligas (empírico)")
-    axes[1].set_xlabel("mean $p_{fav}$ da liga")
-    axes[1].set_ylabel("skewness ex-ante")
-    axes[1].set_title(f"Ligas na curva fechada (r={r:+.2f})")
+                    label="leagues (empirical)")
+    axes[1].set_xlabel("league mean $p_{fav}$")
+    axes[1].set_ylabel("ex-ante skewness")
+    axes[1].set_title(f"Leagues on the closed-form curve (r={r:+.2f})")
     axes[1].legend(frameon=False, fontsize=8)
-    fig.suptitle("F10 — E1: S(σ_L) em forma fechada (integral gaussiano por quadratura)",
+    fig.suptitle("F10 — E1: closed-form S(σ_L) (Gaussian integral by quadrature)",
                  y=1.02)
     fig.tight_layout()
     fig.savefig(FIG / "f10_closed_form.png", dpi=C.FIG_DPI, bbox_inches="tight"); plt.close(fig)

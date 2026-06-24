@@ -42,20 +42,21 @@ def main():
     pp = np.linspace(0.05, 0.95, 200)
     fig, axes = plt.subplots(1, 2, figsize=(10, 4))
     axes[0].plot(pp, exante.per_match_skew(pp), color="0.5", lw=2,
-                 label="identidade (1−2q)/√(q(1−q))")
+                 label="identity (1−2q)/√(q(1−q))")
     axes[0].axhline(0, color="0.85", lw=.8); axes[0].axvline(0.5, color="0.85", lw=.8)
     cols = {"atrás": "#2ca02c", "empatado": "#1f77b4", "+1": "#ff7f0e", "+2 ou mais": "#d62728"}
+    state_en = {"atrás": "behind", "empatado": "level", "+1": "+1", "+2 ou mais": "+2 or more"}
     for r in tab.itertuples():
         axes[0].scatter([r.q_cond], [r.skew_cond], s=90, color=cols.get(r.state, "#333"),
-                        zorder=4, label=f"HT {r.state}")
-    axes[0].set_xlabel("q = P(favorito vence | estado HT)")
-    axes[0].set_ylabel("skewness do resto do jogo")
-    axes[0].set_title("A assimetria resolve com a info"); axes[0].legend(frameon=False, fontsize=7)
-    axes[1].plot([0.4, 0.75], [0.4, 0.75], "--", color="0.7", lw=1, label="calibração")
+                        zorder=4, label=f"HT {state_en.get(r.state, r.state)}")
+    axes[0].set_xlabel("q = P(favourite wins | HT state)")
+    axes[0].set_ylabel("skewness of the rest of the match")
+    axes[0].set_title("The asymmetry resolves with information"); axes[0].legend(frameon=False, fontsize=7)
+    axes[1].plot([0.4, 0.75], [0.4, 0.75], "--", color="0.7", lw=1, label="calibration")
     axes[1].scatter(mc.p0_mean, mc.q_mean, s=40, color="#1f77b4", zorder=3)
-    axes[1].set_xlabel("p0 pré-jogo (média da faixa)"); axes[1].set_ylabel("q médio no FT")
-    axes[1].set_title(f"Refinamento martingale (|Δ|={err:.3f})"); axes[1].legend(frameon=False, fontsize=8)
-    fig.suptitle("F24 — J: o núcleo mecânico é dinâmico (HT→FT)", y=1.02)
+    axes[1].set_xlabel("pre-match p0 (band mean)"); axes[1].set_ylabel("mean q at FT")
+    axes[1].set_title(f"Martingale refinement (|Δ|={err:.3f})"); axes[1].legend(frameon=False, fontsize=8)
+    fig.suptitle("F24 — J: the mechanical core is dynamic (HT→FT)", y=1.02)
     fig.tight_layout()
     fig.savefig(FIG / "f24_inplay.png", dpi=C.FIG_DPI, bbox_inches="tight"); plt.close(fig)
     print(f"\n  -> {FIG / 'f24_inplay.png'} | {C.OUTDIR / 'inplay_conditional.csv'}")

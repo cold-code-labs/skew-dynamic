@@ -71,8 +71,8 @@ def main():
         xs, F = collapse.ecdf(z[lg])
         axes[0].step(xs, F, color=c, lw=1.5,
                      label=f"{lg} (p̄={pf[lg]:.2f})")
-    axes[0].set_title("Sem controlar competitividade\n(retorno z-scored por liga)")
-    axes[0].set_xlabel("retorno padronizado"); axes[0].set_ylabel("ECDF")
+    axes[0].set_title("Without controlling competitiveness\n(return z-scored by league)")
+    axes[0].set_xlabel("standardised return"); axes[0].set_ylabel("ECDF")
     axes[0].set_xlim(-2, 3); axes[0].legend(frameon=False, fontsize=8)
 
     # faixa central de p_fav: restringe as MESMAS ligas e plota retorno cru
@@ -84,10 +84,10 @@ def main():
             continue
         xs, F = collapse.ecdf(x)
         axes[1].step(xs, F, color=c, lw=1.5, label=lg)
-    axes[1].set_title(f"Mesma faixa de competitividade\n(p_fav∈[{lo:.2f},{hi:.2f}], retorno cru)")
-    axes[1].set_xlabel("retorno"); axes[1].set_ylabel("ECDF")
+    axes[1].set_title(f"Same competitiveness band\n(p_fav∈[{lo:.2f},{hi:.2f}], raw return)")
+    axes[1].set_xlabel("return"); axes[1].set_ylabel("ECDF")
     axes[1].legend(frameon=False, fontsize=8)
-    fig.suptitle("F7 — Colapso de distribuição: a forma é função da competitividade",
+    fig.suptitle("F7 — Distribution collapse: shape is a function of competitiveness",
                  y=1.03)
     fig.tight_layout()
     fig.savefig(FIG / "f7_collapse.png", dpi=C.FIG_DPI, bbox_inches="tight"); plt.close(fig)

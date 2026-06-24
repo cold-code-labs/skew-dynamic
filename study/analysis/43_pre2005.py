@@ -93,19 +93,19 @@ def main():
     fig, axes = plt.subplots(1, 2, figsize=(11, 4.4))
     axes[0].axhline(0, color="0.85", lw=0.8)
     axes[0].plot(gy.index, gy.values, "o-", color="#1f77b4", ms=4)
-    axes[0].axvline(CUT - 0.5, color="#d62728", ls="--", lw=1, label="recorte ≥2005 do estudo")
-    axes[0].set_xlabel("ano"); axes[0].set_ylabel("skewness − média da liga (WH)")
-    axes[0].set_title("Sem quebra de baseline em 2005\n(série demeaned, sem composição)")
+    axes[0].axvline(CUT - 0.5, color="#d62728", ls="--", lw=1, label="study cut ≥2005")
+    axes[0].set_xlabel("year"); axes[0].set_ylabel("skewness − league mean (WH)")
+    axes[0].set_title("No baseline break in 2005\n(demeaned series, no composition)")
     axes[0].legend(frameon=False, fontsize=8)
     lo = min(E.pre2005.min(), E.modern.min()) - 0.02
     hi = max(E.pre2005.max(), E.modern.max()) + 0.02
     axes[1].plot([lo, hi], [lo, hi], "--", color="0.7", lw=1)
     axes[1].scatter(E.pre2005, E.modern, s=28, color="#1f77b4")
-    axes[1].set_xlabel("baseline pré-2005 (2000–2004)")
-    axes[1].set_ylabel("baseline moderno (2005+)")
-    axes[1].set_title(f"Mesmo baseline por liga (r={np.corrcoef(E.pre2005,E.modern)[0,1]:+.2f})")
-    fig.suptitle("F32 — pré-2005: o regime moderno já vigora desde ~2000 "
-                 "(invariância estendida)", y=1.02)
+    axes[1].set_xlabel("pre-2005 baseline (2000–2004)")
+    axes[1].set_ylabel("modern baseline (2005+)")
+    axes[1].set_title(f"Same baseline by league (r={np.corrcoef(E.pre2005,E.modern)[0,1]:+.2f})")
+    fig.suptitle("F32 — pre-2005: the modern regime already holds since ~2000 "
+                 "(extended invariance)", y=1.02)
     fig.tight_layout()
     fig.savefig(FIG / "f32_pre2005.png", dpi=config.FIG_DPI, bbox_inches="tight"); plt.close(fig)
     print(f"\n  -> {FIG / 'f32_pre2005.png'} | {config.OUTDIR / 'pre2005_by_league.csv'}")

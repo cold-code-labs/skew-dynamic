@@ -78,15 +78,15 @@ def main():
     FIG = C.OUTDIR / "fig"; FIG.mkdir(parents=True, exist_ok=True)
     fig, axes = plt.subplots(1, 2, figsize=(10, 4))
     for ax, m, lab in [(axes[0], "skew", "skewness (m₃)"),
-                       (axes[1], "exkurt", "excesso de kurtose (m₄)")]:
+                       (axes[1], "exkurt", "excess kurtosis (m₄)")]:
         ax.plot(cpf[order], cmom[m][order], color="0.5", lw=2,
-                label="ordered-probit (derivado)")
+                label="ordered-probit (derived)")
         ax.scatter(lg.p_fav_dv, lg[m], s=20, color="#1f77b4", zorder=3,
-                   label="ligas (empírico)")
+                   label="leagues (empirical)")
         r = float(np.corrcoef(pred[m], lg[m].values)[0, 1])
-        ax.set_xlabel("mean $p_{fav}$ da liga"); ax.set_ylabel(lab)
+        ax.set_xlabel("league mean $p_{fav}$"); ax.set_ylabel(lab)
         ax.set_title(f"{lab} — r={r:+.2f}"); ax.legend(frameon=False, fontsize=8)
-    fig.suptitle("F6 — Invariância de FORMA: cada momento na curva teórica", y=1.02)
+    fig.suptitle("F6 — SHAPE invariance: every moment on the theoretical curve", y=1.02)
     fig.tight_layout()
     fig.savefig(FIG / "f6_moments.png", dpi=C.FIG_DPI, bbox_inches="tight"); plt.close(fig)
     print(f"  -> {FIG / 'f6_moments.png'}")

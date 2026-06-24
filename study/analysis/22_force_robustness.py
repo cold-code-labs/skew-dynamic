@@ -21,11 +21,11 @@ from skewlib import io, returns, exante, model, provenance as prov, config as C
 
 FAMILIES = [
     ("normal",          {},            "N(0,σ²) — baseline",          "#444444"),
-    ("t",               {"nu": 5.0},   "t-Student ν=5 (cauda média)", "#1f77b4"),
-    ("t",               {"nu": 3.0},   "t-Student ν=3 (cauda pesada)","#d62728"),
+    ("t",               {"nu": 5.0},   "t-Student ν=5 (medium tail)", "#1f77b4"),
+    ("t",               {"nu": 3.0},   "t-Student ν=3 (heavy tail)",  "#d62728"),
     ("skewnormal",      {"alpha": 4.0},"skew-normal α=+4",            "#2ca02c"),
     ("skewnormal_neg",  {"alpha": 4.0},"skew-normal α=−4",            "#9467bd"),
-    ("uniform",         {},            "uniforme (cauda curta)",      "#ff7f0e"),
+    ("uniform",         {},            "uniform (short tail)",        "#ff7f0e"),
 ]
 N = 600_000
 
@@ -100,9 +100,9 @@ def main():
         ls = "-" if fam == "normal" else "--"
         ax.plot(pf[o], sk[o], ls, color=col, lw=lw, label=lab)
     ax.axhline(0, color="0.85", lw=.8)
-    ax.set_xlabel("mean $p_{fav}$ (competitividade observável)")
-    ax.set_ylabel("skewness agrupada $S$")
-    ax.set_title("F11 — E2: a lei skew×competitividade sobrevive à troca da força")
+    ax.set_xlabel("mean $p_{fav}$ (observable competitiveness)")
+    ax.set_ylabel("pooled skewness $S$")
+    ax.set_title("F11 — E2: the skew×competitiveness law survives swapping the strength law")
     ax.legend(frameon=False, fontsize=8)
     fig.tight_layout()
     fig.savefig(FIG / "f11_force_robustness.png", dpi=C.FIG_DPI, bbox_inches="tight")
