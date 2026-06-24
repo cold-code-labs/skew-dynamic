@@ -1,6 +1,6 @@
 {
   "schema": "skew-dynamic/lineage@1",
-  "generated_at_head": "4cf90845",
+  "generated_at_head": "fa6ea6b0",
   "head_dirty": true,
   "data": {
     "sha256": "6905ca5324df9528",
@@ -800,6 +800,28 @@
         "law_atp": -1.0,
         "law_wta": -0.98,
         "n_matches": 62865
+      },
+      "commit_date": "2026-06-23"
+    },
+    {
+      "id": "T",
+      "frente": "External validity",
+      "tag": "evidence/frente-T",
+      "commit": "fa6ea6b",
+      "title": "Basquete: a lei vale num 3º esporte (NBA moneyline, camada canônica)",
+      "blocks": [
+        "49_basketball"
+      ],
+      "figures": [
+        "f36"
+      ],
+      "metrics": {
+        "skew_fav": -0.57,
+        "skew_dog": 2.609,
+        "calib_pfav": 0.694,
+        "calib_winrate": 0.685,
+        "law_nba": -0.95,
+        "n_matches": 19621
       },
       "commit_date": "2026-06-23"
     }

@@ -191,6 +191,12 @@ PHASES = [
      "blocks": ["48_tennis"], "figures": ["f35"],
      "metrics": {"skew_fav": -0.571, "skew_dog": 2.314, "calib_pfav": 0.688,
      "calib_winrate": 0.692, "law_atp": -1.00, "law_wta": -0.98, "n_matches": 62865}},
+    # ── 7ª rodada (validade externa: 3º esporte sobre a camada canônica) ──
+    {"id": "T", "frente": "External validity", "tag": "evidence/frente-T", "commit": "fa6ea6b",
+     "title": "Basquete: a lei vale num 3º esporte (NBA moneyline, camada canônica)",
+     "blocks": ["49_basketball"], "figures": ["f36"],
+     "metrics": {"skew_fav": -0.570, "skew_dog": 2.609, "calib_pfav": 0.694,
+     "calib_winrate": 0.685, "law_nba": -0.95, "n_matches": 19621}},
 ]
 
 
