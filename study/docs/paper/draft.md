@@ -19,17 +19,24 @@ win-probability distribution — the algebraic image of the favourite–longshot
 level tracks competitiveness and survives a competitiveness measure built
 **without odds** (results-only Elo; skewness vs upset rate r = +0.83), while odds-
 and Elo-based favourite strength agree at r = 0.91. A league×season panel shows
-**no secular trend** within the modern regime (β = +0.00015/yr, p = 0.73; a single
-break, COVID-19; 70% of variance is between-league). Margin is orthogonal to
-asymmetry, and the identity reappears in the binary over/under-2.5 market. Cast as
-one instrument for the *similarity of asymmetries*, a single competitiveness
-parameter explains 82% of the between-league variance, the first two moments 98%,
-and the full win-probability distribution is the minimal sufficient statistic. The
-market's risk asymmetry is a structural baseline inherited from the sport, not
-produced by pricing it.
+**no secular trend** within the modern regime (β = +0.00015/yr; a single break,
+COVID-19; 70% of variance is between-league); by an equivalence test (two one-sided
+tests) the trend is **statistically equivalent to zero** within half a between-league
+SD (*p* = 0.006), turning the usual high *p*-value into positive evidence of
+stability. Margin is orthogonal to asymmetry, and the identity reappears in the binary
+over/under-2.5 market. Cast as one instrument for the *similarity of asymmetries*, a
+single competitiveness parameter explains 82% of the between-league variance, the
+first two moments 98%, and the full win-probability distribution is the minimal
+sufficient statistic. Finally, ported unchanged through a sport-agnostic data layer,
+the same law holds **out of sample in tennis and basketball** — two-outcome markets
+with independent odds sources (corr(skew, competitiveness) −0.95 to −1.00; underdog
+skew +2.3 to +2.6) — identifying it as a property of competition rather than of
+football or the 1X2 contract. The market's risk asymmetry is a structural baseline
+inherited from the sport, not produced by pricing it.
 
 **Keywords:** skewness; favourite–longshot bias; betting markets; market
-efficiency; implied probabilities; structural invariance.
+efficiency; implied probabilities; structural invariance; equivalence testing;
+cross-sport validation.
 
 ---
 
