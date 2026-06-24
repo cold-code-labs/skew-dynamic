@@ -13,8 +13,10 @@ crucially, the relation survives a competitiveness measure built **without
 odds** — a results-only Elo (skewness vs upset rate r=+0.83; vs Elo-entropy
 +0.72) — while odds- and Elo-based favourite strength agree at r=0.91, implying
 the market merely *reads* the sporting structure. A league×season panel shows
-**no secular trend** in 20 years (β=+0.00015/yr, p=0.73; 70% of variance is
-between-league), and a COVID natural experiment (empty-stadium home-advantage
+**no secular trend** in 20 years (β=+0.00015/yr; 70% of variance is
+between-league) — and, by an equivalence test (TOST), the trend is statistically
+**equivalent to zero** within half a between-league SD (p=0.006), turning the usual
+high *p*-value into positive evidence of stability. A COVID natural experiment (empty-stadium home-advantage
 collapse) moves skewness in the predicted direction, corroborating the causal
 mechanism. Bookmaker margin is orthogonal to asymmetry (best-price collapses the
 overround 1.067→1.009 while skewness barely moves), and the identity reappears

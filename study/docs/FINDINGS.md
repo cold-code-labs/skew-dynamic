@@ -1017,3 +1017,33 @@ dependências novas (o fetch usa `html.parser` da stdlib).
 > moneyline, odds independentes), via a camada canônica sem mudar o núcleo. 42 fases no
 > ledger. A f36 põe futebol+tênis+basquete numa só curva. Lineage em
 > `lineage.json`/`LINEAGE.md`.
+
+## Fase U — Equivalência temporal: "sem deriva" como afirmação positiva (bloco 51)
+
+W3 mostrou β_ano≈0 com **p=0.73** e IC cruzando zero. Mas p alto é só **não-rejeição**
+de uma tendência — não evidência de ausência (um teste sem potência também dá p alto).
+Aqui fechamos o buraco lógico do §4.3 com um **teste de equivalência (TOST)**:
+
+- **Margem pré-registrada** Δ = ½ da SD between-liga (**0.026**), a MESMA do §4.8 —
+  lida como a maior deriva de 20 anos que trataríamos como desprezível.
+- **Resultado:** o IC de 90% do β cai inteiro dentro de [−Δ,+Δ] → rejeitamos qualquer
+  deriva maior que Δ, **p_tost = 0.006**. Robusto a bootstrap por liga (p=0.005) e ao
+  painel **balanceado** (cesta fixa de 15 ligas; β=−0.0003/ano, p=0.043).
+- **Sensibilidade:** equivalente a ½ e 1× a SD; inconclusivo só num Δ severo de ¼ SD
+  (deriva < 0.013 em 20 anos — abaixo disso o dado não afirma nem nega).
+
+Conclusão: a skewness não é apenas *não-mostrada* derivar — é **estatisticamente
+equivalente a não derivar**, dentro de uma fração de uma única diferença entre-ligas
+acumulada em todo o histórico. Converte a invariância temporal de ausência-de-evidência
+em evidência-de-ausência. Vale também como gabarito metodológico para os outros "sem
+deriva" do paper (P4/FLB, C2/γ, L/HFA), hoje argumentados por não-rejeição.
+
+Artefatos: `skewlib/stats.py:tost`, `skewlib/panel.py:trend_boot`,
+`analysis/51_temporal_equivalence.py`, `outputs/fig/f37_temporal_equivalence.png`.
+
+---
+
+> **8ª rodada (rigor inferencial)** (2026-06-23): equivalência temporal — o "sem deriva
+> secular" (W3) vira afirmação positiva por TOST (p_tost=0.006, margem ½ SD between-liga;
+> robusto a bootstrap e painel balanceado). 43 fases no ledger. f37 (forest) entra como
+> Figure 20; §4.3 e abstract atualizados.

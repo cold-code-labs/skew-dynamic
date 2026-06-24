@@ -224,8 +224,22 @@ composition confound that produced an apparent break in earlier pooled analyses
 (the sample grew from 21 to 37 leagues in 2012). In a 638-observation panel with
 league fixed effects, the linear year coefficient is **+0.00015 per year**
 (cluster-robust SE 0.00045, p = 0.73; 95% CI [−0.0007, +0.0010]) — a twenty-year
-drift of ≈ +0.003 against a between-league standard deviation of 0.052. There is
-no secular trend.
+drift of ≈ +0.003 against a between-league standard deviation of 0.052.
+
+A high *p*-value, however, is only a failure to reject a trend, not evidence of its
+absence. We therefore test temporal invariance as an **equivalence** hypothesis
+(two one-sided tests; Figure 20). Pre-registering the same margin used for the
+similarity analysis below (§4.8) — half a between-league standard deviation,
+Δ = 0.026, read as the largest twenty-year drift we would treat as negligible — the
+slope's 90% confidence interval falls strictly inside [−Δ, +Δ], rejecting the
+presence of any larger drift at *p* = 0.006 (TOST). The conclusion is robust to a
+league-cluster bootstrap (*p* = 0.005) and to fixing the league basket across all
+seasons (the balanced 15-league panel, β = −0.0003/yr, *p* = 0.043), and it tightens
+monotonically as the margin is relaxed (equivalence at ½ and 1× the between-league
+SD; inconclusive only at a stringent ¼ SD, i.e. a drift below 0.013 over two decades,
+which the data can neither establish nor rule out). The skewness is thus not merely
+*not shown* to drift — it is statistically equivalent to no drift, to within a
+fraction of a single league-to-league difference accumulated over the entire record.
 
 A variance decomposition attributes 70% of the total variance to the
 between-league component (the structural invariant); the within-league standard
@@ -735,6 +749,12 @@ audit.
   basketball seasons (NBA). The three sports — three two-outcome/three-outcome
   markets, three independent odds sources — trace one descending (favourite) and one
   rising (underdog) curve.
+- **Figure 20.** Temporal invariance as equivalence: the twenty-year drift in
+  ex-ante skewness (slope × span) with its 90% confidence interval, for the full
+  panel (cluster-robust and league-bootstrap) and the balanced 15-league panel,
+  against the pre-registered equivalence band ±Δ (half a between-league SD). Every
+  interval lies inside the band — positive evidence of no drift, not a mere failure
+  to reject β = 0.
 
 ## References
 

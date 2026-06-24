@@ -40,6 +40,32 @@ def trend_test(panel):
             "n_obs": int(m.nobs)}
 
 
+def trend_boot(panel, B=2000, seed=42):
+    """IC bootstrap do β_ano por reamostragem de LIGAS (cluster bootstrap, coerente
+    com o SE cluster-robusto de `trend_test`). Reajusta o estimador de efeitos fixos
+    a cada reamostra via transformação within (rápida e exata p/ o slope): demeia
+    skew e ano dentro de cada cluster sorteado e regride. Devolve SE e IC 90/95%."""
+    p = panel.copy()
+    p["yr"] = p.season - p.season.mean()
+    groups = [(g.skew_exante.to_numpy(float), g.yr.to_numpy(float))
+              for _, g in p.groupby("Division")]
+    k = len(groups)
+    rng = np.random.default_rng(seed)
+    betas = np.empty(B)
+    for b in range(B):
+        ys, xs = [], []
+        for idx in rng.integers(0, k, k):
+            y, x = groups[idx]
+            ys.append(y - y.mean()); xs.append(x - x.mean())
+        y_dm = np.concatenate(ys); x_dm = np.concatenate(xs)
+        d = (x_dm * x_dm).sum()
+        betas[b] = (x_dm * y_dm).sum() / d if d > 0 else np.nan
+    betas = betas[~np.isnan(betas)]
+    return {"se": float(betas.std(ddof=1)), "B": int(betas.size),
+            "ci90_lo": float(np.percentile(betas, 5)), "ci90_hi": float(np.percentile(betas, 95)),
+            "ci95_lo": float(np.percentile(betas, 2.5)), "ci95_hi": float(np.percentile(betas, 97.5))}
+
+
 def variance_decomp(panel):
     """Var total = between-liga + within-liga. ICC = between/(between+within)."""
     g = panel.groupby("Division").skew_exante

@@ -70,6 +70,31 @@ def ols(y, x):
             "r2": float(1 - ss / st), "r": float(np.corrcoef(x, y)[0, 1])}
 
 
+def tost(beta, se, delta, dof=None):
+    """Teste de EQUIVALÊNCIA (TOST: two one-sided tests). H0 (não-equivalência):
+    |β| ≥ delta. Dois testes unilaterais — H0a: β ≤ −delta e H0b: β ≥ +delta — e
+    a equivalência é declarada só se AMBOS são rejeitados (p_tost = max dos dois <
+    α). Isso é evidência POSITIVA de que β está dentro de (−delta,+delta), ao
+    contrário da mera não-rejeição de β=0 (ausência de evidência). O IC de 90%
+    (= 1−2α p/ α=.05) dentro de [−delta,+delta] é o critério equivalente.
+
+    `dof` usa a t de Student (amostras pequenas); default normal. Reusa o mesmo SE
+    do estimador (analítico cluster-robusto ou bootstrap)."""
+    from scipy import stats as _st
+    se = float(se)
+    t_lo = (beta + delta) / se                 # H0a: β ≤ −delta (cauda superior)
+    t_hi = (beta - delta) / se                 # H0b: β ≥ +delta (cauda inferior)
+    if dof:
+        p_lo, p_hi, q = _st.t.sf(t_lo, dof), _st.t.cdf(t_hi, dof), _st.t.ppf(0.95, dof)
+    else:
+        p_lo, p_hi, q = _st.norm.sf(t_lo), _st.norm.cdf(t_hi), _st.norm.ppf(0.95)
+    p = max(float(p_lo), float(p_hi))
+    return {"beta": float(beta), "se": se, "delta": float(delta),
+            "p_lower": float(p_lo), "p_upper": float(p_hi), "p_tost": p,
+            "ci90_lo": float(beta - q * se), "ci90_hi": float(beta + q * se),
+            "equivalent": bool(p < 0.05)}
+
+
 def breakpoints(ser, min_size=20, pen_mult=2.0):
     """Quebras estruturais endógenas na média (PELT, modelo l2)."""
     import ruptures as rpt
