@@ -53,7 +53,7 @@ def main():
     axes[1].set_title(f"Fator comum entre mercados (r={rc['r']:+.2f})")
     fig.suptitle("F28 — N: entropia + co-momento entre mercados", y=1.02)
     fig.tight_layout()
-    fig.savefig(FIG / "f28_entropy_comoment.png", dpi=150, bbox_inches="tight"); plt.close(fig)
+    fig.savefig(FIG / "f28_entropy_comoment.png", dpi=C.FIG_DPI, bbox_inches="tight"); plt.close(fig)
     print(f"\n  -> {FIG / 'f28_entropy_comoment.png'} | {C.OUTDIR / 'entropy_comoment.csv'}")
 
     prov.write_stamp("40_entropy_comoment", metrics={

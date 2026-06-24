@@ -62,7 +62,7 @@ def main():
     ax.set_xlabel("mean $p_{fav}$ (competitividade)"); ax.set_ylabel("skewness ex-ante")
     ax.set_title("F20 — H2: a MLS (fechada) cai na curva das ligas abertas")
     ax.legend(frameon=False, fontsize=8); fig.tight_layout()
-    fig.savefig(FIG / "f20_open_vs_closed.png", dpi=150, bbox_inches="tight"); plt.close(fig)
+    fig.savefig(FIG / "f20_open_vs_closed.png", dpi=C.FIG_DPI, bbox_inches="tight"); plt.close(fig)
     print(f"\n  -> {FIG / 'f20_open_vs_closed.png'} | {C.OUTDIR / 'open_vs_closed.csv'}")
 
     prov.write_stamp("32_open_vs_closed", metrics={

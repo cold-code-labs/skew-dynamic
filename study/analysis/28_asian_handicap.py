@@ -53,7 +53,7 @@ def main():
     ax.set_xlabel("p_fav do mercado AH"); ax.set_ylabel("skewness ex-ante AH")
     ax.set_title(f"F16 — D4: handicap asiático na identidade (r={rr:+.2f})")
     ax.legend(frameon=False, fontsize=8); fig.tight_layout()
-    fig.savefig(FIG / "f16_asian_handicap.png", dpi=150, bbox_inches="tight"); plt.close(fig)
+    fig.savefig(FIG / "f16_asian_handicap.png", dpi=C.FIG_DPI, bbox_inches="tight"); plt.close(fig)
     print(f"\n  -> {FIG / 'f16_asian_handicap.png'} | {C.OUTDIR / 'asian_handicap_by_league.csv'}")
 
     prov.write_stamp("28_asian_handicap", metrics={

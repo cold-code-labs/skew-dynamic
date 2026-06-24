@@ -34,7 +34,7 @@ def fig1_flb(df):
     ax.set_xlabel("prob. do favorito $p_{fav}$"); ax.set_ylabel("skewness")
     ax.set_title("F1 — Favorite-longshot bias: skewness = imagem de $p$")
     ax.legend(frameon=False, fontsize=8)
-    fig.tight_layout(); fig.savefig(FIG / "f1_flb.png", dpi=150); plt.close(fig)
+    fig.tight_layout(); fig.savefig(FIG / "f1_flb.png", dpi=C.FIG_DPI); plt.close(fig)
 
 
 def fig2_law(league):
@@ -50,7 +50,7 @@ def fig2_law(league):
     ax.set_xlabel("taxa de zebra (Elo, odds-free)"); ax.set_ylabel("skewness ex-ante da liga")
     ax.set_title("F2 — Lei estrutural: skewness ~ competitividade (sem odds)")
     ax.legend(frameon=False); fig.tight_layout()
-    fig.savefig(FIG / "f2_law.png", dpi=150); plt.close(fig)
+    fig.savefig(FIG / "f2_law.png", dpi=C.FIG_DPI); plt.close(fig)
 
 
 def fig3_decomp(df):
@@ -65,7 +65,7 @@ def fig3_decomp(df):
                 va="bottom" if p[1] >= 0 else "top", fontsize=9)
     ax.axhline(0, color="k", lw=.5); ax.set_ylabel("% do 3º momento $M_3$")
     ax.set_title("F3 — Decomposição da skewness (cumulantes totais)")
-    fig.tight_layout(); fig.savefig(FIG / "f3_decomp.png", dpi=150); plt.close(fig)
+    fig.tight_layout(); fig.savefig(FIG / "f3_decomp.png", dpi=C.FIG_DPI); plt.close(fig)
 
 
 def fig4_panel(pan):
@@ -81,7 +81,7 @@ def fig4_panel(pan):
     ax.set_xlabel("temporada"); ax.set_ylabel("skewness ex-ante (liga×temporada)")
     ax.set_title("F4 — Invariância temporal: sem deriva em 20 anos")
     ax.legend(frameon=False, fontsize=8); fig.tight_layout()
-    fig.savefig(FIG / "f4_panel.png", dpi=150); plt.close(fig)
+    fig.savefig(FIG / "f4_panel.png", dpi=C.FIG_DPI); plt.close(fig)
 
 
 def main():

@@ -155,7 +155,7 @@ def main():
                  "competitividade\n(1 parâmetro explica 80%; os 2 primeiros momentos 98%; "
                  "a distribuição inteira é suficiente)", y=1.07)
     fig.tight_layout()
-    fig.savefig(FIG / "f33_skewmeter.png", dpi=150, bbox_inches="tight"); plt.close(fig)
+    fig.savefig(FIG / "f33_skewmeter.png", dpi=C.FIG_DPI, bbox_inches="tight"); plt.close(fig)
     print(f"\n  -> {FIG / 'f33_skewmeter.png'}")
 
     prov.write_stamp("45_skewmeter", metrics={

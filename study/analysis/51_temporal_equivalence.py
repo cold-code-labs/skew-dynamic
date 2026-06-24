@@ -120,7 +120,7 @@ def main():
                  "(positive evidence of no drift, not mere failure to reject β=0)", fontsize=10)
     ax.legend(frameon=False, fontsize=8, loc="lower right")
     fig.tight_layout()
-    fig.savefig(FIG / "f37_temporal_equivalence.png", dpi=150, bbox_inches="tight"); plt.close(fig)
+    fig.savefig(FIG / "f37_temporal_equivalence.png", dpi=C.FIG_DPI, bbox_inches="tight"); plt.close(fig)
     print(f"\n  -> {FIG / 'f37_temporal_equivalence.png'}")
     print("  → a invariância temporal vira afirmação positiva: rejeitamos qualquer deriva")
     print(f"    maior que ½ SD between-liga ({delta20:.3f}) em 20 anos, p_tost={anf['p_tost']:.4f}.")

@@ -50,7 +50,7 @@ def main():
     axes[1].legend(frameon=False, fontsize=8)
     fig.suptitle("F27 — M: risco de cauda realizado das estratégias", y=1.02)
     fig.tight_layout()
-    fig.savefig(FIG / "f27_tail_risk.png", dpi=150, bbox_inches="tight"); plt.close(fig)
+    fig.savefig(FIG / "f27_tail_risk.png", dpi=C.FIG_DPI, bbox_inches="tight"); plt.close(fig)
     print(f"\n  -> {FIG / 'f27_tail_risk.png'}")
 
     prov.write_stamp("39_tail_risk", metrics={

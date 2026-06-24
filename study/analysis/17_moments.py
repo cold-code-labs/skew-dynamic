@@ -88,7 +88,7 @@ def main():
         ax.set_title(f"{lab} — r={r:+.2f}"); ax.legend(frameon=False, fontsize=8)
     fig.suptitle("F6 — Invariância de FORMA: cada momento na curva teórica", y=1.02)
     fig.tight_layout()
-    fig.savefig(FIG / "f6_moments.png", dpi=150, bbox_inches="tight"); plt.close(fig)
+    fig.savefig(FIG / "f6_moments.png", dpi=C.FIG_DPI, bbox_inches="tight"); plt.close(fig)
     print(f"  -> {FIG / 'f6_moments.png'}")
 
 

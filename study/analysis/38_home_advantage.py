@@ -42,7 +42,7 @@ def main():
     ax.set_title(f"F26 — L: HFA cai (β={th['slope']:+.4f}), skew invariante "
                  f"(corr={rc['r']:+.2f})")
     fig.tight_layout()
-    fig.savefig(FIG / "f26_home_advantage.png", dpi=150, bbox_inches="tight"); plt.close(fig)
+    fig.savefig(FIG / "f26_home_advantage.png", dpi=C.FIG_DPI, bbox_inches="tight"); plt.close(fig)
     print(f"\n  -> {FIG / 'f26_home_advantage.png'} | {C.OUTDIR / 'hfa_by_year.csv'}")
 
     prov.write_stamp("38_home_advantage", metrics={

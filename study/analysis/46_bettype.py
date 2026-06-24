@@ -59,7 +59,7 @@ def main():
     ax.set_title("F34 — three bet objects: all lottery-like, all governed by\n"
                  "competitiveness (favourite falls, draw & underdog rise)")
     ax.legend(frameon=False, fontsize=9); fig.tight_layout()
-    fig.savefig(FIG / "f34_bettype.png", dpi=150, bbox_inches="tight"); plt.close(fig)
+    fig.savefig(FIG / "f34_bettype.png", dpi=C.FIG_DPI, bbox_inches="tight"); plt.close(fig)
     print(f"\n  -> {FIG / 'f34_bettype.png'} | {C.OUTDIR / 'bettype_by_league.csv'}")
 
     prov.write_stamp("46_bettype", metrics={

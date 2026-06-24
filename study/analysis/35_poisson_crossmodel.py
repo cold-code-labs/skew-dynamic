@@ -65,7 +65,7 @@ def main():
     axes[1].set_title(f"Poisson vs empírico (r={rs['r']:+.2f})")
     fig.suptitle("F23 — I: modelo de gols (Poisson) reproduz a lei (mecanismo independente)", y=1.02)
     fig.tight_layout()
-    fig.savefig(FIG / "f23_poisson_crossmodel.png", dpi=150, bbox_inches="tight"); plt.close(fig)
+    fig.savefig(FIG / "f23_poisson_crossmodel.png", dpi=C.FIG_DPI, bbox_inches="tight"); plt.close(fig)
     print(f"\n  -> {FIG / 'f23_poisson_crossmodel.png'} | {C.OUTDIR / 'poisson_crossmodel_by_league.csv'}")
 
     prov.write_stamp("35_poisson_crossmodel", metrics={

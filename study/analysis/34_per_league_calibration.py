@@ -57,7 +57,7 @@ def main():
     axes[1].set_title(f"Calibração por liga (r={r:+.2f})")
     fig.suptitle("F22 — E3: (h,c,σ) endógenos por liga — a lei sobrevive", y=1.02)
     fig.tight_layout()
-    fig.savefig(FIG / "f22_per_league_calib.png", dpi=150, bbox_inches="tight"); plt.close(fig)
+    fig.savefig(FIG / "f22_per_league_calib.png", dpi=C.FIG_DPI, bbox_inches="tight"); plt.close(fig)
     print(f"\n  -> {FIG / 'f22_per_league_calib.png'} | {C.OUTDIR / 'per_league_calibration.csv'}")
 
     prov.write_stamp("34_per_league_calibration", metrics={

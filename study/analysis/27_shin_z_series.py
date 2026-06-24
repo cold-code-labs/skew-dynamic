@@ -47,7 +47,7 @@ def main():
     axes[1].set_title(f"z estável no tempo (β={ty['slope']:+.4f}/ano)")
     fig.suptitle("F15 — D3: z de Shin (dinheiro informado) por liga e no tempo", y=1.02)
     fig.tight_layout()
-    fig.savefig(FIG / "f15_shin_z.png", dpi=150, bbox_inches="tight"); plt.close(fig)
+    fig.savefig(FIG / "f15_shin_z.png", dpi=C.FIG_DPI, bbox_inches="tight"); plt.close(fig)
     print(f"\n  -> {FIG / 'f15_shin_z.png'} | {C.OUTDIR / 'shin_z_by_league.csv'}")
 
     prov.write_stamp("27_shin_z_series", metrics={

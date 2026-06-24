@@ -40,7 +40,7 @@ def main():
     ax.set_ylabel("contribuição ao M₃ (%)")
     ax.set_title("F18 — F2: jogos parelhos (verde) puxam +skew, desequilibrados (vermelho) −")
     fig.tight_layout()
-    fig.savefig(FIG / "f18_game_contribution.png", dpi=150, bbox_inches="tight"); plt.close(fig)
+    fig.savefig(FIG / "f18_game_contribution.png", dpi=C.FIG_DPI, bbox_inches="tight"); plt.close(fig)
     print(f"\n  -> {FIG / 'f18_game_contribution.png'} | {C.OUTDIR / 'm3_contribution_by_bin.csv'}")
 
     prov.write_stamp("30_game_contribution", metrics={

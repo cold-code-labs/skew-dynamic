@@ -85,7 +85,7 @@ def main():
     fig.suptitle("F36 — external validity: football, tennis and basketball on one structural law\n"
                  "(favourite falls, underdog rises with imbalance — across three sports & markets)", y=1.06)
     fig.tight_layout()
-    fig.savefig(FIG / "f36_crosssport.png", dpi=150, bbox_inches="tight"); plt.close(fig)
+    fig.savefig(FIG / "f36_crosssport.png", dpi=C.FIG_DPI, bbox_inches="tight"); plt.close(fig)
     print(f"\n  -> {FIG / 'f36_crosssport.png'} | {C.OUTDIR / 'basketball_by_season.csv'}")
     print("  → a lei é do ESPORTE: 3º esporte, mercado moneyline, odds independentes.")
 

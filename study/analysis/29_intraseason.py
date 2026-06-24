@@ -50,7 +50,7 @@ def main():
     axes[1].set_title(f"Sem deriva (média {sh["shift"].mean():+.3f})")
     fig.suptitle("F17 — F1: skewness estável dentro da temporada", y=1.02)
     fig.tight_layout()
-    fig.savefig(FIG / "f17_intraseason.png", dpi=150, bbox_inches="tight"); plt.close(fig)
+    fig.savefig(FIG / "f17_intraseason.png", dpi=C.FIG_DPI, bbox_inches="tight"); plt.close(fig)
     print(f"\n  -> {FIG / 'f17_intraseason.png'} | {C.OUTDIR / 'intraseason_shift_by_league.csv'}")
 
     prov.write_stamp("29_intraseason", metrics={

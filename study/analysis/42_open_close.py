@@ -104,7 +104,7 @@ def main():
     fig.suptitle("F30 — D1: a assimetria já nasce no preço de abertura "
                  "(descoberta de preço)", y=1.02)
     fig.tight_layout()
-    fig.savefig(FIG / "f30_open_close.png", dpi=150, bbox_inches="tight"); plt.close(fig)
+    fig.savefig(FIG / "f30_open_close.png", dpi=C.FIG_DPI, bbox_inches="tight"); plt.close(fig)
     print(f"\n  -> {FIG / 'f30_open_close.png'} | {C.OUTDIR / 'open_close_by_league.csv'}")
 
     ch = fc.canonical_hash()

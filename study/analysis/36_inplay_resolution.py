@@ -57,7 +57,7 @@ def main():
     axes[1].set_title(f"Refinamento martingale (|Δ|={err:.3f})"); axes[1].legend(frameon=False, fontsize=8)
     fig.suptitle("F24 — J: o núcleo mecânico é dinâmico (HT→FT)", y=1.02)
     fig.tight_layout()
-    fig.savefig(FIG / "f24_inplay.png", dpi=150, bbox_inches="tight"); plt.close(fig)
+    fig.savefig(FIG / "f24_inplay.png", dpi=C.FIG_DPI, bbox_inches="tight"); plt.close(fig)
     print(f"\n  -> {FIG / 'f24_inplay.png'} | {C.OUTDIR / 'inplay_conditional.csv'}")
 
     prov.write_stamp("36_inplay_resolution", metrics={

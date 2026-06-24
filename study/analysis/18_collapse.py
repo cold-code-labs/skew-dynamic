@@ -90,7 +90,7 @@ def main():
     fig.suptitle("F7 — Colapso de distribuição: a forma é função da competitividade",
                  y=1.03)
     fig.tight_layout()
-    fig.savefig(FIG / "f7_collapse.png", dpi=150, bbox_inches="tight"); plt.close(fig)
+    fig.savefig(FIG / "f7_collapse.png", dpi=C.FIG_DPI, bbox_inches="tight"); plt.close(fig)
     print(f"  -> {FIG / 'f7_collapse.png'}")
 
 

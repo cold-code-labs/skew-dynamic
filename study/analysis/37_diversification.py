@@ -48,7 +48,7 @@ def main():
     ax.set_ylabel("skewness do retorno médio")
     ax.set_title("F25 — K: diversificação mata a skewness (≈1/√N)")
     ax.legend(frameon=False, fontsize=8); fig.tight_layout()
-    fig.savefig(FIG / "f25_diversification.png", dpi=150, bbox_inches="tight"); plt.close(fig)
+    fig.savefig(FIG / "f25_diversification.png", dpi=C.FIG_DPI, bbox_inches="tight"); plt.close(fig)
     print(f"\n  -> {FIG / 'f25_diversification.png'} | {C.OUTDIR / 'diversification.csv'}")
 
     prov.write_stamp("37_diversification", metrics={

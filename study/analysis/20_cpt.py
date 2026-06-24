@@ -68,7 +68,7 @@ def main():
     fig.suptitle("F9 — CPT invariante: a ponderação de probabilidade é estável",
                  y=1.02)
     fig.tight_layout()
-    fig.savefig(FIG / "f9_cpt.png", dpi=150, bbox_inches="tight"); plt.close(fig)
+    fig.savefig(FIG / "f9_cpt.png", dpi=C.FIG_DPI, bbox_inches="tight"); plt.close(fig)
     print(f"  -> {FIG / 'f9_cpt.png'}")
 
 

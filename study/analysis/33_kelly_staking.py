@@ -64,7 +64,7 @@ def main():
     axes[1].set_title("Skewness impulsiona o crescimento no azarão (p<0.5)")
     fig.suptitle("F21 — C3: Kelly/crescimento sob a estrutura de skewness", y=1.02)
     fig.tight_layout()
-    fig.savefig(FIG / "f21_kelly.png", dpi=150, bbox_inches="tight"); plt.close(fig)
+    fig.savefig(FIG / "f21_kelly.png", dpi=C.FIG_DPI, bbox_inches="tight"); plt.close(fig)
     print(f"\n  -> {FIG / 'f21_kelly.png'}")
 
     prov.write_stamp("33_kelly_staking", metrics={

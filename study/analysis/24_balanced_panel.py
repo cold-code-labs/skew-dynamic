@@ -60,7 +60,7 @@ def main():
     ax.set_xlabel("temporada"); ax.set_ylabel("skewness ex-ante global")
     ax.set_title("F13 — G2: série global em painel balanceado estrito (sem drift)")
     ax.legend(frameon=False, fontsize=8); fig.tight_layout()
-    fig.savefig(FIG / "f13_balanced_panel.png", dpi=150, bbox_inches="tight"); plt.close(fig)
+    fig.savefig(FIG / "f13_balanced_panel.png", dpi=C.FIG_DPI, bbox_inches="tight"); plt.close(fig)
     print(f"\n  -> {FIG / 'f13_balanced_panel.png'} | {C.OUTDIR / 'balanced_global_series.csv'}")
 
     prov.write_stamp("24_balanced_panel", metrics={

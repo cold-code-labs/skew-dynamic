@@ -105,7 +105,7 @@ def main():
     ax.set_title("F11 — E2: a lei skew×competitividade sobrevive à troca da força")
     ax.legend(frameon=False, fontsize=8)
     fig.tight_layout()
-    fig.savefig(FIG / "f11_force_robustness.png", dpi=150, bbox_inches="tight")
+    fig.savefig(FIG / "f11_force_robustness.png", dpi=C.FIG_DPI, bbox_inches="tight")
     plt.close(fig)
     print(f"  -> {FIG / 'f11_force_robustness.png'}")
 

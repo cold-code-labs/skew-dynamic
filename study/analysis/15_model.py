@@ -47,7 +47,7 @@ def main():
     ax.set_xlabel("mean $p_{fav}$ da liga"); ax.set_ylabel("skewness ex-ante")
     ax.set_title(f"F5 — Lei derivada: ligas na curva teórica (r={r:+.2f})")
     ax.legend(frameon=False); fig.tight_layout()
-    fig.savefig(FIG / "f5_model.png", dpi=150); plt.close(fig)
+    fig.savefig(FIG / "f5_model.png", dpi=C.FIG_DPI); plt.close(fig)
     print(f"  -> {FIG / 'f5_model.png'}")
 
 

@@ -62,7 +62,7 @@ def main():
     axes[1].legend(frameon=False, fontsize=8)
     fig.suptitle("F12 — G1: de-vig confiável e estável (reliability/Brier)", y=1.02)
     fig.tight_layout()
-    fig.savefig(FIG / "f12_reliability.png", dpi=150, bbox_inches="tight"); plt.close(fig)
+    fig.savefig(FIG / "f12_reliability.png", dpi=C.FIG_DPI, bbox_inches="tight"); plt.close(fig)
     print(f"\n  -> {FIG / 'f12_reliability.png'} | {C.OUTDIR / 'reliability_by_league.csv'}")
 
     prov.write_stamp("23_devig_reliability", metrics={

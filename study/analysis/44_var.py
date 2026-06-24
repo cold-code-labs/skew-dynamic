@@ -72,7 +72,7 @@ def main():
     fig.suptitle("F31 — VAR: choque institucional não move a skewness "
                  "(placebo de competitividade)", y=1.02)
     fig.tight_layout()
-    fig.savefig(FIG / "f31_var.png", dpi=150, bbox_inches="tight"); plt.close(fig)
+    fig.savefig(FIG / "f31_var.png", dpi=C.FIG_DPI, bbox_inches="tight"); plt.close(fig)
     print(f"\n  -> {FIG / 'f31_var.png'} | {C.OUTDIR / 'var_panel.csv'}")
 
     prov.write_stamp("44_var", metrics={

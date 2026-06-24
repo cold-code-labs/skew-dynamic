@@ -67,7 +67,7 @@ def main():
     fig.suptitle("F8 — Prêmio de skewness: FLB acompanha a skewness; o resíduo é pequeno",
                  y=1.02)
     fig.tight_layout()
-    fig.savefig(FIG / "f8_premium.png", dpi=150, bbox_inches="tight"); plt.close(fig)
+    fig.savefig(FIG / "f8_premium.png", dpi=C.FIG_DPI, bbox_inches="tight"); plt.close(fig)
     print(f"  -> {FIG / 'f8_premium.png'}")
 
 

@@ -106,7 +106,7 @@ def main():
     fig.suptitle("F29 — O: bateria de modelos geradores reproduz a lei "
                  "(independência de modelo)", y=1.02)
     fig.tight_layout()
-    fig.savefig(FIG / "f29_model_battery.png", dpi=150, bbox_inches="tight")
+    fig.savefig(FIG / "f29_model_battery.png", dpi=C.FIG_DPI, bbox_inches="tight")
     plt.close(fig)
     print(f"\n  -> {FIG / 'f29_model_battery.png'} | "
           f"{C.OUTDIR / 'model_battery_by_league.csv'}")

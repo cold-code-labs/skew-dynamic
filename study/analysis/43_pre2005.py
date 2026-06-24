@@ -107,7 +107,7 @@ def main():
     fig.suptitle("F32 — pré-2005: o regime moderno já vigora desde ~2000 "
                  "(invariância estendida)", y=1.02)
     fig.tight_layout()
-    fig.savefig(FIG / "f32_pre2005.png", dpi=150, bbox_inches="tight"); plt.close(fig)
+    fig.savefig(FIG / "f32_pre2005.png", dpi=config.FIG_DPI, bbox_inches="tight"); plt.close(fig)
     print(f"\n  -> {FIG / 'f32_pre2005.png'} | {config.OUTDIR / 'pre2005_by_league.csv'}")
 
     ch = fc.canonical_hash()

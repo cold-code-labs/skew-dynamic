@@ -40,7 +40,7 @@ def main():
     ax.set_xlabel("skew (soft — odd média)"); ax.set_ylabel("skew (sharp — melhor odd)")
     ax.set_title(f"F14 — D2: skew sharp vs soft por liga (r={r['r']:+.2f})")
     ax.legend(frameon=False, fontsize=8); fig.tight_layout()
-    fig.savefig(FIG / "f14_sharp_soft.png", dpi=150, bbox_inches="tight"); plt.close(fig)
+    fig.savefig(FIG / "f14_sharp_soft.png", dpi=C.FIG_DPI, bbox_inches="tight"); plt.close(fig)
     print(f"\n  -> {FIG / 'f14_sharp_soft.png'} | {C.OUTDIR / 'sharp_soft_by_league.csv'}")
 
     prov.write_stamp("26_sharp_soft", metrics={

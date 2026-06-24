@@ -83,7 +83,7 @@ def main():
     fig.suptitle("F35 — external validity: football and tennis on one structural law\n"
                  "(favourite falls, underdog rises with imbalance — across sports & markets)", y=1.06)
     fig.tight_layout()
-    fig.savefig(FIG / "f35_crosssport.png", dpi=150, bbox_inches="tight"); plt.close(fig)
+    fig.savefig(FIG / "f35_crosssport.png", dpi=C.FIG_DPI, bbox_inches="tight"); plt.close(fig)
     print(f"\n  -> {FIG / 'f35_crosssport.png'} | {C.OUTDIR / 'tennis_by_tier.csv'}")
     print("  → a lei é do ESPORTE, não do futebol: 2º esporte, mercado de 2 resultados, "
           "odds independentes.")

@@ -108,7 +108,7 @@ def main():
     fig.suptitle("F10 — E1: S(σ_L) em forma fechada (integral gaussiano por quadratura)",
                  y=1.02)
     fig.tight_layout()
-    fig.savefig(FIG / "f10_closed_form.png", dpi=150, bbox_inches="tight"); plt.close(fig)
+    fig.savefig(FIG / "f10_closed_form.png", dpi=C.FIG_DPI, bbox_inches="tight"); plt.close(fig)
     print(f"  -> {FIG / 'f10_closed_form.png'}")
 
     prov.write_stamp("21_closed_form", metrics={

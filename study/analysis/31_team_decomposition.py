@@ -54,7 +54,7 @@ def main():
     axes[1].set_title(f"Ligas: dispersão de força vs skew (r={rl['r']:+.2f})")
     fig.suptitle("F19 — F3: a assinatura da liga vem da dispersão de força dos times", y=1.02)
     fig.tight_layout()
-    fig.savefig(FIG / "f19_team_decomposition.png", dpi=150, bbox_inches="tight"); plt.close(fig)
+    fig.savefig(FIG / "f19_team_decomposition.png", dpi=C.FIG_DPI, bbox_inches="tight"); plt.close(fig)
     print(f"\n  -> {FIG / 'f19_team_decomposition.png'} | {C.OUTDIR / 'team_dominance.csv'}")
 
     prov.write_stamp("31_team_decomposition", metrics={
