@@ -16,7 +16,18 @@
    "o_fair": 1.7985,
    "predicted_asof": "2026-06-28",
    "model": "elo-results-only",
-   "realized": null
+   "realized": {
+    "result": "H",
+    "fav_won": true,
+    "ret_fav": 0.7985,
+    "score": "2-1",
+    "advanced": "Brazil",
+    "pens": false,
+    "pens_score": null,
+    "note": "Martinelli 96', won in regulation",
+    "source": "ESPN/FIFA/CBS",
+    "settled_asof": "2026-06-28"
+   }
   },
   {
    "match_id": "2026-06-29|Germany|Paraguay",
@@ -31,7 +42,18 @@
    "o_fair": 1.6045,
    "predicted_asof": "2026-06-28",
    "model": "elo-results-only",
-   "realized": null
+   "realized": {
+    "result": "D",
+    "fav_won": false,
+    "ret_fav": -1.0,
+    "score": "1-1",
+    "advanced": "Paraguay",
+    "pens": true,
+    "pens_score": "3-4",
+    "note": "1-1 after 120'; Paraguay won 4-3 on penalties — Germany's first-ever WC shootout loss",
+    "source": "ESPN/CBS/VAVEL",
+    "settled_asof": "2026-06-28"
+   }
   },
   {
    "match_id": "2026-06-29|Netherlands|Morocco",
@@ -46,7 +68,18 @@
    "o_fair": 2.0794,
    "predicted_asof": "2026-06-28",
    "model": "elo-results-only",
-   "realized": null
+   "realized": {
+    "result": "D",
+    "fav_won": false,
+    "ret_fav": -1.0,
+    "score": "1-1",
+    "advanced": "Morocco",
+    "pens": true,
+    "pens_score": "2-3",
+    "note": "1-1 after 120'; Morocco won 3-2 on penalties (Bounou save, Saibari decisive)",
+    "source": "ESPN/Yahoo/Outlook",
+    "settled_asof": "2026-06-28"
+   }
   },
   {
    "match_id": "2026-06-30|France|Sweden",

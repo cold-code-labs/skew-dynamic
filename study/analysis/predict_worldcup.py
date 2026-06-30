@@ -24,6 +24,7 @@ DATA = Path("data/intl_results.csv")
 SITE = Path(__file__).resolve().parents[1].parent / "site" / "src" / "data"
 LEDGER = SITE / "wc_predictions.json"     # append-only pre-registration (versioned)
 LIVE = SITE / "wc_live.json"              # compact payload for the page
+MANUAL = Path(__file__).resolve().parents[1] / "wc_manual_results.json"  # web-sourced KO results
 
 
 def _mid(date, home, away):
@@ -90,6 +91,22 @@ def main():
                 "settled_asof": asof}
             resolved_now += 1
 
+    # web-sourced knockout results not yet in the dump (persistent + sourced).
+    # A knockout draw (reg=D) settles the favourite 1X2 bet as a loss; the shootout
+    # only decides who advances, which we keep separately.
+    manual = json.loads(MANUAL.read_text()) if MANUAL.exists() else {}
+    for mid, p in by_id.items():
+        if p.get("realized") is None and mid in manual:
+            r = manual[mid]
+            won = p["fav_pick"] == r["reg"]
+            p["realized"] = {
+                "result": r["reg"], "fav_won": won,
+                "ret_fav": round(p["o_fair"] - 1.0, 4) if won else -1.0,
+                "score": f'{r["fh"]}-{r["fa"]}', "advanced": r.get("advanced"),
+                "pens": bool(r.get("pens")), "pens_score": r.get("pens_score"),
+                "note": r.get("note"), "source": r.get("source"), "settled_asof": asof}
+            resolved_now += 1
+
     ledger = {"schema": "wc-predictions@1", "updated_asof": asof,
               "data_sha256": fp["sha256"][:16],
               "predictions": sorted(by_id.values(), key=lambda p: (p["date"], p["home"]))}
@@ -126,6 +143,24 @@ def main():
 
     upcoming = [card(p) for p in pend]
 
+    # resolved predictions (predicted vs actual) — the retrospective payload
+    resolved_detail = []
+    for p in sorted(res, key=lambda x: x["date"]):
+        ex = extras.get(p["match_id"], {})
+        rz = p["realized"]
+        resolved_detail.append({
+            "home": p["home"], "away": p["away"],
+            "home_flag": wc.flag_iso(p["home"]), "away_flag": wc.flag_iso(p["away"]),
+            "fav_team": p["fav_team"], "p_fav": p["p_fav"], "skew_pred": p["skew_pred"],
+            "xg_home": ex.get("xg_home"), "xg_away": ex.get("xg_away"),
+            "score_pred": (f'{ex.get("score_home")}-{ex.get("score_away")}'
+                           if ex.get("score_home") is not None else None),
+            "adv_home": ex.get("adv_home"),
+            "score": rz.get("score"), "reg_result": rz.get("result"),
+            "fav_won": rz.get("fav_won"), "advanced": rz.get("advanced"),
+            "pens": rz.get("pens"), "pens_score": rz.get("pens_score"),
+            "note": rz.get("note")})
+
     # recent played 2026 games (with scorelines) — the "results" strip
     w26s = w26.sort_values("date").tail(8)
     recent_games = [{
@@ -146,6 +181,7 @@ def main():
         "upcoming": upcoming,
         "backtest2026": bt,
         "ledger": led,
+        "resolved_detail": resolved_detail,
         "recent_games": recent_games,
         "recent_resolved": [
             {"home": p["home"], "away": p["away"], "fav_team": p["fav_team"],
