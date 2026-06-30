@@ -26,6 +26,40 @@ SOURCE_URL = ("https://raw.githubusercontent.com/martj42/"
               "international_results/master/results.csv")
 WC_TOURNAMENT = "FIFA World Cup"
 
+# nation → ISO code for flagcdn.com (home nations use gb-* subcodes)
+TEAM_ISO = {
+    "Brazil": "br", "Japan": "jp", "Germany": "de", "Paraguay": "py",
+    "Netherlands": "nl", "Morocco": "ma", "Ivory Coast": "ci", "Norway": "no",
+    "France": "fr", "Sweden": "se", "Mexico": "mx", "Ecuador": "ec",
+    "England": "gb-eng", "Scotland": "gb-sct", "Wales": "gb-wls",
+    "Northern Ireland": "gb-nir", "DR Congo": "cd", "Belgium": "be",
+    "Senegal": "sn", "United States": "us", "Bosnia and Herzegovina": "ba",
+    "Spain": "es", "Austria": "at", "Portugal": "pt", "Croatia": "hr",
+    "Switzerland": "ch", "Algeria": "dz", "Australia": "au", "Egypt": "eg",
+    "Argentina": "ar", "Cape Verde": "cv", "Colombia": "co", "Ghana": "gh",
+    "South Africa": "za", "South Korea": "kr", "North Korea": "kp", "Canada": "ca",
+    "Qatar": "qa", "Haiti": "ht", "Turkey": "tr", "Uruguay": "uy", "Italy": "it",
+    "Poland": "pl", "Denmark": "dk", "Nigeria": "ng", "Cameroon": "cm",
+    "Tunisia": "tn", "Iran": "ir", "Saudi Arabia": "sa", "Serbia": "rs",
+    "Czech Republic": "cz", "Czechia": "cz", "Greece": "gr", "Russia": "ru",
+    "Soviet Union": "ru", "Ukraine": "ua", "Peru": "pe", "Chile": "cl",
+    "Costa Rica": "cr", "Panama": "pa", "Honduras": "hn", "Jamaica": "jm",
+    "New Zealand": "nz", "Slovenia": "si", "Slovakia": "sk", "Hungary": "hu",
+    "Romania": "ro", "Republic of Ireland": "ie", "Ireland": "ie", "Iceland": "is",
+    "Finland": "fi", "Israel": "il", "Mali": "ml", "Burkina Faso": "bf",
+    "Guinea": "gn", "Zambia": "zm", "Uzbekistan": "uz", "Jordan": "jo",
+    "United Arab Emirates": "ae", "Bolivia": "bo", "Venezuela": "ve",
+    "Curacao": "cw", "Cuba": "cu", "Yugoslavia": "rs", "Czechoslovakia": "cz",
+    "China PR": "cn", "China": "cn", "Bulgaria": "bg", "Angola": "ao",
+    "Togo": "tg", "Trinidad and Tobago": "tt", "Kuwait": "kw", "Iraq": "iq",
+    "Germany DR": "de", "West Germany": "de",
+}
+
+
+def flag_iso(team):
+    """ISO code for the team's flag (None if unknown — the UI falls back to initials)."""
+    return TEAM_ISO.get(team)
+
 
 def ensure_dataset(path):
     """Download the internationals dump if it does not exist yet (clean clone).

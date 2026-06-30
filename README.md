@@ -78,9 +78,25 @@ result lands. It updates during the 2026 tournament. Annex:
 [skew-dynamic.coldcodelabs.com/worldcup](https://skew-dynamic.coldcodelabs.com/worldcup).
 
 ```bash
-python study/analysis/41_worldcup.py            # the analysis
+python study/analysis/52_worldcup.py            # the analysis
 python study/analysis/export_worldcup_data.py   # regenerate the page data
 python study/analysis/predict_worldcup.py       # predict next games + reconcile ledger
+```
+
+## Annex — Goals: the over/under ladder
+
+The same law, dialled by the **line** instead of by who's playing. Each total-goals
+line is a two-point Over bet with `p = P(total > L)`; sweeping the line sweeps
+`(1−2p)/√(p(1−p))` across its **full range** (skew −3.0 → +3.6), far past the
+1X2 favourite. The over-probability comes **odds-free** from a Poisson goals model;
+the one line with real odds (2.5) anchors it — model **48%** ≈ market **49%** ≈
+reality **49%**, calibrated within a point at every line. Annex:
+[`study/docs/GOALS.md`](study/docs/GOALS.md) · page:
+[skew-dynamic.coldcodelabs.com/goals](https://skew-dynamic.coldcodelabs.com/goals).
+
+```bash
+python study/analysis/53_goals_ladder.py        # the ladder + 2.5 anchor
+python study/analysis/export_goals_data.py      # regenerate the page data
 ```
 
 ## The paper

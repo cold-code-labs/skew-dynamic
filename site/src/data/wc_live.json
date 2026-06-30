@@ -18,7 +18,12 @@
 "skew_pred": -0.2255,
 "win_payoff": 0.8,
 "lose_payoff": -1.0,
-"verdict": "neg"
+"verdict": "neg",
+"p_home": 0.556,
+"p_draw": 0.252,
+"p_away": 0.192,
+"home_flag": "br",
+"away_flag": "jp"
 },
 "upcoming": [
 {
@@ -33,7 +38,12 @@
 "skew_pred": -0.2255,
 "win_payoff": 0.8,
 "lose_payoff": -1.0,
-"verdict": "neg"
+"verdict": "neg",
+"p_home": 0.556,
+"p_draw": 0.252,
+"p_away": 0.192,
+"home_flag": "br",
+"away_flag": "jp"
 },
 {
 "match_id": "2026-06-29|Germany|Paraguay",
@@ -47,7 +57,12 @@
 "skew_pred": -0.5087,
 "win_payoff": 0.6,
 "lose_payoff": -1.0,
-"verdict": "neg_strong"
+"verdict": "neg_strong",
+"p_home": 0.6233,
+"p_draw": 0.2285,
+"p_away": 0.1483,
+"home_flag": "de",
+"away_flag": "py"
 },
 {
 "match_id": "2026-06-29|Netherlands|Morocco",
@@ -61,7 +76,12 @@
 "skew_pred": 0.0764,
 "win_payoff": 1.08,
 "lose_payoff": -1.0,
-"verdict": "flat"
+"verdict": "flat",
+"p_home": 0.4809,
+"p_draw": 0.2712,
+"p_away": 0.2479,
+"home_flag": "nl",
+"away_flag": "ma"
 },
 {
 "match_id": "2026-06-30|France|Sweden",
@@ -75,7 +95,12 @@
 "skew_pred": -1.3352,
 "win_payoff": 0.29,
 "lose_payoff": -1.0,
-"verdict": "neg_strong"
+"verdict": "neg_strong",
+"p_home": 0.7776,
+"p_draw": 0.154,
+"p_away": 0.0683,
+"home_flag": "fr",
+"away_flag": "se"
 },
 {
 "match_id": "2026-06-30|Ivory Coast|Norway",
@@ -89,7 +114,12 @@
 "skew_pred": 0.4021,
 "win_payoff": 1.49,
 "lose_payoff": -1.0,
-"verdict": "pos_strong"
+"verdict": "pos_strong",
+"p_home": 0.3176,
+"p_draw": 0.2809,
+"p_away": 0.4014,
+"home_flag": "ci",
+"away_flag": "no"
 },
 {
 "match_id": "2026-06-30|Mexico|Ecuador",
@@ -103,7 +133,12 @@
 "skew_pred": -0.0017,
 "win_payoff": 1.0,
 "lose_payoff": -1.0,
-"verdict": "flat"
+"verdict": "flat",
+"p_home": 0.5004,
+"p_draw": 0.267,
+"p_away": 0.2326,
+"home_flag": "mx",
+"away_flag": "ec"
 },
 {
 "match_id": "2026-07-01|Belgium|Senegal",
@@ -117,7 +152,12 @@
 "skew_pred": -0.205,
 "win_payoff": 0.81,
 "lose_payoff": -1.0,
-"verdict": "neg"
+"verdict": "neg",
+"p_home": 0.551,
+"p_draw": 0.2535,
+"p_away": 0.1955,
+"home_flag": "be",
+"away_flag": "sn"
 },
 {
 "match_id": "2026-07-01|England|DR Congo",
@@ -131,7 +171,12 @@
 "skew_pred": -1.3593,
 "win_payoff": 0.28,
 "lose_payoff": -1.0,
-"verdict": "neg_strong"
+"verdict": "neg_strong",
+"p_home": 0.7811,
+"p_draw": 0.1521,
+"p_away": 0.0669,
+"home_flag": "gb-eng",
+"away_flag": "cd"
 },
 {
 "match_id": "2026-07-01|United States|Bosnia and Herzegovina",
@@ -145,7 +190,12 @@
 "skew_pred": -1.1038,
 "win_payoff": 0.35,
 "lose_payoff": -1.0,
-"verdict": "neg_strong"
+"verdict": "neg_strong",
+"p_home": 0.7416,
+"p_draw": 0.1738,
+"p_away": 0.0846,
+"home_flag": "us",
+"away_flag": "ba"
 },
 {
 "match_id": "2026-07-02|Portugal|Croatia",
@@ -159,7 +209,12 @@
 "skew_pred": -0.1529,
 "win_payoff": 0.86,
 "lose_payoff": -1.0,
-"verdict": "neg"
+"verdict": "neg",
+"p_home": 0.5381,
+"p_draw": 0.2573,
+"p_away": 0.2046,
+"home_flag": "pt",
+"away_flag": "hr"
 },
 {
 "match_id": "2026-07-02|Spain|Austria",
@@ -173,7 +228,12 @@
 "skew_pred": -0.9623,
 "win_payoff": 0.4,
 "lose_payoff": -1.0,
-"verdict": "neg_strong"
+"verdict": "neg_strong",
+"p_home": 0.7168,
+"p_draw": 0.1866,
+"p_away": 0.0966,
+"home_flag": "es",
+"away_flag": "at"
 },
 {
 "match_id": "2026-07-02|Switzerland|Algeria",
@@ -187,7 +247,12 @@
 "skew_pred": 0.0777,
 "win_payoff": 1.08,
 "lose_payoff": -1.0,
-"verdict": "flat"
+"verdict": "flat",
+"p_home": 0.4806,
+"p_draw": 0.2712,
+"p_away": 0.2482,
+"home_flag": "ch",
+"away_flag": "dz"
 },
 {
 "match_id": "2026-07-03|Argentina|Cape Verde",
@@ -201,7 +266,12 @@
 "skew_pred": -2.8731,
 "win_payoff": 0.1,
 "lose_payoff": -1.0,
-"verdict": "neg_strong"
+"verdict": "neg_strong",
+"p_home": 0.9104,
+"p_draw": 0.0691,
+"p_away": 0.0205,
+"home_flag": "ar",
+"away_flag": "cv"
 },
 {
 "match_id": "2026-07-03|Australia|Egypt",
@@ -215,7 +285,12 @@
 "skew_pred": 0.0168,
 "win_payoff": 1.02,
 "lose_payoff": -1.0,
-"verdict": "flat"
+"verdict": "flat",
+"p_home": 0.4958,
+"p_draw": 0.268,
+"p_away": 0.2362,
+"home_flag": "au",
+"away_flag": "eg"
 },
 {
 "match_id": "2026-07-03|Colombia|Ghana",
@@ -229,7 +304,12 @@
 "skew_pred": -1.8977,
 "win_payoff": 0.18,
 "lose_payoff": -1.0,
-"verdict": "neg_strong"
+"verdict": "neg_strong",
+"p_home": 0.8442,
+"p_draw": 0.1139,
+"p_away": 0.042,
+"home_flag": "co",
+"away_flag": "gh"
 }
 ],
 "backtest2026": {
@@ -244,5 +324,103 @@
 "n_pending": 15,
 "n_resolved": 0
 },
+"recent_games": [
+{
+"home": "South Africa",
+"away": "Canada",
+"home_flag": "za",
+"away_flag": "ca",
+"fh": 0,
+"fa": 1,
+"fav_team": "Canada",
+"fav_won": true,
+"p_fav": 0.543,
+"skew_pred": -0.1728
+},
+{
+"home": "Croatia",
+"away": "Ghana",
+"home_flag": "hr",
+"away_flag": "gh",
+"fh": 2,
+"fa": 1,
+"fav_team": "Croatia",
+"fav_won": true,
+"p_fav": 0.7479,
+"skew_pred": -1.1419
+},
+{
+"home": "Panama",
+"away": "England",
+"home_flag": "pa",
+"away_flag": "gb-eng",
+"fh": 0,
+"fa": 2,
+"fav_team": "England",
+"fav_won": true,
+"p_fav": 0.6622,
+"skew_pred": -0.686
+},
+{
+"home": "DR Congo",
+"away": "Uzbekistan",
+"home_flag": "cd",
+"away_flag": "uz",
+"fh": 3,
+"fa": 1,
+"fav_team": "Uzbekistan",
+"fav_won": false,
+"p_fav": 0.3762,
+"skew_pred": 0.511
+},
+{
+"home": "Colombia",
+"away": "Portugal",
+"home_flag": "co",
+"away_flag": "pt",
+"fh": 0,
+"fa": 0,
+"fav_team": "Colombia",
+"fav_won": false,
+"p_fav": 0.44,
+"skew_pred": 0.2418
+},
+{
+"home": "Jordan",
+"away": "Argentina",
+"home_flag": "jo",
+"away_flag": "ar",
+"fh": 1,
+"fa": 3,
+"fav_team": "Argentina",
+"fav_won": true,
+"p_fav": 0.8417,
+"skew_pred": -1.8727
+},
+{
+"home": "Algeria",
+"away": "Austria",
+"home_flag": "dz",
+"away_flag": "at",
+"fh": 3,
+"fa": 3,
+"fav_team": "Algeria",
+"fav_won": false,
+"p_fav": 0.4109,
+"skew_pred": 0.362
+},
+{
+"home": "Senegal",
+"away": "Iraq",
+"home_flag": "sn",
+"away_flag": "iq",
+"fh": 5,
+"fa": 0,
+"fav_team": "Senegal",
+"fav_won": true,
+"p_fav": 0.642,
+"skew_pred": -0.5923
+}
+],
 "recent_resolved": []
 }

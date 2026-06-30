@@ -73,42 +73,83 @@ const pct = (x) => (x * 100).toFixed(0) + '%';
 
       <div class="nm-card">
         <div class="nm-fixture">
-          <div class="nm-team" id="nm-home"></div>
-          <div class="nm-vs">vs</div>
-          <div class="nm-team" id="nm-away"></div>
+          <div class="nm-side" id="nm-side-h">
+            <img class="nm-flag" id="nm-flag-h" alt="" width="68" height="46" />
+            <div class="nm-team" id="nm-home"></div>
+            <div class="nm-wprob" id="nm-wph"></div>
+          </div>
+          <div class="nm-center">
+            <span class="nm-vs">vs</span>
+            <span class="nm-date" id="nm-date"></span>
+            <span class="nm-venue" id="nm-venue"></span>
+          </div>
+          <div class="nm-side" id="nm-side-a">
+            <img class="nm-flag" id="nm-flag-a" alt="" width="68" height="46" />
+            <div class="nm-team" id="nm-away"></div>
+            <div class="nm-wprob" id="nm-wpa"></div>
+          </div>
         </div>
-        <div class="nm-meta"><span id="nm-date"></span> · <span id="nm-venue"></span></div>
 
-        <div class="nm-grid">
-          <div class="nm-stat"><label>model favourite</label><b id="nm-fav"></b></div>
-          <div class="nm-stat"><label>win probability</label><b id="nm-p" class="mono"></b></div>
-          <div class="nm-stat"><label>predicted skewness</label><b id="nm-skew" class="mono"></b></div>
+        <div class="nm-wdl">
+          <div class="nm-wdl-bar">
+            <span class="seg seg-h" id="nm-seg-h"></span>
+            <span class="seg seg-d" id="nm-seg-d"></span>
+            <span class="seg seg-a" id="nm-seg-a"></span>
+          </div>
+          <div class="nm-wdl-key">
+            <span><i class="dot dot-h"></i><b id="nm-kh"></b> <span id="nm-khn"></span></span>
+            <span><i class="dot dot-d"></i><b id="nm-kd"></b> draw</span>
+            <span><i class="dot dot-a"></i><b id="nm-ka"></b> <span id="nm-kan"></span></span>
+          </div>
         </div>
 
-        <div class="nm-verdict" id="nm-verdict"></div>
-
-        <div class="nm-viz">
-          <svg viewBox="0 0 340 200" id="nm-payoff" role="img" aria-label="Two-point payoff shape of the favourite bet">
-            <line x1="40" y1="150" x2="320" y2="150" class="grid" stroke-opacity=".5" />
-            <text class="tick" x="40" y="172" text-anchor="middle">−1</text>
-            <text class="tick" x="320" y="172" text-anchor="end" id="nm-axwin">+0.8</text>
-            <text class="tick" x="180" y="172" text-anchor="middle">0</text>
-            <rect id="nm-bar-lose" x="64" width="48" rx="3" fill="var(--neg)" />
-            <rect id="nm-bar-win"  x="248" width="48" rx="3" fill="var(--pos)" />
-            <text id="nm-lbl-lose" class="nm-bl" x="88" text-anchor="middle"></text>
-            <text id="nm-lbl-win"  class="nm-bl" x="272" text-anchor="middle"></text>
-            <text class="nm-axl" x="88" y="192" text-anchor="middle">lose</text>
-            <text class="nm-axl" x="272" y="192" text-anchor="middle">win</text>
-          </svg>
-          <p class="note">A unit bet on the favourite is a two-point gamble: lose <span class="mono">−1</span>
-            with probability <span class="mono" id="nm-q"></span>, win <span class="mono" id="nm-w"></span> with
-            probability <span class="mono" id="nm-pp"></span>. The gap between those two probabilities <em>is</em>
-            the skewness — no odds required.</p>
+        <div class="nm-bet">
+          <div class="nm-bet-line">Bet on the favourite — <b id="nm-fav"></b></div>
+          <div class="nm-verdict" id="nm-verdict"></div>
+          <div class="nm-viz">
+            <svg viewBox="0 0 340 200" id="nm-payoff" role="img" aria-label="Two-point payoff shape of the favourite bet">
+              <line x1="40" y1="150" x2="320" y2="150" class="grid" stroke-opacity=".5" />
+              <text class="tick" x="40" y="172" text-anchor="middle">−1</text>
+              <text class="tick" x="320" y="172" text-anchor="end" id="nm-axwin">+0.8</text>
+              <text class="tick" x="180" y="172" text-anchor="middle">0</text>
+              <rect id="nm-bar-lose" x="64" width="48" rx="4" fill="var(--neg)" />
+              <rect id="nm-bar-win"  x="248" width="48" rx="4" fill="var(--pos)" />
+              <text id="nm-lbl-lose" class="nm-bl" x="88" text-anchor="middle"></text>
+              <text id="nm-lbl-win"  class="nm-bl" x="272" text-anchor="middle"></text>
+              <text class="nm-axl" x="88" y="192" text-anchor="middle">loses</text>
+              <text class="nm-axl" x="272" y="192" text-anchor="middle">wins</text>
+            </svg>
+            <div class="nm-skewbox">
+              <div class="nm-skewnum" id="nm-skew"></div>
+              <label>predicted skewness</label>
+              <p class="note" id="nm-betnote"></p>
+            </div>
+          </div>
         </div>
         <div class="nm-stamp">pre-registered as-of <span class="mono">{wcl.meta.data_date}</span> · model
           <span class="mono">elo-results-only</span> · awaiting result</div>
       </div>
     </div> : <p class="lede">No upcoming fixtures in the dataset right now — the bracket is complete.</p>}
+
+    {wcl.recent_games && wcl.recent_games.length > 0 && <div class="nm-results reveal">
+      <div class="nm-results-head">Recent results · 2026 group stage</div>
+      <div class="nm-results-grid">
+        {wcl.recent_games.map(g => <div class="rg">
+          <div class="rg-team">
+            {g.home_flag && <img src={`https://flagcdn.com/w40/${g.home_flag}.png`} alt="" width="26" height="17" />}
+            <span class={g.fav_team===g.home ? 'rg-fav' : ''}>{g.home}</span>
+          </div>
+          <div class="rg-score">{g.fh}<span>–</span>{g.fa}</div>
+          <div class="rg-team rg-away">
+            <span class={g.fav_team===g.away ? 'rg-fav' : ''}>{g.away}</span>
+            {g.away_flag && <img src={`https://flagcdn.com/w40/${g.away_flag}.png`} alt="" width="26" height="17" />}
+          </div>
+          <div class={`rg-mark ${g.fav_won ? 'ok' : 'no'}`} title={g.fav_won ? 'favourite won' : 'upset'}>{g.fav_won ? '✓' : '✗'}</div>
+        </div>)}
+      </div>
+      <p class="note">✓ = the model favourite won. The skewness prediction lives upstream of the result — it's a
+        property of the bet's shape, not a tip on who wins.</p>
+    </div>}
 
     <div class="nm-score reveal">
       <div class="nm-score-card">
@@ -254,21 +295,46 @@ python analysis/export_worldcup_data.py   # regenerate this page's data</code></
   };
   const $ = (id) => document.getElementById(id);
   const sgn = (x, d = 2) => (x >= 0 ? '+' : '') + x.toFixed(d);
-  let cur = 0;
+  const pc = (x) => Math.round(x*100) + '%';
+  const flagSrc = (iso) => iso ? `https://flagcdn.com/w80/${iso}.png` : '';
+
+  function setFlag(img, iso, name) {
+    if (iso) { img.src = flagSrc(iso); img.style.display = ''; img.alt = name; }
+    else { img.style.display = 'none'; }
+  }
 
   function render(i) {
     const f = FX[i]; if (!f) return;
+    const favH = f.fav_pick === 'H', favA = f.fav_pick === 'A';
     $('nm-home').textContent = f.home;
     $('nm-away').textContent = f.away;
-    $('nm-home').classList.toggle('fav', f.fav_pick === 'H');
-    $('nm-away').classList.toggle('fav', f.fav_pick === 'A');
-    $('nm-date').textContent = new Date(f.date).toLocaleDateString('en-GB', { day:'numeric', month:'short' });
+    $('nm-side-h').classList.toggle('fav', favH);
+    $('nm-side-a').classList.toggle('fav', favA);
+    setFlag($('nm-flag-h'), f.home_flag, f.home);
+    setFlag($('nm-flag-a'), f.away_flag, f.away);
+    $('nm-date').textContent = new Date(f.date).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
     $('nm-venue').textContent = f.neutral ? 'neutral venue' : `${f.home} hosting`;
-    $('nm-fav').textContent = f.fav_team;
-    $('nm-p').textContent = (f.p_fav*100).toFixed(0) + '%';
+
+    // 3-way W/D/L bar
+    const ph = f.p_home ?? f.p_fav, pd = f.p_draw ?? 0, pa = f.p_away ?? 0;
+    $('nm-wph').textContent = pc(ph);
+    $('nm-wpa').textContent = pc(pa);
+    $('nm-seg-h').style.width = (ph*100)+'%';
+    $('nm-seg-d').style.width = (pd*100)+'%';
+    $('nm-seg-a').style.width = (pa*100)+'%';
+    $('nm-kh').textContent = pc(ph); $('nm-khn').textContent = f.home + ' win';
+    $('nm-kd').textContent = pc(pd);
+    $('nm-ka').textContent = pc(pa); $('nm-kan').textContent = f.away + ' win';
+
+    // the bet
+    $('nm-fav').textContent = `${f.fav_team} (${pc(f.p_fav)})`;
     const sk = $('nm-skew'); sk.textContent = sgn(f.skew_pred);
     sk.style.color = f.skew_pred >= 0.1 ? 'var(--pos)' : (f.skew_pred <= -0.1 ? 'var(--neg)' : 'var(--ink)');
     $('nm-verdict').textContent = VERDICT[f.verdict] || '';
+    $('nm-betnote').textContent =
+      `${f.fav_team} wins ${pc(f.p_fav)} of the time for a small ${sgn(f.win_payoff)}; the other `
+      + `${pc(1-f.p_fav)} loses −1. The gap between those two odds is the skewness — no betting odds needed.`;
+
     // payoff bars
     const p = f.p_fav, q = 1 - p, base = 150, scale = 108;
     const win = $('nm-bar-win'), lose = $('nm-bar-lose');
@@ -276,13 +342,10 @@ python analysis/export_worldcup_data.py   # regenerate this page's data</code></
     lose.setAttribute('height', (q*scale).toFixed(1)); lose.setAttribute('y', (base - q*scale).toFixed(1));
     $('nm-lbl-win').setAttribute('y', (base - p*scale - 6).toFixed(1));
     $('nm-lbl-lose').setAttribute('y', (base - q*scale - 6).toFixed(1));
-    $('nm-lbl-win').textContent = (p*100).toFixed(0) + '%';
-    $('nm-lbl-lose').textContent = (q*100).toFixed(0) + '%';
+    $('nm-lbl-win').textContent = pc(p);
+    $('nm-lbl-lose').textContent = pc(q);
     $('nm-axwin').textContent = sgn(f.win_payoff);
-    $('nm-w').textContent = sgn(f.win_payoff); $('nm-q').textContent = (q*100).toFixed(0)+'%';
-    $('nm-pp').textContent = (p*100).toFixed(0)+'%';
     document.querySelectorAll('.nm-chip').forEach((c, j) => c.classList.toggle('on', j === i));
-    cur = i;
   }
   document.querySelectorAll('.nm-chip').forEach((c) =>
     c.addEventListener('click', () => render(+c.dataset.i)));
@@ -339,16 +402,51 @@ python analysis/export_worldcup_data.py   # regenerate this page's data</code></
   .nm-chip-d { font-family: var(--mono); font-size: .72rem; color: var(--ink-faint); margin-right: 7px; }
   .nm-card { border: 1px solid var(--accent-soft); border-radius: 16px; padding: 28px; background: var(--surface-2);
     box-shadow: 0 0 0 3px var(--accent-soft); }
-  .nm-fixture { display: flex; align-items: center; justify-content: center; gap: 18px; flex-wrap: wrap; }
-  .nm-team { font-size: clamp(1.2rem, 3vw, 1.9rem); font-weight: 650; letter-spacing: -.02em; color: var(--ink-soft); }
-  .nm-team.fav { color: var(--accent); }
-  .nm-vs { color: var(--ink-faint); font-size: .9rem; }
-  .nm-meta { text-align: center; color: var(--ink-faint); font-size: .85rem; margin-top: 6px; }
-  .nm-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin: 22px 0 6px; text-align: center; }
-  .nm-stat label { display: block; font-size: .72rem; text-transform: uppercase; letter-spacing: .04em; color: var(--ink-faint); margin-bottom: 4px; }
-  .nm-stat b { font-size: 1.5rem; font-weight: 650; }
-  .nm-verdict { text-align: center; color: var(--ink-soft); font-size: .95rem; margin: 10px auto 4px; max-width: 52ch; }
-  .nm-viz { display: grid; grid-template-columns: 340px 1fr; gap: 20px; align-items: center; margin-top: 18px; }
+  .nm-fixture { display: grid; grid-template-columns: 1fr auto 1fr; align-items: start; gap: 14px; }
+  .nm-side { display: flex; flex-direction: column; align-items: center; gap: 7px; padding: 10px; border-radius: 12px; transition: background .15s; }
+  .nm-side.fav { background: var(--accent-soft); }
+  .nm-flag { border-radius: 4px; box-shadow: 0 1px 4px rgba(0,0,0,.18); object-fit: cover; }
+  .nm-team { font-size: clamp(1rem, 2.6vw, 1.5rem); font-weight: 650; letter-spacing: -.02em; color: var(--ink); text-align: center; line-height: 1.1; }
+  .nm-side.fav .nm-team { color: var(--accent); }
+  .nm-wprob { font-family: var(--mono); font-size: 1.1rem; font-weight: 600; color: var(--ink-soft); }
+  .nm-side.fav .nm-wprob { color: var(--accent); }
+  .nm-center { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding-top: 18px; }
+  .nm-vs { color: var(--ink-faint); font-size: .85rem; font-weight: 600; }
+  .nm-date { font-size: .82rem; color: var(--ink-soft); white-space: nowrap; }
+  .nm-venue { font-size: .72rem; color: var(--ink-faint); }
+  /* W/D/L bar */
+  .nm-wdl { margin: 20px 0 6px; }
+  .nm-wdl-bar { display: flex; height: 12px; border-radius: 6px; overflow: hidden; background: var(--surface); }
+  .nm-wdl-bar .seg { height: 100%; transition: width .35s ease; }
+  .seg-h { background: var(--accent); } .seg-d { background: var(--ink-faint); opacity:.5; } .seg-a { background: var(--navy); }
+  .nm-wdl-key { display: flex; justify-content: space-between; margin-top: 8px; font-size: .78rem; color: var(--ink-faint); flex-wrap: wrap; gap: 6px; }
+  .nm-wdl-key b { color: var(--ink); font-family: var(--mono); }
+  .nm-wdl-key .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 5px; vertical-align: middle; }
+  .dot-h { background: var(--accent); } .dot-d { background: var(--ink-faint); } .dot-a { background: var(--navy); }
+  /* the bet */
+  .nm-bet { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line-soft); }
+  .nm-bet-line { text-align: center; font-size: .95rem; color: var(--ink-soft); }
+  .nm-bet-line b { color: var(--ink); }
+  .nm-verdict { text-align: center; color: var(--ink-soft); font-size: .92rem; margin: 8px auto 4px; max-width: 54ch; }
+  .nm-skewbox { display: flex; flex-direction: column; justify-content: center; }
+  .nm-skewnum { font-family: var(--mono); font-size: 2.4rem; font-weight: 650; line-height: 1; }
+  .nm-skewbox label { font-size: .74rem; color: var(--ink-faint); text-transform: uppercase; letter-spacing: .04em; margin: 4px 0 10px; }
+  /* results strip */
+  .nm-results { margin-top: 26px; }
+  .nm-results-head { font-size: .8rem; font-weight: 600; color: var(--accent); margin-bottom: 12px; }
+  .nm-results-grid { display: grid; grid-template-columns: 1fr; gap: 7px; }
+  @media (min-width: 640px) { .nm-results-grid { grid-template-columns: 1fr 1fr; } }
+  .rg { display: grid; grid-template-columns: 1fr auto 1fr auto; align-items: center; gap: 10px; padding: 8px 12px; border: 1px solid var(--line-soft); border-radius: 10px; font-size: .9rem; }
+  .rg-team { display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .rg-team span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .rg-away { justify-content: flex-end; }
+  .rg-fav { font-weight: 650; color: var(--accent); }
+  .rg-team img { border-radius: 3px; flex: 0 0 auto; box-shadow: 0 1px 2px rgba(0,0,0,.15); }
+  .rg-score { font-family: var(--mono); font-weight: 650; font-size: 1rem; }
+  .rg-score span { color: var(--ink-faint); margin: 0 2px; }
+  .rg-mark { font-weight: 700; width: 20px; text-align: center; }
+  .rg-mark.ok { color: var(--pos); } .rg-mark.no { color: var(--neg); }
+  .nm-viz { display: grid; grid-template-columns: 340px 1fr; gap: 24px; align-items: center; margin-top: 14px; }
   @media (max-width: 680px) { .nm-viz { grid-template-columns: 1fr; } #nm-payoff { max-width: 340px; } }
   #nm-payoff { width: 100%; height: auto; }
   .nm-bl { font-family: var(--mono); font-size: 12px; fill: var(--ink-soft); }

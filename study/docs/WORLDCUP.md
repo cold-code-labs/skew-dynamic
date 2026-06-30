@@ -1,6 +1,6 @@
 # Annex — The structural skewness law at the World Cup
 
-*Live spin-off of the main study. Block `analysis/41_worldcup.py`, library
+*Live spin-off of the main study. Block `analysis/52_worldcup.py`, library
 `skewlib/worldcup.py`. Updates during the 2026 tournament.*
 
 ## The question
@@ -75,12 +75,12 @@ in, **prediction never rewritten**). The `/worldcup` page renders an interactive
 ## Reproduce & provenance
 
 ```bash
-python analysis/41_worldcup.py            # full analysis (stdout + outputs/wc_*.csv)
+python analysis/52_worldcup.py            # full analysis (stdout + outputs/wc_*.csv)
 python analysis/export_worldcup_data.py   # regenerate site/src/data/worldcup.json
 python analysis/predict_worldcup.py       # predict next games + reconcile the ledger
 ```
 
-No API key, no scraping. Each run stamps `outputs/_provenance/41_worldcup.json`
+No API key, no scraping. Each run stamps `outputs/_provenance/52_worldcup.json`
 with the git sha + the **dump's sha256** + the date of the last game — provenance
 that travels with the live data.
 

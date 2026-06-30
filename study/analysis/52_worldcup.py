@@ -68,7 +68,7 @@ def main():
     # — honest out-of-time forecast (train through groups, predict the knockout) —
     fc = _forecast_holdout(intl, wcup)
 
-    prov.write_stamp("41_worldcup", metrics={
+    prov.write_stamp("52_worldcup", metrics={
         "n_intl": fp["n_intl"], "n_wc": fp["n_wc"],
         "editions": len(fp["editions"]),
         "skew_pred_pool": round(pool_pred, 4),

@@ -43,6 +43,13 @@ def main():
     preds = wc.predict_upcoming(intl, fixtures) if len(fixtures) else fixtures
     asof = fp["date_max"]
 
+    # per-fixture display extras (3-way probs + flags) — cosmetic, keyed by match_id
+    extras = {r.match_id: {
+        "p_home": round(float(r.pH_elo), 4), "p_draw": round(float(r.pD_elo), 4),
+        "p_away": round(float(r.pA_elo), 4),
+        "home_flag": wc.flag_iso(r.HomeTeam), "away_flag": wc.flag_iso(r.AwayTeam),
+    } for r in preds.itertuples()} if len(preds) else {}
+
     # ── append-only ledger: freeze new predictions, reconcile resolved ones ──
     ledger = json.loads(LEDGER.read_text()) if LEDGER.exists() else {"predictions": []}
     by_id = {p["match_id"]: p for p in ledger["predictions"]}
@@ -101,9 +108,23 @@ def main():
                 "away": p["away"], "neutral": p["neutral"], "fav_team": p["fav_team"],
                 "fav_pick": p["fav_pick"], "p_fav": p["p_fav"], "skew_pred": p["skew_pred"],
                 "win_payoff": round(o - 1, 2), "lose_payoff": -1.0,
-                "verdict": _verdict(p["skew_pred"])}
+                "verdict": _verdict(p["skew_pred"]),
+                **extras.get(p["match_id"], {})}
 
     upcoming = [card(p) for p in pend]
+
+    # recent played 2026 games (with scorelines) — the "results" strip
+    w26s = w26.sort_values("date").tail(8)
+    recent_games = [{
+        "home": g.HomeTeam, "away": g.AwayTeam,
+        "home_flag": wc.flag_iso(g.HomeTeam), "away_flag": wc.flag_iso(g.AwayTeam),
+        "fh": int(g.FTHome), "fa": int(g.FTAway),
+        "fav_team": (g.HomeTeam if g.fav_pick == "H" else g.AwayTeam if g.fav_pick == "A" else "Draw"),
+        "fav_won": bool(g.fav_pick == g.FTResult),
+        "p_fav": round(float(g.p_fav), 4),
+        "skew_pred": round(float(g.skew_exante_match), 4),
+    } for g in w26s.itertuples()][::-1]
+
     live = {
         "meta": {"data_date": asof, "n_played_wc": fp["n_wc"],
                  "n_upcoming": len(upcoming), "source": "martj42/international_results",
@@ -112,8 +133,10 @@ def main():
         "upcoming": upcoming,
         "backtest2026": bt,
         "ledger": led,
+        "recent_games": recent_games,
         "recent_resolved": [
             {"home": p["home"], "away": p["away"], "fav_team": p["fav_team"],
+             "home_flag": wc.flag_iso(p["home"]), "away_flag": wc.flag_iso(p["away"]),
              "p_fav": p["p_fav"], "skew_pred": p["skew_pred"],
              "fav_won": p["realized"]["fav_won"], "ret_fav": p["realized"]["ret_fav"]}
             for p in sorted(res, key=lambda p: p["date"], reverse=True)[:6]],
