@@ -564,8 +564,9 @@ while the cross-league law is essentially unchanged (corr −0.906 / −0.900 /
 −0.891). The ordering is itself a sanity check: the multiplicative method, which
 removes the margin proportionally and so under-corrects the longshot side, returns
 the highest skewness, exactly as expected when a de-vig ignores the
-favourite–longshot structure [Clarke, Kovalchik & Ingram 2017]. Stationarity is confirmed by both ADF (p < 0.001) and KPSS (p = 0.10)
-across window sizes from 500 to 3000 matches and under league-demeaning. The
+favourite–longshot structure [Clarke, Kovalchik & Ingram 2017]. Stationarity is confirmed by both ADF (p < 0.001) and KPSS (p > 0.10, the test's
+tabulated maximum — stationarity is not rejected) across window sizes from 500 to
+3000 matches and under league-demeaning. The
 apparent short-run persistence in overlapping windows (ACF₁ = 0.74) is entirely a
 window-overlap artefact: with disjoint windows the series is white noise
 (Ljung-Box p = 0.70, ACF₁ = −0.06). The per-match bootstrap benchmark (§4.3)

@@ -26,13 +26,14 @@ competitiveness — it collapses across leagues once conditioned on it.
 
 | Configuration | ADF | KPSS | Ljung-Box | ACF(1) |
 |---|---|---|---|---|
-| baseline (overlap) | <0.001 | 0.10 | <0.001 | 0.74 |
-| league-demeaned (overlap) | <0.001 | 0.10 | <0.001 | 0.74 |
-| **non-overlap** | <0.001 | 0.10 | **0.71** | **−0.08** |
-| league-demeaned non-overlap | <0.001 | 0.10 | 0.70 | −0.08 |
+| baseline (overlap) | <0.001 | >0.10 | <0.001 | 0.74 |
+| league-demeaned (overlap) | <0.001 | >0.10 | <0.001 | 0.74 |
+| **non-overlap** | <0.001 | >0.10 | **0.71** | **−0.08** |
+| league-demeaned non-overlap | <0.001 | >0.10 | 0.70 | −0.08 |
 
 - **Stationarity: armoured.** Survives demeaning, non-overlap and windows of
-  500 to 3000 matches. ADF<0.001 and KPSS=0.10 in all 10 configs.
+  500 to 3000 matches. ADF<0.001 and KPSS p>0.10 (the test's tabulated ceiling;
+  stationarity is not rejected) in all 10 configs.
 - **Persistence: it was an artefact.** The ACF=0.74 came 100% from window
   overlap. Without overlap → white noise (LB p=0.71). **An honest correction
   vs v1.**
@@ -475,7 +476,7 @@ seasons (15 leagues: B1,D1,D2,E0–E3,F1,F2,I1,I2,N1,SP1,SP2,T1) — killing 100
 the composition confound that P1 attacked per-league.
 
 - **No trend with a fixed basket:** β = **−0.00013/year** (r=−0.06, Δ20yr −0.003)
-  in the balanced series vs −0.00009 in the full one; KPSS p=0.10 (stationary).
+  in the balanced series vs −0.00009 in the full one; KPSS p>0.10 (stationary).
   Mean level **+0.243 (sd 0.014)** — extremely tight.
 - **Conclusion:** the temporal invariance does NOT come from the league basket
   changing year on year; with the core fixed the global series stays flat. The "no
