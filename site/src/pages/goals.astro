@@ -1,0 +1,258 @@
+---
+import Base from '../layouts/Base.astro';
+import Footer from '../components/Footer.astro';
+import data from '../data/goals.json';
+
+const m = data.meta;
+const h = data.headline;
+const a = data.anchor;
+const fmt = (x, d = 2) => (x >= 0 ? '+' : '') + x.toFixed(d);
+const pct = (x) => Math.round(x * 100) + '%';
+
+// law-curve chart geometry (skew vs over-probability)
+const W = 720, H = 440, P = { l: 56, r: 22, t: 22, b: 50 };
+const xlo = 0.02, xhi = 0.98, ylo = -3.6, yhi = 4.2;
+const X = (p) => P.l + ((p - xlo) / (xhi - xlo)) * (W - P.l - P.r);
+const Y = (s) => P.t + (1 - (s - ylo) / (yhi - ylo)) * (H - P.t - P.b);
+const curve = data.curve.map(d => `${X(d.p).toFixed(1)},${Y(d.skew).toFixed(1)}`).join(' ');
+const xticks = [0.1, 0.3, 0.5, 0.7, 0.9];
+const yticks = [-3, -2, -1, 0, 1, 2, 3, 4];
+---
+<Base title="Goals — the over/under ladder | skew-dynamic"
+      description="A spin-off of the skew-dynamic study: the over/under goals market is a favourite-longshot ladder. The same structural skewness law, dialled by the line — sourced odds-free from a Poisson goals model and anchored on the one line with real odds (2.5)."
+      path="/goals">
+  <header class="g-top">
+    <div class="container g-top-inner">
+      <a class="brand" href="/"><span class="brand-mark"></span>skew<span class="brand-dim">-dynamic</span></a>
+      <div class="g-top-links">
+        <a href="/worldcup">World Cup</a>
+        <a href="/">The study</a>
+        <a href="https://github.com/cold-code-labs/skew-dynamic" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="g-hero">
+    <div class="container">
+      <div class="eyebrow reveal">Annex · the fun part of goals</div>
+      <h1 class="reveal">The over/under market is a favourite–longshot ladder.</h1>
+      <p class="lede reveal">Every total-goals line is a coin you can buy: bet <em>Over</em> and you win if the
+        match clears the line. The probability of that — and therefore the <strong>skewness</strong> of the bet —
+        is set by one dial: <strong>the line</strong>. Low lines are near-certain overs (the favourite side);
+        high lines are longshots. Same law as the rest of the study, <span class="mono">(1−2p)/√(p(1−p))</span>,
+        but here we dial it by the strike instead of by who's playing. And we never touch a betting odd — the
+        over-probability comes from a <strong>goals model</strong> (Poisson over {m.n.toLocaleString()} matches).</p>
+      <div class="g-stats reveal">
+        <div><span class="big">{fmt(h.skew_min,1)} → {fmt(h.skew_max,1)}</span><label>skew across the<br/>line ladder</label></div>
+        <div><span class="big">≤{pct(h.max_calib_err)}</span><label>model vs real<br/>over-rate, any line</label></div>
+        <div><span class="big">3</span><label>lines of odds used<br/>(just the 2.5 anchor)</label></div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <section class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow">● Play with it</div>
+      <h2>Drag the line. Watch the bet change shape.</h2>
+      <p class="lede">Slide the goals line and see the chance of an Over, the shape of the bet, and where it sits on
+        the law. Low line → you almost always win small (deep negative skew). High line → you rarely win, but big
+        (positive skew). The over/under market sweeps the law's full range — far past what backing a team ever reaches.</p>
+    </div>
+
+    <div class="g-play reveal">
+      <div class="g-controls">
+        <div class="g-line-readout">
+          <span>Over</span><b id="g-line">2.5</b><span>goals</span>
+        </div>
+        <input id="g-slider" type="range" min="0.5" max="9.5" step="1" value="2.5" aria-label="goals line" />
+        <div class="g-readouts">
+          <div><span class="g-num" id="g-p">49%</span><label>chance of Over</label></div>
+          <div><span class="g-num" id="g-skew">+0.03</span><label>predicted skewness</label></div>
+          <div><span class="g-num" id="g-pay">+1.0</span><label>payoff if it hits</label></div>
+        </div>
+        <p class="g-verdict" id="g-verdict"></p>
+        <svg viewBox="0 0 320 170" id="g-payoff" aria-label="Two-point payoff shape of the over bet">
+          <line x1="36" y1="128" x2="300" y2="128" class="grid" stroke-opacity=".5" />
+          <rect id="g-bar-lose" x="60" width="52" rx="4" fill="var(--neg)" />
+          <rect id="g-bar-win"  x="232" width="52" rx="4" fill="var(--pos)" />
+          <text id="g-lbl-lose" class="g-bl" x="86" text-anchor="middle"></text>
+          <text id="g-lbl-win"  class="g-bl" x="258" text-anchor="middle"></text>
+          <text class="g-axl" x="86" y="148" text-anchor="middle">Under (lose)</text>
+          <text class="g-axl" x="258" y="148" text-anchor="middle">Over (win)</text>
+        </svg>
+      </div>
+
+      <figure class="g-chart">
+        <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label="Skewness versus over-probability, with the goals-line ladder">
+          {yticks.map(t => <g>
+            <line class="grid" x1={P.l} y1={Y(t)} x2={W-P.r} y2={Y(t)} stroke-opacity={t===0?'.5':'.14'} stroke-dasharray={t===0?'':'3 3'} />
+            <text class="tick" x={P.l-9} y={Y(t)+4} text-anchor="end">{t}</text>
+          </g>)}
+          {xticks.map(t => <text class="tick" x={X(t)} y={H-P.b+18} text-anchor="middle">{pct(t)}</text>)}
+          <polyline points={curve} fill="none" stroke="var(--ink-faint)" stroke-width="2.5" />
+          {data.ladder.map(d => <g>
+            <circle cx={X(d.p_real)} cy={Y(d.skew_real)} r="5.5" fill="var(--accent)"
+                    data-tip={`line ${d.line}  ·  Over ${pct(d.p_real)}  ·  skew ${fmt(d.skew_real)}`} />
+            <text class="g-pt" x={X(d.p_real)} y={Y(d.skew_real) - 11} text-anchor="middle">{d.line}</text>
+          </g>)}
+          <g id="g-marker"><line stroke="var(--navy)" stroke-width="1.5" stroke-dasharray="3 3"/><circle r="8" fill="none" stroke="var(--navy)" stroke-width="2.5"/></g>
+          <text class="axis-label" x={W/2} y={H-8} text-anchor="middle">chance of going Over  p</text>
+          <text class="axis-label" x="15" y={H/2} text-anchor="middle" transform={`rotate(-90 15 ${H/2})`}>bet skewness</text>
+        </svg>
+        <figcaption class="chart-caption">Dots = the real goals lines (0.5–5.5); the line = the structural law. Drag the slider to move the ring.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <section class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow">The anchor</div>
+      <h2>One line has real odds. The model nails it.</h2>
+      <p class="lede">We only need bookmaker odds at a single rung — Over/Under 2.5 — to check the odds-free model.
+        The Poisson's over-probability, the de-vigged market's, and what actually happened all land on the same number.</p>
+    </div>
+    <div class="g-anchor reveal">
+      <div class="g-anchor-card"><span class="g-num">{pct(a.p_model)}</span><label>goals model<br/>(Poisson, no odds)</label></div>
+      <div class="g-anchor-eq">≈</div>
+      <div class="g-anchor-card"><span class="g-num">{pct(a.p_market)}</span><label>market<br/>(de-vigged odds)</label></div>
+      <div class="g-anchor-eq">≈</div>
+      <div class="g-anchor-card hl"><span class="g-num">{pct(a.p_real)}</span><label>reality<br/>(actual over-rate)</label></div>
+    </div>
+    <p class="note" style="text-align:center">Over/Under 2.5, {a.n.toLocaleString()} matches, market overround {a.overround.toFixed(3)}.
+      The model is built from scores alone, yet recovers the market's probability to within a point.</p>
+  </section>
+
+  <hr class="divider" />
+
+  <section class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow">The ladder</div>
+      <h2>Predicted vs realised, line by line.</h2>
+    </div>
+    <div class="g-table-wrap reveal">
+      <table class="g-table">
+        <thead><tr><th>line</th><th>chance of Over</th><th>model says</th><th>skew predicted</th><th>skew realised</th></tr></thead>
+        <tbody>
+          {data.ladder.map(d => <tr>
+            <td class="mono">Over {d.line}</td>
+            <td class="mono">{pct(d.p_real)}</td>
+            <td class="mono">{pct(d.p_model)}</td>
+            <td class="mono" style={`color:${d.skew_pred>=0?'var(--pos)':'var(--neg)'}`}>{fmt(d.skew_pred)}</td>
+            <td class="mono" style={`color:${d.skew_real>=0?'var(--pos)':'var(--neg)'}`}>{fmt(d.skew_real)}</td>
+          </tr>)}
+        </tbody>
+      </table>
+      <p class="note">And a freebie: the goal-count itself is structurally skewed — mean {h.goal_mean.toFixed(2)} goals/match,
+        skewness {fmt(h.goal_skew)} ≈ <span class="mono">1/√mean = {fmt(h.goal_skew_poisson)}</span> (Poisson). The
+        sport's scoring is right-skewed by construction.</p>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <section class="container g-repro reveal">
+    <div class="eyebrow">Reproduce</div>
+    <pre class="code"><code>python study/analysis/53_goals_ladder.py        # the ladder + 2.5 anchor
+python study/analysis/export_goals_data.py      # regenerate this page's data</code></pre>
+    <p class="note">{m.n.toLocaleString()} matches, {m.leagues} leagues, {m.date_min.slice(0,4)}–{m.date_max.slice(0,4)} ·
+      source football-data.co.uk · sha256 <span class="mono">{m.sha256}</span> · the law is derived in
+      <a href="/">the main study</a> · sister annex: <a href="/worldcup">the World Cup</a>.</p>
+  </section>
+
+  <Footer />
+</Base>
+
+<script define:vars={{ HIST: data.hist }}>
+  const $ = (id) => document.getElementById(id);
+  const W = 720, H = 440, Pl = 56, Pr = 22, Pt = 22, Pb = 50;
+  const xlo = 0.02, xhi = 0.98, ylo = -3.6, yhi = 4.2;
+  const X = (p) => Pl + ((p - xlo) / (xhi - xlo)) * (W - Pl - Pr);
+  const Y = (s) => Pt + (1 - (s - ylo) / (yhi - ylo)) * (H - Pt - Pb);
+  const law = (p) => (1 - 2*p) / Math.sqrt(p*(1-p));
+  const pc = (x) => Math.round(x*100) + '%';
+  const sgn = (x, d=2) => (x>=0?'+':'') + x.toFixed(d);
+  const pOver = (line) => { let s = 0; for (let k = Math.ceil(line); k < HIST.length; k++) s += HIST[k]; return Math.min(Math.max(s, 1e-4), 1-1e-4); };
+
+  const VERD = (L, p) =>
+    p > 0.85 ? `An Over ${L} almost always cashes — a tiny win nearly every match, with a rare, ugly −1. Deeply left-skewed: the classic favourite.`
+    : p > 0.6 ? `Over ${L} comes in most of the time for a modest payout — mildly left-skewed.`
+    : p > 0.4 ? `Over ${L} is a near coin-flip — the bet is roughly symmetric, skewness close to zero.`
+    : p > 0.2 ? `Over ${L} misses more often than not — now it's a longshot, and the skew turns positive.`
+    : `Over ${L} rarely hits, but pays big when it does — a lottery ticket, strongly right-skewed.`;
+
+  const mk = $('g-marker'), mline = mk.querySelector('line'), mdot = mk.querySelector('circle');
+  function render(L) {
+    const p = pOver(L), s = law(p), q = 1 - p, payoff = 1/p - 1;
+    $('g-line').textContent = L.toFixed(1);
+    $('g-p').textContent = pc(p);
+    $('g-skew').textContent = sgn(s); $('g-skew').style.color = s>=0.1?'var(--pos)':(s<=-0.1?'var(--neg)':'var(--ink)');
+    $('g-pay').textContent = sgn(payoff,1);
+    $('g-verdict').textContent = VERD(L, p);
+    // payoff bars
+    const base = 128, scale = 92;
+    const win = $('g-bar-win'), lose = $('g-bar-lose');
+    win.setAttribute('height', (p*scale).toFixed(1)); win.setAttribute('y', (base-p*scale).toFixed(1));
+    lose.setAttribute('height', (q*scale).toFixed(1)); lose.setAttribute('y', (base-q*scale).toFixed(1));
+    $('g-lbl-win').setAttribute('y', (base-p*scale-6).toFixed(1)); $('g-lbl-win').textContent = pc(p);
+    $('g-lbl-lose').setAttribute('y', (base-q*scale-6).toFixed(1)); $('g-lbl-lose').textContent = pc(q);
+    // chart marker
+    const x = X(p), y = Y(s);
+    mdot.setAttribute('cx', x); mdot.setAttribute('cy', y);
+    mline.setAttribute('x1', x); mline.setAttribute('x2', x); mline.setAttribute('y1', Y(0)); mline.setAttribute('y2', y);
+  }
+  const sl = $('g-slider');
+  sl.addEventListener('input', () => render(+sl.value));
+  render(+sl.value);
+</script>
+
+<style>
+  .g-top { position: sticky; top: 0; z-index: 40; backdrop-filter: saturate(160%) blur(12px);
+    background: rgba(252,253,255,.82); border-bottom: 1px solid var(--line-soft); }
+  .g-top-inner { display: flex; align-items: center; height: 60px; }
+  .g-top-links { margin-left: auto; display: flex; gap: 20px; }
+  .g-top-links a { color: var(--ink-soft); font-size: .9rem; font-weight: 500; }
+  .g-top-links a:hover { color: var(--accent); text-decoration: none; }
+  .brand { font-weight: 650; letter-spacing: -.02em; color: var(--ink); display: flex; align-items: center; gap: 9px; }
+  .brand:hover { text-decoration: none; }
+  .brand-dim { color: var(--ink-faint); font-weight: 500; }
+  .brand-mark { width: 16px; height: 16px; border-radius: 5px; background: linear-gradient(135deg, var(--accent), var(--navy)); box-shadow: 0 0 0 3px var(--accent-soft); }
+
+  .g-hero { padding: 64px 0 36px; }
+  .g-hero h1 { font-size: clamp(2.1rem, 5vw, 3.3rem); letter-spacing: -.03em; line-height: 1.05; margin: 14px 0 18px; }
+  .g-stats { display: flex; gap: 40px; flex-wrap: wrap; margin-top: 30px; }
+  .g-stats .big { font-size: 2.1rem; font-weight: 650; color: var(--accent); letter-spacing: -.02em; font-family: var(--mono); }
+  .g-stats label { display: block; font-size: .78rem; color: var(--ink-faint); margin-top: 2px; line-height: 1.3; }
+
+  .g-play { display: grid; grid-template-columns: 1fr; gap: 26px; }
+  @media (min-width: 900px) { .g-play { grid-template-columns: 380px 1fr; align-items: start; } }
+  .g-controls { border: 1px solid var(--accent-soft); border-radius: 16px; padding: 22px; background: var(--surface-2); box-shadow: 0 0 0 3px var(--accent-soft); }
+  .g-line-readout { display: flex; align-items: baseline; justify-content: center; gap: 8px; color: var(--ink-soft); font-size: .95rem; }
+  .g-line-readout b { font-family: var(--mono); font-size: 2.2rem; font-weight: 650; color: var(--accent); }
+  #g-slider { width: 100%; margin: 14px 0 18px; accent-color: var(--accent); }
+  .g-readouts { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; text-align: center; }
+  .g-num { font-family: var(--mono); font-size: 1.5rem; font-weight: 650; display: block; }
+  .g-readouts label { font-size: .68rem; color: var(--ink-faint); text-transform: uppercase; letter-spacing: .03em; }
+  .g-verdict { text-align: center; font-size: .9rem; color: var(--ink-soft); margin: 16px auto 6px; min-height: 3.4em; }
+  #g-payoff { width: 100%; height: auto; }
+  .g-bl { font-family: var(--mono); font-size: 13px; fill: var(--ink-soft); }
+  .g-axl { font-size: 11px; fill: var(--ink-faint); }
+  .g-chart svg { width: 100%; height: auto; }
+  .g-pt { font-family: var(--mono); font-size: 11px; fill: var(--ink-faint); }
+
+  .g-anchor { display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; }
+  .g-anchor-card { border: 1px solid var(--line-soft); border-radius: 14px; padding: 20px 26px; text-align: center; min-width: 130px; }
+  .g-anchor-card.hl { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+  .g-anchor-card .g-num { font-size: 2rem; color: var(--accent); }
+  .g-anchor-card label { font-size: .76rem; color: var(--ink-faint); display: block; margin-top: 4px; line-height: 1.3; }
+  .g-anchor-eq { font-size: 1.6rem; color: var(--ink-faint); }
+
+  .g-table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+  .g-table th, .g-table td { padding: 9px 12px; text-align: right; border-bottom: 1px solid var(--line-soft); }
+  .g-table th { color: var(--ink-faint); font-weight: 500; font-size: .76rem; text-transform: uppercase; letter-spacing: .04em; }
+  .g-table td:first-child, .g-table th:first-child { text-align: left; }
+  .g-repro .code { margin: 12px 0; }
+</style>

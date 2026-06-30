@@ -23,3 +23,7 @@ node_modules/
 # run stamps (regenerable; the versioned ledger is lineage.json)
 study/outputs/_provenance/
 outputs/_provenance/
+
+# goals annex: per-match λ cache (regenerable in ~2 min, not a result table)
+study/outputs/goals_lambda.csv
+outputs/goals_lambda.csv
