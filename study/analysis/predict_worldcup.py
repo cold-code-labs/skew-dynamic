@@ -25,6 +25,7 @@ SITE = Path(__file__).resolve().parents[1].parent / "site" / "src" / "data"
 LEDGER = SITE / "wc_predictions.json"     # append-only pre-registration (versioned)
 LIVE = SITE / "wc_live.json"              # compact payload for the page
 MANUAL = Path(__file__).resolve().parents[1] / "wc_manual_results.json"  # web-sourced KO results
+BOOK = Path(__file__).resolve().parents[1] / "wc_book_odds.json"  # web-sourced bookmaker odds
 
 
 def _mid(date, home, away):
@@ -107,6 +108,21 @@ def main():
                 "note": r.get("note"), "source": r.get("source"), "settled_asof": asof}
             resolved_now += 1
 
+    # ── market overlay (Box A): freeze the pre-match book quote alongside our p ──
+    # The book and the model price the SAME bet (the model's favourite pick). De-vig
+    # gives the market's fair p; the law (1−2p)/√(p(1−p)) gives its implied skew. The
+    # block is frozen once — a pre-match snapshot, never rewritten (like predictions).
+    book_odds = wc.load_book_odds(BOOK)
+    for mid, p in by_id.items():
+        if mid in book_odds and "book" not in p:
+            b = book_odds[mid]
+            pb, ob, ovr = wc.book_pfav(b, p["fav_pick"])
+            p["book"] = {
+                "p_fav": round(pb, 4), "o_fav": round(ob, 4),
+                "skew": round(float(exante.per_match_skew(pb)), 4),
+                "overround": round(ovr, 4), "edge": round(p["p_fav"] - pb, 4),
+                "book": b["book"], "source": b["source"], "asof": b["asof"]}
+
     ledger = {"schema": "wc-predictions@1", "updated_asof": asof,
               "data_sha256": fp["sha256"][:16],
               "predictions": sorted(by_id.values(), key=lambda p: (p["date"], p["home"]))}
@@ -173,6 +189,43 @@ def main():
         "skew_pred": round(float(g.skew_exante_match), 4),
     } for g in w26s.itertuples()][::-1]
 
+    # ── Box A: model vs market — same bet, two probabilities, one law ──
+    # Each resolved game with a frozen book quote gives a (p, skew) point for the
+    # model AND for the market. The structural claim: both sit on (1−2p)/√(p(1−p));
+    # they differ only in WHERE on the curve, never in the curve. Box B: whose p was
+    # better calibrated against the realised outcome (Brier / log-loss, model vs book).
+    tri = []
+    for p in sorted([q for q in res if "book" in q], key=lambda x: x["date"]):
+        bk, rz = p["book"], p["realized"]
+        tri.append({
+            "home": p["home"], "away": p["away"],
+            "home_flag": wc.flag_iso(p["home"]), "away_flag": wc.flag_iso(p["away"]),
+            "fav_team": p["fav_team"], "fav_pick": p["fav_pick"],
+            "p_model": p["p_fav"], "p_book": bk["p_fav"],
+            "skew_model": p["skew_pred"], "skew_book": bk["skew"],
+            "o_model": p["o_fair"], "o_book": bk["o_fav"],
+            "overround": bk["overround"], "edge": bk["edge"], "book": bk["book"],
+            "fav_won": rz.get("fav_won"), "score": rz.get("score"),
+            "pens": rz.get("pens"), "advanced": rz.get("advanced")})
+
+    both = [p for p in res if "book" in p]
+    mvb = None
+    if both:
+        y = np.array([1.0 if p["realized"]["fav_won"] else 0.0 for p in both])
+        pm = np.array([p["p_fav"] for p in both])
+        pb = np.array([p["book"]["p_fav"] for p in both])
+        eps = 1e-9
+        mvb = {
+            "n": len(both),
+            "p_model_mean": round(float(pm.mean()), 4), "p_book_mean": round(float(pb.mean()), 4),
+            "hit_rate": round(float(y.mean()), 4),
+            "brier_model": round(float(np.mean((pm - y) ** 2)), 4),
+            "brier_book": round(float(np.mean((pb - y) ** 2)), 4),
+            "logloss_model": round(float(-np.mean(y * np.log(pm + eps) + (1 - y) * np.log(1 - pm + eps))), 4),
+            "logloss_book": round(float(-np.mean(y * np.log(pb + eps) + (1 - y) * np.log(1 - pb + eps))), 4),
+            "agree_corr": round(float(np.corrcoef(pm, pb)[0, 1]), 4) if len(both) > 1 else None,
+            "mean_abs_edge": round(float(np.mean(np.abs(pm - pb))), 4)}
+
     live = {
         "meta": {"data_date": asof, "n_played_wc": fp["n_wc"],
                  "n_upcoming": len(upcoming), "source": "martj42/international_results",
@@ -181,6 +234,8 @@ def main():
         "upcoming": upcoming,
         "backtest2026": bt,
         "ledger": led,
+        "triangulation": tri,
+        "model_vs_book": mvb,
         "resolved_detail": resolved_detail,
         "recent_games": recent_games,
         "recent_resolved": [

@@ -232,6 +232,44 @@ def add_favorite_bet(d, odd_cols=None):
     return out
 
 
+# ── market overlay: de-vig real bookmaker odds (Box A — observer-invariance) ──
+def american_to_decimal(a):
+    """US moneyline → decimal odds. -140 → 1.714, +420 → 5.20."""
+    a = float(a)
+    return 1.0 + (100.0 / abs(a) if a < 0 else a / 100.0)
+
+
+def load_book_odds(path):
+    """Web-sourced bookmaker 3-way quotes (American) → decimal, per match_id.
+    Live-annex sidecar (`wc_book_odds.json`): hand-recorded, sourced, no feed.
+    Returns {match_id: {o_home, o_draw, o_away, book, source, asof}}."""
+    import json
+    raw = json.loads(Path(path).read_text()) if Path(path).exists() else {}
+    out = {}
+    for mid, e in raw.items():
+        if mid.startswith("_") or "american" not in e:
+            continue
+        am = e["american"]
+        out[mid] = {"o_home": american_to_decimal(am["home"]),
+                    "o_draw": american_to_decimal(am["draw"]),
+                    "o_away": american_to_decimal(am["away"]),
+                    "book": e.get("book"), "source": e.get("source"),
+                    "asof": e.get("asof")}
+    return out
+
+
+def book_pfav(entry, fav_pick, method="shin"):
+    """De-vig one 3-way book quote and read off the MODEL's favourite pick (H/D/A),
+    so the book and the Elo model price the SAME bet. Returns (p_fav_book, o_fav_book,
+    overround). De-vig defaults to Shin (the study's canonical fair-probability map)."""
+    from . import devig
+    O = np.array([[entry["o_home"], entry["o_draw"], entry["o_away"]]], float)
+    P = devig.devig_odds(O, method=method)[0]
+    overround = float((1.0 / O[0]).sum() - 1.0)
+    col = {"H": 0, "D": 1, "A": 2}[fav_pick]
+    return float(P[col]), float(O[0, col]), overround
+
+
 # ── tournament cuts ───────────────────────────────────────────────────────────
 def world_cup(d):
     """Subset of World Cup final stages, with edition and phase (group/knockout)."""

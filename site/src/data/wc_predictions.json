@@ -27,6 +27,16 @@
     "note": "Martinelli 96', won in regulation",
     "source": "ESPN/FIFA/CBS",
     "settled_asof": "2026-06-28"
+   },
+   "book": {
+    "p_fav": 0.5625,
+    "o_fav": 1.7143,
+    "skew": -0.252,
+    "overround": 0.0534,
+    "edge": -0.0065,
+    "book": "FanDuel",
+    "source": "CBS Sports / ESPN (pre-match line, 2026-06-29)",
+    "asof": "2026-06-29"
    }
   },
   {
@@ -53,6 +63,16 @@
     "note": "1-1 after 120'; Paraguay won 4-3 on penalties — Germany's first-ever WC shootout loss",
     "source": "ESPN/CBS/VAVEL",
     "settled_asof": "2026-06-28"
+   },
+   "book": {
+    "p_fav": 0.7423,
+    "o_fav": 1.3125,
+    "skew": -1.108,
+    "overround": 0.0451,
+    "edge": -0.119,
+    "book": "FanDuel",
+    "source": "CBS Sports / FanDuel Sportsbook (pre-match line, 2026-06-29)",
+    "asof": "2026-06-29"
    }
   },
   {
@@ -79,6 +99,16 @@
     "note": "1-1 after 120'; Morocco won 3-2 on penalties (Bounou save, Saibari decisive)",
     "source": "ESPN/Yahoo/Outlook",
     "settled_asof": "2026-06-28"
+   },
+   "book": {
+    "p_fav": 0.3981,
+    "o_fav": 2.4,
+    "skew": 0.4162,
+    "overround": 0.053,
+    "edge": 0.0828,
+    "book": "FanDuel",
+    "source": "CBS Sports / FanDuel Sportsbook (pre-match line, 2026-06-29)",
+    "asof": "2026-06-29"
    }
   },
   {

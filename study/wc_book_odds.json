@@ -1,0 +1,21 @@
+{
+ "_about": "Web-sourced pre-match bookmaker 3-way odds (American) for World Cup knockout fixtures. The live-annex sidecar to wc_manual_results.json: hand-recorded, sourced, frozen as a pre-match snapshot (asof = the matchday, before kickoff). NOT an API/feed. American odds preserve source fidelity; decimal + de-vig computed at load. Only the favourite-bet column is consumed downstream, so book and model price the SAME bet.",
+ "2026-06-29|Brazil|Japan": {
+  "book": "FanDuel",
+  "asof": "2026-06-29",
+  "source": "CBS Sports / ESPN (pre-match line, 2026-06-29)",
+  "american": { "home": -140, "draw": 260, "away": 420 }
+ },
+ "2026-06-29|Germany|Paraguay": {
+  "book": "FanDuel",
+  "asof": "2026-06-29",
+  "source": "CBS Sports / FanDuel Sportsbook (pre-match line, 2026-06-29)",
+  "american": { "home": -320, "draw": 420, "away": 1000 }
+ },
+ "2026-06-29|Netherlands|Morocco": {
+  "book": "FanDuel",
+  "asof": "2026-06-29",
+  "source": "CBS Sports / FanDuel Sportsbook (pre-match line, 2026-06-29)",
+  "american": { "home": 140, "draw": 200, "away": 230 }
+ }
+}

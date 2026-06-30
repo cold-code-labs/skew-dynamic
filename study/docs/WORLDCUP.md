@@ -72,6 +72,33 @@ skewness, fair odds. When the score arrives the row is reconciled (realised fill
 in, **prediction never rewritten**). The `/worldcup` page renders an interactive
 "next match" card + a live scorecard from `wc_live.json`.
 
+## Market overlay — model vs market (Box A / Box B), page `/odds`
+
+The odds-free Elo gives a probability for each favourite bet *without ever seeing a
+price*. A real bookmaker gives one too. `/odds` puts them side by side:
+
+- **Box A — observer-invariance (descriptive, on-thesis).** De-vig a real published
+  3-way line (Shin) → the market's fair `p` for the *same* bet (the model's favourite
+  pick). Apply the law `(1−2p)/√(p(1−p))` to each. The claim: **both** the model's
+  `(p, skew)` and the market's land on the *same* curve — they differ only in *where*.
+  Agreement (rank corr of the two `p`'s, **0.998** over the first three) is the
+  headline: the odds-free engine reconstructs what a sportsbook priced. The WC
+  analogue of the realised-skew `+0.998`, now against a second *observer*, not frequency.
+- **Box B — calibration (honest, weak at small n).** Whose `p` was better calibrated
+  vs the outcome: model vs book Brier / log-loss (model 0.272 / 0.740 vs book
+  0.300 / 0.813 so far — our humility on the upsets paid). With n = 3, two of them
+  penalty lotteries, it is noise; real at n = 16.
+- **Box C — value/edge — deliberately NOT crossed.** The gap `p_model − p_book` is a
+  betting signal; we display it as a *diagnostic* and stop. Staking it would turn a
+  structural law into an alpha claim with a different burden of proof. The thesis's
+  credibility rests on it being descriptive history, not a tip sheet.
+
+Book odds are **hand-recorded, sourced, frozen** in `study/wc_book_odds.json`
+(American moneyline → decimal at load) — a pre-match snapshot, same discipline as
+`wc_manual_results.json`. **No API, no feed.** `skewlib/worldcup.py`: `load_book_odds`
++ `book_pfav`; `predict_worldcup.py` freezes a `book` block per ledger entry (never
+rewritten) and emits `triangulation` + `model_vs_book` into `wc_live.json`.
+
 ## Reproduce & provenance
 
 ```bash

@@ -1,0 +1,228 @@
+---
+import Base from '../layouts/Base.astro';
+import Footer from '../components/Footer.astro';
+import wcl from '../data/wc_live.json';
+
+const T = wcl.triangulation || [];
+const M = wcl.model_vs_book || null;
+const pct = (x) => Math.round(x * 100) + '%';
+const sgn = (x) => (x >= 0 ? '+' : '') + x.toFixed(2);
+
+// ── the structural law, plotted: skew = (1−2p)/√(p(1−p)) ──
+const law = (p) => (1 - 2 * p) / Math.sqrt(p * (1 - p));
+const P0 = 0.33, P1 = 0.95, S0 = 0.7, S1 = -1.25;      // axis domains
+const L = 64, Rr = 688, Tp = 34, Bt = 320;             // plot box (viewBox 720×372)
+const X = (p) => L + ((p - P0) / (P1 - P0)) * (Rr - L);
+const Y = (s) => Tp + ((S0 - s) / (S0 - S1)) * (Bt - Tp);
+// law polyline
+const curve = Array.from({ length: 125 }, (_, i) => {
+  const p = P0 + (i / 124) * (P1 - P0);
+  return `${X(p).toFixed(1)},${Y(law(p)).toFixed(1)}`;
+}).join(' ');
+// axis ticks
+const pTicks = [0.35, 0.45, 0.55, 0.65, 0.75, 0.85, 0.95];
+const sTicks = [0.5, 0, -0.5, -1.0];
+---
+<Base title="Model vs Market — the law is observer-invariant | skew-dynamic"
+      description="Our odds-free Elo and a real bookmaker price the same World Cup bets. Two probabilities, one law: both land on (1−2p)/√(p(1−p)). And whose p was better calibrated."
+      path="/odds">
+  <header class="o-top">
+    <div class="container o-top-inner">
+      <a class="brand" href="/"><span class="brand-mark"></span>skew<span class="brand-dim">-dynamic</span></a>
+      <div class="o-top-links">
+        <a href="/worldcup">World Cup</a><a href="/goals">Goals</a><a href="/retro">Retro</a>
+        <a href="https://github.com/cold-code-labs/skew-dynamic" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+    </div>
+  </header>
+
+  <article class="container o-wrap">
+    <div class="eyebrow reveal">● Model vs Market · same bet, two prices, one law</div>
+    <h1 class="reveal">Our odds, the bookmaker's odds, and the law that holds for both.</h1>
+    <p class="o-lede reveal">For these knockout games we have <em>three</em> readings of each favourite bet:
+      our <b>odds-free Elo</b> probability (results only — no market), the <b>bookmaker's</b> de-vigged
+      probability (a real published line, frozen pre-match), and the <b>realised</b> outcome. The structural
+      claim is not that we beat the market. It is sharper and stranger: <strong>whatever probability you
+      believe, the skewness of the bet is forced</strong> — both our number and the market's land on the same
+      curve <span class="mono">(1−2p)/√(p(1−p))</span>. They disagree on <em>where</em> on the curve a game sits,
+      never on the curve itself.</p>
+
+    {M && <div class="o-scoreboard reveal">
+      <div class="o-sb-card">
+        <span class="o-sb-k">Agreement (rank corr)</span>
+        <b class="o-sb-v pos">{M.agree_corr.toFixed(3)}</b>
+        <span class="o-sb-d">our p vs the market's p — near-identical ordering</span>
+      </div>
+      <div class="o-sb-card">
+        <span class="o-sb-k">Mean disagreement</span>
+        <b class="o-sb-v">{pct(M.mean_abs_edge)}</b>
+        <span class="o-sb-d">average gap in level (|p<sub>model</sub> − p<sub>book</sub>|)</span>
+      </div>
+      <div class="o-sb-card">
+        <span class="o-sb-k">Brier — model vs book</span>
+        <b class="o-sb-v"><span class={M.brier_model<=M.brier_book?'pos':''}>{M.brier_model.toFixed(3)}</span> <i>/</i> {M.brier_book.toFixed(3)}</b>
+        <span class="o-sb-d">lower is better · n = {M.n} (far too few to conclude)</span>
+      </div>
+      <div class="o-sb-card">
+        <span class="o-sb-k">Log-loss — model vs book</span>
+        <b class="o-sb-v"><span class={M.logloss_model<=M.logloss_book?'pos':''}>{M.logloss_model.toFixed(3)}</span> <i>/</i> {M.logloss_book.toFixed(3)}</b>
+        <span class="o-sb-d">same direction — our humility on the upsets paid</span>
+      </div>
+    </div>}
+
+    <!-- ── the law curve with model (○) and market (●) points ── -->
+    <figure class="o-fig reveal">
+      <svg viewBox="0 0 720 372" role="img" aria-label="Skewness law with model and bookmaker points">
+        <!-- grid -->
+        {sTicks.map(s => <g>
+          <line x1={L} y1={Y(s)} x2={Rr} y2={Y(s)} class={s===0?'ax0':'grid'} />
+          <text x={L-10} y={Y(s)+4} class="tk" text-anchor="end">{sgn(s)}</text>
+        </g>)}
+        {pTicks.map(p => <g>
+          <line x1={X(p)} y1={Tp} x2={X(p)} y2={Bt} class={Math.abs(p-0.5)<1e-9?'ax0':'grid'} />
+          <text x={X(p)} y={Bt+18} class="tk" text-anchor="middle">{p.toFixed(2)}</text>
+        </g>)}
+        <text x={(L+Rr)/2} y={362} class="axlab" text-anchor="middle">favourite probability p</text>
+        <text x={16} y={(Tp+Bt)/2} class="axlab" text-anchor="middle" transform={`rotate(-90 16 ${(Tp+Bt)/2})`}>return skewness</text>
+        <!-- the law -->
+        <polyline points={curve} class="law" />
+        <text x={X(0.9)} y={Y(law(0.9))-10} class="lawlab" text-anchor="end">(1−2p)/√(p(1−p))</text>
+        <!-- per-match: connect model ○ and book ● (both on the curve) -->
+        {T.map(t => <g>
+          <line x1={X(t.p_model)} y1={Y(t.skew_model)} x2={X(t.p_book)} y2={Y(t.skew_book)}
+                class={`conn ${t.fav_won?'ok':'no'}`} />
+          <circle cx={X(t.p_model)} cy={Y(t.skew_model)} r="6" class={`pt model ${t.fav_won?'ok':'no'}`} />
+          <circle cx={X(t.p_book)} cy={Y(t.skew_book)} r="6" class={`pt book ${t.fav_won?'ok':'no'}`} />
+          <text x={X(t.p_book)} y={Y(t.skew_book)+ (t.skew_book < t.skew_model ? 20 : -12)} class="ptlab" text-anchor="middle">{t.fav_team}</text>
+        </g>)}
+      </svg>
+      <figcaption>
+        <span class="lg"><span class="dot model"></span> our Elo (results-only)</span>
+        <span class="lg"><span class="dot book"></span> {T[0]?.book || 'bookmaker'} (de-vigged)</span>
+        <span class="lg"><span class="bar ok"></span> favourite advanced</span>
+        <span class="lg"><span class="bar no"></span> favourite out</span>
+      </figcaption>
+    </figure>
+
+    <!-- ── triangulation table ── -->
+    <div class="o-tbl reveal">
+      <div class="o-tr o-th">
+        <span>Match</span><span>p model</span><span>p market</span><span>skew model</span><span>skew market</span><span>outcome</span>
+      </div>
+      {T.map(t => <div class={`o-tr ${t.fav_won?'ok':'no'}`}>
+        <span class="o-m">
+          {t.home_flag && <img src={`https://flagcdn.com/w20/${t.home_flag}.png`} alt="" width="18" height="12" />}
+          {t.fav_team}<i> fav</i>
+        </span>
+        <span class="mono">{t.p_model.toFixed(3)}</span>
+        <span class="mono">{t.p_book.toFixed(3)} <em class={t.edge>=0?'up':'dn'}>{t.edge>=0?'+':''}{(t.edge*100).toFixed(1)}</em></span>
+        <span class="mono">{sgn(t.skew_model)}</span>
+        <span class="mono">{sgn(t.skew_book)}</span>
+        <span class="o-o">{t.fav_won ? '✓ won' : (t.pens ? '✗ pens' : '✗ upset')} <i>{t.score}</i></span>
+      </div>)}
+    </div>
+
+    <section class="o-body reveal">
+      <h2>What the three games say</h2>
+      <p><b>Brazil — the market and the model are the same bet.</b> Our p = 0.556, the book's de-vigged
+        p = 0.562: a six-thousandths gap. Both put Brazil just past a coin-flip, both imply a mildly
+        left-skewed bet (−0.23 / −0.25), and the favourite won. When everyone agrees, the law is invisible
+        — it just sits there being satisfied.</p>
+      <p><b>Germany — the market was the over-confident one.</b> The book priced Germany at <b>0.742</b>;
+        our results-only Elo, at <b>0.623</b>, was far more humble. That gap is the whole story: a higher p
+        means a <em>more</em> left-skewed bet — skew <b>−1.11</b> on the market's number vs −0.51 on ours, i.e.
+        "wins small, rarely loses <b>catastrophically</b>." Germany lost on penalties. The catastrophic tail
+        the market's own skew was screaming about is exactly the one that hit — and our lower p ate a smaller
+        loss in the scorecard.</p>
+      <p><b>Netherlands — both called the toss-up, the market more loudly.</b> Here we were the bolder one
+        (0.481) and the book the cautious one (0.398, skew <b>+0.42</b> — a <em>positively</em> skewed,
+        longshot-shaped favourite). Both readings said "do not trust this favourite"; it went to penalties,
+        Morocco through. Different p, same warning, same curve.</p>
+
+      <h2>The point — and the line we are not crossing</h2>
+      <p>This is a test of <b>agreement and shape</b>, not of edge. The rank correlation between our p and the
+        market's is <b>{M ? M.agree_corr.toFixed(3) : '—'}</b>: the odds-free engine reconstructs what a real
+        sportsbook priced, from results alone. That is the same result as the World Cup annex's
+        <span class="mono"> +0.998</span> on realised skew, now against a <em>second observer</em> instead of
+        against frequency.</p>
+      <blockquote>The difference <span class="mono">p<sub>model</sub> − p<sub>book</sub></span> is, literally,
+        a betting signal. We compute it, we show it — and we stop there. Turning that gap into staked "value"
+        would convert this study from a structural law into an alpha claim, with a completely different burden
+        of proof (market efficiency, transaction costs, years of out-of-sample). The whole credibility of the
+        thesis rests on it being <em>descriptive history</em>, not a tip sheet. So the edge column is a
+        diagnostic, never an instruction.</blockquote>
+      <p>And the calibration scoreboard — model Brier {M ? M.brier_model.toFixed(3) : '—'} vs market
+        {M ? ' ' + M.brier_book.toFixed(3) : ''} — is <b>not</b> evidence we beat the market. With
+        <b> n = {M ? M.n : 0}</b> and two penalty lotteries it is noise. It becomes a real number at n = 16,
+        the full Round of 32, and it is reported here only so the comparison is honest in both directions.</p>
+      <p class="o-foot">Book odds: real pre-match lines, hand-recorded and frozen in
+        <a href="https://github.com/cold-code-labs/skew-dynamic/blob/main/study/wc_book_odds.json" target="_blank" rel="noopener">wc_book_odds.json</a>
+        (FanDuel via CBS Sports / ESPN, 2026-06-29) · de-vig: Shin · method in
+        <a href="/worldcup">the World Cup annex</a> · this page updates as more games resolve.</p>
+    </section>
+  </article>
+
+  <Footer />
+</Base>
+
+<style>
+  .o-top { position: sticky; top: 0; z-index: 40; backdrop-filter: saturate(160%) blur(12px); background: rgba(252,253,255,.82); border-bottom: 1px solid var(--line-soft); }
+  .o-top-inner { display: flex; align-items: center; height: 60px; }
+  .o-top-links { margin-left: auto; display: flex; gap: 18px; }
+  .o-top-links a { color: var(--ink-soft); font-size: .9rem; font-weight: 500; }
+  .o-top-links a:hover { color: var(--accent); text-decoration: none; }
+  .brand { font-weight: 650; letter-spacing: -.02em; color: var(--ink); display: flex; align-items: center; gap: 9px; }
+  .brand:hover { text-decoration: none; } .brand-dim { color: var(--ink-faint); font-weight: 500; }
+  .brand-mark { width: 16px; height: 16px; border-radius: 5px; background: linear-gradient(135deg, var(--accent), var(--navy)); box-shadow: 0 0 0 3px var(--accent-soft); }
+
+  .o-wrap { max-width: 820px; padding-top: 56px; padding-bottom: 40px; }
+  .o-wrap h1 { font-size: clamp(2rem, 5vw, 2.8rem); letter-spacing: -.03em; line-height: 1.06; margin: 14px 0 18px; }
+  .o-lede { font-size: 1.12rem; color: var(--ink-soft); line-height: 1.6; }
+  .mono { font-family: var(--mono); }
+
+  .o-scoreboard { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 30px 0; }
+  @media (min-width: 720px) { .o-scoreboard { grid-template-columns: repeat(4, 1fr); } }
+  .o-sb-card { border: 1px solid var(--line-soft); border-radius: 12px; padding: 14px 16px; background: var(--surface, #fff); }
+  .o-sb-k { font-size: .72rem; color: var(--ink-faint); text-transform: uppercase; letter-spacing: .04em; }
+  .o-sb-v { font-family: var(--mono); font-size: 1.5rem; font-weight: 650; color: var(--ink); display: block; margin: 4px 0 2px; }
+  .o-sb-v i { color: var(--ink-faint); font-style: normal; font-weight: 400; }
+  .o-sb-v .pos, .pos { color: var(--pos); }
+  .o-sb-d { font-size: .74rem; color: var(--ink-faint); line-height: 1.3; }
+
+  .o-fig { margin: 32px 0 8px; }
+  .o-fig svg { width: 100%; height: auto; display: block; }
+  .grid { stroke: var(--line-soft); stroke-width: 1; }
+  .ax0 { stroke: var(--line); stroke-width: 1.3; }
+  .tk { fill: var(--ink-faint); font-size: 11px; font-family: var(--mono); }
+  .axlab { fill: var(--ink-soft); font-size: 12px; font-weight: 500; }
+  .law { fill: none; stroke: var(--accent); stroke-width: 2.4; opacity: .9; }
+  .lawlab { fill: var(--accent); font-size: 12px; font-family: var(--mono); font-weight: 600; }
+  .conn { stroke-width: 2; stroke-dasharray: 3 3; opacity: .55; }
+  .conn.ok { stroke: var(--pos); } .conn.no { stroke: var(--neg); }
+  .pt { stroke-width: 2; }
+  .pt.model { fill: #fff; } .pt.book { fill: currentColor; }
+  .pt.ok { color: var(--pos); stroke: var(--pos); } .pt.no { color: var(--neg); stroke: var(--neg); }
+  .ptlab { fill: var(--ink-soft); font-size: 11px; font-weight: 600; }
+  .o-fig figcaption { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 12px; font-size: .8rem; color: var(--ink-soft); justify-content: center; }
+  .lg { display: inline-flex; align-items: center; gap: 6px; }
+  .dot { width: 11px; height: 11px; border-radius: 50%; border: 2px solid var(--ink-soft); }
+  .dot.model { background: #fff; } .dot.book { background: var(--ink-soft); }
+  .bar { width: 14px; height: 3px; border-radius: 2px; } .bar.ok { background: var(--pos); } .bar.no { background: var(--neg); }
+
+  .o-tbl { margin: 26px 0; border: 1px solid var(--line-soft); border-radius: 12px; overflow: hidden; }
+  .o-tr { display: grid; grid-template-columns: 1.6fr 1fr 1.2fr 1fr 1fr 1.1fr; align-items: center; gap: 8px; padding: 11px 16px; font-size: .86rem; border-top: 1px solid var(--line-soft); }
+  .o-tr:first-child { border-top: none; }
+  .o-th { background: var(--accent-soft); color: var(--ink-soft); font-size: .72rem; text-transform: uppercase; letter-spacing: .03em; font-weight: 600; }
+  .o-tr.ok { border-left: 3px solid var(--pos); } .o-tr.no { border-left: 3px solid var(--neg); }
+  .o-m { display: flex; align-items: center; gap: 7px; font-weight: 600; color: var(--ink); }
+  .o-m i { color: var(--ink-faint); font-style: normal; font-weight: 400; font-size: .78rem; }
+  .o-m img { border-radius: 2px; }
+  .o-tr em { font-family: var(--mono); font-size: .72rem; font-style: normal; } .o-tr .up { color: var(--pos); } .o-tr .dn { color: var(--neg); }
+  .o-o { font-weight: 600; } .o-o i { font-style: normal; font-weight: 400; color: var(--ink-faint); font-family: var(--mono); }
+
+  .o-body h2 { font-size: 1.4rem; letter-spacing: -.02em; margin: 36px 0 12px; }
+  .o-body p { color: var(--ink-soft); line-height: 1.7; margin-bottom: 14px; }
+  .o-body b { color: var(--ink); }
+  .o-body blockquote { margin: 20px 0; padding: 14px 20px; border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 8px 8px 0; font-size: 1.04rem; color: var(--ink); line-height: 1.6; }
+  .o-foot { font-size: .82rem; color: var(--ink-faint); margin-top: 28px; padding-top: 16px; border-top: 1px solid var(--line-soft); }
+</style>
