@@ -29,16 +29,16 @@ const links = [
 <style>
   .nav { position: sticky; top: 0; z-index: 40; backdrop-filter: saturate(160%) blur(12px);
     background: rgba(252,253,255,.82); border-bottom: 1px solid var(--line-soft); }
-  .nav-inner { display: flex; align-items: center; gap: 20px; height: 60px; }
+  .nav-inner { display: flex; align-items: center; gap: 16px; height: 60px; }
   .brand { font-weight: 650; letter-spacing: -.02em; color: var(--ink); display: flex; align-items: center; gap: 9px; font-size: 1.04rem; }
   .brand:hover { text-decoration: none; }
   .brand-dim { color: var(--ink-faint); font-weight: 500; }
   .brand-mark { width: 16px; height: 16px; border-radius: 5px;
     background: linear-gradient(135deg, var(--accent), var(--navy)); box-shadow: 0 0 0 3px var(--accent-soft); }
-  .nav-links { display: none; gap: 22px; margin-left: auto; }
-  .nav-links a { color: var(--ink-soft); font-size: .92rem; font-weight: 500; }
+  .nav-links { display: none; gap: 15px; margin-left: auto; flex-wrap: nowrap; }
+  .nav-links a { color: var(--ink-soft); font-size: .86rem; font-weight: 500; white-space: nowrap; }
   .nav-links a:hover { color: var(--accent); text-decoration: none; }
-  .nav-cta { padding: 7px 14px; font-size: .86rem; }
-  @media (min-width: 860px) { .nav-links { display: flex; } .nav-cta { margin-left: 4px; } }
-  @media (max-width: 859px) { .nav-cta { margin-left: auto; } }
+  .nav-cta { padding: 7px 14px; font-size: .86rem; white-space: nowrap; flex: 0 0 auto; }
+  @media (min-width: 1024px) { .nav-links { display: flex; } .nav-cta { margin-left: 4px; } }
+  @media (max-width: 1023px) { .nav-cta { margin-left: auto; } }
 </style>
