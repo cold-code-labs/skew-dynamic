@@ -1,0 +1,364 @@
+---
+import Base from '../layouts/Base.astro';
+import Footer from '../components/Footer.astro';
+import data from '../data/worldcup.json';
+import wcl from '../data/wc_live.json';
+
+const m = data.meta;
+const h = data.headline;
+const fc = data.forecast;
+const live = fc.live2026;
+const ho = fc.holdout;
+
+// ── main chart geometry: skewness vs favourite probability ──
+const W = 720, H = 430, P = { l: 56, r: 22, t: 22, b: 48 };
+const xlo = 0.34, xhi = 0.92, ylo = -1.0, yhi = 0.65;
+const X = (p) => P.l + ((p - xlo) / (xhi - xlo)) * (W - P.l - P.r);
+const Y = (s) => P.t + (1 - (s - ylo) / (yhi - ylo)) * (H - P.t - P.b);
+const curve = data.curve.map(d => `${X(d.p).toFixed(1)},${Y(d.skew).toFixed(1)}`).join(' ');
+const xticks = [0.4, 0.5, 0.6, 0.7, 0.8, 0.9];
+const yticks = [-1.0, -0.5, 0, 0.5];
+const fmt = (x, d = 3) => (x >= 0 ? '+' : '') + x.toFixed(d);
+const pct = (x) => (x * 100).toFixed(0) + '%';
+---
+<Base title="The World Cup skewness forecast — skew-dynamic"
+      description="A live spin-off of the skew-dynamic study: the same structural law predicts the return-skewness of World Cup favourite bets, out-of-sample, with no odds — validated across 96 years of World Cups and tracking the 2026 tournament in real time."
+      path="/worldcup">
+  <header class="wc-top">
+    <div class="container wc-top-inner">
+      <a class="brand" href="/"><span class="brand-mark"></span>skew<span class="brand-dim">-dynamic</span></a>
+      <div class="wc-top-links">
+        <a href="/">← The study</a>
+        <a href="https://github.com/cold-code-labs/skew-dynamic" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="wc-hero">
+    <div class="container">
+      <div class="eyebrow reveal">Annex · live during the 2026 tournament</div>
+      <h1 class="reveal">The same law predicts the World Cup.</h1>
+      <p class="lede reveal">The study showed a favourite's bet skewness is fixed by one number — its win
+        probability <span class="mono">p</span> — through <span class="mono">(1−2p)/√(p(1−p))</span>. Here we
+        take that law <em>out of its own population</em>: from club leagues to national teams, from market odds
+        to <strong>no odds at all</strong>. We rebuild each side's strength from results only (a chronological
+        Elo over {m.n_intl.toLocaleString()} internationals), turn it into a favourite probability, and predict
+        the skewness of the 1X2 favourite bet across every World Cup from {m.edition_min} to {m.edition_max}.</p>
+      <div class="wc-stats reveal">
+        <div><span class="big">{fmt(h.corr_bucket, 3)}</span><label>predicted ↔ realised<br/>across p-buckets</label></div>
+        <div><span class="big">{m.n_wc.toLocaleString()}</span><label>World Cup matches<br/>{m.edition_min}–{m.edition_max}</label></div>
+        <div><span class="big">0</span><label>betting odds used<br/>(Elo only)</label></div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ── INTERACTIVE: the next match ── -->
+  <section class="container" id="next-match">
+    <div class="section-head reveal">
+      <div class="eyebrow">● Live · the practical demonstration</div>
+      <h2>The next match — predicted before it's played.</h2>
+      <p class="lede">For every upcoming fixture the model names the favourite, its win probability, and the
+        <strong>skewness of a unit bet on it</strong> — frozen into a
+        <a href="https://github.com/cold-code-labs/skew-dynamic/blob/main/site/src/data/wc_predictions.json" target="_blank" rel="noopener">pre-registered ledger</a>
+        and checked against reality when the result lands. Pick a fixture:</p>
+    </div>
+
+    {wcl.next ? <div class="nm reveal">
+      <div class="nm-chips" id="nm-chips">
+        {wcl.upcoming.map((f, i) => <button class="nm-chip" data-i={i}>
+          <span class="nm-chip-d">{f.date.slice(5)}</span>{f.home} × {f.away}</button>)}
+      </div>
+
+      <div class="nm-card">
+        <div class="nm-fixture">
+          <div class="nm-team" id="nm-home"></div>
+          <div class="nm-vs">vs</div>
+          <div class="nm-team" id="nm-away"></div>
+        </div>
+        <div class="nm-meta"><span id="nm-date"></span> · <span id="nm-venue"></span></div>
+
+        <div class="nm-grid">
+          <div class="nm-stat"><label>model favourite</label><b id="nm-fav"></b></div>
+          <div class="nm-stat"><label>win probability</label><b id="nm-p" class="mono"></b></div>
+          <div class="nm-stat"><label>predicted skewness</label><b id="nm-skew" class="mono"></b></div>
+        </div>
+
+        <div class="nm-verdict" id="nm-verdict"></div>
+
+        <div class="nm-viz">
+          <svg viewBox="0 0 340 200" id="nm-payoff" role="img" aria-label="Two-point payoff shape of the favourite bet">
+            <line x1="40" y1="150" x2="320" y2="150" class="grid" stroke-opacity=".5" />
+            <text class="tick" x="40" y="172" text-anchor="middle">−1</text>
+            <text class="tick" x="320" y="172" text-anchor="end" id="nm-axwin">+0.8</text>
+            <text class="tick" x="180" y="172" text-anchor="middle">0</text>
+            <rect id="nm-bar-lose" x="64" width="48" rx="3" fill="var(--neg)" />
+            <rect id="nm-bar-win"  x="248" width="48" rx="3" fill="var(--pos)" />
+            <text id="nm-lbl-lose" class="nm-bl" x="88" text-anchor="middle"></text>
+            <text id="nm-lbl-win"  class="nm-bl" x="272" text-anchor="middle"></text>
+            <text class="nm-axl" x="88" y="192" text-anchor="middle">lose</text>
+            <text class="nm-axl" x="272" y="192" text-anchor="middle">win</text>
+          </svg>
+          <p class="note">A unit bet on the favourite is a two-point gamble: lose <span class="mono">−1</span>
+            with probability <span class="mono" id="nm-q"></span>, win <span class="mono" id="nm-w"></span> with
+            probability <span class="mono" id="nm-pp"></span>. The gap between those two probabilities <em>is</em>
+            the skewness — no odds required.</p>
+        </div>
+        <div class="nm-stamp">pre-registered as-of <span class="mono">{wcl.meta.data_date}</span> · model
+          <span class="mono">elo-results-only</span> · awaiting result</div>
+      </div>
+    </div> : <p class="lede">No upcoming fixtures in the dataset right now — the bracket is complete.</p>}
+
+    <div class="nm-score reveal">
+      <div class="nm-score-card">
+        <div class="nm-score-tag">2026 so far · model backtest</div>
+        <div class="nm-score-rows">
+          <div><span>matches played</span><b class="mono">{wcl.backtest2026.n}</b></div>
+          <div><span>skew predicted</span><b class="mono">{fmt(wcl.backtest2026.skew_pred_pool)}</b></div>
+          <div><span>skew realised</span><b class="mono">{fmt(wcl.backtest2026.skew_real_pool)}</b></div>
+          <div><span>favourite hit rate</span><b class="mono">{(wcl.backtest2026.fav_hit_rate*100).toFixed(0)}%</b></div>
+          <div><span>Brier score</span><b class="mono">{wcl.backtest2026.brier.toFixed(3)}</b></div>
+        </div>
+      </div>
+      <div class="nm-score-card">
+        <div class="nm-score-tag">Pre-registered ledger</div>
+        <div class="nm-score-rows">
+          <div><span>predictions pending</span><b class="mono">{wcl.ledger.n_pending}</b></div>
+          <div><span>predictions resolved</span><b class="mono">{wcl.ledger.n_resolved}</b></div>
+          {wcl.ledger.n_resolved >= 3 && <div><span>resolved hit rate</span><b class="mono">{(wcl.ledger.resolved_hit_rate*100).toFixed(0)}%</b></div>}
+        </div>
+        <p class="note">Frozen predictions; realised values fill in as the Round of 32 plays. The ledger is the
+          tamper-evident record of predicted vs realised — append-only, committed to git.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <section class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow">The validation</div>
+      <h2>Predicted skewness lands on the realised — out of sample.</h2>
+      <p class="lede">Each dot is a bucket of World Cup matches at a given favourite strength. The line is the
+        structural law — <em>no fitting, no odds</em>. Realised skewness (filled) tracks the prediction (curve)
+        from balanced ties on the left to lopsided mismatches on the right, crossing zero right at
+        <span class="mono">p = ½</span>.</p>
+    </div>
+
+    <figure class="chart-figure reveal">
+      <svg viewBox={`0 0 ${W} ${H}`} class="wc-svg" role="img" aria-label="World Cup skewness: predicted law versus realised, by favourite probability">
+        {yticks.map(t => <g>
+          <line class="grid" x1={P.l} y1={Y(t)} x2={W-P.r} y2={Y(t)} stroke-opacity={t===0?'.5':'.16'} stroke-dasharray={t===0?'':'3 3'} />
+          <text class="tick" x={P.l-10} y={Y(t)+4} text-anchor="end">{t.toFixed(1)}</text>
+        </g>)}
+        {xticks.map(t => <g>
+          <text class="tick" x={X(t)} y={H-P.b+18} text-anchor="middle">{t.toFixed(1)}</text>
+        </g>)}
+        <line class="grid" x1={X(0.5)} y1={P.t} x2={X(0.5)} y2={H-P.b} stroke-dasharray="3 3" stroke-opacity=".4" />
+        <polyline points={curve} fill="none" stroke="var(--ink-faint)" stroke-width="2.5" />
+        {data.buckets.map(d => <g>
+          <line x1={X(d.p_fav)} y1={Y(d.skew_pred)} x2={X(d.p_fav)} y2={Y(d.skew_real)} stroke="var(--line)" stroke-width="1.5" />
+          <circle cx={X(d.p_fav)} cy={Y(d.skew_pred)} r="4.5" fill="none" stroke="var(--ink-faint)" stroke-width="2"
+                  data-tip={`predicted  p=${d.p_fav.toFixed(2)}  skew=${fmt(d.skew_pred,2)}`} />
+          <circle cx={X(d.p_fav)} cy={Y(d.skew_real)} r="6" fill="var(--accent)"
+                  data-tip={`realised  p=${d.p_fav.toFixed(2)}  skew=${fmt(d.skew_real,2)}  (n=${d.n})`} />
+        </g>)}
+        <text class="axis-label" x={W/2} y={H-8} text-anchor="middle">favourite win probability  p</text>
+        <text class="axis-label" x="15" y={H/2} text-anchor="middle" transform={`rotate(-90 15 ${H/2})`}>return skewness</text>
+      </svg>
+      <figcaption class="chart-caption">
+        <span class="key"><span class="sw line"></span>structural law (1−2p)/√(p(1−p))</span>
+        <span class="key"><span class="sw ring"></span>predicted</span>
+        <span class="key"><span class="sw" style="background:var(--accent)"></span>realised</span>
+        — {m.n_wc.toLocaleString()} matches, {m.editions} World Cups. Pooled: predicted {fmt(h.skew_pred_pool)}, realised {fmt(h.skew_real_pool)}.
+      </figcaption>
+    </figure>
+
+    <div class="wc-table-wrap reveal">
+      <table class="wc-table">
+        <thead><tr><th>favourite p</th><th>matches</th><th>win rate</th><th>skew predicted</th><th>skew realised</th></tr></thead>
+        <tbody>
+          {data.buckets.map(d => <tr>
+            <td class="mono">{d.p_fav.toFixed(2)}</td>
+            <td class="mono">{d.n}</td>
+            <td class="mono">{pct(d.win_rate)}</td>
+            <td class="mono">{fmt(d.skew_pred,2)}</td>
+            <td class="mono" style={`color:${d.skew_real>=0?'var(--pos)':'var(--neg)'}`}>{fmt(d.skew_real,2)}</td>
+          </tr>)}
+        </tbody>
+      </table>
+      <p class="note">Win rate ≈ favourite probability in every row — the odds-free Elo is well-calibrated on
+        real World Cup outcomes, which is what lets the structural skewness prediction hold.</p>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <section class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow">The forecast</div>
+      <h2>Calling the next round before it's played.</h2>
+      <p class="lede">The honest test: train the Elo only on matches <em>before</em> a tournament's knockout
+        stage, then predict the skewness of the bracket without seeing a single result.</p>
+    </div>
+    <div class="wc-cards">
+      {ho && <div class="wc-card reveal">
+        <div class="wc-card-tag">Hold-out · {ho.edition} knockout</div>
+        <div class="wc-card-rows">
+          <div><span>predicted</span><b class="mono">{fmt(ho.skew_pred,3)}</b></div>
+          <div><span>realised</span><b class="mono">{fmt(ho.skew_real,3)}</b></div>
+          <div><span>upsets</span><b class="mono">{pct(ho.upset_rate)}</b></div>
+        </div>
+        <p class="note">{ho.n} knockout matches, trained on data through the group stage only. Knockouts are
+          small samples and high-variance — the prediction is the structural baseline the chaos deviates from.</p>
+      </div>}
+      <div class="wc-card wc-card-live reveal">
+        <div class="wc-card-tag">{live ? '● Live · World Cup 2026' : 'World Cup 2026'}</div>
+        {live ? <div class="wc-card-rows">
+          <div><span>matches so far</span><b class="mono">{live.n_played}</b></div>
+          <div><span>avg favourite p</span><b class="mono">{live.p_fav_mean.toFixed(3)}</b></div>
+          <div><span>predicted skew</span><b class="mono">{fmt(live.skew_pred,3)}</b></div>
+          <div><span>realised skew</span><b class="mono">{live.skew_real==null?'—':fmt(live.skew_real,3)}</b></div>
+        </div> : <p class="note">Awaiting kickoff in the dataset.</p>}
+        <p class="note">{live ? `Updates as the tournament unfolds — data through ${live.date_max}.` : ''}
+          This page regenerates from the live results feed.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <section class="container wc-repro reveal">
+    <div class="eyebrow">Reproduce</div>
+    <p>Everything here is one command on the public dataset — no API keys, no scraping:</p>
+    <pre class="code"><code>git clone https://github.com/cold-code-labs/skew-dynamic
+cd skew-dynamic/study
+python analysis/41_worldcup.py        # the full analysis
+python analysis/export_worldcup_data.py   # regenerate this page's data</code></pre>
+    <p class="note">Source: <a href="https://github.com/martj42/international_results" target="_blank" rel="noopener">martj42/international_results</a>
+      ({m.n_intl.toLocaleString()} internationals, 1872–{m.date_max.slice(0,4)}) · dataset sha256 <span class="mono">{m.sha256}</span> ·
+      the favourite-bet skewness law is derived in <a href="/">the main study</a>.</p>
+  </section>
+
+  <Footer />
+</Base>
+
+<script define:vars={{ FX: wcl.upcoming }}>
+  const VERDICT = {
+    neg_strong: 'Heavily left-skewed: frequent small wins, rare painful losses — the favourite-bet signature.',
+    neg: 'Left-skewed: the favourite usually wins small, and occasionally loses big.',
+    flat: 'Near-symmetric: a coin-flip tie, skewness sits right around zero at p = ½.',
+    pos: 'Right-skewed: an even match where the bet behaves like a mild longshot.',
+    pos_strong: 'Strongly right-skewed: the underdog-flavoured upside tail dominates.',
+  };
+  const $ = (id) => document.getElementById(id);
+  const sgn = (x, d = 2) => (x >= 0 ? '+' : '') + x.toFixed(d);
+  let cur = 0;
+
+  function render(i) {
+    const f = FX[i]; if (!f) return;
+    $('nm-home').textContent = f.home;
+    $('nm-away').textContent = f.away;
+    $('nm-home').classList.toggle('fav', f.fav_pick === 'H');
+    $('nm-away').classList.toggle('fav', f.fav_pick === 'A');
+    $('nm-date').textContent = new Date(f.date).toLocaleDateString('en-GB', { day:'numeric', month:'short' });
+    $('nm-venue').textContent = f.neutral ? 'neutral venue' : `${f.home} hosting`;
+    $('nm-fav').textContent = f.fav_team;
+    $('nm-p').textContent = (f.p_fav*100).toFixed(0) + '%';
+    const sk = $('nm-skew'); sk.textContent = sgn(f.skew_pred);
+    sk.style.color = f.skew_pred >= 0.1 ? 'var(--pos)' : (f.skew_pred <= -0.1 ? 'var(--neg)' : 'var(--ink)');
+    $('nm-verdict').textContent = VERDICT[f.verdict] || '';
+    // payoff bars
+    const p = f.p_fav, q = 1 - p, base = 150, scale = 108;
+    const win = $('nm-bar-win'), lose = $('nm-bar-lose');
+    win.setAttribute('height', (p*scale).toFixed(1));  win.setAttribute('y', (base - p*scale).toFixed(1));
+    lose.setAttribute('height', (q*scale).toFixed(1)); lose.setAttribute('y', (base - q*scale).toFixed(1));
+    $('nm-lbl-win').setAttribute('y', (base - p*scale - 6).toFixed(1));
+    $('nm-lbl-lose').setAttribute('y', (base - q*scale - 6).toFixed(1));
+    $('nm-lbl-win').textContent = (p*100).toFixed(0) + '%';
+    $('nm-lbl-lose').textContent = (q*100).toFixed(0) + '%';
+    $('nm-axwin').textContent = sgn(f.win_payoff);
+    $('nm-w').textContent = sgn(f.win_payoff); $('nm-q').textContent = (q*100).toFixed(0)+'%';
+    $('nm-pp').textContent = (p*100).toFixed(0)+'%';
+    document.querySelectorAll('.nm-chip').forEach((c, j) => c.classList.toggle('on', j === i));
+    cur = i;
+  }
+  document.querySelectorAll('.nm-chip').forEach((c) =>
+    c.addEventListener('click', () => render(+c.dataset.i)));
+  if (FX && FX.length) render(0);
+</script>
+
+<style>
+  .wc-top { position: sticky; top: 0; z-index: 40; backdrop-filter: saturate(160%) blur(12px);
+    background: rgba(252,253,255,.82); border-bottom: 1px solid var(--line-soft); }
+  .wc-top-inner { display: flex; align-items: center; height: 60px; }
+  .wc-top-links { margin-left: auto; display: flex; gap: 20px; }
+  .wc-top-links a { color: var(--ink-soft); font-size: .9rem; font-weight: 500; }
+  .wc-top-links a:hover { color: var(--accent); text-decoration: none; }
+  .brand { font-weight: 650; letter-spacing: -.02em; color: var(--ink); display: flex; align-items: center; gap: 9px; }
+  .brand:hover { text-decoration: none; }
+  .brand-dim { color: var(--ink-faint); font-weight: 500; }
+  .brand-mark { width: 16px; height: 16px; border-radius: 5px;
+    background: linear-gradient(135deg, var(--accent), var(--navy)); box-shadow: 0 0 0 3px var(--accent-soft); }
+
+  .wc-hero { padding: 64px 0 36px; }
+  .wc-hero h1 { font-size: clamp(2.1rem, 5vw, 3.3rem); letter-spacing: -.03em; line-height: 1.04; margin: 14px 0 18px; }
+  .wc-stats { display: flex; gap: 40px; flex-wrap: wrap; margin-top: 30px; }
+  .wc-stats .big { font-size: 2.4rem; font-weight: 650; color: var(--accent); letter-spacing: -.02em; font-family: var(--mono); }
+  .wc-stats label { display: block; font-size: .78rem; color: var(--ink-faint); margin-top: 2px; line-height: 1.3; }
+
+  .wc-svg { width: 100%; height: auto; }
+  .wc-table-wrap { margin-top: 28px; }
+  .wc-table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+  .wc-table th, .wc-table td { padding: 9px 12px; text-align: right; border-bottom: 1px solid var(--line-soft); }
+  .wc-table th { color: var(--ink-faint); font-weight: 500; font-size: .78rem; text-transform: uppercase; letter-spacing: .04em; }
+  .wc-table td:first-child, .wc-table th:first-child { text-align: left; }
+
+  .wc-cards { display: grid; grid-template-columns: 1fr; gap: 18px; }
+  @media (min-width: 760px) { .wc-cards { grid-template-columns: 1fr 1fr; } }
+  .wc-card { border: 1px solid var(--line-soft); border-radius: 14px; padding: 22px 24px; background: var(--surface-2); }
+  .wc-card-live { border-color: var(--accent-soft); box-shadow: 0 0 0 3px var(--accent-soft); }
+  .wc-card-tag { font-size: .82rem; font-weight: 600; color: var(--accent); margin-bottom: 14px; }
+  .wc-card-rows { display: flex; flex-direction: column; gap: 8px; }
+  .wc-card-rows > div { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px dashed var(--line-soft); padding-bottom: 6px; }
+  .wc-card-rows span { color: var(--ink-soft); font-size: .9rem; } .wc-card-rows b { font-size: 1.05rem; }
+  .note { font-size: .82rem; color: var(--ink-faint); margin-top: 12px; line-height: 1.5; }
+  .wc-repro .code { margin: 12px 0; }
+  .key { display: inline-flex; align-items: center; gap: 6px; margin-right: 14px; }
+  .key .sw { width: 11px; height: 11px; border-radius: 50%; display: inline-block; }
+  .key .sw.line { width: 16px; height: 2px; border-radius: 0; background: var(--ink-faint); }
+  .key .sw.ring { background: transparent; border: 2px solid var(--ink-faint); }
+
+  /* ── next-match interactive ── */
+  .nm-chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 18px; }
+  .nm-chip { flex: 0 0 auto; border: 1px solid var(--line-soft); background: var(--surface); border-radius: 9px;
+    padding: 7px 12px; font-size: .82rem; color: var(--ink-soft); cursor: pointer; white-space: nowrap; transition: all .15s; }
+  .nm-chip:hover { border-color: var(--accent-soft); color: var(--ink); }
+  .nm-chip.on { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); font-weight: 600; }
+  .nm-chip-d { font-family: var(--mono); font-size: .72rem; color: var(--ink-faint); margin-right: 7px; }
+  .nm-card { border: 1px solid var(--accent-soft); border-radius: 16px; padding: 28px; background: var(--surface-2);
+    box-shadow: 0 0 0 3px var(--accent-soft); }
+  .nm-fixture { display: flex; align-items: center; justify-content: center; gap: 18px; flex-wrap: wrap; }
+  .nm-team { font-size: clamp(1.2rem, 3vw, 1.9rem); font-weight: 650; letter-spacing: -.02em; color: var(--ink-soft); }
+  .nm-team.fav { color: var(--accent); }
+  .nm-vs { color: var(--ink-faint); font-size: .9rem; }
+  .nm-meta { text-align: center; color: var(--ink-faint); font-size: .85rem; margin-top: 6px; }
+  .nm-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin: 22px 0 6px; text-align: center; }
+  .nm-stat label { display: block; font-size: .72rem; text-transform: uppercase; letter-spacing: .04em; color: var(--ink-faint); margin-bottom: 4px; }
+  .nm-stat b { font-size: 1.5rem; font-weight: 650; }
+  .nm-verdict { text-align: center; color: var(--ink-soft); font-size: .95rem; margin: 10px auto 4px; max-width: 52ch; }
+  .nm-viz { display: grid; grid-template-columns: 340px 1fr; gap: 20px; align-items: center; margin-top: 18px; }
+  @media (max-width: 680px) { .nm-viz { grid-template-columns: 1fr; } #nm-payoff { max-width: 340px; } }
+  #nm-payoff { width: 100%; height: auto; }
+  .nm-bl { font-family: var(--mono); font-size: 12px; fill: var(--ink-soft); }
+  .nm-axl { font-size: 11px; fill: var(--ink-faint); }
+  .nm-stamp { margin-top: 18px; padding-top: 14px; border-top: 1px dashed var(--line-soft); text-align: center;
+    font-size: .76rem; color: var(--ink-faint); }
+  .nm-score { display: grid; grid-template-columns: 1fr; gap: 18px; margin-top: 26px; }
+  @media (min-width: 760px) { .nm-score { grid-template-columns: 1fr 1fr; } }
+  .nm-score-card { border: 1px solid var(--line-soft); border-radius: 14px; padding: 20px 22px; }
+  .nm-score-tag { font-size: .8rem; font-weight: 600; color: var(--accent); margin-bottom: 12px; }
+  .nm-score-rows > div { display: flex; justify-content: space-between; border-bottom: 1px dashed var(--line-soft); padding: 5px 0; }
+  .nm-score-rows span { color: var(--ink-soft); font-size: .88rem; } .nm-score-rows b { font-size: 1rem; }
+</style>

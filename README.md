@@ -65,6 +65,24 @@ Every reported number regenerates from the frozen dataset (sha256 in
 for the full per-phase log and [`study/docs/METHODOLOGY.md`](study/docs/METHODOLOGY.md)
 for methods.
 
+## Annex — the World Cup, live
+
+The same law, taken **out of its own population**: from clubs to national teams,
+from market odds to **no odds at all**. A results-only Elo over ~49k internationals
+predicts the favourite-bet skewness of every World Cup from 1930 to 2026 — and
+**predicted vs realised correlate at +0.998** across favourite-probability buckets,
+crossing zero at `p = ½` exactly as `(1−2p)/√(p(1−p))` requires. A pre-registered
+ledger freezes the prediction for each upcoming match and reconciles it when the
+result lands. It updates during the 2026 tournament. Annex:
+[`study/docs/WORLDCUP.md`](study/docs/WORLDCUP.md) · page:
+[skew-dynamic.coldcodelabs.com/worldcup](https://skew-dynamic.coldcodelabs.com/worldcup).
+
+```bash
+python study/analysis/41_worldcup.py            # the analysis
+python study/analysis/export_worldcup_data.py   # regenerate the page data
+python study/analysis/predict_worldcup.py       # predict next games + reconcile ledger
+```
+
 ## The paper
 
 Working draft (RSOS target): [`study/docs/paper/draft.md`](study/docs/paper/draft.md).

@@ -19,18 +19,24 @@ Outputs per league (all odds-free):
 import numpy as np, pandas as pd
 
 
-def run_elo(df, k=20.0, hfa=65.0, init=1500.0, gd_mult=True):
-    """Chronological Elo pass. Adds elo_h, elo_a (pre-game) and elo_diff (with HFA)."""
+def run_elo(df, k=20.0, hfa=65.0, init=1500.0, gd_mult=True, neutral_col=None):
+    """Chronological Elo pass. Adds elo_h, elo_a (pre-game) and elo_diff (with HFA).
+
+    neutral_col: name of a boolean column (e.g. 'neutral'); where True, home
+    advantage is zeroed (neutral-venue game — the norm in World Cup matches).
+    """
     d = df.sort_values("date").reset_index(drop=True)
     R = {}
     rh = np.empty(len(d)); ra = np.empty(len(d))
     home = d.HomeTeam.values; away = d.AwayTeam.values; res = d.FTResult.values
     fh = pd.to_numeric(d.FTHome, errors="coerce").values
     fa = pd.to_numeric(d.FTAway, errors="coerce").values
+    hfa_i = (np.where(d[neutral_col].to_numpy(bool), 0.0, hfa)
+             if neutral_col else np.full(len(d), float(hfa)))
     for i in range(len(d)):
         Rh = R.get(home[i], init); Ra = R.get(away[i], init)
         rh[i] = Rh; ra[i] = Ra
-        Eh = 1.0 / (1.0 + 10 ** (-((Rh + hfa) - Ra) / 400.0))
+        Eh = 1.0 / (1.0 + 10 ** (-((Rh + hfa_i[i]) - Ra) / 400.0))
         Sh = 1.0 if res[i] == "H" else (0.5 if res[i] == "D" else 0.0)
         kk = k
         if gd_mult and not (np.isnan(fh[i]) or np.isnan(fa[i])):
@@ -38,7 +44,7 @@ def run_elo(df, k=20.0, hfa=65.0, init=1500.0, gd_mult=True):
         delta = kk * (Sh - Eh)
         R[home[i]] = Rh + delta; R[away[i]] = Ra - delta
     d["elo_h"] = rh; d["elo_a"] = ra
-    d["elo_diff"] = (rh + hfa) - ra
+    d["elo_diff"] = (rh + hfa_i) - ra
     return d, R
 
 

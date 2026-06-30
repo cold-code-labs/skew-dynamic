@@ -1,0 +1,144 @@
+"""Pre-registered ledger of World Cup predictions + predicted×realised reconcile.
+
+The live practical demonstration: for every UPCOMING World Cup game (a fixture
+with no score in the dump) the odds-free Elo model predicts the favourite, its
+probability and the **skewness of the favourite bet** — and freezes that into an
+append-only ledger (`site/src/data/wc_predictions.json`). When the score arrives,
+the row is reconciled (realised filled in, prediction untouched). It is a
+pre-registration: the prediction is never rewritten. Also exports `wc_live.json`,
+compact, for the /worldcup page.
+
+    python analysis/predict_worldcup.py        # predict upcoming + reconcile + export
+"""
+import json
+import sys
+from pathlib import Path
+
+import numpy as np
+from scipy.stats import skew
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from skewlib import worldcup as wc, exante
+
+DATA = Path("data/intl_results.csv")
+SITE = Path(__file__).resolve().parents[1].parent / "site" / "src" / "data"
+LEDGER = SITE / "wc_predictions.json"     # append-only pre-registration (versioned)
+LIVE = SITE / "wc_live.json"              # compact payload for the page
+
+
+def _mid(date, home, away):
+    return f"{date}|{home}|{away}"
+
+
+def main():
+    wc.ensure_dataset(DATA)
+    fp = wc.dataset_fingerprint(DATA)
+    intl = wc.load_internationals(DATA)
+    played = wc.world_cup(wc.add_favorite_bet(wc.fit(intl)))
+    played["match_id"] = [_mid(d.strftime("%Y-%m-%d"), h, a)
+                          for d, h, a in zip(played.date, played.HomeTeam, played.AwayTeam)]
+    played_by_id = {r.match_id: r for r in played.itertuples()}
+
+    fixtures = wc.upcoming_wc_fixtures(DATA)
+    preds = wc.predict_upcoming(intl, fixtures) if len(fixtures) else fixtures
+    asof = fp["date_max"]
+
+    # ── append-only ledger: freeze new predictions, reconcile resolved ones ──
+    ledger = json.loads(LEDGER.read_text()) if LEDGER.exists() else {"predictions": []}
+    by_id = {p["match_id"]: p for p in ledger["predictions"]}
+
+    for r in preds.itertuples() if len(preds) else []:
+        if r.match_id in by_id:
+            continue                                   # NEVER rewrite a prediction
+        by_id[r.match_id] = {
+            "match_id": r.match_id, "date": r.date.strftime("%Y-%m-%d"),
+            "home": r.HomeTeam, "away": r.AwayTeam, "neutral": bool(r.neutral),
+            "fav_team": r.fav_team, "fav_pick": r.fav_pick,
+            "p_fav": round(float(r.p_fav), 4),
+            "skew_pred": round(float(r.skew_exante_match), 4),
+            "o_fair": round(float(r.o_fav), 4),
+            "predicted_asof": asof, "model": "elo-results-only",
+            "realized": None}
+
+    resolved_now = 0
+    for mid, p in by_id.items():
+        if p.get("realized") is None and mid in played_by_id:
+            g = played_by_id[mid]
+            p["realized"] = {
+                "result": g.FTResult, "fav_won": bool(g.fav_pick == g.FTResult),
+                "ret_fav": round(float(g.ret_fav), 4),
+                "settled_asof": asof}
+            resolved_now += 1
+
+    ledger = {"schema": "wc-predictions@1", "updated_asof": asof,
+              "data_sha256": fp["sha256"][:16],
+              "predictions": sorted(by_id.values(), key=lambda p: (p["date"], p["home"]))}
+    LEDGER.write_text(json.dumps(ledger, ensure_ascii=False, indent=1))
+
+    # ── model backtest on the 2026 World Cup played so far (immediate, reproducible) ──
+    w26 = played[played.edition == 2026]
+    bt = {"n": int(len(w26)),
+          "skew_pred_pool": round(exante.pooled_skew(w26.p_fav.values, w26.o_fav.values)["skew"], 4),
+          "skew_real_pool": round(float(skew(w26.ret_fav)), 4),
+          "p_fav_mean": round(float(w26.p_fav.mean()), 4),
+          "fav_hit_rate": round(float((w26.fav_pick.values == w26.FTResult.values).mean()), 4),
+          "brier": round(float(np.mean((w26.p_fav.values
+                          - (w26.fav_pick.values == w26.FTResult.values)) ** 2)), 4)}
+
+    # ── state of the pre-registered ledger ──
+    res = [p for p in ledger["predictions"] if p.get("realized")]
+    pend = [p for p in ledger["predictions"] if not p.get("realized")]
+    led = {"n_pending": len(pend), "n_resolved": len(res)}
+    if len(res) >= 3:
+        rr = np.array([p["realized"]["ret_fav"] for p in res])
+        led["resolved_skew_real"] = round(float(skew(rr)), 4)
+        led["resolved_p_fav"] = round(float(np.mean([p["p_fav"] for p in res])), 4)
+        led["resolved_hit_rate"] = round(float(np.mean([p["realized"]["fav_won"] for p in res])), 4)
+
+    def card(p):
+        o = p["o_fair"]
+        return {"match_id": p["match_id"], "date": p["date"], "home": p["home"],
+                "away": p["away"], "neutral": p["neutral"], "fav_team": p["fav_team"],
+                "fav_pick": p["fav_pick"], "p_fav": p["p_fav"], "skew_pred": p["skew_pred"],
+                "win_payoff": round(o - 1, 2), "lose_payoff": -1.0,
+                "verdict": _verdict(p["skew_pred"])}
+
+    upcoming = [card(p) for p in pend]
+    live = {
+        "meta": {"data_date": asof, "n_played_wc": fp["n_wc"],
+                 "n_upcoming": len(upcoming), "source": "martj42/international_results",
+                 "sha256": fp["sha256"][:12]},
+        "next": upcoming[0] if upcoming else None,
+        "upcoming": upcoming,
+        "backtest2026": bt,
+        "ledger": led,
+        "recent_resolved": [
+            {"home": p["home"], "away": p["away"], "fav_team": p["fav_team"],
+             "p_fav": p["p_fav"], "skew_pred": p["skew_pred"],
+             "fav_won": p["realized"]["fav_won"], "ret_fav": p["realized"]["ret_fav"]}
+            for p in sorted(res, key=lambda p: p["date"], reverse=True)[:6]],
+    }
+    LIVE.write_text(json.dumps(live, ensure_ascii=False, indent=0))
+
+    print(f"as-of {asof} | fixtures {len(fixtures)} | ledger: "
+          f"{led['n_pending']} pending, {led['n_resolved']} resolved "
+          f"(+{resolved_now} now)")
+    print(f"backtest 2026 ({bt['n']} games): predicted skew {bt['skew_pred_pool']:+.3f} | "
+          f"realised {bt['skew_real_pool']:+.3f} | favourite wins "
+          f"{bt['fav_hit_rate']:.0%} (Brier {bt['brier']:.3f})")
+    if live["next"]:
+        n = live["next"]
+        print(f"NEXT: {n['home']} × {n['away']} ({n['date']}) → favourite "
+              f"{n['fav_team']} p={n['p_fav']:.2f}, predicted skew {n['skew_pred']:+.3f}")
+
+
+def _verdict(s):
+    if s <= -0.4: return "neg_strong"
+    if s < -0.1:  return "neg"
+    if s <= 0.1:  return "flat"
+    if s < 0.4:   return "pos"
+    return "pos_strong"
+
+
+if __name__ == "__main__":
+    main()
