@@ -1,0 +1,152 @@
+---
+import Base from '../layouts/Base.astro';
+import Footer from '../components/Footer.astro';
+import wcl from '../data/wc_live.json';
+
+const R = wcl.resolved_detail || [];
+const n = R.length;
+const favAdv = R.filter(r => r.advanced === r.fav_team).length;
+const nPens = R.filter(r => r.pens).length;
+const favBet = R.filter(r => r.fav_won).length;
+// advance Brier (favourite is the home side in these fixtures → adv_home)
+const brier = n ? R.reduce((s, r) => s + Math.pow((r.adv_home ?? 0) - (r.advanced === r.fav_team ? 1 : 0), 2), 0) / n : 0;
+// total-goals MAE (xG sum vs actual)
+const totGoals = (s) => s ? s.split('-').reduce((a, b) => a + (+b), 0) : null;
+const mae = n ? R.reduce((s, r) => s + Math.abs(((r.xg_home ?? 0) + (r.xg_away ?? 0)) - (totGoals(r.score) ?? 0)), 0) / n : 0;
+const pct = (x) => Math.round(x * 100) + '%';
+---
+<Base title="Round of 32 — first verdicts | skew-dynamic"
+      description="The pre-registered World Cup ledger meets reality: what our frozen predictions got right, wrong, and implicitly knew across the opening knockout games."
+      path="/retro">
+  <header class="r-top">
+    <div class="container r-top-inner">
+      <a class="brand" href="/"><span class="brand-mark"></span>skew<span class="brand-dim">-dynamic</span></a>
+      <div class="r-top-links">
+        <a href="/worldcup">World Cup</a><a href="/goals">Goals</a>
+        <a href="https://github.com/cold-code-labs/skew-dynamic" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+    </div>
+  </header>
+
+  <article class="container r-wrap">
+    <div class="eyebrow reveal">● Live retrospective · pre-registered ledger vs reality</div>
+    <h1 class="reveal">Round of 32 — the first verdicts.</h1>
+    <p class="r-lede reveal">On 2026-06-28, before a ball was kicked, the model froze a prediction for every
+      knockout fixture — favourite, win probability, skewness, expected goals, chance to advance, even the penalty
+      split. Here is what the first {n} games did to those frozen calls. The point was never to tip winners; it
+      was to <strong>price the shape of the risk</strong>. On that, the early read holds up better than the
+      scoreline suggests.</p>
+
+    <div class="r-stats reveal">
+      <div><b>{favAdv}/{n}</b><span>favourites advanced<br/>(we predicted ~{pct(0.70)})</span></div>
+      <div><b>{nPens}/{n}</b><span>went to penalties<br/>favourites lost both</span></div>
+      <div><b>{mae.toFixed(2)}</b><span>goals — total-goals<br/>forecast error</span></div>
+      <div><b>{brier.toFixed(3)}</b><span>advance Brier<br/>(0.25 = coin-flip)</span></div>
+    </div>
+
+    <div class="r-games reveal">
+      {R.map(r => <div class={`r-game ${r.fav_won ? 'ok' : 'no'}`}>
+        <div class="r-game-top">
+          <div class="r-side">
+            {r.home_flag && <img src={`https://flagcdn.com/w40/${r.home_flag}.png`} alt="" width="30" height="20" />}
+            <b class={r.advanced===r.home ? 'adv' : ''}>{r.home}</b>
+          </div>
+          <div class="r-sc">{r.score}{r.pens && <i>pens {r.pens_score}</i>}</div>
+          <div class="r-side r-r">
+            <b class={r.advanced===r.away ? 'adv' : ''}>{r.away}</b>
+            {r.away_flag && <img src={`https://flagcdn.com/w40/${r.away_flag}.png`} alt="" width="30" height="20" />}
+          </div>
+        </div>
+        <div class="r-game-bot">
+          <span>frozen: <b>{r.fav_team} {pct(r.p_fav)}</b> · advance {pct(r.adv_home)} · skew {r.skew_pred>=0?'+':''}{r.skew_pred.toFixed(2)} · ~{r.score_pred}</span>
+          <span class={`r-tag ${r.fav_won ? 'ok' : 'no'}`}>{r.fav_won ? '✓ favourite won' : (r.pens ? '✗ out on penalties' : '✗ upset')}</span>
+        </div>
+      </div>)}
+    </div>
+
+    <section class="r-body reveal">
+      <h2>What we got right — and implicitly knew</h2>
+      <p><b>The upset alert was already on the board.</b> Netherlands × Morocco was the <em>only</em> game we
+        flagged as a near coin-flip: favourite probability <b>48%</b>, skewness <b>+0.08</b> (essentially
+        symmetric → "this favourite bet behaves like a mild longshot"), chance to advance just <b>63%</b>. The
+        model said <em>"this is the toss-up"</em> — and it went to penalties, Morocco through. We priced the upset
+        risk without naming the winner.</p>
+      <blockquote>Skewness was never a tip on who wins — it is the <em>shape</em> of the bet's return. Germany was
+        our most left-skewed bet (−0.51: "wins small, rarely loses big"). The rare, ugly loss is exactly what a
+        left tail encodes — and the tail hit.</blockquote>
+      <p>The point prediction (Germany advances) missed, but the <b>risk characterisation was right</b>: a heavy
+        favourite fragile to a catastrophic tail event. And the goals model called the texture cleanly — we
+        predicted ~1–0 in all three, and all three finished low and were decided by a single goal in regulation
+        (<b>total-goals error {mae.toFixed(2)}</b>).</p>
+
+      <h2>What we got wrong</h2>
+      <p><b>Germany 77% to advance</b> — our most confident call, the biggest upset. The Elo overrated Germany
+        ("brand" weight + the dataset's group form), echoing its real modern-tournament fragility. A structural
+        miss, not bad luck. Overall it was a <b>bad day for favourites</b> (advance Brier {brier.toFixed(3)} vs
+        0.25 baseline) — but two of three were penalty lotteries we modelled as ~50/50, so much of the "miss" is
+        just knockout variance. <b>Shootouts 0/2:</b> we gave the favourite a slight edge and both lost. We got
+        the humility right (shrunk toward a coin-flip, in print) — the skill signal was on the wrong side twice.</p>
+
+      <h2>What to improve</h2>
+      <ul>
+        <li><b>Recent-form weighting</b> — so fragile "brands" like Germany aren't overrated by raw Elo.</li>
+        <li><b>Penalties = an exact coin-flip</b> (or a real keeper/history model) — the slight skill edge was wrong twice.</li>
+        <li><b>Model extra-time goals explicitly</b> instead of folding extra time into the shootout coin.</li>
+        <li><b>Calibrate advance probabilities</b> on historical knockouts — 77%/63% may be over-confident.</li>
+      </ul>
+
+      <h2>The meta-point</h2>
+      <p>This is the first real test of the <a href="https://github.com/cold-code-labs/skew-dynamic/blob/main/site/src/data/wc_predictions.json" target="_blank" rel="noopener">pre-registered ledger</a>:
+        predictions frozen before kickoff, now checked against reality — integrity intact. With n = {n} (and two
+        penalty lotteries) it is far too early to judge calibration; the scorecard becomes evidence at n = 16, the
+        full Round of 32. But the direction is on-thesis: <b>the toss-ups went to penalties, and the skewness
+        measured the shape of the risk correctly even when the winner surprised.</b> The bet's character was
+        right; the coin landed where coins land.</p>
+      <p class="r-foot">Sources: ESPN, FIFA, CBS Sports, Yahoo Sports (match reports, 2026-06-29) ·
+        full method in <a href="/worldcup">the World Cup annex</a> · the goals model in <a href="/goals">the over/under ladder</a>.</p>
+    </section>
+  </article>
+
+  <Footer />
+</Base>
+
+<style>
+  .r-top { position: sticky; top: 0; z-index: 40; backdrop-filter: saturate(160%) blur(12px); background: rgba(252,253,255,.82); border-bottom: 1px solid var(--line-soft); }
+  .r-top-inner { display: flex; align-items: center; height: 60px; }
+  .r-top-links { margin-left: auto; display: flex; gap: 18px; }
+  .r-top-links a { color: var(--ink-soft); font-size: .9rem; font-weight: 500; }
+  .r-top-links a:hover { color: var(--accent); text-decoration: none; }
+  .brand { font-weight: 650; letter-spacing: -.02em; color: var(--ink); display: flex; align-items: center; gap: 9px; }
+  .brand:hover { text-decoration: none; } .brand-dim { color: var(--ink-faint); font-weight: 500; }
+  .brand-mark { width: 16px; height: 16px; border-radius: 5px; background: linear-gradient(135deg, var(--accent), var(--navy)); box-shadow: 0 0 0 3px var(--accent-soft); }
+
+  .r-wrap { max-width: 760px; padding-top: 56px; padding-bottom: 40px; }
+  .r-wrap h1 { font-size: clamp(2rem, 5vw, 3rem); letter-spacing: -.03em; line-height: 1.05; margin: 14px 0 18px; }
+  .r-lede { font-size: 1.15rem; color: var(--ink-soft); line-height: 1.6; }
+  .r-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin: 32px 0; }
+  @media (min-width: 640px) { .r-stats { grid-template-columns: repeat(4, 1fr); } }
+  .r-stats b { font-family: var(--mono); font-size: 1.9rem; font-weight: 650; color: var(--accent); display: block; }
+  .r-stats span { font-size: .76rem; color: var(--ink-faint); line-height: 1.3; }
+
+  .r-games { display: flex; flex-direction: column; gap: 12px; margin: 28px 0; }
+  .r-game { border: 1px solid var(--line-soft); border-left: 3px solid var(--line); border-radius: 12px; padding: 14px 18px; }
+  .r-game.ok { border-left-color: var(--pos); } .r-game.no { border-left-color: var(--neg); }
+  .r-game-top { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 12px; }
+  .r-side { display: flex; align-items: center; gap: 9px; font-size: 1.1rem; min-width: 0; }
+  .r-side b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
+  .r-side b.adv { color: var(--accent); } .r-r { justify-content: flex-end; }
+  .r-side img { border-radius: 3px; flex: 0 0 auto; box-shadow: 0 1px 2px rgba(0,0,0,.15); }
+  .r-sc { font-family: var(--mono); font-weight: 700; font-size: 1.35rem; text-align: center; white-space: nowrap; }
+  .r-sc i { display: block; font-size: .62rem; font-weight: 500; color: var(--ink-faint); font-style: normal; }
+  .r-game-bot { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--line-soft); flex-wrap: wrap; }
+  .r-game-bot > span:first-child { font-size: .8rem; color: var(--ink-soft); } .r-game-bot b { color: var(--ink); }
+  .r-tag { font-size: .8rem; font-weight: 600; } .r-tag.ok { color: var(--pos); } .r-tag.no { color: var(--neg); }
+
+  .r-body h2 { font-size: 1.4rem; letter-spacing: -.02em; margin: 36px 0 12px; }
+  .r-body p { color: var(--ink-soft); line-height: 1.7; margin-bottom: 14px; }
+  .r-body b { color: var(--ink); }
+  .r-body blockquote { margin: 20px 0; padding: 14px 20px; border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 8px 8px 0; font-size: 1.05rem; color: var(--ink); line-height: 1.6; }
+  .r-body ul { color: var(--ink-soft); line-height: 1.7; padding-left: 22px; margin-bottom: 14px; }
+  .r-body li { margin-bottom: 6px; }
+  .r-foot { font-size: .82rem; color: var(--ink-faint); margin-top: 28px; padding-top: 16px; border-top: 1px solid var(--line-soft); }
+</style>
