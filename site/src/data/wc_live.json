@@ -23,7 +23,14 @@
 "p_draw": 0.252,
 "p_away": 0.192,
 "home_flag": "br",
-"away_flag": "jp"
+"away_flag": "jp",
+"adv_home": 0.7066,
+"adv_away": 0.2934,
+"pen_home": 0.5973,
+"xg_home": 1.82,
+"xg_away": 0.56,
+"score_home": 1,
+"score_away": 0
 },
 "upcoming": [
 {
@@ -43,7 +50,14 @@
 "p_draw": 0.252,
 "p_away": 0.192,
 "home_flag": "br",
-"away_flag": "jp"
+"away_flag": "jp",
+"adv_home": 0.7066,
+"adv_away": 0.2934,
+"pen_home": 0.5973,
+"xg_home": 1.82,
+"xg_away": 0.56,
+"score_home": 1,
+"score_away": 0
 },
 {
 "match_id": "2026-06-29|Germany|Paraguay",
@@ -62,7 +76,14 @@
 "p_draw": 0.2285,
 "p_away": 0.1483,
 "home_flag": "de",
-"away_flag": "py"
+"away_flag": "py",
+"adv_home": 0.7656,
+"adv_away": 0.2344,
+"pen_home": 0.6231,
+"xg_home": 1.48,
+"xg_away": 0.73,
+"score_home": 1,
+"score_away": 0
 },
 {
 "match_id": "2026-06-29|Netherlands|Morocco",
@@ -81,7 +102,14 @@
 "p_draw": 0.2712,
 "p_away": 0.2479,
 "home_flag": "nl",
-"away_flag": "ma"
+"away_flag": "ma",
+"adv_home": 0.6338,
+"adv_away": 0.3662,
+"pen_home": 0.5639,
+"xg_home": 1.0,
+"xg_away": 0.8,
+"score_home": 1,
+"score_away": 0
 },
 {
 "match_id": "2026-06-30|France|Sweden",
@@ -100,7 +128,14 @@
 "p_draw": 0.154,
 "p_away": 0.0683,
 "home_flag": "fr",
-"away_flag": "se"
+"away_flag": "se",
+"adv_home": 0.8805,
+"adv_away": 0.1195,
+"pen_home": 0.6677,
+"xg_home": 1.5,
+"xg_away": 0.74,
+"score_home": 1,
+"score_away": 0
 },
 {
 "match_id": "2026-06-30|Ivory Coast|Norway",
@@ -119,7 +154,14 @@
 "p_draw": 0.2809,
 "p_away": 0.4014,
 "home_flag": "ci",
-"away_flag": "no"
+"away_flag": "no",
+"adv_home": 0.4516,
+"adv_away": 0.5484,
+"pen_home": 0.4767,
+"xg_home": 0.96,
+"xg_away": 1.03,
+"score_home": 0,
+"score_away": 1
 },
 {
 "match_id": "2026-06-30|Mexico|Ecuador",
@@ -138,7 +180,14 @@
 "p_draw": 0.267,
 "p_away": 0.2326,
 "home_flag": "mx",
-"away_flag": "ec"
+"away_flag": "ec",
+"adv_home": 0.6534,
+"adv_away": 0.3466,
+"pen_home": 0.5731,
+"xg_home": 1.51,
+"xg_away": 1.05,
+"score_home": 1,
+"score_away": 1
 },
 {
 "match_id": "2026-07-01|Belgium|Senegal",
@@ -157,7 +206,14 @@
 "p_draw": 0.2535,
 "p_away": 0.1955,
 "home_flag": "be",
-"away_flag": "sn"
+"away_flag": "sn",
+"adv_home": 0.7019,
+"adv_away": 0.2981,
+"pen_home": 0.5953,
+"xg_home": 1.27,
+"xg_away": 0.82,
+"score_home": 1,
+"score_away": 0
 },
 {
 "match_id": "2026-07-01|England|DR Congo",
@@ -176,7 +232,14 @@
 "p_draw": 0.1521,
 "p_away": 0.0669,
 "home_flag": "gb-eng",
-"away_flag": "cd"
+"away_flag": "cd",
+"adv_home": 0.8827,
+"adv_away": 0.1173,
+"pen_home": 0.6685,
+"xg_home": 1.63,
+"xg_away": 0.46,
+"score_home": 1,
+"score_away": 0
 },
 {
 "match_id": "2026-07-01|United States|Bosnia and Herzegovina",
@@ -195,7 +258,14 @@
 "p_draw": 0.1738,
 "p_away": 0.0846,
 "home_flag": "us",
-"away_flag": "ba"
+"away_flag": "ba",
+"adv_home": 0.8561,
+"adv_away": 0.1439,
+"pen_home": 0.659,
+"xg_home": 1.84,
+"xg_away": 0.85,
+"score_home": 1,
+"score_away": 0
 },
 {
 "match_id": "2026-07-02|Portugal|Croatia",
@@ -214,7 +284,14 @@
 "p_draw": 0.2573,
 "p_away": 0.2046,
 "home_flag": "pt",
-"away_flag": "hr"
+"away_flag": "hr",
+"adv_home": 0.6899,
+"adv_away": 0.3101,
+"pen_home": 0.5898,
+"xg_home": 1.28,
+"xg_away": 0.83,
+"score_home": 1,
+"score_away": 0
 },
 {
 "match_id": "2026-07-02|Spain|Austria",
@@ -233,7 +310,14 @@
 "p_draw": 0.1866,
 "p_away": 0.0966,
 "home_flag": "es",
-"away_flag": "at"
+"away_flag": "at",
+"adv_home": 0.8385,
+"adv_away": 0.1615,
+"pen_home": 0.6525,
+"xg_home": 1.63,
+"xg_away": 0.65,
+"score_home": 1,
+"score_away": 0
 },
 {
 "match_id": "2026-07-02|Switzerland|Algeria",
@@ -252,7 +336,14 @@
 "p_draw": 0.2712,
 "p_away": 0.2482,
 "home_flag": "ch",
-"away_flag": "dz"
+"away_flag": "dz",
+"adv_home": 0.6335,
+"adv_away": 0.3665,
+"pen_home": 0.5638,
+"xg_home": 1.33,
+"xg_away": 1.07,
+"score_home": 1,
+"score_away": 1
 },
 {
 "match_id": "2026-07-03|Argentina|Cape Verde",
@@ -271,7 +362,14 @@
 "p_draw": 0.0691,
 "p_away": 0.0205,
 "home_flag": "ar",
-"away_flag": "cv"
+"away_flag": "cv",
+"adv_home": 0.9581,
+"adv_away": 0.0419,
+"pen_home": 0.6912,
+"xg_home": 1.99,
+"xg_away": 0.34,
+"score_home": 1,
+"score_away": 0
 },
 {
 "match_id": "2026-07-03|Australia|Egypt",
@@ -290,7 +388,14 @@
 "p_draw": 0.268,
 "p_away": 0.2362,
 "home_flag": "au",
-"away_flag": "eg"
+"away_flag": "eg",
+"adv_home": 0.6488,
+"adv_away": 0.3512,
+"pen_home": 0.5709,
+"xg_home": 0.79,
+"xg_away": 0.83,
+"score_home": 0,
+"score_away": 0
 },
 {
 "match_id": "2026-07-03|Colombia|Ghana",
@@ -309,7 +414,14 @@
 "p_draw": 0.1139,
 "p_away": 0.042,
 "home_flag": "co",
-"away_flag": "gh"
+"away_flag": "gh",
+"adv_home": 0.9217,
+"adv_away": 0.0783,
+"pen_home": 0.6811,
+"xg_home": 1.67,
+"xg_away": 0.5,
+"score_home": 1,
+"score_away": 0
 }
 ],
 "backtest2026": {

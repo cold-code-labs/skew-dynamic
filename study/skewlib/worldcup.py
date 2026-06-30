@@ -134,6 +134,60 @@ def predict_upcoming(intl, fixtures, k=20.0, hfa=65.0):
     return fx
 
 
+def fit_intl_goals(intl, since_year=2014, iters=25):
+    """Attack/defence + home Poisson on recent internationals → expected goals per
+    team. Fitted by fast iterative scaling (opponent-adjusted, vectorised — a global
+    statsmodels GLM over ~200 nations is too slow for the cron). Neutral-aware: home
+    advantage (multiplicative γ) counts only at genuine home games. Returns
+    ({mu, gamma, att, dfn, idx}, set_of_teams)."""
+    d = intl[intl.date.dt.year >= since_year]
+    teams = sorted(set(d.HomeTeam) | set(d.AwayTeam))
+    idx = {t: i for i, t in enumerate(teams)}
+    n = len(teams)
+    h = d.HomeTeam.map(idx).to_numpy(); a = d.AwayTeam.map(idx).to_numpy()
+    gh = pd.to_numeric(d.FTHome).to_numpy(float); ga = pd.to_numeric(d.FTAway).to_numpy(float)
+    notN = (~d.neutral.to_numpy(bool))
+    mu = (gh.sum() + ga.sum()) / (2 * len(d))
+    gamma = (gh[notN].mean() / max(ga[notN].mean(), 1e-6)) if notN.any() else 1.0
+    gfac = np.where(notN, gamma, 1.0)                  # per-match home factor
+    scored = np.zeros(n); conceded = np.zeros(n)
+    np.add.at(scored, h, gh); np.add.at(scored, a, ga)
+    np.add.at(conceded, h, ga); np.add.at(conceded, a, gh)
+    att = np.ones(n); dfn = np.ones(n)
+    for _ in range(iters):
+        dA = np.zeros(n)
+        np.add.at(dA, h, mu * dfn[a] * gfac)           # t home: scores vs dfn[away]·γ
+        np.add.at(dA, a, mu * dfn[h])                  # t away
+        att = scored / np.maximum(dA, 1e-9)
+        att *= n / att.sum()                           # identifiability: mean(att)=1
+        dD = np.zeros(n)
+        np.add.at(dD, h, mu * att[a])                  # t home concedes vs att[away]
+        np.add.at(dD, a, mu * att[h] * gfac)           # t away concedes vs att[home]·γ
+        dfn = conceded / np.maximum(dD, 1e-9)
+    return {"mu": mu, "gamma": gamma, "att": att, "dfn": dfn, "idx": idx}, set(teams)
+
+
+def predict_match_goals(model, teams, home, away, neutral):
+    """Expected goals (λ_home, λ_away) for one fixture; None if a team is unseen."""
+    if home not in model["idx"] or away not in model["idx"]:
+        return None
+    i, j = model["idx"][home], model["idx"][away]
+    g = 1.0 if neutral else model["gamma"]
+    lh = model["mu"] * model["att"][i] * model["dfn"][j] * g
+    la = model["mu"] * model["att"][j] * model["dfn"][i]
+    return float(np.clip(lh, 0.05, 8)), float(np.clip(la, 0.05, 8))
+
+
+def top_scoreline(lh, la, maxg=9):
+    """Most likely exact score under independent Poisson(λ_home), Poisson(λ_away)."""
+    from scipy.stats import poisson
+    ph = poisson.pmf(np.arange(maxg + 1), lh)
+    pa = poisson.pmf(np.arange(maxg + 1), la)
+    M = np.outer(ph, pa)
+    i, j = np.unravel_index(M.argmax(), M.shape)
+    return int(i), int(j), float(M[i, j])
+
+
 def dataset_fingerprint(path):
     """sha256 + coverage — provenance of the live dump (updates during the cup)."""
     h = hashlib.sha256(open(path, "rb").read()).hexdigest()

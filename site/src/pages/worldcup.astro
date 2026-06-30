@@ -103,6 +103,23 @@ const pct = (x) => (x * 100).toFixed(0) + '%';
           </div>
         </div>
 
+        <div class="nm-forecast" id="nm-forecast">
+          <div class="nm-fc-card" id="nm-fc-goals">
+            <div class="nm-fc-label">Predicted scoreline</div>
+            <div class="nm-fc-score"><span id="nm-sc-h">–</span><i>:</i><span id="nm-sc-a">–</span></div>
+            <div class="nm-fc-xg">expected goals <b id="nm-xg-h"></b> – <b id="nm-xg-a"></b></div>
+          </div>
+          <div class="nm-fc-card">
+            <div class="nm-fc-label">Knockout — chance to advance</div>
+            <div class="nm-adv-bar"><span class="adv-h" id="nm-adv-h"></span><span class="adv-a" id="nm-adv-a"></span></div>
+            <div class="nm-adv-key">
+              <span><b id="nm-advh"></b> <span id="nm-advhn"></span></span>
+              <span><span id="nm-advan"></span> <b id="nm-adva"></b></span>
+            </div>
+            <div class="nm-pens" id="nm-pens"></div>
+          </div>
+        </div>
+
         <div class="nm-bet">
           <div class="nm-bet-line">Bet on the favourite — <b id="nm-fav"></b></div>
           <div class="nm-verdict" id="nm-verdict"></div>
@@ -312,8 +329,22 @@ python analysis/export_worldcup_data.py   # regenerate this page's data</code></
     $('nm-side-a').classList.toggle('fav', favA);
     setFlag($('nm-flag-h'), f.home_flag, f.home);
     setFlag($('nm-flag-a'), f.away_flag, f.away);
-    $('nm-date').textContent = new Date(f.date).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
+    $('nm-date').textContent = new Date(f.date + 'T12:00:00').toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
     $('nm-venue').textContent = f.neutral ? 'neutral venue' : `${f.home} hosting`;
+
+    // goals forecast (Poisson) + knockout / penalties
+    const hasG = f.xg_home != null;
+    $('nm-fc-goals').style.display = hasG ? '' : 'none';
+    if (hasG) {
+      $('nm-sc-h').textContent = f.score_home; $('nm-sc-a').textContent = f.score_away;
+      $('nm-xg-h').textContent = f.xg_home.toFixed(2); $('nm-xg-a').textContent = f.xg_away.toFixed(2);
+    }
+    const ah = f.adv_home ?? f.p_fav, aa = f.adv_away ?? (1 - (f.adv_home ?? f.p_fav));
+    $('nm-adv-h').style.width = (ah*100)+'%'; $('nm-adv-a').style.width = (aa*100)+'%';
+    $('nm-advh').textContent = pc(ah); $('nm-advhn').textContent = f.home;
+    $('nm-adva').textContent = pc(aa); $('nm-advan').textContent = f.away;
+    const pen = f.pen_home ?? 0.5;
+    $('nm-pens').innerHTML = `<span>🥅 if it goes to penalties:</span> <b>${f.home} ${pc(pen)}</b> · <b>${f.away} ${pc(1-pen)}</b> <em>— shootouts are near coin-flips</em>`;
 
     // 3-way W/D/L bar
     const ph = f.p_home ?? f.p_fav, pd = f.p_draw ?? 0, pa = f.p_away ?? 0;
@@ -423,6 +454,21 @@ python analysis/export_worldcup_data.py   # regenerate this page's data</code></
   .nm-wdl-key b { color: var(--ink); font-family: var(--mono); }
   .nm-wdl-key .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 5px; vertical-align: middle; }
   .dot-h { background: var(--accent); } .dot-d { background: var(--ink-faint); } .dot-a { background: var(--navy); }
+  /* goals forecast + knockout */
+  .nm-forecast { display: grid; grid-template-columns: 1fr; gap: 14px; margin-top: 18px; }
+  @media (min-width: 620px) { .nm-forecast { grid-template-columns: 1fr 1.3fr; } }
+  .nm-fc-card { border: 1px solid var(--line-soft); border-radius: 12px; padding: 14px 16px; background: var(--surface); }
+  .nm-fc-label { font-size: .7rem; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-faint); margin-bottom: 8px; }
+  .nm-fc-score { font-family: var(--mono); font-size: 2.2rem; font-weight: 650; color: var(--ink); text-align: center; line-height: 1; }
+  .nm-fc-score i { color: var(--ink-faint); margin: 0 8px; font-style: normal; }
+  .nm-fc-xg { text-align: center; font-size: .8rem; color: var(--ink-faint); margin-top: 6px; }
+  .nm-fc-xg b { color: var(--ink-soft); font-family: var(--mono); }
+  .nm-adv-bar { display: flex; height: 14px; border-radius: 7px; overflow: hidden; background: var(--surface-2); }
+  .nm-adv-bar .adv-h { background: var(--accent); } .nm-adv-bar .adv-a { background: var(--navy); }
+  .nm-adv-key { display: flex; justify-content: space-between; margin-top: 7px; font-size: .82rem; color: var(--ink-soft); }
+  .nm-adv-key b { font-family: var(--mono); color: var(--ink); }
+  .nm-pens { margin-top: 10px; font-size: .82rem; color: var(--ink-soft); text-align: center; }
+  .nm-pens b { color: var(--ink); } .nm-pens em { color: var(--ink-faint); font-size: .76rem; }
   /* the bet */
   .nm-bet { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line-soft); }
   .nm-bet-line { text-align: center; font-size: .95rem; color: var(--ink-soft); }

@@ -43,12 +43,25 @@ def main():
     preds = wc.predict_upcoming(intl, fixtures) if len(fixtures) else fixtures
     asof = fp["date_max"]
 
-    # per-fixture display extras (3-way probs + flags) — cosmetic, keyed by match_id
-    extras = {r.match_id: {
-        "p_home": round(float(r.pH_elo), 4), "p_draw": round(float(r.pD_elo), 4),
-        "p_away": round(float(r.pA_elo), 4),
-        "home_flag": wc.flag_iso(r.HomeTeam), "away_flag": wc.flag_iso(r.AwayTeam),
-    } for r in preds.itertuples()} if len(preds) else {}
+    # per-fixture display extras (3-way probs, flags, goals forecast, penalties)
+    extras = {}
+    gmodel, gteams = wc.fit_intl_goals(intl) if len(preds) else (None, set())
+    for r in (preds.itertuples() if len(preds) else []):
+        pH, pD, pA = float(r.pH_elo), float(r.pD_elo), float(r.pA_elo)
+        cond = pH / (pH + pA) if (pH + pA) > 0 else 0.5
+        s_home = 0.5 + 0.4 * (cond - 0.5)            # shootout win prob (shrunk to ~coin-flip)
+        adv_home = pH + pD * s_home                  # advance: win in 90'/ET, or win the shootout
+        ex = {"p_home": round(pH, 4), "p_draw": round(pD, 4), "p_away": round(pA, 4),
+              "home_flag": wc.flag_iso(r.HomeTeam), "away_flag": wc.flag_iso(r.AwayTeam),
+              "adv_home": round(adv_home, 4), "adv_away": round(1 - adv_home, 4),
+              "pen_home": round(s_home, 4)}
+        g = wc.predict_match_goals(gmodel, gteams, r.HomeTeam, r.AwayTeam, bool(r.neutral))
+        if g:
+            lh, la = g
+            i, j, _ = wc.top_scoreline(lh, la)
+            ex.update({"xg_home": round(float(lh), 2), "xg_away": round(float(la), 2),
+                       "score_home": i, "score_away": j})
+        extras[r.match_id] = ex
 
     # ── append-only ledger: freeze new predictions, reconcile resolved ones ──
     ledger = json.loads(LEDGER.read_text()) if LEDGER.exists() else {"predictions": []}
