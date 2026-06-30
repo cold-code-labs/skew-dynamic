@@ -1,0 +1,158 @@
+---
+import Base from '../layouts/Base.astro';
+import Footer from '../components/Footer.astro';
+
+// decorative identity curve for the hero backdrop (matches Hero.astro)
+const W = 760, H = 420, pts = [];
+for (let i = 0; i <= 120; i++) {
+  const p = 0.18 + (0.64 * i) / 120;
+  const s = (1 - 2 * p) / Math.sqrt(p * (1 - p));
+  pts.push(`${(((p - 0.18) / 0.64) * W).toFixed(1)},${(H / 2 - (s / 2.2) * (H / 2)).toFixed(1)}`);
+}
+
+const pillars = [
+  {
+    n: '01',
+    t: 'The shape is a law, not a phenomenon — and it ignores who you are.',
+    b: `Every study of betting returns treats the asymmetry as something to <em>explain</em> — risk appetite, the bookmaker's margin, informed money. We invert it: the skewness needs no behavioural story, it is the algebraic image of a two-outcome bet at probability p, <span class="mono">(1−2p)/√(p(1−p))</span>. And it is <strong>observer-invariant</strong> — your p, the bookmaker's p, the realised frequency all land on the same curve. The disagreement between you and the market lives entirely in the <em>location</em>, never in the shape.`,
+    k: 'Demonstrated live on /odds: model, market and reality, one curve.'
+  },
+  {
+    n: '02',
+    t: 'We price the shape of bets that have no market.',
+    b: `Because we read p from <strong>results alone</strong> (a chronological Elo), the law gives the full return distribution of a bet that was never quoted. A bookmaker can't — it needs a market. A data vendor can't — it resells odds. We give the shape of national-team bets with no line (<span class="mono">corr +0.998</span>), of exotic competitions, of the <strong>champion bet itself</strong> — Argentina-to-win is a +1.2-skew lottery, by the same law.`,
+    k: 'Odds-free skewness forecasting — a capability others structurally lack.'
+  },
+  {
+    n: '03',
+    t: 'The shape is load-bearing and cannot be diversified away.',
+    b: `Single-bet skewness decays as <span class="mono">~1/√N</span>: the "lottery feel" of a wager is irreducible structure, not a choice you can hedge out. That turns the law into a decision tool — for Kelly, bankroll and portfolio sizing — because the asymmetry is mathematically imposed on the single bet. We can say <em>exactly</em> how much of the lottery feel is structure versus selection.`,
+    k: 'A risk-shape primitive, not a tip.'
+  },
+  {
+    n: '04',
+    t: 'The apparatus is the moat — an instrument, not a pick.',
+    b: `Structural law + <strong>pre-registered live ledger</strong> (frozen before kickoff, append-only, git-versioned) + fully reproducible with a DOI + external validity across sports (tennis, basketball, out-of-sample). That combination exists nowhere else. We <strong>renounce edge on purpose</strong> — and that renunciation is what makes the rest credible. What we offer is a measuring instrument anyone can verify, not a promise to beat the house.`,
+    k: 'Reproducible, falsifiable, multi-sport — verifiable by design.'
+  }
+];
+
+const rivals = [
+  ['The bookmaker', 'Has the markets — but treats the shape as a by-product, and cannot read a bet with no line. Commoditising the shape is against its interest.'],
+  ['Academia (FLB literature)', 'Has models — but explains the asymmetry behaviourally, backtests on history, and rarely pre-registers or reproduces a live multi-sport apparatus.'],
+  ['The tipster', 'Sells the location (who wins) — no rigor, and explicitly chases the edge we deliberately renounce.'],
+  ['The quant shop', 'Chases edge too — the shape is incidental, the method is closed, and nothing is verifiable from the outside.']
+];
+---
+<Base title="Why this exists — the shape of the bet | skew-dynamic"
+      description="We are the only ones who study the shape of betting returns as the object, prove it is an observer-invariant structural law, and do it with a pre-registered, reproducible, multi-sport apparatus that deliberately renounces edge.">
+  <header class="w-hero dark">
+    <svg class="w-bg" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <defs><linearGradient id="cv" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#2f7fc7" stop-opacity="0"/>
+        <stop offset=".5" stop-color="#4a97d4" stop-opacity=".9"/>
+        <stop offset="1" stop-color="#9ec7e8" stop-opacity=".2"/>
+      </linearGradient></defs>
+      <line x1="0" y1={H/2} x2={W} y2={H/2} stroke="#1d3a5f" stroke-width="1"/>
+      <polyline points={pts.join(' ')} fill="none" stroke="url(#cv)" stroke-width="2.5"/>
+    </svg>
+    <div class="container w-hero-inner">
+      <div class="w-top">
+        <a class="brand" href="/"><span class="brand-mark"></span>skew<span class="brand-dim">-dynamic</span></a>
+        <div class="w-links">
+          <a href="/">The study</a><a href="/odds">Odds</a><a href="/worldcup">World Cup</a>
+          <a href="https://github.com/cold-code-labs/skew-dynamic" target="_blank" rel="noopener">GitHub ↗</a>
+        </div>
+      </div>
+      <div class="eyebrow">Positioning · why this exists</div>
+      <h1>Everyone else studies <span class="hl">who wins</span>. We study the <span class="hl">shape of the bet</span> — and prove the shape is a law.</h1>
+      <p class="w-lede">The return on a wager has a form — how it pays, how it fails, how lopsided the
+        ride is. We are the only ones treating that <strong>shape</strong> as the object of study, proving it
+        is an <strong>observer-invariant structural law</strong>, and doing it with a pre-registered,
+        reproducible, multi-sport apparatus that <strong>deliberately renounces edge</strong>.</p>
+    </div>
+  </header>
+
+  <article class="container w-wrap">
+    <section class="w-pillars">
+      {pillars.map(p => <div class="w-pill reveal">
+        <div class="w-pill-n mono">{p.n}</div>
+        <div class="w-pill-body">
+          <h2>{p.t}</h2>
+          <p set:html={p.b}></p>
+          <div class="w-pill-k">{p.k}</div>
+        </div>
+      </div>)}
+    </section>
+
+    <section class="w-rivals reveal">
+      <h3>Why no one else can sit here</h3>
+      <p class="w-rivals-lede">Each natural rival is blocked by its own incentive — every one of them gives up
+        at least one of the four. The seat needs all four at once.</p>
+      <div class="w-rgrid">
+        {rivals.map(([who, why]) => <div class="w-rcard">
+          <b>{who}</b><span>{why}</span>
+        </div>)}
+      </div>
+    </section>
+
+    <section class="w-seat reveal">
+      <div class="w-seat-mark"></div>
+      <p class="w-seat-line">We are the only ones who treat the <em>shape</em> of a betting return as the object
+        of study, prove it is a law that holds for <em>anyone's</em> probability, and do it with an apparatus
+        that — on purpose — does not try to win.</p>
+      <p class="w-seat-sub">Everything else — the goal models, the Elo, the de-vig, the dashboards — is means.
+        Those four are the end. No bookmaker, academic, tipster or quant shop can hold all four, because each
+        has an incentive that kills one.</p>
+      <div class="w-cta">
+        <a class="btn btn-primary" href="/">See the study →</a>
+        <a class="btn btn-ghost" href="/odds">The law vs the market</a>
+        <a class="btn btn-ghost" href="/paper">Read the paper</a>
+      </div>
+    </section>
+  </article>
+
+  <Footer />
+</Base>
+
+<style>
+  .w-hero { position: relative; overflow: hidden; padding: 28px 0 clamp(56px,9vh,104px); }
+  .w-bg { position: absolute; inset: 0; width: 100%; height: 100%; opacity: .5; mask-image: linear-gradient(90deg, transparent, #000 30%, #000 70%, transparent); }
+  .w-hero-inner { position: relative; }
+  .w-top { display: flex; align-items: center; gap: 20px; margin-bottom: clamp(40px,8vh,80px); }
+  .brand { font-weight: 650; letter-spacing: -.02em; color: #fff; display: flex; align-items: center; gap: 9px; }
+  .brand:hover { text-decoration: none; } .brand-dim { color: #6f87a4; font-weight: 500; }
+  .brand-mark { width: 16px; height: 16px; border-radius: 5px; background: linear-gradient(135deg, var(--accent), var(--ice)); }
+  .w-links { margin-left: auto; display: flex; gap: 18px; }
+  .w-links a { color: #b9cbe1; font-size: .9rem; font-weight: 500; } .w-links a:hover { color: var(--ice); text-decoration: none; }
+  .w-hero h1 { max-width: 20ch; margin-top: 16px; font-size: clamp(2rem,5vw,3.1rem); letter-spacing: -.03em; line-height: 1.06; }
+  .hl { background: linear-gradient(120deg, var(--ice), #fff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .w-lede { max-width: 60ch; margin-top: 18px; font-size: 1.16rem; color: #b9cbe1; line-height: 1.6; }
+  .w-lede strong { color: #eaf2fb; }
+
+  .w-wrap { max-width: 880px; padding-top: 56px; padding-bottom: 20px; }
+  .w-pillars { display: flex; flex-direction: column; gap: 14px; }
+  .w-pill { display: grid; grid-template-columns: auto 1fr; gap: 18px; border: 1px solid var(--line-soft); border-radius: 16px; padding: 24px 26px; background: var(--surface, #fff); transition: border-color .2s; }
+  .w-pill:hover { border-color: var(--accent); }
+  .w-pill-n { font-size: 1.1rem; font-weight: 650; color: var(--accent); padding-top: 3px; }
+  .w-pill h2 { font-size: 1.32rem; letter-spacing: -.02em; line-height: 1.2; margin: 0 0 10px; }
+  .w-pill p { color: var(--ink-soft); line-height: 1.66; margin: 0 0 14px; }
+  .w-pill p :global(strong) { color: var(--ink); } .w-pill p :global(em) { color: var(--accent); font-style: normal; font-weight: 500; }
+  .w-pill-k { font-size: .84rem; font-weight: 600; color: var(--accent); border-top: 1px dashed var(--line-soft); padding-top: 12px; }
+
+  .w-rivals { margin: 48px 0 8px; }
+  .w-rivals h3 { font-size: 1.5rem; letter-spacing: -.02em; margin-bottom: 8px; }
+  .w-rivals-lede { color: var(--ink-soft); line-height: 1.6; max-width: 64ch; margin-bottom: 22px; }
+  .w-rgrid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+  @media (min-width: 680px) { .w-rgrid { grid-template-columns: 1fr 1fr; } }
+  .w-rcard { border: 1px solid var(--line-soft); border-left: 3px solid var(--neg); border-radius: 10px; padding: 16px 18px; }
+  .w-rcard b { display: block; color: var(--ink); font-size: 1rem; margin-bottom: 6px; }
+  .w-rcard span { color: var(--ink-soft); font-size: .9rem; line-height: 1.55; }
+
+  .w-seat { margin: 52px 0 8px; padding: 36px 32px; border-radius: 18px; background: var(--accent-soft); border: 1px solid var(--line-soft); text-align: center; }
+  .w-seat-mark { width: 22px; height: 22px; border-radius: 7px; margin: 0 auto 18px; background: linear-gradient(135deg, var(--accent), var(--navy)); box-shadow: 0 0 0 4px var(--accent-soft); }
+  .w-seat-line { font-size: clamp(1.2rem,2.6vw,1.55rem); letter-spacing: -.02em; line-height: 1.4; color: var(--ink); max-width: 40ch; margin: 0 auto 14px; font-weight: 500; }
+  .w-seat-line em { color: var(--accent); font-style: normal; }
+  .w-seat-sub { color: var(--ink-soft); line-height: 1.65; max-width: 56ch; margin: 0 auto 24px; font-size: .98rem; }
+  .w-cta { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+</style>
