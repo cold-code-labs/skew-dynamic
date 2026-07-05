@@ -1,0 +1,324 @@
+{
+ "schema": "wc-forecast@1",
+ "generated_asof": "2026-07-03",
+ "data_sha256": "bcf26ebc26bd911f",
+ "model": "elo-results-only",
+ "method": "exact bracket propagation (no odds, no Monte-Carlo)",
+ "n_intl": 49493,
+ "n_wc": 1052,
+ "bracket": {
+  "r16": [
+   {
+    "home": "Canada",
+    "away": "Morocco",
+    "home_flag": "ca",
+    "away_flag": "ma",
+    "neutral": true,
+    "fav": "Morocco",
+    "p_fav": 0.5747
+   },
+   {
+    "home": "Paraguay",
+    "away": "France",
+    "home_flag": "py",
+    "away_flag": "fr",
+    "neutral": true,
+    "fav": "France",
+    "p_fav": 0.7932
+   },
+   {
+    "home": "Brazil",
+    "away": "Norway",
+    "home_flag": "br",
+    "away_flag": "no",
+    "neutral": true,
+    "fav": "Brazil",
+    "p_fav": 0.7847
+   },
+   {
+    "home": "Mexico",
+    "away": "England",
+    "home_flag": "mx",
+    "away_flag": "gb-eng",
+    "neutral": false,
+    "fav": "Mexico",
+    "p_fav": 0.5347
+   },
+   {
+    "home": "Portugal",
+    "away": "Spain",
+    "home_flag": "pt",
+    "away_flag": "es",
+    "neutral": true,
+    "fav": "Spain",
+    "p_fav": 0.5888
+   },
+   {
+    "home": "United States",
+    "away": "Belgium",
+    "home_flag": "us",
+    "away_flag": "be",
+    "neutral": false,
+    "fav": "Belgium",
+    "p_fav": 0.5327
+   },
+   {
+    "home": "Argentina",
+    "away": "Egypt",
+    "home_flag": "ar",
+    "away_flag": "eg",
+    "neutral": true,
+    "fav": "Argentina",
+    "p_fav": 0.9064
+   },
+   {
+    "home": "Switzerland",
+    "away": "Colombia",
+    "home_flag": "ch",
+    "away_flag": "co",
+    "neutral": true,
+    "fav": "Colombia",
+    "p_fav": 0.5769
+   }
+  ],
+  "qf_feeders": [
+   [
+    0,
+    1
+   ],
+   [
+    2,
+    3
+   ],
+   [
+    4,
+    5
+   ],
+   [
+    6,
+    7
+   ]
+  ],
+  "sf_feeders": [
+   [
+    0,
+    1
+   ],
+   [
+    2,
+    3
+   ]
+  ],
+  "note": "R16 ties pair sequentially into the QFs; QFs into the SFs; SFs into the final."
+ },
+ "teams": [
+  {
+   "team": "Argentina",
+   "flag": "ar",
+   "elo": 2158.8,
+   "r16_opp": "Egypt",
+   "r16_opp_flag": "eg",
+   "r16_neutral": true,
+   "p_r16": 0.9064,
+   "p_qf": 0.9064,
+   "p_sf": 0.6864,
+   "p_final": 0.3915,
+   "p_win": 0.2327
+  },
+  {
+   "team": "France",
+   "flag": "fr",
+   "elo": 2098.6,
+   "r16_opp": "Paraguay",
+   "r16_opp_flag": "py",
+   "r16_neutral": true,
+   "p_r16": 0.7932,
+   "p_qf": 0.7932,
+   "p_sf": 0.5463,
+   "p_final": 0.3512,
+   "p_win": 0.1946
+  },
+  {
+   "team": "Spain",
+   "flag": "es",
+   "elo": 2138.3,
+   "r16_opp": "Portugal",
+   "r16_opp_flag": "pt",
+   "r16_neutral": true,
+   "p_r16": 0.5888,
+   "p_qf": 0.5888,
+   "p_sf": 0.4754,
+   "p_final": 0.2855,
+   "p_win": 0.1617
+  },
+  {
+   "team": "Brazil",
+   "flag": "br",
+   "elo": 2087.3,
+   "r16_opp": "Norway",
+   "r16_opp_flag": "no",
+   "r16_neutral": true,
+   "p_r16": 0.7847,
+   "p_qf": 0.7847,
+   "p_sf": 0.5404,
+   "p_final": 0.2909,
+   "p_win": 0.1566
+  },
+  {
+   "team": "Portugal",
+   "flag": "pt",
+   "elo": 2031.4,
+   "r16_opp": "Spain",
+   "r16_opp_flag": "es",
+   "r16_neutral": true,
+   "p_r16": 0.4112,
+   "p_qf": 0.4112,
+   "p_sf": 0.2878,
+   "p_final": 0.1309,
+   "p_win": 0.0549
+  },
+  {
+   "team": "England",
+   "flag": "gb-eng",
+   "elo": 2038.8,
+   "r16_opp": "Mexico",
+   "r16_opp_flag": "mx",
+   "r16_neutral": false,
+   "p_r16": 0.4653,
+   "p_qf": 0.4653,
+   "p_sf": 0.1968,
+   "p_final": 0.0932,
+   "p_win": 0.0439
+  },
+  {
+   "team": "Morocco",
+   "flag": "ma",
+   "elo": 1956.4,
+   "r16_opp": "Canada",
+   "r16_opp_flag": "ca",
+   "r16_neutral": true,
+   "p_r16": 0.5747,
+   "p_qf": 0.5747,
+   "p_sf": 0.2522,
+   "p_final": 0.113,
+   "p_win": 0.0407
+  },
+  {
+   "team": "Colombia",
+   "flag": "co",
+   "elo": 2043.2,
+   "r16_opp": "Switzerland",
+   "r16_opp_flag": "ch",
+   "r16_neutral": true,
+   "p_r16": 0.5769,
+   "p_qf": 0.5769,
+   "p_sf": 0.1897,
+   "p_final": 0.0784,
+   "p_win": 0.0341
+  },
+  {
+   "team": "Belgium",
+   "flag": "be",
+   "elo": 1986.0,
+   "r16_opp": "United States",
+   "r16_opp_flag": "us",
+   "r16_neutral": false,
+   "p_r16": 0.5327,
+   "p_qf": 0.5327,
+   "p_sf": 0.158,
+   "p_final": 0.0622,
+   "p_win": 0.0224
+  },
+  {
+   "team": "Mexico",
+   "flag": "mx",
+   "elo": 1952.2,
+   "r16_opp": "England",
+   "r16_opp_flag": "gb-eng",
+   "r16_neutral": false,
+   "p_r16": 0.5347,
+   "p_qf": 0.5347,
+   "p_sf": 0.1678,
+   "p_final": 0.0608,
+   "p_win": 0.0216
+  },
+  {
+   "team": "Canada",
+   "flag": "ca",
+   "elo": 1859.5,
+   "r16_opp": "Morocco",
+   "r16_opp_flag": "ma",
+   "r16_neutral": true,
+   "p_r16": 0.4253,
+   "p_qf": 0.4253,
+   "p_sf": 0.1358,
+   "p_final": 0.0434,
+   "p_win": 0.0107
+  },
+  {
+   "team": "Switzerland",
+   "flag": "ch",
+   "elo": 1944.7,
+   "r16_opp": "Colombia",
+   "r16_opp_flag": "co",
+   "r16_neutral": true,
+   "p_r16": 0.4231,
+   "p_qf": 0.4231,
+   "p_sf": 0.0968,
+   "p_final": 0.0284,
+   "p_win": 0.0088
+  },
+  {
+   "team": "Norway",
+   "flag": "no",
+   "elo": 1905.9,
+   "r16_opp": "Brazil",
+   "r16_opp_flag": "br",
+   "r16_neutral": true,
+   "p_r16": 0.2153,
+   "p_qf": 0.2153,
+   "p_sf": 0.095,
+   "p_final": 0.0293,
+   "p_win": 0.0087
+  },
+  {
+   "team": "United States",
+   "flag": "us",
+   "elo": 1853.1,
+   "r16_opp": "Belgium",
+   "r16_opp_flag": "be",
+   "r16_neutral": false,
+   "p_r16": 0.4673,
+   "p_qf": 0.4673,
+   "p_sf": 0.0788,
+   "p_final": 0.0187,
+   "p_win": 0.004
+  },
+  {
+   "team": "Paraguay",
+   "flag": "py",
+   "elo": 1824.9,
+   "r16_opp": "France",
+   "r16_opp_flag": "fr",
+   "r16_neutral": true,
+   "p_r16": 0.2068,
+   "p_qf": 0.2068,
+   "p_sf": 0.0656,
+   "p_final": 0.0182,
+   "p_win": 0.0038
+  },
+  {
+   "team": "Egypt",
+   "flag": "eg",
+   "elo": 1800.2,
+   "r16_opp": "Argentina",
+   "r16_opp_flag": "ar",
+   "r16_neutral": true,
+   "p_r16": 0.0936,
+   "p_qf": 0.0936,
+   "p_sf": 0.0271,
+   "p_final": 0.0044,
+   "p_win": 0.0007
+  }
+ ]
+}

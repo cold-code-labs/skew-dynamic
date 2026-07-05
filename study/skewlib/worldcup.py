@@ -270,6 +270,79 @@ def book_pfav(entry, fav_pick, method="shin"):
     return float(P[col]), float(O[0, col]), overround
 
 
+# ── tournament winner forecast (odds-free Elo → title odds) ───────────────────
+# The single-bet skew law prices ONE match; the tournament is a tree of them.
+# Same engine (results-only Elo + calibrated MNLogit) propagated exactly through
+# the bracket gives each surviving team's probability of reaching every round and
+# lifting the cup — no odds, no simulation noise (exact convolution over a fixed
+# tree; feeder sub-brackets are disjoint, so the product form is exact).
+
+def elo_state(intl, k=20.0, hfa=65.0):
+    """Final Elo rating per team + the calibrated outcome model (results only)."""
+    d, R = elo.run_elo(intl, k=k, hfa=hfa, neutral_col="neutral")
+    _, model = elo.calibrate_outcomes(d)
+    return R, model
+
+
+def advance_prob(R, model, a, b, neutral=True, a_home=True, hfa=65.0):
+    """P(team a knocks team b out) in one knockout tie. A regulation draw is
+    resolved by a shootout whose win prob is shrunk towards a coin-flip (the same
+    convention the ledger uses for `pen_home`)."""
+    ra, rb = R.get(a, 1500.0), R.get(b, 1500.0)
+    diff = (ra - rb) if neutral else ((ra + hfa) - rb if a_home else ra - (rb + hfa))
+    pH, pD, pA = _predict_p(model, np.array([diff], float))
+    pH, pD, pA = float(pH[0]), float(pD[0]), float(pA[0])
+    cond = pH / (pH + pA) if (pH + pA) > 0 else 0.5          # a wins | decisive
+    s = 0.5 + 0.4 * (cond - 0.5)                             # shootout win prob
+    return pH + pD * s
+
+
+def simulate_bracket(R, model, r16, hfa=65.0):
+    """Exact title-odds propagation through a single-elimination bracket.
+
+    `r16` is the 8 round-of-16 ties as (home, away, neutral), paired sequentially:
+    ties (0,1)→QF, (2,3)→QF, (4,5)→QF, (6,7)→QF; QFs (0,1)→SF, (2,3)→SF; SFs→final.
+    HFA applies only where a tie is non-neutral (a co-host at home in the R16);
+    later rounds are treated as neutral. Returns {team: {reach: {...}, ...}} with
+    the probability of reaching QF/SF/final and winning, plus the R16 tie context.
+    """
+    teams = [t for tie in r16 for t in tie[:2]]
+    reach = {t: {"qf": 0.0, "sf": 0.0, "final": 0.0, "win": 0.0} for t in teams}
+
+    # round of 16 → winner distribution per tie (two teams each)
+    slots, r16_ctx = [], {}
+    for (h, a, neu) in r16:
+        pa = advance_prob(R, model, h, a, neutral=bool(neu), a_home=True, hfa=hfa)
+        slots.append({h: pa, a: 1.0 - pa})
+        r16_ctx[h] = {"opp": a, "adv": pa}
+        r16_ctx[a] = {"opp": h, "adv": 1.0 - pa}
+    for dist in slots:
+        for t, pr in dist.items():
+            reach[t]["qf"] += pr                             # reaching QF = winning R16
+
+    def combine(dL, dR):                                     # neutral next-round tie
+        out = {}
+        for a, pa in dL.items():
+            for b, pb in dR.items():
+                adv_a = advance_prob(R, model, a, b, neutral=True)
+                out[a] = out.get(a, 0.0) + pa * pb * adv_a
+                out[b] = out.get(b, 0.0) + pa * pb * (1.0 - adv_a)
+        return out
+
+    qf = [combine(slots[0], slots[1]), combine(slots[2], slots[3]),
+          combine(slots[4], slots[5]), combine(slots[6], slots[7])]
+    for dist in qf:
+        for t, pr in dist.items():
+            reach[t]["sf"] += pr
+    sf = [combine(qf[0], qf[1]), combine(qf[2], qf[3])]
+    for dist in sf:
+        for t, pr in dist.items():
+            reach[t]["final"] += pr
+    for t, pr in combine(sf[0], sf[1]).items():
+        reach[t]["win"] += pr
+    return reach, r16_ctx
+
+
 # ── tournament cuts ───────────────────────────────────────────────────────────
 def world_cup(d):
     """Subset of World Cup final stages, with edition and phase (group/knockout)."""

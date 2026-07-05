@@ -3,6 +3,10 @@ import Base from '../layouts/Base.astro';
 import Footer from '../components/Footer.astro';
 import data from '../data/worldcup.json';
 import wcl from '../data/wc_live.json';
+import forecast from '../data/wc_forecast.json';
+
+// title-odds bar scaling: the leader's bar runs (nearly) full width
+const oddsMax = forecast.teams.length ? forecast.teams[0].p_win : 1;
 
 const m = data.meta;
 const h = data.headline;
@@ -316,13 +320,62 @@ const pct = (x) => (x * 100).toFixed(0) + '%';
 
   <hr class="divider" />
 
+  <!-- ── Title odds: the engine propagated through the bracket ── -->
+  <section class="container" id="title-odds">
+    <div class="section-head reveal">
+      <div class="eyebrow">Who wins it</div>
+      <h2>Title odds — the same engine, propagated through the bracket.</h2>
+      <p class="lede">The law prices one match from its favourite probability <span class="mono">p</span>. A
+        knockout cup is a <em>tree</em> of them. We take the identical odds-free Elo engine that priced every
+        fixture above and push it <em>exactly</em> through the round-of-16 bracket — no odds, no simulation
+        noise. Each bar is a nation's probability of lifting the cup; the table breaks down how far it is
+        expected to go. As-of {forecast.generated_asof}, all sixteen still standing.</p>
+    </div>
+
+    <div class="wc-odds reveal">
+      {forecast.teams.map((t, i) => <div class="odds-row">
+        <span class="odds-rank mono">{i + 1}</span>
+        {t.flag
+          ? <img class="odds-flag" src={`https://flagcdn.com/w80/${t.flag}.png`} alt="" width="34" height="23" loading="lazy" />
+          : <span class="odds-flag odds-flag-x">{t.team.slice(0,3).toUpperCase()}</span>}
+        <span class="odds-team">{t.team}</span>
+        <span class="odds-bar-wrap"><span class="odds-bar" style={`width:${Math.max(t.p_win / oddsMax * 100, 1.2).toFixed(1)}%`}></span></span>
+        <span class="odds-win mono">{(t.p_win * 100).toFixed(1)}%</span>
+      </div>)}
+    </div>
+
+    <div class="wc-table-wrap reveal">
+      <table class="wc-table">
+        <thead><tr><th>#</th><th>nation</th><th>Elo</th><th>round of 16</th><th>reach final-4</th><th>reach final</th><th>win</th></tr></thead>
+        <tbody>
+          {forecast.teams.map((t, i) => <tr>
+            <td class="mono">{i + 1}</td>
+            <td>{t.team} <span class="odds-opp">vs {t.r16_opp}</span></td>
+            <td class="mono">{t.elo.toFixed(0)}</td>
+            <td class="mono">{pct(t.p_r16)}</td>
+            <td class="mono">{pct(t.p_sf)}</td>
+            <td class="mono">{pct(t.p_final)}</td>
+            <td class="mono" style="color:var(--accent);font-weight:600">{(t.p_win * 100).toFixed(1)}%</td>
+          </tr>)}
+        </tbody>
+      </table>
+      <p class="note">Exact convolution over the official bracket tree — feeder sub-brackets share no teams, so
+        the product form is exact (no Monte-Carlo noise). A regulation draw resolves by a shootout shrunk towards
+        a coin-flip. Title probabilities sum to 100%; it regenerates from the live feed as each round is played.</p>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
   <section class="container wc-repro reveal">
     <div class="eyebrow">Reproduce</div>
     <p>Everything here is one command on the public dataset — no API keys, no scraping:</p>
     <pre class="code"><code>git clone https://github.com/cold-code-labs/skew-dynamic
 cd skew-dynamic/study
-python analysis/41_worldcup.py        # the full analysis
-python analysis/export_worldcup_data.py   # regenerate this page's data</code></pre>
+python analysis/52_worldcup.py             # the full analysis
+python analysis/predict_worldcup.py        # ledger: freeze + reconcile fixtures
+python analysis/predict_worldcup_winner.py # title odds through the bracket
+python analysis/export_worldcup_data.py    # regenerate this page's data</code></pre>
     <p class="note">Source: <a href="https://github.com/martj42/international_results" target="_blank" rel="noopener">martj42/international_results</a>
       ({m.n_intl.toLocaleString()} internationals, 1872–{m.date_max.slice(0,4)}) · dataset sha256 <span class="mono">{m.sha256}</span> ·
       the favourite-bet skewness law is derived in <a href="/">the main study</a>.</p>
@@ -437,6 +490,27 @@ python analysis/export_worldcup_data.py   # regenerate this page's data</code></
   .wc-table th, .wc-table td { padding: 9px 12px; text-align: right; border-bottom: 1px solid var(--line-soft); }
   .wc-table th { color: var(--ink-faint); font-weight: 500; font-size: .78rem; text-transform: uppercase; letter-spacing: .04em; }
   .wc-table td:first-child, .wc-table th:first-child { text-align: left; }
+  #title-odds .wc-table td:nth-child(2), #title-odds .wc-table th:nth-child(2) { text-align: left; }
+  .odds-opp { color: var(--ink-faint); font-size: .8rem; }
+
+  /* title-odds bars */
+  .wc-odds { display: flex; flex-direction: column; gap: 7px; margin-top: 8px; }
+  .odds-row { display: grid; grid-template-columns: 22px 34px minmax(96px, 1fr) 3fr auto;
+    align-items: center; gap: 12px; }
+  .odds-rank { color: var(--ink-faint); font-size: .82rem; text-align: right; }
+  .odds-flag { border-radius: 3px; box-shadow: 0 0 0 1px var(--line-soft); object-fit: cover; }
+  .odds-flag-x { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 23px;
+    font-size: .6rem; font-family: var(--mono); color: var(--ink-faint); background: var(--surface-2);
+    border-radius: 3px; box-shadow: 0 0 0 1px var(--line-soft); }
+  .odds-team { font-weight: 550; font-size: .92rem; }
+  .odds-bar-wrap { height: 12px; background: var(--surface-2); border-radius: 6px; overflow: hidden; }
+  .odds-bar { display: block; height: 100%; border-radius: 6px;
+    background: linear-gradient(90deg, var(--accent), var(--navy)); }
+  .odds-win { min-width: 48px; text-align: right; font-weight: 600; color: var(--accent); font-size: .92rem; }
+  @media (max-width: 560px) {
+    .odds-row { grid-template-columns: 18px 28px minmax(72px, 1fr) 2fr auto; gap: 8px; }
+    .odds-team { font-size: .84rem; }
+  }
 
   .wc-cards { display: grid; grid-template-columns: 1fr; gap: 18px; }
   @media (min-width: 760px) { .wc-cards { grid-template-columns: 1fr 1fr; } }

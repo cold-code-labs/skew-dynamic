@@ -1,7 +1,7 @@
 {
  "schema": "wc-predictions@1",
- "updated_asof": "2026-06-28",
- "data_sha256": "df6a30676640fc64",
+ "updated_asof": "2026-07-03",
+ "data_sha256": "bcf26ebc26bd911f",
  "predictions": [
   {
    "match_id": "2026-06-29|Brazil|Japan",
@@ -124,7 +124,18 @@
    "o_fair": 1.286,
    "predicted_asof": "2026-06-28",
    "model": "elo-results-only",
-   "realized": null
+   "realized": {
+    "result": "H",
+    "fav_won": true,
+    "ret_fav": 0.2858,
+    "score": "3-0",
+    "advanced": "France",
+    "pens": false,
+    "pens_score": null,
+    "note": null,
+    "source": "martj42/international_results",
+    "settled_asof": "2026-07-03"
+   }
   },
   {
    "match_id": "2026-06-30|Ivory Coast|Norway",
@@ -139,7 +150,18 @@
    "o_fair": 2.491,
    "predicted_asof": "2026-06-28",
    "model": "elo-results-only",
-   "realized": null
+   "realized": {
+    "result": "A",
+    "fav_won": true,
+    "ret_fav": 1.4912,
+    "score": "1-2",
+    "advanced": "Norway",
+    "pens": false,
+    "pens_score": null,
+    "note": null,
+    "source": "martj42/international_results",
+    "settled_asof": "2026-07-03"
+   }
   },
   {
    "match_id": "2026-06-30|Mexico|Ecuador",
@@ -154,7 +176,18 @@
    "o_fair": 1.9983,
    "predicted_asof": "2026-06-28",
    "model": "elo-results-only",
-   "realized": null
+   "realized": {
+    "result": "H",
+    "fav_won": true,
+    "ret_fav": 0.9982,
+    "score": "2-0",
+    "advanced": "Mexico",
+    "pens": false,
+    "pens_score": null,
+    "note": null,
+    "source": "martj42/international_results",
+    "settled_asof": "2026-07-03"
+   }
   },
   {
    "match_id": "2026-07-01|Belgium|Senegal",
@@ -169,7 +202,18 @@
    "o_fair": 1.8149,
    "predicted_asof": "2026-06-28",
    "model": "elo-results-only",
-   "realized": null
+   "realized": {
+    "result": "H",
+    "fav_won": true,
+    "ret_fav": 0.8148,
+    "score": "3-2",
+    "advanced": "Belgium",
+    "pens": false,
+    "pens_score": null,
+    "note": null,
+    "source": "martj42/international_results",
+    "settled_asof": "2026-07-03"
+   }
   },
   {
    "match_id": "2026-07-01|England|DR Congo",
@@ -184,7 +228,18 @@
    "o_fair": 1.2803,
    "predicted_asof": "2026-06-28",
    "model": "elo-results-only",
-   "realized": null
+   "realized": {
+    "result": "H",
+    "fav_won": true,
+    "ret_fav": 0.2802,
+    "score": "2-1",
+    "advanced": "England",
+    "pens": false,
+    "pens_score": null,
+    "note": null,
+    "source": "martj42/international_results",
+    "settled_asof": "2026-07-03"
+   }
   },
   {
    "match_id": "2026-07-01|United States|Bosnia and Herzegovina",
@@ -199,7 +254,18 @@
    "o_fair": 1.3484,
    "predicted_asof": "2026-06-28",
    "model": "elo-results-only",
-   "realized": null
+   "realized": {
+    "result": "H",
+    "fav_won": true,
+    "ret_fav": 0.3483,
+    "score": "2-0",
+    "advanced": "United States",
+    "pens": false,
+    "pens_score": null,
+    "note": null,
+    "source": "martj42/international_results",
+    "settled_asof": "2026-07-03"
+   }
   },
   {
    "match_id": "2026-07-02|Portugal|Croatia",
@@ -214,7 +280,18 @@
    "o_fair": 1.8583,
    "predicted_asof": "2026-06-28",
    "model": "elo-results-only",
-   "realized": null
+   "realized": {
+    "result": "H",
+    "fav_won": true,
+    "ret_fav": 0.8582,
+    "score": "2-1",
+    "advanced": "Portugal",
+    "pens": false,
+    "pens_score": null,
+    "note": null,
+    "source": "martj42/international_results",
+    "settled_asof": "2026-07-03"
+   }
   },
   {
    "match_id": "2026-07-02|Spain|Austria",
@@ -229,7 +306,18 @@
    "o_fair": 1.3951,
    "predicted_asof": "2026-06-28",
    "model": "elo-results-only",
-   "realized": null
+   "realized": {
+    "result": "H",
+    "fav_won": true,
+    "ret_fav": 0.3949,
+    "score": "3-0",
+    "advanced": "Spain",
+    "pens": false,
+    "pens_score": null,
+    "note": null,
+    "source": "martj42/international_results",
+    "settled_asof": "2026-07-03"
+   }
   },
   {
    "match_id": "2026-07-02|Switzerland|Algeria",
@@ -244,7 +332,18 @@
    "o_fair": 2.0808,
    "predicted_asof": "2026-06-28",
    "model": "elo-results-only",
-   "realized": null
+   "realized": {
+    "result": "H",
+    "fav_won": true,
+    "ret_fav": 1.0807,
+    "score": "2-0",
+    "advanced": "Switzerland",
+    "pens": false,
+    "pens_score": null,
+    "note": null,
+    "source": "martj42/international_results",
+    "settled_asof": "2026-07-03"
+   }
   },
   {
    "match_id": "2026-07-03|Argentina|Cape Verde",
@@ -259,7 +358,18 @@
    "o_fair": 1.0985,
    "predicted_asof": "2026-06-28",
    "model": "elo-results-only",
-   "realized": null
+   "realized": {
+    "result": "H",
+    "fav_won": true,
+    "ret_fav": 0.0984,
+    "score": "3-2",
+    "advanced": "Argentina",
+    "pens": false,
+    "pens_score": null,
+    "note": null,
+    "source": "martj42/international_results",
+    "settled_asof": "2026-07-03"
+   }
   },
   {
    "match_id": "2026-07-03|Australia|Egypt",
@@ -274,7 +384,18 @@
    "o_fair": 2.017,
    "predicted_asof": "2026-06-28",
    "model": "elo-results-only",
-   "realized": null
+   "realized": {
+    "result": "D",
+    "fav_won": false,
+    "ret_fav": -1.0,
+    "score": "1-1",
+    "advanced": "Egypt",
+    "pens": true,
+    "pens_score": null,
+    "note": "1-1 after 120'; Egypt won on penalties to reach the round of 16",
+    "source": "ESPN/FIFA",
+    "settled_asof": "2026-07-03"
+   }
   },
   {
    "match_id": "2026-07-03|Colombia|Ghana",
@@ -288,6 +409,137 @@
    "skew_pred": -1.8977,
    "o_fair": 1.1846,
    "predicted_asof": "2026-06-28",
+   "model": "elo-results-only",
+   "realized": {
+    "result": "H",
+    "fav_won": true,
+    "ret_fav": 0.1845,
+    "score": "1-0",
+    "advanced": "Colombia",
+    "pens": false,
+    "pens_score": null,
+    "note": null,
+    "source": "martj42/international_results",
+    "settled_asof": "2026-07-03"
+   }
+  },
+  {
+   "match_id": "2026-07-04|Canada|Morocco",
+   "date": "2026-07-04",
+   "home": "Canada",
+   "away": "Morocco",
+   "neutral": true,
+   "fav_team": "Morocco",
+   "fav_pick": "A",
+   "p_fav": 0.4256,
+   "skew_pred": 0.3011,
+   "o_fair": 2.3498,
+   "predicted_asof": "2026-07-03",
+   "model": "elo-results-only",
+   "realized": null
+  },
+  {
+   "match_id": "2026-07-04|Paraguay|France",
+   "date": "2026-07-04",
+   "home": "Paraguay",
+   "away": "France",
+   "neutral": true,
+   "fav_team": "France",
+   "fav_pick": "A",
+   "p_fav": 0.6603,
+   "skew_pred": -0.6769,
+   "o_fair": 1.5145,
+   "predicted_asof": "2026-07-03",
+   "model": "elo-results-only",
+   "realized": null
+  },
+  {
+   "match_id": "2026-07-05|Brazil|Norway",
+   "date": "2026-07-05",
+   "home": "Brazil",
+   "away": "Norway",
+   "neutral": true,
+   "fav_team": "Brazil",
+   "fav_pick": "H",
+   "p_fav": 0.6464,
+   "skew_pred": -0.6125,
+   "o_fair": 1.547,
+   "predicted_asof": "2026-07-03",
+   "model": "elo-results-only",
+   "realized": null
+  },
+  {
+   "match_id": "2026-07-05|Mexico|England",
+   "date": "2026-07-05",
+   "home": "Mexico",
+   "away": "England",
+   "neutral": false,
+   "fav_team": "Mexico",
+   "fav_pick": "H",
+   "p_fav": 0.3886,
+   "skew_pred": 0.4572,
+   "o_fair": 2.5735,
+   "predicted_asof": "2026-07-03",
+   "model": "elo-results-only",
+   "realized": null
+  },
+  {
+   "match_id": "2026-07-06|Argentina|Egypt",
+   "date": "2026-07-06",
+   "home": "Argentina",
+   "away": "Egypt",
+   "neutral": true,
+   "fav_team": "Argentina",
+   "fav_pick": "H",
+   "p_fav": 0.8185,
+   "skew_pred": -1.653,
+   "o_fair": 1.2217,
+   "predicted_asof": "2026-07-03",
+   "model": "elo-results-only",
+   "realized": null
+  },
+  {
+   "match_id": "2026-07-06|Portugal|Spain",
+   "date": "2026-07-06",
+   "home": "Portugal",
+   "away": "Spain",
+   "neutral": true,
+   "fav_team": "Spain",
+   "fav_pick": "A",
+   "p_fav": 0.4389,
+   "skew_pred": 0.2463,
+   "o_fair": 2.2784,
+   "predicted_asof": "2026-07-03",
+   "model": "elo-results-only",
+   "realized": null
+  },
+  {
+   "match_id": "2026-07-06|Switzerland|Colombia",
+   "date": "2026-07-06",
+   "home": "Switzerland",
+   "away": "Colombia",
+   "neutral": true,
+   "fav_team": "Colombia",
+   "fav_pick": "A",
+   "p_fav": 0.4277,
+   "skew_pred": 0.2924,
+   "o_fair": 2.3383,
+   "predicted_asof": "2026-07-03",
+   "model": "elo-results-only",
+   "realized": null
+  },
+  {
+   "match_id": "2026-07-06|United States|Belgium",
+   "date": "2026-07-06",
+   "home": "United States",
+   "away": "Belgium",
+   "neutral": false,
+   "fav_team": "Belgium",
+   "fav_pick": "A",
+   "p_fav": 0.3872,
+   "skew_pred": 0.4631,
+   "o_fair": 2.5826,
+   "predicted_asof": "2026-07-03",
    "model": "elo-results-only",
    "realized": null
   }

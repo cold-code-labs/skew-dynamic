@@ -82,20 +82,34 @@ def main():
             "predicted_asof": asof, "model": "elo-results-only",
             "realized": None}
 
+    # web-sourced knockout details (advancement / shootout) — used both as the
+    # sole source before a game enters the dump AND to enrich a dump-resolved row
+    # (the dump carries the 90'/120' score, not who won the shootout).
+    manual = json.loads(MANUAL.read_text()) if MANUAL.exists() else {}
+
     resolved_now = 0
     for mid, p in by_id.items():
         if p.get("realized") is None and mid in played_by_id:
             g = played_by_id[mid]
+            reg = g.FTResult
+            man = manual.get(mid, {})
+            if reg == "D":                       # knockout draw → shootout decided it
+                advanced, pens = man.get("advanced"), True
+            else:
+                advanced = p["home"] if reg == "H" else p["away"]
+                pens = bool(man.get("pens", False))
             p["realized"] = {
-                "result": g.FTResult, "fav_won": bool(g.fav_pick == g.FTResult),
+                "result": reg, "fav_won": bool(g.fav_pick == reg),
                 "ret_fav": round(float(g.ret_fav), 4),
+                "score": f"{int(g.FTHome)}-{int(g.FTAway)}", "advanced": advanced,
+                "pens": pens, "pens_score": man.get("pens_score"), "note": man.get("note"),
+                "source": man.get("source", "martj42/international_results"),
                 "settled_asof": asof}
             resolved_now += 1
 
     # web-sourced knockout results not yet in the dump (persistent + sourced).
     # A knockout draw (reg=D) settles the favourite 1X2 bet as a loss; the shootout
     # only decides who advances, which we keep separately.
-    manual = json.loads(MANUAL.read_text()) if MANUAL.exists() else {}
     for mid, p in by_id.items():
         if p.get("realized") is None and mid in manual:
             r = manual[mid]
