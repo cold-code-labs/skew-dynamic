@@ -225,7 +225,9 @@
 "fav_won": true,
 "score": "2-1",
 "pens": false,
-"advanced": "Brazil"
+"advanced": "Brazil",
+"p_players": 0.6849,
+"skew_players": -0.7959
 },
 {
 "home": "Germany",
@@ -246,7 +248,9 @@
 "fav_won": false,
 "score": "1-1",
 "pens": true,
-"advanced": "Paraguay"
+"advanced": "Paraguay",
+"p_players": 0.7901,
+"skew_players": -1.4246
 },
 {
 "home": "Netherlands",
@@ -267,7 +271,9 @@
 "fav_won": false,
 "score": "1-1",
 "pens": true,
-"advanced": "Morocco"
+"advanced": "Morocco",
+"p_players": 0.5497,
+"skew_players": -0.1996
 }
 ],
 "model_vs_book": {

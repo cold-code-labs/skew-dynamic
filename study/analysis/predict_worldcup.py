@@ -26,6 +26,7 @@ LEDGER = SITE / "wc_predictions.json"     # append-only pre-registration (versio
 LIVE = SITE / "wc_live.json"              # compact payload for the page
 MANUAL = Path(__file__).resolve().parents[1] / "wc_manual_results.json"  # web-sourced KO results
 BOOK = Path(__file__).resolve().parents[1] / "wc_book_odds.json"  # web-sourced bookmaker odds
+SQUAD = Path(__file__).resolve().parents[1] / "wc_squad_values.json"  # frozen squad values (Front O)
 
 
 def _mid(date, home, away):
@@ -137,6 +138,19 @@ def main():
                 "overround": round(ovr, 4), "edge": round(p["p_fav"] - pb, 4),
                 "book": b["book"], "source": b["source"], "asof": b["asof"]}
 
+    # ── third-observer overlay (Front O): the players' reading of the same bet ──
+    # p of the ledger's favourite pick from the log squad-value ratio through the
+    # club-fitted link — no results, no odds in the state. Frozen once per entry.
+    values, vmeta = wc.load_squad_values(SQUAD)
+    for p in by_id.values():
+        if "players" not in p:
+            pv = wc.players_pfav(values, p["home"], p["away"], p["fav_pick"])
+            if pv is not None:
+                p["players"] = {
+                    "p_fav": round(pv[0], 4), "skew": round(pv[1], 4),
+                    "v_home": values[p["home"]], "v_away": values[p["away"]],
+                    "asof": vmeta["asof"], "source": vmeta["source"]}
+
     ledger = {"schema": "wc-predictions@1", "updated_asof": asof,
               "data_sha256": fp["sha256"][:16],
               "predictions": sorted(by_id.values(), key=lambda p: (p["date"], p["home"]))}
@@ -211,7 +225,7 @@ def main():
     tri = []
     for p in sorted([q for q in res if "book" in q], key=lambda x: x["date"]):
         bk, rz = p["book"], p["realized"]
-        tri.append({
+        row = {
             "home": p["home"], "away": p["away"],
             "home_flag": wc.flag_iso(p["home"]), "away_flag": wc.flag_iso(p["away"]),
             "fav_team": p["fav_team"], "fav_pick": p["fav_pick"],
@@ -220,7 +234,11 @@ def main():
             "o_model": p["o_fair"], "o_book": bk["o_fav"],
             "overround": bk["overround"], "edge": bk["edge"], "book": bk["book"],
             "fav_won": rz.get("fav_won"), "score": rz.get("score"),
-            "pens": rz.get("pens"), "advanced": rz.get("advanced")})
+            "pens": rz.get("pens"), "advanced": rz.get("advanced")}
+        if "players" in p:                       # Front O: the third observer's reading
+            row["p_players"] = p["players"]["p_fav"]
+            row["skew_players"] = p["players"]["skew"]
+        tri.append(row)
 
     both = [p for p in res if "book" in p]
     mvb = None

@@ -37,6 +37,14 @@
     "book": "FanDuel",
     "source": "CBS Sports / ESPN (pre-match line, 2026-06-29)",
     "asof": "2026-06-29"
+   },
+   "players": {
+    "p_fav": 0.6849,
+    "skew": -0.7959,
+    "v_home": 1257000000,
+    "v_away": 334500000,
+    "asof": "2026-06-28",
+    "source": "Transfermarkt via dcaribou/transfermarkt-datasets (CC0)"
    }
   },
   {
@@ -73,6 +81,14 @@
     "book": "FanDuel",
     "source": "CBS Sports / FanDuel Sportsbook (pre-match line, 2026-06-29)",
     "asof": "2026-06-29"
+   },
+   "players": {
+    "p_fav": 0.7901,
+    "skew": -1.4246,
+    "v_home": 1114000000,
+    "v_away": 147250000,
+    "asof": "2026-06-28",
+    "source": "Transfermarkt via dcaribou/transfermarkt-datasets (CC0)"
    }
   },
   {
@@ -109,6 +125,14 @@
     "book": "FanDuel",
     "source": "CBS Sports / FanDuel Sportsbook (pre-match line, 2026-06-29)",
     "asof": "2026-06-29"
+   },
+   "players": {
+    "p_fav": 0.5497,
+    "skew": -0.1996,
+    "v_home": 940000000,
+    "v_away": 543000000,
+    "asof": "2026-06-28",
+    "source": "Transfermarkt via dcaribou/transfermarkt-datasets (CC0)"
    }
   },
   {
@@ -135,6 +159,14 @@
     "note": null,
     "source": "martj42/international_results",
     "settled_asof": "2026-07-03"
+   },
+   "players": {
+    "p_fav": 0.6707,
+    "skew": -0.7267,
+    "v_home": 1667000000,
+    "v_away": 483000000,
+    "asof": "2026-06-28",
+    "source": "Transfermarkt via dcaribou/transfermarkt-datasets (CC0)"
    }
   },
   {
@@ -187,6 +219,14 @@
     "note": null,
     "source": "martj42/international_results",
     "settled_asof": "2026-07-03"
+   },
+   "players": {
+    "p_fav": 0.3648,
+    "skew": 0.5619,
+    "v_home": 234500000,
+    "v_away": 385700000,
+    "asof": "2026-06-28",
+    "source": "Transfermarkt via dcaribou/transfermarkt-datasets (CC0)"
    }
   },
   {
@@ -213,6 +253,14 @@
     "note": null,
     "source": "martj42/international_results",
     "settled_asof": "2026-07-03"
+   },
+   "players": {
+    "p_fav": 0.4763,
+    "skew": 0.0949,
+    "v_home": 576000000,
+    "v_away": 499500000,
+    "asof": "2026-06-28",
+    "source": "Transfermarkt via dcaribou/transfermarkt-datasets (CC0)"
    }
   },
   {
@@ -265,6 +313,14 @@
     "note": null,
     "source": "martj42/international_results",
     "settled_asof": "2026-07-03"
+   },
+   "players": {
+    "p_fav": 0.654,
+    "skew": -0.6475,
+    "v_home": 462000000,
+    "v_away": 147800000,
+    "asof": "2026-06-28",
+    "source": "Transfermarkt via dcaribou/transfermarkt-datasets (CC0)"
    }
   },
   {
@@ -291,6 +347,14 @@
     "note": null,
     "source": "martj42/international_results",
     "settled_asof": "2026-07-03"
+   },
+   "players": {
+    "p_fav": 0.6345,
+    "skew": -0.5584,
+    "v_home": 1137000000,
+    "v_away": 407500000,
+    "asof": "2026-06-28",
+    "source": "Transfermarkt via dcaribou/transfermarkt-datasets (CC0)"
    }
   },
   {
@@ -317,6 +381,14 @@
     "note": null,
     "source": "martj42/international_results",
     "settled_asof": "2026-07-03"
+   },
+   "players": {
+    "p_fav": 0.7274,
+    "skew": -1.0216,
+    "v_home": 1372000000,
+    "v_away": 279700000,
+    "asof": "2026-06-28",
+    "source": "Transfermarkt via dcaribou/transfermarkt-datasets (CC0)"
    }
   },
   {
@@ -343,6 +415,14 @@
     "note": null,
     "source": "martj42/international_results",
     "settled_asof": "2026-07-03"
+   },
+   "players": {
+    "p_fav": 0.4635,
+    "skew": 0.1463,
+    "v_home": 333200000,
+    "v_away": 310300000,
+    "asof": "2026-06-28",
+    "source": "Transfermarkt via dcaribou/transfermarkt-datasets (CC0)"
    }
   },
   {
@@ -395,6 +475,14 @@
     "note": "1-1 after 120'; Egypt won on penalties to reach the round of 16",
     "source": "ESPN/FIFA",
     "settled_asof": "2026-07-03"
+   },
+   "players": {
+    "p_fav": 0.3846,
+    "skew": 0.4743,
+    "v_home": 76550000,
+    "v_away": 111900000,
+    "asof": "2026-06-28",
+    "source": "Transfermarkt via dcaribou/transfermarkt-datasets (CC0)"
    }
   },
   {
@@ -421,6 +509,14 @@
     "note": null,
     "source": "martj42/international_results",
     "settled_asof": "2026-07-03"
+   },
+   "players": {
+    "p_fav": 0.4512,
+    "skew": 0.1962,
+    "v_home": 302350000,
+    "v_away": 301700000,
+    "asof": "2026-06-28",
+    "source": "Transfermarkt via dcaribou/transfermarkt-datasets (CC0)"
    }
   },
   {
@@ -447,6 +543,14 @@
     "note": null,
     "source": "martj42/international_results",
     "settled_asof": "2026-07-04"
+   },
+   "players": {
+    "p_fav": 0.4382,
+    "skew": 0.2489,
+    "v_home": 203000000,
+    "v_away": 543000000,
+    "asof": "2026-06-28",
+    "source": "Transfermarkt via dcaribou/transfermarkt-datasets (CC0)"
    }
   },
   {
@@ -473,6 +577,14 @@
     "note": null,
     "source": "martj42/international_results",
     "settled_asof": "2026-07-04"
+   },
+   "players": {
+    "p_fav": 0.7132,
+    "skew": -0.9426,
+    "v_home": 147250000,
+    "v_away": 1667000000,
+    "asof": "2026-06-28",
+    "source": "Transfermarkt via dcaribou/transfermarkt-datasets (CC0)"
    }
   },
   {
@@ -499,6 +611,14 @@
     "note": "Haaland brace sends Brazil home — biggest upset of the tournament; Norway win in regulation",
     "source": "ESPN/Yahoo Sports (2026-07-06)",
     "settled_asof": "2026-07-04"
+   },
+   "players": {
+    "p_fav": 0.5822,
+    "skew": -0.3332,
+    "v_home": 1257000000,
+    "v_away": 606000000,
+    "asof": "2026-06-28",
+    "source": "Transfermarkt via dcaribou/transfermarkt-datasets (CC0)"
    }
   },
   {
@@ -514,7 +634,15 @@
    "o_fair": 2.5735,
    "predicted_asof": "2026-07-03",
    "model": "elo-results-only",
-   "realized": null
+   "realized": null,
+   "players": {
+    "p_fav": 0.1586,
+    "skew": 1.8686,
+    "v_home": 234500000,
+    "v_away": 1725000000,
+    "asof": "2026-06-28",
+    "source": "Transfermarkt via dcaribou/transfermarkt-datasets (CC0)"
+   }
   },
   {
    "match_id": "2026-07-06|Argentina|Egypt",
@@ -529,7 +657,15 @@
    "o_fair": 1.2217,
    "predicted_asof": "2026-07-03",
    "model": "elo-results-only",
-   "realized": null
+   "realized": null,
+   "players": {
+    "p_fav": 0.806,
+    "skew": -1.5477,
+    "v_home": 956000000,
+    "v_away": 111900000,
+    "asof": "2026-06-28",
+    "source": "Transfermarkt via dcaribou/transfermarkt-datasets (CC0)"
+   }
   },
   {
    "match_id": "2026-07-06|Portugal|Spain",
@@ -544,7 +680,15 @@
    "o_fair": 2.2784,
    "predicted_asof": "2026-07-03",
    "model": "elo-results-only",
-   "realized": null
+   "realized": null,
+   "players": {
+    "p_fav": 0.2963,
+    "skew": 0.892,
+    "v_home": 1137000000,
+    "v_away": 1372000000,
+    "asof": "2026-06-28",
+    "source": "Transfermarkt via dcaribou/transfermarkt-datasets (CC0)"
+   }
   },
   {
    "match_id": "2026-07-06|Switzerland|Colombia",
@@ -559,7 +703,15 @@
    "o_fair": 2.3383,
    "predicted_asof": "2026-07-03",
    "model": "elo-results-only",
-   "realized": null
+   "realized": null,
+   "players": {
+    "p_fav": 0.2524,
+    "skew": 1.14,
+    "v_home": 333200000,
+    "v_away": 302350000,
+    "asof": "2026-06-28",
+    "source": "Transfermarkt via dcaribou/transfermarkt-datasets (CC0)"
+   }
   },
   {
    "match_id": "2026-07-06|United States|Belgium",
@@ -574,7 +726,15 @@
    "o_fair": 2.5826,
    "predicted_asof": "2026-07-03",
    "model": "elo-results-only",
-   "realized": null
+   "realized": null,
+   "players": {
+    "p_fav": 0.3016,
+    "skew": 0.8644,
+    "v_home": 462000000,
+    "v_away": 576000000,
+    "asof": "2026-06-28",
+    "source": "Transfermarkt via dcaribou/transfermarkt-datasets (CC0)"
+   }
   },
   {
    "match_id": "2026-07-09|France|Morocco",
@@ -589,7 +749,15 @@
    "o_fair": 1.7105,
    "predicted_asof": "2026-07-04",
    "model": "elo-results-only",
-   "realized": null
+   "realized": null,
+   "players": {
+    "p_fav": 0.6509,
+    "skew": -0.6332,
+    "v_home": 1667000000,
+    "v_away": 543000000,
+    "asof": "2026-06-28",
+    "source": "Transfermarkt via dcaribou/transfermarkt-datasets (CC0)"
+   }
   }
  ]
 }

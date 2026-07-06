@@ -2,9 +2,16 @@
 import Base from '../layouts/Base.astro';
 import Footer from '../components/Footer.astro';
 import wcl from '../data/wc_live.json';
+import obs from '../data/observers.json';
 
 const T = wcl.triangulation || [];
 const M = wcl.model_vs_book || null;
+const OBS = obs.observers || {};
+const ONAMES = [
+  { key: 'elo', label: 'Elo (results only)', cls: 'elo' },
+  { key: 'book', label: 'bookmaker (market)', cls: 'book3' },
+  { key: 'players', label: 'players (lineup value)', cls: 'players' },
+];
 const pct = (x) => Math.round(x * 100) + '%';
 const sgn = (x) => (x >= 0 ? '+' : '') + x.toFixed(2);
 
@@ -91,14 +98,18 @@ const sTicks = [0.5, 0, -0.5, -1.0];
         {T.map(t => <g>
           <line x1={X(t.p_model)} y1={Y(t.skew_model)} x2={X(t.p_book)} y2={Y(t.skew_book)}
                 class={`conn ${t.fav_won?'ok':'no'}`} />
+          {t.p_players && <line x1={X(t.p_book)} y1={Y(t.skew_book)} x2={X(t.p_players)} y2={Y(Math.max(t.skew_players,S1))}
+                class={`conn ${t.fav_won?'ok':'no'}`} />}
           <circle cx={X(t.p_model)} cy={Y(t.skew_model)} r="6" class={`pt model ${t.fav_won?'ok':'no'}`} />
           <circle cx={X(t.p_book)} cy={Y(t.skew_book)} r="6" class={`pt book ${t.fav_won?'ok':'no'}`} />
+          {t.p_players && <circle cx={X(t.p_players)} cy={Y(Math.max(t.skew_players,S1))} r="6" class={`pt players ${t.fav_won?'ok':'no'}`} />}
           <text x={X(t.p_book)} y={Y(t.skew_book)+ (t.skew_book < t.skew_model ? 20 : -12)} class="ptlab" text-anchor="middle">{t.fav_team}</text>
         </g>)}
       </svg>
       <figcaption>
         <span class="lg"><span class="dot model"></span> our Elo (results-only)</span>
         <span class="lg"><span class="dot book"></span> {T[0]?.book || 'bookmaker'} (de-vigged)</span>
+        <span class="lg"><span class="dot d-players"></span> players (squad value)</span>
         <span class="lg"><span class="bar ok"></span> favourite advanced</span>
         <span class="lg"><span class="bar no"></span> favourite out</span>
       </figcaption>
@@ -107,7 +118,7 @@ const sTicks = [0.5, 0, -0.5, -1.0];
     <!-- ── triangulation table ── -->
     <div class="o-tbl reveal">
       <div class="o-tr o-th">
-        <span>Match</span><span>p model</span><span>p market</span><span>skew model</span><span>skew market</span><span>outcome</span>
+        <span>Match</span><span>p model</span><span>p market</span><span>p players</span><span>skew m / mkt / pl</span><span>outcome</span>
       </div>
       {T.map(t => <div class={`o-tr ${t.fav_won?'ok':'no'}`}>
         <span class="o-m">
@@ -116,8 +127,8 @@ const sTicks = [0.5, 0, -0.5, -1.0];
         </span>
         <span class="mono">{t.p_model.toFixed(3)}</span>
         <span class="mono">{t.p_book.toFixed(3)} <em class={t.edge>=0?'up':'dn'}>{t.edge>=0?'+':''}{(t.edge*100).toFixed(1)}</em></span>
-        <span class="mono">{sgn(t.skew_model)}</span>
-        <span class="mono">{sgn(t.skew_book)}</span>
+        <span class="mono">{t.p_players ? t.p_players.toFixed(3) : '—'}</span>
+        <span class="mono">{sgn(t.skew_model)} / {sgn(t.skew_book)}{t.skew_players ? ' / ' + sgn(t.skew_players) : ''}</span>
         <span class="o-o">{t.fav_won ? '✓ won' : (t.pens ? '✗ pens' : '✗ upset')} <i>{t.score}</i></span>
       </div>)}
     </div>
@@ -160,6 +171,75 @@ const sTicks = [0.5, 0, -0.5, -1.0];
         (FanDuel via CBS Sports / ESPN, 2026-06-29) · de-vig: Shin · method in
         <a href="/worldcup">the World Cup annex</a> · this page updates as more games resolve.</p>
     </section>
+
+    <!-- ── the third observer: club-scale tri-observer test ── -->
+    <section class="o-body reveal">
+      <h2>The third observer — and the club-scale version of this test</h2>
+      <p>The World Cup points above are an anecdote (a handful of games). Here is the same test at scale,
+        with a <b>third observer</b> added. Three probability engines price the identical favourite bet on
+        <b>{obs.n_eval.toLocaleString()}</b> league matches ({obs.era[0].slice(0,4)}–{obs.era[1].slice(0,4)},
+        top European leagues), each built from a <b>disjoint information set</b>:</p>
+      <p><b>Elo</b> sees only past <em>results</em>. The <b>bookmaker</b> sees the market. And the new one —
+        <b>players</b> — sees only <em>who is on the pitch</em>: the log market value of the actual starting
+        lineup (Transfermarkt), mapped to a probability by a link fitted on a disjoint earlier era. Its
+        strength estimate never reads a result and never reads a price.</p>
+    </section>
+
+    <figure class="o-fig reveal">
+      <svg viewBox="0 0 720 372" role="img" aria-label="Skewness law with three observers' bucket points">
+        {sTicks.map(s => <g>
+          <line x1={L} y1={Y(s)} x2={Rr} y2={Y(s)} class={s===0?'ax0':'grid'} />
+          <text x={L-10} y={Y(s)+4} class="tk" text-anchor="end">{sgn(s)}</text>
+        </g>)}
+        {pTicks.map(p => <g>
+          <line x1={X(p)} y1={Tp} x2={X(p)} y2={Bt} class={Math.abs(p-0.5)<1e-9?'ax0':'grid'} />
+          <text x={X(p)} y={Bt+18} class="tk" text-anchor="middle">{p.toFixed(2)}</text>
+        </g>)}
+        <text x={(L+Rr)/2} y={362} class="axlab" text-anchor="middle">favourite probability p (each observer's own)</text>
+        <text x={16} y={(Tp+Bt)/2} class="axlab" text-anchor="middle" transform={`rotate(-90 16 ${(Tp+Bt)/2})`}>realised return skewness</text>
+        <polyline points={curve} class="law" />
+        <text x={X(0.9)} y={Y(law(0.9))-10} class="lawlab" text-anchor="end">(1−2p)/√(p(1−p))</text>
+        {ONAMES.map(o => (OBS[o.key]?.buckets || []).map(b => <g>
+          <line x1={X(b.p_mean)} y1={Y(Math.max(Math.min(b.ci_lo,S0),S1))} x2={X(b.p_mean)} y2={Y(Math.max(Math.min(b.ci_hi,S0),S1))} class={`whisk ${o.cls}`} />
+          <circle cx={X(b.p_mean)} cy={Y(Math.max(Math.min(b.skew_real,S0),S1))} r="4.5" class={`pt3 ${o.cls}`} />
+        </g>))}
+      </svg>
+      <figcaption>
+        <span class="lg"><span class="dot d-elo"></span> Elo (results only)</span>
+        <span class="lg"><span class="dot d-book3"></span> bookmaker (market)</span>
+        <span class="lg"><span class="dot d-players"></span> players (lineup value — no results, no odds)</span>
+        <span class="lg">whiskers = bootstrap 95% CI per bucket</span>
+      </figcaption>
+    </figure>
+
+    <div class="o-tbl reveal">
+      <div class="o-tr3 o-th">
+        <span>Observer</span><span>information set</span><span>Brier ↓</span><span>calibration |p−f|</span><span>shape residual (RMSE)</span><span>corr with law</span>
+      </div>
+      {ONAMES.map(o => { const m = OBS[o.key]?.metrics; return m && <div class="o-tr3">
+        <span class="o-m">{o.label.split(' (')[0]}</span>
+        <span class="o-is">{o.key==='elo' ? 'results only' : o.key==='book' ? 'the market' : 'player values only'}</span>
+        <span class="mono">{m.brier.toFixed(3)}</span>
+        <span class="mono">{m.calib_mean_abs.toFixed(3)}</span>
+        <span class="mono pos">{m.shape_rmse.toFixed(3)}</span>
+        <span class="mono">{m.corr_law >= 0 ? '+' : ''}{m.corr_law.toFixed(3)}</span>
+      </div>; })}
+    </div>
+
+    <section class="o-body reveal">
+      <p>Read the last two columns against the first. The three engines are <em>not</em> equally good
+        forecasters — the market is sharpest, the player observer (which never saw a result) is the most
+        miscalibrated, exactly as you would expect. That is the point: <b>calibration differs freely, the
+        shape does not</b>. For every observer the realised skewness at its own p sits on the same curve
+        with a shape residual of ~{(Math.max(...ONAMES.map(o=>OBS[o.key]?.metrics?.shape_rmse||0))).toFixed(3)}
+        — indistinguishable from zero. Knowing <em>more</em> moves you <em>along</em> the law; it never moves
+        you off it. Three ways of knowing a football match, one geometry of the bet.</p>
+      <p class="o-foot">Player data: Transfermarkt market valuations via the CC0
+        <a href="https://github.com/dcaribou/transfermarkt-datasets" target="_blank" rel="noopener">transfermarkt-datasets</a>
+        mirror · starting-lineup value at match date, ASOF join · link (MNLogit on log value ratio) trained
+        {obs.train[0].slice(0,4)}–{obs.train[1].slice(0,4)}, evaluated {obs.era[0].slice(0,4)}–{obs.era[1].slice(0,4)}
+        · code: <span class="mono">skewlib/players.py</span>, <span class="mono">analysis/55_third_observer.py</span>.</p>
+    </section>
   </article>
 
   <Footer />
@@ -200,7 +280,7 @@ const sTicks = [0.5, 0, -0.5, -1.0];
   .conn { stroke-width: 2; stroke-dasharray: 3 3; opacity: .55; }
   .conn.ok { stroke: var(--pos); } .conn.no { stroke: var(--neg); }
   .pt { stroke-width: 2; }
-  .pt.model { fill: #fff; } .pt.book { fill: currentColor; }
+  .pt.model { fill: #fff; } .pt.book { fill: currentColor; } .pt.players { fill: var(--pos); }
   .pt.ok { color: var(--pos); stroke: var(--pos); } .pt.no { color: var(--neg); stroke: var(--neg); }
   .ptlab { fill: var(--ink-soft); font-size: 11px; font-weight: 600; }
   .o-fig figcaption { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 12px; font-size: .8rem; color: var(--ink-soft); justify-content: center; }
@@ -219,6 +299,17 @@ const sTicks = [0.5, 0, -0.5, -1.0];
   .o-m img { border-radius: 2px; }
   .o-tr em { font-family: var(--mono); font-size: .72rem; font-style: normal; } .o-tr .up { color: var(--pos); } .o-tr .dn { color: var(--neg); }
   .o-o { font-weight: 600; } .o-o i { font-style: normal; font-weight: 400; color: var(--ink-faint); font-family: var(--mono); }
+
+  .pt3 { stroke-width: 1.6; stroke: #fff; }
+  .pt3.elo { fill: var(--ink-soft); } .pt3.book3 { fill: var(--accent); } .pt3.players { fill: var(--pos); }
+  .whisk { stroke-width: 1.4; opacity: .45; }
+  .whisk.elo { stroke: var(--ink-soft); } .whisk.book3 { stroke: var(--accent); } .whisk.players { stroke: var(--pos); }
+  .dot.d-elo { background: var(--ink-soft); border-color: var(--ink-soft); }
+  .dot.d-book3 { background: var(--accent); border-color: var(--accent); }
+  .dot.d-players { background: var(--pos); border-color: var(--pos); }
+  .o-tr3 { display: grid; grid-template-columns: 1fr 1.2fr .8fr 1.1fr 1.3fr 1fr; align-items: center; gap: 8px; padding: 11px 16px; font-size: .86rem; border-top: 1px solid var(--line-soft); }
+  .o-tr3:first-child { border-top: none; }
+  .o-is { color: var(--ink-faint); font-size: .8rem; }
 
   .o-body h2 { font-size: 1.4rem; letter-spacing: -.02em; margin: 36px 0 12px; }
   .o-body p { color: var(--ink-soft); line-height: 1.7; margin-bottom: 14px; }

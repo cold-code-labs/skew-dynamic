@@ -270,6 +270,28 @@ def book_pfav(entry, fav_pick, method="shin"):
     return float(P[col]), float(O[0, col]), overround
 
 
+def load_squad_values(path):
+    """Frozen national-squad market values (study/wc_squad_values.json)."""
+    import json
+    d = json.loads(Path(path).read_text())
+    return {t: v["value_eur"] for t, v in d["teams"].items()}, d
+
+
+def players_pfav(values, home, away, fav_pick):
+    """The third observer's reading of a WC fixture: p of the ledger's favourite
+    pick from the log squad-value ratio through the CLUB-fitted link
+    (skewlib/data/value_link.json — trained on league lineups, never on
+    internationals, results touching only the link). Returns (p_fav, skew) or
+    None when either squad value is missing."""
+    from . import players as pl
+    vh, va = values.get(home), values.get(away)
+    if not vh or not va:
+        return None
+    pA, pD, pH = (x[0] for x in pl.load_value_link()(np.log(vh / va)))
+    p = {"H": pH, "D": pD, "A": pA}[fav_pick]
+    return float(p), float((1 - 2 * p) / np.sqrt(p * (1 - p)))
+
+
 # ── tournament winner forecast (odds-free Elo → title odds) ───────────────────
 # The single-bet skew law prices ONE match; the tournament is a tree of them.
 # Same engine (results-only Elo + calibrated MNLogit) propagated exactly through

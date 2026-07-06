@@ -1093,3 +1093,45 @@ Artefacts: `skewlib/stats.py:tost`, `skewlib/panel.py:trend_boot`,
 > drift" (W3) becomes a positive claim by TOST (p_tost=0.006, margin ½ between-league SD;
 > robust to bootstrap and balanced panel). 43 phases in the ledger. f37 (forest) enters as
 > Figure 20; §4.3 and the abstract updated.
+
+## Phase V — The third observer: player-informed p (Front O, block 55)
+
+The `/odds` triangulation showed two observers — results-only Elo and a real
+bookmaker — landing on the same curve. Phase V adds a third with a **disjoint
+information set**: team strength = log market value of the actual **starting
+lineup** (Transfermarkt, CC0 mirror; docs/SPIKE-O0.md), mapped to (P_A,P_D,P_H)
+by the same MNLogit link the Elo observer uses (const+z+z², z = log value
+ratio), **fitted on 2013–2018 and evaluated on 2018–2025** — the state never
+reads a result or a price; results touch only the low-dimensional link.
+
+Three engines price the identical favourite bet at fair odds 1/p on the same
+**17,356** evaluation matches (top European leagues; the TM source has no valued
+lineups for the non-European first tiers). Bucketed by each observer's own
+p_fav:
+
+| observer | information set | Brier | calib \|p−f\| | shape RMSE | corr law |
+|---|---|---|---|---|---|
+| elo     | results only        | 0.234 | 0.016 | **0.005** | +0.997 |
+| book    | the market          | 0.230 | 0.012 | **0.006** | +0.994 |
+| players | player values only  | 0.235 | 0.032 | **0.005** | +0.994 |
+
+**The decomposition is the finding.** The three are *not* equally good
+forecasters — the market is sharpest, the player observer (which never saw a
+result) is the most miscalibrated, 2.7× the book's level error. But the **shape
+residual** — realised skew minus the law evaluated at the bucket's *realised
+frequency* — is ~0.005 for all three, indistinguishable from zero. Calibration
+differs freely; the shape does not. Knowing more moves an observer *along* the
+law, never off it. This is the strong form of observer-invariance: the law
+holds for ANY p-generator, including one built from a completely different way
+of knowing the game.
+
+WC overlay: each ledger fixture also carries the players' reading (log squad-
+value ratio through the club-fitted link, values frozen in
+`wc_squad_values.json`). On the three resolved R32 games with book odds the
+players observer was the most seduced by Germany (p=0.790, skew −1.42 — the
+loudest catastrophic-tail warning of the three; Germany fell on penalties).
+
+Artefacts: `skewlib/players.py` (+ committed `skewlib/data/{tm_club_map,
+value_link}.json`), `analysis/55_third_observer.py`,
+`outputs/third_observer_buckets.csv`, site `/odds` §"The third observer",
+`wc_squad_values.json`. Tag `evidence/observer-3`.

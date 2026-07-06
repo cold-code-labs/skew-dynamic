@@ -1,0 +1,125 @@
+{
+ "_note": "National-squad market value (EUR) per ledger team = sum of the 26 most valuable players currently registered to the national team (players.current_national_team_id, latest Transfermarkt valuation). One consistent method for every team (the national_teams.total_market_value column is NULL for several top squads). Only input of the players observer's WC overlay: p from log value ratio through the club-fitted link (skewlib/data/value_link.json). Missing teams have no national_teams entry in the source.",
+ "asof": "2026-06-28",
+ "method": "top26-player-sum",
+ "source": "Transfermarkt via dcaribou/transfermarkt-datasets (CC0)",
+ "missing": [
+  "Cape Verde",
+  "DR Congo",
+  "Ivory Coast"
+ ],
+ "teams": {
+  "Algeria": {
+   "value_eur": 310300000,
+   "fifa_ranking": 28
+  },
+  "Argentina": {
+   "value_eur": 956000000,
+   "fifa_ranking": 1
+  },
+  "Australia": {
+   "value_eur": 76550000,
+   "fifa_ranking": 27
+  },
+  "Austria": {
+   "value_eur": 279700000,
+   "fifa_ranking": 24
+  },
+  "Belgium": {
+   "value_eur": 576000000,
+   "fifa_ranking": 9
+  },
+  "Bosnia and Herzegovina": {
+   "value_eur": 147800000,
+   "fifa_ranking": 64
+  },
+  "Brazil": {
+   "value_eur": 1257000000,
+   "fifa_ranking": 6
+  },
+  "Canada": {
+   "value_eur": 203000000,
+   "fifa_ranking": 30
+  },
+  "Colombia": {
+   "value_eur": 302350000,
+   "fifa_ranking": 13
+  },
+  "Croatia": {
+   "value_eur": 407500000,
+   "fifa_ranking": 11
+  },
+  "Ecuador": {
+   "value_eur": 385700000,
+   "fifa_ranking": 23
+  },
+  "Egypt": {
+   "value_eur": 111900000,
+   "fifa_ranking": 29
+  },
+  "England": {
+   "value_eur": 1725000000,
+   "fifa_ranking": 4
+  },
+  "France": {
+   "value_eur": 1667000000,
+   "fifa_ranking": 3
+  },
+  "Germany": {
+   "value_eur": 1114000000,
+   "fifa_ranking": 10
+  },
+  "Ghana": {
+   "value_eur": 301700000,
+   "fifa_ranking": 73
+  },
+  "Japan": {
+   "value_eur": 334500000,
+   "fifa_ranking": 18
+  },
+  "Mexico": {
+   "value_eur": 234500000,
+   "fifa_ranking": 14
+  },
+  "Morocco": {
+   "value_eur": 543000000,
+   "fifa_ranking": 7
+  },
+  "Netherlands": {
+   "value_eur": 940000000,
+   "fifa_ranking": 8
+  },
+  "Norway": {
+   "value_eur": 606000000,
+   "fifa_ranking": 31
+  },
+  "Paraguay": {
+   "value_eur": 147250000,
+   "fifa_ranking": 41
+  },
+  "Portugal": {
+   "value_eur": 1137000000,
+   "fifa_ranking": 5
+  },
+  "Senegal": {
+   "value_eur": 499500000,
+   "fifa_ranking": 15
+  },
+  "Spain": {
+   "value_eur": 1372000000,
+   "fifa_ranking": 2
+  },
+  "Sweden": {
+   "value_eur": 483000000,
+   "fifa_ranking": 38
+  },
+  "Switzerland": {
+   "value_eur": 333200000,
+   "fifa_ranking": 19
+  },
+  "United States": {
+   "value_eur": 462000000,
+   "fifa_ranking": 17
+  }
+ }
+}
