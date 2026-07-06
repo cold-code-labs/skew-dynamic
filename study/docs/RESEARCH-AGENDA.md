@@ -195,13 +195,12 @@ preference parameters (CPT) are themselves invariant.
 **disjoint information set** — player attributes only: no match results, no odds —
 turns the duet into a panel and makes the invariance claim structural.
 
-- **O0 [spike] Source audit** — Kaggle `davidcariboo/player-scores` (Transfermarkt
-  mirror: 60k+ games, 400k+ historical market valuations, `game_lineups`,
-  `appearances`, national teams; weekly refresh, OSS pipeline
-  `dcaribou/transfermarkt-datasets`). Audit the coverage join vs the frozen
-  archive (team-name mapping à la `fdcanon.py`); license posture: raw dump stays
-  in `data/` (gitignored), only derived aggregates committed. Complement/fallback:
-  SoFIFA (EA) player-rating dumps.
+- **O0 [spike] Source audit** ✅ DONE 2026-07-06 — verdict **GO**, see
+  `docs/SPIKE-O0.md`. Source is CC0-1.0 with a public no-account DuckDB mirror
+  (~200 MB). Lineups usable from 2013 (≥95%); 24/38 divisions join (first tiers
+  only) = 84k frozen matches in the era, ~45–50k on the strong-join leagues.
+  End-to-end lineup-value query verified. Decisions fixed: state = log matchday
+  lineup value; eval era 2013+; match clubs globally, league as tiebreaker.
 - **O1 [new data] The observer** — `skewlib/players.py`: team state = log
   matchday-lineup market value (fallback: season squad value — decide in O0 by
   coverage), link `strength gap → (pH, pD, pA)` by ordered probit (reuse the

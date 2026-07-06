@@ -1,5 +1,6 @@
 # raw match data (restricted by football-data.co.uk ToS; regenerable, hash-frozen)
 data/*.csv
+data/*.duckdb
 data/canonical/
 outputs/*.log
 outputs/_provenance/
