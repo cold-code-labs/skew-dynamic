@@ -204,6 +204,14 @@ PHASES = [
      "metrics": {"beta_year": 0.00015, "drift20": 0.003, "sd_between": 0.0516,
      "delta20": 0.026, "p_tost": 0.006, "p_tost_boot": 0.005,
      "p_tost_balanced": 0.043, "n_obs": 638}},
+    # ── 9th round (Front O: strong observer-invariance via a 3rd information set) ──
+    {"id": "V", "front": "Observer invariance", "tag": "evidence/observer-3", "commit": "b654bca",
+     "title": "The third observer: player-informed p (disjoint information set)",
+     "blocks": ["55_third_observer"], "figures": [],
+     "metrics": {"n_eval": 17356, "elo_corr_law": 0.9975, "book_corr_law": 0.9938,
+     "players_corr_law": 0.9938, "elo_shape_rmse": 0.0053, "book_shape_rmse": 0.0062,
+     "players_shape_rmse": 0.0051, "elo_brier": 0.2338, "book_brier": 0.23,
+     "players_brier": 0.2355}},
 ]
 
 

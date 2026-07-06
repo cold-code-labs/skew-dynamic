@@ -6,7 +6,7 @@
 > 38 leagues). Return to any state with
 > `git checkout <tag>`; audit a result change with `--check`.
 
-**HEAD at generation:** `dadd67dd`  ⚠️ working tree DIRTY
+**HEAD at generation:** `b654bca8`  ⚠️ working tree DIRTY
 
 | Phase | Front | Finding | Blocks | Figures | Headline numbers | Commit | Tag |
 |------|--------|--------|--------|---------|----------------|--------|-----|
@@ -53,6 +53,7 @@
 | **S** | External validity | Tennis: the law belongs to the sport, not to football (canonical layer) | 48_tennis | f35 | skew_fav=-0.571 · skew_dog=2.314 · calib_pfav=0.688 · calib_winrate=0.692 · law_atp=-1.0 · law_wta=-0.98 · n_matches=62865 | `4cf9084` (2026-06-23) | `evidence/frente-S` |
 | **T** | External validity | Basketball: the law holds in a 3rd sport (NBA moneyline, canonical layer) | 49_basketball | f36 | skew_fav=-0.57 · skew_dog=2.609 · calib_pfav=0.694 · calib_winrate=0.685 · law_nba=-0.95 · n_matches=19621 | `fa6ea6b` (2026-06-23) | `evidence/frente-T` |
 | **U** | Equivalence | Temporal equivalence: 'no drift' as TOST (evidence of absence) | 51_temporal_equivalence | f37 | beta_year=0.00015 · drift20=0.003 · sd_between=0.0516 · delta20=0.026 · p_tost=0.006 · p_tost_boot=0.005 · p_tost_balanced=0.043 · n_obs=638 | `0598390` (2026-06-23) | `evidence/frente-U` |
+| **V** | Observer invariance | The third observer: player-informed p (disjoint information set) | 55_third_observer | — | n_eval=17356 · elo_corr_law=0.9975 · book_corr_law=0.9938 · players_corr_law=0.9938 · elo_shape_rmse=0.0053 · book_shape_rmse=0.0062 · players_shape_rmse=0.0051 · elo_brier=0.2338 · book_brier=0.23 · players_brier=0.2355 | `b654bca` (2026-07-06) | `evidence/observer-3` |
 
 ## Versioning tags (`evidence/*`)
 One annotated tag per evidence milestone points to the commit that established
