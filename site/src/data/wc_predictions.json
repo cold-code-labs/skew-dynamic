@@ -1,7 +1,7 @@
 {
  "schema": "wc-predictions@1",
- "updated_asof": "2026-07-03",
- "data_sha256": "bcf26ebc26bd911f",
+ "updated_asof": "2026-07-04",
+ "data_sha256": "c211656dc8a64d61",
  "predictions": [
   {
    "match_id": "2026-06-29|Brazil|Japan",
@@ -436,7 +436,18 @@
    "o_fair": 2.3498,
    "predicted_asof": "2026-07-03",
    "model": "elo-results-only",
-   "realized": null
+   "realized": {
+    "result": "A",
+    "fav_won": true,
+    "ret_fav": 1.3496,
+    "score": "0-3",
+    "advanced": "Morocco",
+    "pens": false,
+    "pens_score": null,
+    "note": null,
+    "source": "martj42/international_results",
+    "settled_asof": "2026-07-04"
+   }
   },
   {
    "match_id": "2026-07-04|Paraguay|France",
@@ -451,7 +462,18 @@
    "o_fair": 1.5145,
    "predicted_asof": "2026-07-03",
    "model": "elo-results-only",
-   "realized": null
+   "realized": {
+    "result": "A",
+    "fav_won": true,
+    "ret_fav": 0.5143,
+    "score": "0-1",
+    "advanced": "France",
+    "pens": false,
+    "pens_score": null,
+    "note": null,
+    "source": "martj42/international_results",
+    "settled_asof": "2026-07-04"
+   }
   },
   {
    "match_id": "2026-07-05|Brazil|Norway",
@@ -466,7 +488,18 @@
    "o_fair": 1.547,
    "predicted_asof": "2026-07-03",
    "model": "elo-results-only",
-   "realized": null
+   "realized": {
+    "result": "A",
+    "fav_won": false,
+    "ret_fav": -1.0,
+    "score": "1-2",
+    "advanced": "Norway",
+    "pens": false,
+    "pens_score": null,
+    "note": "Haaland brace sends Brazil home — biggest upset of the tournament; Norway win in regulation",
+    "source": "ESPN/Yahoo Sports (2026-07-06)",
+    "settled_asof": "2026-07-04"
+   }
   },
   {
    "match_id": "2026-07-05|Mexico|England",
@@ -540,6 +573,21 @@
    "skew_pred": 0.4631,
    "o_fair": 2.5826,
    "predicted_asof": "2026-07-03",
+   "model": "elo-results-only",
+   "realized": null
+  },
+  {
+   "match_id": "2026-07-09|France|Morocco",
+   "date": "2026-07-09",
+   "home": "France",
+   "away": "Morocco",
+   "neutral": true,
+   "fav_team": "France",
+   "fav_pick": "H",
+   "p_fav": 0.5846,
+   "skew_pred": -0.3434,
+   "o_fair": 1.7105,
+   "predicted_asof": "2026-07-04",
    "model": "elo-results-only",
    "realized": null
   }

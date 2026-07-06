@@ -21,7 +21,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from skewlib import worldcup as wc
 
 DATA = Path("data/intl_results.csv")
-OUT = Path(__file__).resolve().parents[1].parent / "site" / "src" / "data" / "wc_forecast.json"
+SITE = Path(__file__).resolve().parents[1].parent / "site" / "src" / "data"
+OUT = SITE / "wc_forecast.json"
+LEDGER = SITE / "wc_predictions.json"     # reconciled ledger = source of decided R16 ties
 
 # Official 2026 round-of-16 bracket. Ties pair sequentially into the four QFs
 # (0,1)->QF1, (2,3)->QF2, (4,5)->QF3, (6,7)->QF4; QFs (0,1)->SF1, (2,3)->SF2.
@@ -51,13 +53,27 @@ def main():
     fx = wc.upcoming_wc_fixtures(DATA)
     neu_by_pair = {frozenset([r.HomeTeam, r.AwayTeam]): bool(r.neutral) for r in fx.itertuples()}
     r16 = [(h, a, neu_by_pair.get(frozenset([h, a]), True)) for (h, a) in BRACKET_R16]
-    missing = [t for (h, a, _) in r16 for t in (h, a)
-               if frozenset([h, a]) not in neu_by_pair]
-    if missing:
-        print(f"WARN: {len(missing)} bracket teams not in the pending fixtures "
-              f"(feed may have advanced past the R16): {sorted(set(missing))}")
 
-    reach, ctx = wc.simulate_bracket(R, model, r16)
+    # decided ties, straight from the reconciled ledger: the forecast conditions
+    # on results already in the books instead of re-randomising played games
+    winners = {}
+    if LEDGER.exists():
+        for p in json.loads(LEDGER.read_text())["predictions"]:
+            pair = frozenset([p["home"], p["away"]])
+            adv = (p.get("realized") or {}).get("advanced")
+            if adv and pair in {frozenset(t) for t in BRACKET_R16}:
+                winners[pair] = adv
+    missing = [t for (h, a, _) in r16 for t in (h, a)
+               if frozenset([h, a]) not in neu_by_pair
+               and frozenset([h, a]) not in winners]
+    if missing:
+        print(f"WARN: {len(missing)} bracket teams neither in pending fixtures nor "
+              f"decided in the ledger: {sorted(set(missing))}")
+    if winners:
+        print(f"conditioning on {len(winners)} decided R16 ties: "
+              f"{', '.join(sorted(winners.values()))} through")
+
+    reach, ctx = wc.simulate_bracket(R, model, r16, winners=winners)
 
     teams = []
     for (h, a, neu) in r16:

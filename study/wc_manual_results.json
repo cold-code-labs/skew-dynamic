@@ -1,7 +1,50 @@
 {
   "_note": "Real knockout results confirmed from the web, applied to reconcile the pre-registered ledger for games not yet in the martj42 dump. `reg` = 1X2 result at 90' (H/D/A); knockout draws (D) settle the favourite 1X2 bet as a loss regardless of the shootout. Sourced 2026-06-30.",
-  "2026-06-29|Brazil|Japan": {"fh": 2, "fa": 1, "reg": "H", "advanced": "Brazil", "pens": false, "note": "Martinelli 96', won in regulation", "source": "ESPN/FIFA/CBS"},
-  "2026-06-29|Germany|Paraguay": {"fh": 1, "fa": 1, "reg": "D", "advanced": "Paraguay", "pens": true, "pens_score": "3-4", "note": "1-1 after 120'; Paraguay won 4-3 on penalties — Germany's first-ever WC shootout loss", "source": "ESPN/CBS/VAVEL"},
-  "2026-06-29|Netherlands|Morocco": {"fh": 1, "fa": 1, "reg": "D", "advanced": "Morocco", "pens": true, "pens_score": "2-3", "note": "1-1 after 120'; Morocco won 3-2 on penalties (Bounou save, Saibari decisive)", "source": "ESPN/Yahoo/Outlook"},
-  "2026-07-03|Australia|Egypt": {"fh": 1, "fa": 1, "reg": "D", "advanced": "Egypt", "pens": true, "note": "1-1 after 120'; Egypt won on penalties to reach the round of 16", "source": "ESPN/FIFA"}
+  "2026-06-29|Brazil|Japan": {
+    "fh": 2,
+    "fa": 1,
+    "reg": "H",
+    "advanced": "Brazil",
+    "pens": false,
+    "note": "Martinelli 96', won in regulation",
+    "source": "ESPN/FIFA/CBS"
+  },
+  "2026-06-29|Germany|Paraguay": {
+    "fh": 1,
+    "fa": 1,
+    "reg": "D",
+    "advanced": "Paraguay",
+    "pens": true,
+    "pens_score": "3-4",
+    "note": "1-1 after 120'; Paraguay won 4-3 on penalties — Germany's first-ever WC shootout loss",
+    "source": "ESPN/CBS/VAVEL"
+  },
+  "2026-06-29|Netherlands|Morocco": {
+    "fh": 1,
+    "fa": 1,
+    "reg": "D",
+    "advanced": "Morocco",
+    "pens": true,
+    "pens_score": "2-3",
+    "note": "1-1 after 120'; Morocco won 3-2 on penalties (Bounou save, Saibari decisive)",
+    "source": "ESPN/Yahoo/Outlook"
+  },
+  "2026-07-03|Australia|Egypt": {
+    "fh": 1,
+    "fa": 1,
+    "reg": "D",
+    "advanced": "Egypt",
+    "pens": true,
+    "note": "1-1 after 120'; Egypt won on penalties to reach the round of 16",
+    "source": "ESPN/FIFA"
+  },
+  "2026-07-05|Brazil|Norway": {
+    "fh": 1,
+    "fa": 2,
+    "reg": "A",
+    "advanced": "Norway",
+    "pens": false,
+    "note": "Haaland brace sends Brazil home — biggest upset of the tournament; Norway win in regulation",
+    "source": "ESPN/Yahoo Sports (2026-07-06)"
+  }
 }

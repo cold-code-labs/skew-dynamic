@@ -297,22 +297,30 @@ def advance_prob(R, model, a, b, neutral=True, a_home=True, hfa=65.0):
     return pH + pD * s
 
 
-def simulate_bracket(R, model, r16, hfa=65.0):
+def simulate_bracket(R, model, r16, hfa=65.0, winners=None):
     """Exact title-odds propagation through a single-elimination bracket.
 
     `r16` is the 8 round-of-16 ties as (home, away, neutral), paired sequentially:
     ties (0,1)→QF, (2,3)→QF, (4,5)→QF, (6,7)→QF; QFs (0,1)→SF, (2,3)→SF; SFs→final.
     HFA applies only where a tie is non-neutral (a co-host at home in the R16);
-    later rounds are treated as neutral. Returns {team: {reach: {...}, ...}} with
-    the probability of reaching QF/SF/final and winning, plus the R16 tie context.
+    later rounds are treated as neutral. `winners` maps frozenset({home, away}) →
+    the team that actually advanced: a decided tie collapses to certainty, so the
+    forecast conditions on results already in the books. Returns
+    {team: {reach: {...}, ...}} with the probability of reaching QF/SF/final and
+    winning, plus the R16 tie context.
     """
+    winners = winners or {}
     teams = [t for tie in r16 for t in tie[:2]]
     reach = {t: {"qf": 0.0, "sf": 0.0, "final": 0.0, "win": 0.0} for t in teams}
 
     # round of 16 → winner distribution per tie (two teams each)
     slots, r16_ctx = [], {}
     for (h, a, neu) in r16:
-        pa = advance_prob(R, model, h, a, neutral=bool(neu), a_home=True, hfa=hfa)
+        w = winners.get(frozenset([h, a]))
+        if w is not None:
+            pa = 1.0 if w == h else 0.0
+        else:
+            pa = advance_prob(R, model, h, a, neutral=bool(neu), a_home=True, hfa=hfa)
         slots.append({h: pa, a: 1.0 - pa})
         r16_ctx[h] = {"opp": a, "adv": pa}
         r16_ctx[a] = {"opp": h, "adv": 1.0 - pa}
