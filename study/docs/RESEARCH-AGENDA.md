@@ -187,6 +187,46 @@ preference parameters (CPT) are themselves invariant.
 > asymmetries measure different dimensions (who-wins vs goals), not a single latent.
 > `skewlib/extras.py:{shannon_entropy,entropy_by_league}`, `analysis/40_entropy_comoment.py`.
 
+## Front O — The third observer (player-informed p)  [new data]
+**Hypothesis (strong observer-invariance):** ANY observer's `(p, skew)` lands on
+`(1−2p)/√(p(1−p))` — an observer's error decomposes into pure p-calibration
+(level) with ZERO shape distortion. `/odds` already triangulates two observers
+(results-only Elo × bookmaker, rank-corr 0.998). A third one built from a
+**disjoint information set** — player attributes only: no match results, no odds —
+turns the duet into a panel and makes the invariance claim structural.
+
+- **O0 [spike] Source audit** — Kaggle `davidcariboo/player-scores` (Transfermarkt
+  mirror: 60k+ games, 400k+ historical market valuations, `game_lineups`,
+  `appearances`, national teams; weekly refresh, OSS pipeline
+  `dcaribou/transfermarkt-datasets`). Audit the coverage join vs the frozen
+  archive (team-name mapping à la `fdcanon.py`); license posture: raw dump stays
+  in `data/` (gitignored), only derived aggregates committed. Complement/fallback:
+  SoFIFA (EA) player-rating dumps.
+- **O1 [new data] The observer** — `skewlib/players.py`: team state = log
+  matchday-lineup market value (fallback: season squad value — decide in O0 by
+  coverage), link `strength gap → (pH, pD, pA)` by ordered probit (reuse the
+  `model.py` idiom), fitted on a train era DISJOINT from the evaluation window.
+  Results touch only the low-dimensional link, never the state — the observer
+  stays results-blind where it matters (same status Elo has: results feed its
+  state, so the player observer is *more* blind, not less). Thin block
+  `analysis/55_third_observer.py`.
+- **O2 [dataset∩new] The invariance test** — per-p-bucket realised skew vs the
+  law for all three observers on the overlap sample; decompose each observer's
+  error into **calibration** (p level, Brier — free to differ) vs **shape**
+  (skew at realised frequency — predicted ≡ 0 for every observer). Bootstrap
+  bands. The tri-observer overlay on the single law curve is the headline figure.
+- **O3 [live, optional] WC prospective hook** — national-team variant (tournament
+  squad values) as a third p column in the World Cup ledger `/odds` triangulation,
+  pre-registered for remaining fixtures. Descriptive only — Box C stands (no
+  edge crossing); tiny-n disclaimer up front.
+- **Build:** stamp → FINDINGS Phase → Timeline → `build_lineage.py:PHASES` →
+  tag `evidence/observer-3`. Site: third point series on `/odds`
+  (○ model, ● book, ◐ players).
+- **Why it is safe for the positioning:** player data improves *nothing* we
+  monetise — it deliberately produces a (probably worse-calibrated) p whose only
+  job is to fall on the same curve. A worse Brier with zero shape residual is a
+  BETTER result for the thesis than a sharper p.
+
 ---
 
 ## How to extend (architecture)
@@ -209,3 +249,7 @@ moment, double ADF+KPSS, report sensitivity.
 > are DONE (W·P·B·C·E·D·F·G·H2 — 29 phases; see `docs/LINEAGE.md`). Only those
 > requiring **external data** remain: Front A (tennis/cross-sport), D1 (opening→closing),
 > H1 (rule changes). Vitor's decision: football on the frozen dataset first — fulfilled.
+
+> **NEXT external-data front** (planned 2026-07-06): **Front O — the third
+> observer** (player-informed p from Transfermarkt valuations; disjoint
+> information set → strong observer-invariance test). Spike O0 first.
