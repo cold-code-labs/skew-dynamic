@@ -5,7 +5,7 @@ when:
 
 steps:
   - name: study-tests
-    image: python:3.13-slim
+    image: python:3.13-bookworm
     commands:
       - pip install --quiet -r study/requirements.txt -r study/api/requirements.txt pytest
       - (cd study && python -c "import skewlib.exante, skewlib.skewmeter, skewlib.model, skewlib.canonical; print('skewlib OK')")
