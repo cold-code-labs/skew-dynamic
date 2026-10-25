@@ -1,0 +1,14 @@
+{
+  "$schema": "https://unpkg.com/wrangler@4.152.0/config-schema.json",
+  // Static Astro build served from Cloudflare Workers Static Assets; no Worker script.
+  "name": "skew-dynamic",
+  "compatibility_date": "2026-10-01",
+  "workers_dev": true,
+  "routes": [{ "pattern": "skew-dynamic.coldcodelabs.com", "custom_domain": true }],
+  "assets": {
+    "directory": "site/dist",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "none"
+  },
+  "observability": { "enabled": true }
+}
